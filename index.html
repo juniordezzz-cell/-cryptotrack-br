@@ -700,8 +700,6 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
         <div class="tb-tab" onclick="goPage('hold',null,'hold')"><span class="td" style="background:var(--blue)"></span>HOLD</div>
         <div class="tb-tab" onclick="goPage('defi',null,'defi')"><span class="td" style="background:var(--defi)"></span>DEFI</div>
         <div class="tb-tab" onclick="goPage('trade',null,'trade')"><span class="td" style="background:var(--gold)"></span>TRADE</div>
-        <div class="tb-tab" onclick="goPage('calc',null,'calc')"><span class="td" style="background:var(--green)"></span>Calc Cripto</div>
-        <div class="tb-tab" onclick="goPage('juros',null,'juros')"><span class="td" style="background:var(--gold)"></span>Calc. Juros Compostos</div>
       </div>
     </div>
     <div class="tb-right">
@@ -1483,12 +1481,12 @@ function goPage(p, sbEl, tabKey){
   var pg=document.getElementById('page-'+p); if(pg) pg.classList.add('active');
   if(sbEl) sbEl.classList.add('active');
   else{ var si=document.getElementById('sbi-'+p); if(si) si.classList.add('active'); }
-  if(tabKey){ var tabs=['geral','hold','defi','trade','calc','juros']; var idx=tabs.indexOf(tabKey); var allTabs=document.querySelectorAll('.tb-tab'); if(idx>=0&&allTabs[idx]) allTabs[idx].classList.add('active'); }
+  if(tabKey){ var tabs=['geral','hold','defi','trade']; var idx=tabs.indexOf(tabKey); var allTabs=document.querySelectorAll('.tb-tab'); if(idx>=0&&allTabs[idx]) allTabs[idx].classList.add('active'); }
   if(p==='geral')renderGeral();
   else if(p==='hold')renderHold();
   else if(p==='defi')renderDefi();
   else if(p==='trade')renderTrade();
-  else if(p==='calc')initCalc();
+  else if(p==='calc'){initCalc();_preloadTopPrices();}
   else if(p==='favoritos')renderFavoritos();
   else if(p==='alertas')renderAlertas();
   else if(p==='noticias')carregarNoticias();
@@ -2367,7 +2365,36 @@ var _KNOWN_COINS=[
   {id:'optimism',name:'Optimism',symbol:'OP',market_cap_rank:38},
   {id:'render-token',name:'Render',symbol:'RENDER',market_cap_rank:40},
   {id:'internet-computer',name:'ICP',symbol:'ICP',market_cap_rank:23},
+  {id:'the-open-network',name:'Toncoin',symbol:'TON',market_cap_rank:7},
+  {id:'wrapped-bitcoin',name:'Wrapped Bitcoin',symbol:'WBTC',market_cap_rank:22},
+  {id:'aptos',name:'Aptos',symbol:'APT',market_cap_rank:25},
+  {id:'injective-protocol',name:'Injective',symbol:'INJ',market_cap_rank:28},
+  {id:'sei-network',name:'Sei',symbol:'SEI',market_cap_rank:45},
+  {id:'bonk',name:'Bonk',symbol:'BONK',market_cap_rank:50},
+  {id:'wif-dogwifhat',name:'dogwifhat',symbol:'WIF',market_cap_rank:52},
+  {id:'floki',name:'FLOKI',symbol:'FLOKI',market_cap_rank:55},
+  {id:'ondo-finance',name:'Ondo',symbol:'ONDO',market_cap_rank:32},
+  {id:'stacks',name:'Stacks',symbol:'STX',market_cap_rank:58},
+  {id:'curve-dao-token',name:'Curve DAO',symbol:'CRV',market_cap_rank:70},
+  {id:'maker',name:'MakerDAO',symbol:'MKR',market_cap_rank:48},
+  {id:'the-sandbox',name:'The Sandbox',symbol:'SAND',market_cap_rank:90},
+  {id:'decentraland',name:'Decentraland',symbol:'MANA',market_cap_rank:95},
+  {id:'filecoin',name:'Filecoin',symbol:'FIL',market_cap_rank:30},
+  {id:'vechain',name:'VeChain',symbol:'VET',market_cap_rank:42},
+  {id:'theta-token',name:'Theta Network',symbol:'THETA',market_cap_rank:65},
+  {id:'algorand',name:'Algorand',symbol:'ALGO',market_cap_rank:72},
+  {id:'gala',name:'Gala',symbol:'GALA',market_cap_rank:85},
 ];
+// Pre-load prices for top coins on first use
+var _pricesCached=false;
+function _preloadTopPrices(){
+  if(_pricesCached)return;_pricesCached=true;
+  var ids=_KNOWN_COINS.slice(0,15).map(function(c){return c.id;}).join(',');
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=usd&include_24hr_change=true')
+    .then(function(r){return r.json();})
+    .then(function(p){Object.assign(_calcPrices,p);})
+    .catch(function(){});
+}
 
 function calcAutoSearch(val){
   val=(val||'').trim();
@@ -2428,7 +2455,7 @@ function _cddRender(coins,prices){
     var cs=chg!==null?(chg>=0?'+':'')+chg.toFixed(2)+'%':'';
     var cc=chg===null?'':(chg>=0?'up':'down');
     var col=_COIN_CLR[i%_COIN_CLR.length];
-    var imgHtml=c.thumb?'<img src="'+c.thumb+'" alt="" loading="lazy" onerror="this.style.display='none';this.parentNode.textContent=''+c.symbol.slice(0,2).toUpperCase()+'';">':c.symbol.slice(0,2).toUpperCase();
+    var imgHtml=c.thumb?'<img src="'+c.thumb+'" alt="" loading="lazy" style="width:100%;height:100%;border-radius:50%;object-fit:cover">':c.symbol.slice(0,2).toUpperCase();
     return '<div class="cdd-item" onclick="_cddSelect('+i+')">'
       +'<div class="cdd-ico" style="background:'+col+'">'+imgHtml+'</div>'
       +'<div class="cdd-info"><div class="cdd-name">'+c.name+'</div><div class="cdd-sym">'+c.symbol.toUpperCase()+'</div></div>'
@@ -2558,6 +2585,9 @@ function jCalcular(){
   setTimeout(function(){
     var canvas=document.getElementById('j-grafico');
     if(!canvas)return;
+    // Ensure canvas has explicit pixel dimensions
+    var wrap=canvas.parentNode;
+    if(wrap){canvas.width=wrap.offsetWidth||800;canvas.height=wrap.offsetHeight||260;}
     jChartInst=new Chart(canvas,{
       type:'line',
       data:{
