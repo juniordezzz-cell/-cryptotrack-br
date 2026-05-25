@@ -2288,17 +2288,71 @@ function calcAutoSearch(val){
 }
 function _cddFetch(q){
   var dd=document.getElementById('calc-dd');
-  fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(q))
-    .then(function(r){return r.json();})
+  // Try CoinGecko with cache-busting and proper headers
+  var opts={headers:{'Accept':'application/json'}};
+  fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(q),opts)
+    .then(function(r){
+      if(!r.ok)throw new Error('status '+r.status);
+      return r.json();
+    })
     .then(function(data){
       var coins=(data.coins||[]).slice(0,10);_calcDdData=coins;
       if(!coins.length){dd.innerHTML='<div class="cdd-loading">Nenhum ativo encontrado.</div>';return;}
+      // Get prices for found coins
       var ids=coins.slice(0,8).map(function(c){return c.id;}).join(',');
-      return fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=usd&include_24hr_change=true')
+      return fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=usd&include_24hr_change=true',opts)
         .then(function(r){return r.json();})
         .then(function(prices){Object.assign(_calcPrices,prices);_cddRender(coins,prices);});
     })
-    .catch(function(){if(dd)dd.innerHTML='<div class="cdd-loading">\u26A0 Erro de conex\u00e3o.</div>';});
+    .catch(function(){
+      // Fallback: show known coins matching the query
+      _cddFallback(q);
+    });
+}
+function _cddFallback(q){
+  var dd=document.getElementById('calc-dd');
+  q=q.toLowerCase();
+  var known=[
+    {id:'bitcoin',name:'Bitcoin',symbol:'BTC',market_cap_rank:1,thumb:''},
+    {id:'ethereum',name:'Ethereum',symbol:'ETH',market_cap_rank:2,thumb:''},
+    {id:'tether',name:'Tether',symbol:'USDT',market_cap_rank:3,thumb:''},
+    {id:'binancecoin',name:'BNB',symbol:'BNB',market_cap_rank:4,thumb:''},
+    {id:'solana',name:'Solana',symbol:'SOL',market_cap_rank:5,thumb:''},
+    {id:'ripple',name:'XRP',symbol:'XRP',market_cap_rank:6,thumb:''},
+    {id:'dogecoin',name:'Dogecoin',symbol:'DOGE',market_cap_rank:8,thumb:''},
+    {id:'cardano',name:'Cardano',symbol:'ADA',market_cap_rank:9,thumb:''},
+    {id:'avalanche-2',name:'Avalanche',symbol:'AVAX',market_cap_rank:11,thumb:''},
+    {id:'chainlink',name:'Chainlink',symbol:'LINK',market_cap_rank:14,thumb:''},
+    {id:'uniswap',name:'Uniswap',symbol:'UNI',market_cap_rank:20,thumb:''},
+    {id:'aave',name:'Aave',symbol:'AAVE',market_cap_rank:36,thumb:''},
+    {id:'pepe',name:'Pepe',symbol:'PEPE',market_cap_rank:17,thumb:''},
+    {id:'hyperliquid',name:'Hyperliquid',symbol:'HYPE',market_cap_rank:12,thumb:''},
+    {id:'raydium',name:'Raydium',symbol:'RAY',market_cap_rank:60,thumb:''},
+    {id:'jupiter-exchange-solana',name:'Jupiter',symbol:'JUP',market_cap_rank:55,thumb:''},
+    {id:'pendle',name:'Pendle',symbol:'PENDLE',market_cap_rank:80,thumb:''},
+    {id:'sui',name:'Sui',symbol:'SUI',market_cap_rank:15,thumb:''},
+    {id:'polkadot',name:'Polkadot',symbol:'DOT',market_cap_rank:16,thumb:''},
+    {id:'tron',name:'TRON',symbol:'TRX',market_cap_rank:10,thumb:''},
+    {id:'litecoin',name:'Litecoin',symbol:'LTC',market_cap_rank:18,thumb:''},
+    {id:'shiba-inu',name:'Shiba Inu',symbol:'SHIB',market_cap_rank:13,thumb:''},
+    {id:'stellar',name:'Stellar',symbol:'XLM',market_cap_rank:19,thumb:''},
+    {id:'near',name:'NEAR Protocol',symbol:'NEAR',market_cap_rank:21,thumb:''},
+    {id:'matic-network',name:'Polygon',symbol:'MATIC',market_cap_rank:22,thumb:''},
+  ];
+  var matches=known.filter(function(c){
+    return c.name.toLowerCase().indexOf(q)>=0 || c.symbol.toLowerCase().indexOf(q)>=0;
+  }).slice(0,8);
+  if(!matches.length){
+    dd.innerHTML='<div class="cdd-loading">Nenhum ativo encontrado. Verifique o símbolo.</div>';
+    return;
+  }
+  _calcDdData=matches;
+  // Try to get prices for matched coins
+  var ids=matches.map(function(c){return c.id;}).join(',');
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids='+ids+'&vs_currencies=usd&include_24hr_change=true')
+    .then(function(r){return r.json();})
+    .then(function(prices){Object.assign(_calcPrices,prices);_cddRender(matches,prices);})
+    .catch(function(){_cddRender(matches,{});});
 }
 function _cddRender(coins,prices){
   var dd=document.getElementById('calc-dd');if(!dd)return;
@@ -2349,7 +2403,17 @@ function jCalcular(){
   document.getElementById('j-tbody').innerHTML=dados.map(function(d){return'<tr><td>'+d.mes+'</td><td>'+jFmt(d.juros)+'</td><td>'+jFmt(d.investido)+'</td><td>'+jFmt(d.totalJuros)+'</td><td>'+jFmt(d.acumulado)+'</td></tr>';}).join('');
   document.getElementById('j-resultado').style.display='block';document.getElementById('j-resultado').scrollIntoView({behavior:'smooth',block:'start'});
 }
-function jInit(){if(document.getElementById('j-resultado').style.display==='none')jCalcular();}
+function jInit(){
+  // Don't auto-calculate - chart can't render when page is first shown
+  // Just ensure the form is ready. User clicks Calcular.
+  // But if already calculated, re-render chart (in case canvas resized)
+  var res = document.getElementById('j-resultado');
+  if(res && res.style.display !== 'none'){
+    // Re-render chart for correct sizing
+    if(jChartInst){jChartInst.destroy();jChartInst=null;}
+    jCalcular();
+  }
+}
 
 </script>
 </body>
