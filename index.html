@@ -451,6 +451,54 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
 .cfg-label{font-size:13px;font-weight:600}
 .cfg-desc{font-size:11px;color:var(--muted2);margin-top:2px}
 
+/* ══ PAYWALL MODAL ══ */
+.paywall-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);z-index:600;display:none;align-items:center;justify-content:center}
+.paywall-overlay.open{display:flex}
+.paywall-box{background:var(--bg2);border:1px solid rgba(245,166,35,0.3);border-radius:var(--rxl);width:440px;max-width:95vw;padding:2.5rem 2rem;text-align:center;animation:mIn .2s ease;box-shadow:0 0 80px rgba(245,166,35,0.12)}
+.paywall-icon{font-size:3rem;margin-bottom:1rem}
+.paywall-title{font-size:1.4rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.5rem}
+.paywall-sub{font-size:13px;color:var(--muted2);line-height:1.6;margin-bottom:1.5rem}
+.paywall-limit{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);border-radius:var(--rl);padding:1rem;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px}
+.paywall-limit-ico{font-size:1.5rem;flex-shrink:0}
+.paywall-limit-txt{text-align:left;font-size:12px;color:var(--muted2);line-height:1.5}
+.paywall-limit-txt strong{color:var(--text);display:block;margin-bottom:2px}
+.paywall-features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem;text-align:left}
+.paywall-feat{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--muted2)}
+.paywall-feat::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0}
+.paywall-price{margin-bottom:1.5rem}
+.paywall-price .price-val{font-family:"JetBrains Mono",monospace;font-size:2rem;font-weight:700;color:var(--gold)}
+.paywall-price .price-period{font-size:12px;color:var(--muted2)}
+.paywall-btn-go{width:100%;padding:13px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;font-family:"Space Grotesk",sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:opacity .2s;margin-bottom:10px}
+.paywall-btn-go:hover{opacity:.9}
+.paywall-btn-later{background:none;border:none;color:var(--muted2);font-size:12px;cursor:pointer;font-family:"Space Grotesk",sans-serif;transition:color .15s}
+.paywall-btn-later:hover{color:var(--text)}
+/* ══ DEMO BANNER ══ */
+.demo-banner{background:linear-gradient(135deg,rgba(75,150,255,0.1),rgba(157,113,255,0.1));border:1px solid rgba(75,150,255,0.3);border-radius:var(--rl);padding:.9rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.demo-banner-text{font-size:12px;color:var(--muted2)}.demo-banner-text strong{color:var(--blue)}
+/* ══ HEALTH SCORE ══ */
+.score-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.1rem 1.3rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap;transition:border-color .2s}
+.score-card:hover{border-color:var(--border2)}
+.score-ring{position:relative;width:72px;height:72px;flex-shrink:0}
+.score-ring svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:var(--bg4);stroke-width:6}
+.score-ring-fill{fill:none;stroke-width:6;stroke-linecap:round;transition:stroke-dashoffset .8s ease,stroke .4s}
+.score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;font-size:16px;font-weight:700}
+.score-info{flex:1;min-width:180px}
+.score-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2);margin-bottom:4px}
+.score-title{font-size:15px;font-weight:700;margin-bottom:4px}
+.score-desc{font-size:12px;color:var(--muted2);line-height:1.5}
+.score-items{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.score-item{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted2)}
+.score-item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+/* ══ PORTFOLIO SELECTOR ══ */
+.port-bar{display:flex;align-items:center;gap:8px;padding:.5rem .9rem;background:var(--bg2);border-bottom:1px solid var(--border);flex-shrink:0;flex-wrap:wrap}
+.port-btn{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;color:var(--muted2);background:transparent;border:1px solid var(--border);transition:all .15s;font-family:"Space Grotesk",sans-serif}
+.port-btn:hover{border-color:var(--border2);color:var(--text)}
+.port-btn.active{background:var(--gold);border-color:var(--gold);color:#000}
+.port-btn .port-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.port-add{background:none;border:1px dashed var(--border2);color:var(--muted2);padding:5px 12px;border-radius:99px;font-size:11px;cursor:pointer;font-family:"Space Grotesk",sans-serif;transition:all .15s}
+.port-add:hover{border-color:var(--gold);color:var(--gold)}
+.port-lock{font-size:10px;background:linear-gradient(135deg,rgba(245,166,35,0.15),rgba(168,85,247,0.15));border:1px solid rgba(245,166,35,0.3);color:var(--gold);padding:4px 10px;border-radius:99px;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-weight:600}
 /* ══ AD SLOT ══ */
 .ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--rl);padding:1.2rem;text-align:center;color:var(--muted);font-size:12px;margin-bottom:1rem;min-height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
 
@@ -710,7 +758,7 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
       <div class="sb-av" id="sb-av">?</div>
       <div style="flex:1;min-width:0">
         <div class="sb-uname" id="sb-uname">...</div>
-        <div class="sb-uplan">Plano Gratuito</div>
+        <div class="sb-uplan" id="sb-uplan">Plano Gratuito</div>
       </div>
       <span style="color:var(--muted2);font-size:11px">⌄</span>
     </div>
@@ -742,6 +790,14 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
     </div>
   </div>
 
+  <!-- PORTFOLIO SELECTOR BAR -->
+  <div class="port-bar" id="port-bar">
+    <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted2)">Portfólio:</span>
+    <div id="port-tabs" style="display:flex;gap:6px;flex-wrap:wrap"></div>
+    <button class="port-add" id="port-add-btn" onclick="portAdd()">+ Novo</button>
+    <span id="port-plan-lbl" style="margin-left:auto"></span>
+  </div>
+
   <!-- MARKET TICKER -->
   <div class="market-ticker" id="market-ticker-bar">
     <div class="ticker-track" id="ticker-track"></div>
@@ -755,18 +811,36 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
       <div class="ph"><div><h1>Dashboard</h1><p>Visão consolidada de todos os seus investimentos</p></div>
         <div class="ph-r"><button class="btn btn-ghost btn-sm" onclick="renderGeral()">↺ Atualizar</button><button class="btn btn-gold btn-sm" onclick="openCfgModal()">⚙ Metas</button></div>
       </div>
-      <div class="ad-slot"><span style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)">Espaço publicitário — Google AdSense 728×90</span></div>
-      <!-- UPGRADE BANNER -->
-      <div id="upgrade-banner" style="background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(168,85,247,0.08));border:1px solid rgba(245,166,35,0.2);border-radius:var(--rl);padding:1rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-        <div style="display:flex;align-items:center;gap:12px">
-          <span style="font-size:1.5rem">🚀</span>
-          <div>
-            <div style="font-size:13px;font-weight:700">Quer portfólio ilimitado + estratégias avançadas?</div>
-            <div style="font-size:12px;color:var(--muted2)">Plano PRO por apenas <b style="color:var(--gold)">R$ 9,99/mês</b> — HOLD, DEFI e TRADE ilimitados</div>
-          </div>
+
+      <!-- DEMO BANNER (shown when portfolio is empty) -->
+      <div class="demo-banner" id="demo-banner" style="display:none">
+        <div class="demo-banner-text">
+          <strong>👋 Portfólio de exemplo ativo</strong> — você está vendo dados fictícios para explorar o app.
+          <span style="color:var(--muted2)"> Adicione seus próprios ativos para começar.</span>
         </div>
-        <button onclick="window.open('planos.html','_blank')" style="background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border:none;border-radius:var(--r);padding:9px 20px;font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Ver planos ⚡</button>
+        <div style="display:flex;gap:8px">
+          <button onclick="demoUseReal()" class="btn btn-gold btn-sm">Usar meu portfólio</button>
+          <button onclick="document.getElementById('demo-banner').style.display='none'" class="btn btn-ghost btn-sm">✕</button>
+        </div>
       </div>
+
+      <!-- HEALTH SCORE -->
+      <div class="score-card" id="health-score-card">
+        <div class="score-ring">
+          <svg width="72" height="72" viewBox="0 0 72 72">
+            <circle class="score-ring-bg" cx="36" cy="36" r="30"/>
+            <circle class="score-ring-fill" id="score-ring-fill" cx="36" cy="36" r="30" stroke-dasharray="188.5" stroke-dashoffset="188.5"/>
+          </svg>
+          <div class="score-num" id="score-num" style="color:var(--muted2)">—</div>
+        </div>
+        <div class="score-info">
+          <div class="score-label">Saúde da Carteira</div>
+          <div class="score-title" id="score-title">Adicione ativos para ver seu score</div>
+          <div class="score-desc" id="score-desc">O score analisa diversificação, balanceamento e consistência da sua carteira.</div>
+          <div class="score-items" id="score-items"></div>
+        </div>
+      </div>
+
       <!-- TOP GAINERS / LOSERS -->
       <div class="gl-grid" id="gl-section">
         <div class="gl-card">
@@ -1441,6 +1515,36 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
   </div>
 </div>
 
+<!-- PAYWALL MODAL -->
+<div class="paywall-overlay" id="paywall-overlay">
+  <div class="paywall-box">
+    <div class="paywall-icon">🚀</div>
+    <div class="paywall-title" id="paywall-title">Limite do plano gratuito</div>
+    <div class="paywall-sub" id="paywall-sub">Você atingiu o limite de ativos do plano gratuito.</div>
+    <div class="paywall-limit">
+      <div class="paywall-limit-ico" id="paywall-limit-ico">🔒</div>
+      <div class="paywall-limit-txt">
+        <strong id="paywall-limit-title">Limite atingido</strong>
+        <span id="paywall-limit-desc">Faça upgrade para continuar adicionando.</span>
+      </div>
+    </div>
+    <div class="paywall-features">
+      <div class="paywall-feat">Ativos HOLD ilimitados</div>
+      <div class="paywall-feat">Pools DeFi ilimitadas</div>
+      <div class="paywall-feat">Trades ilimitados</div>
+      <div class="paywall-feat">Portfólios ilimitados</div>
+      <div class="paywall-feat">Estratégia Avançada</div>
+      <div class="paywall-feat">Exportação PDF</div>
+    </div>
+    <div class="paywall-price">
+      <span class="price-val">R$ 9,99</span>
+      <span class="price-period">/mês · cancele quando quiser</span>
+    </div>
+    <button class="paywall-btn-go" onclick="paywallGo()">⚡ Fazer upgrade agora</button>
+    <button class="paywall-btn-later" onclick="paywallClose()">Continuar no plano gratuito</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 <script>
 // ══ FIREBASE CONFIG ══
@@ -1571,6 +1675,16 @@ document.getElementById('htr-price').addEventListener('input',function(){var q=p
 
 function salvarHold(){
   if(holdTab==='transfer'){salvarHoldTransfer();return;}
+  // ── PAYWALL CHECK ──
+  var isNewTicker = holdSelCoin==='_new_';
+  if(isNewTicker && !IS_PRO) {
+    var existingTickers = Object.keys(st.hold.ativos);
+    var newTick = (document.getElementById('hn-ticker').value||'').trim().toUpperCase();
+    if(!st.hold.ativos[newTick] && existingTickers.length >= 3) {
+      paywallShow('hold');
+      return;
+    }
+  }
   var ticker,name,rank,cap,color;
   if(holdSelCoin==='_new_'){ ticker=(document.getElementById('hn-ticker').value||'').trim().toUpperCase(); name=(document.getElementById('hn-name').value||'').trim()||ticker; rank=parseInt(document.getElementById('hn-rank').value)||999; cap=(document.getElementById('hn-cap').value||'').trim()||'—'; color=document.getElementById('hn-color').value||'#4b96ff'; if(!ticker){toast('Informe o símbolo.','err');return;} }
   else if(holdSelCoin&&st.hold.ativos[holdSelCoin]){ var a=st.hold.ativos[holdSelCoin];ticker=a.ticker;name=a.name;rank=a.rank;cap=a.cap;color=a.color; }
@@ -1615,6 +1729,11 @@ function dGetLucroAtivas(){return st.defi.ativas.reduce(function(s,p){return s+(
 function dGetLucroHist(){return st.defi.historico.reduce(function(s,p){return s+p.lucroFinal;},0);}
 function toggleDefiForm(){var f=document.getElementById('defi-form-card');f.style.display=f.style.display==='none'?'block':'none';if(f.style.display==='block')document.getElementById('df-data').value=hoje();}
 function addPool(){
+  // ── PAYWALL CHECK ──
+  if(!IS_PRO && st.defi.ativas.length >= 3) {
+    paywallShow('defi');
+    return;
+  }
   var par=(document.getElementById('df-par').value||'').trim().toUpperCase();
   var inv=parseFloat(document.getElementById('df-inv').value)||0;
   var bal=parseFloat(document.getElementById('df-bal').value);
@@ -1662,7 +1781,14 @@ function tGetBancaAtual(){return tGetBancaIni()+tGetLucro();}
 function openTradeModal(){document.getElementById('tm-tipo').value='win';document.getElementById('tm-ativo').value='';document.getElementById('tm-valor').value='';document.getElementById('tm-data').value=hoje();document.getElementById('tm-notes').value='';document.getElementById('trade-overlay').classList.add('open');}
 function closeTradeModal(){document.getElementById('trade-overlay').classList.remove('open');}
 document.getElementById('trade-overlay').addEventListener('click',function(e){if(e.target===this)closeTradeModal();});
-function salvarTrade(){var tipo=document.getElementById('tm-tipo').value;var ativo=(document.getElementById('tm-ativo').value||'').trim();var raw=parseFloat(document.getElementById('tm-valor').value);var data=document.getElementById('tm-data').value.trim()||hoje();var notes=(document.getElementById('tm-notes').value||'').trim();if(isNaN(raw)||raw<=0){toast('Informe um valor.','err');return;}var valor=tipo==='win'?Math.abs(raw):tipo==='aporte'?Math.abs(raw):-Math.abs(raw);st.trade.eventos.push({id:Date.now(),tipo:tipo,ativo:ativo,valor:valor,data:data,notes:notes});save();renderAll();closeTradeModal();toast('Registro salvo!','ok');}
+function salvarTrade(){
+  // ── PAYWALL CHECK ──
+  var trades=st.trade.eventos.filter(function(e){return e.tipo==='win'||e.tipo==='loss';});
+  if(!IS_PRO && trades.length >= 10) {
+    paywallShow('trade');
+    return;
+  }
+  var tipo=document.getElementById('tm-tipo').value;var ativo=(document.getElementById('tm-ativo').value||'').trim();var raw=parseFloat(document.getElementById('tm-valor').value);var data=document.getElementById('tm-data').value.trim()||hoje();var notes=(document.getElementById('tm-notes').value||'').trim();if(isNaN(raw)||raw<=0){toast('Informe um valor.','err');return;}var valor=tipo==='win'?Math.abs(raw):tipo==='aporte'?Math.abs(raw):-Math.abs(raw);st.trade.eventos.push({id:Date.now(),tipo:tipo,ativo:ativo,valor:valor,data:data,notes:notes});save();renderAll();closeTradeModal();toast('Registro salvo!','ok');}
 function tRemover(id){if(!confirm('Remover?'))return;st.trade.eventos=st.trade.eventos.filter(function(e){return e.id!==id;});save();renderAll();}
 </script>
 <script>
@@ -2761,12 +2887,463 @@ function jFetchCotacoes(){
   _jCotTimer=setInterval(jFetchCotacoes,60000);
 }
 
+// ══════════════════════════════════════
+//  PAYWALL CONTEXTUAL
+// ══════════════════════════════════════
+
+// Limites do plano gratuito
+var FREE_LIMITS = {
+  hold: 3,   // ativos únicos em HOLD
+  defi: 3,   // pools DeFi ativas
+  trade: 10  // trades registrados
+};
+
+function paywallShow(context) {
+  var configs = {
+    hold: {
+      icon: '💎',
+      title: 'Limite de ativos atingido',
+      sub: 'O plano gratuito permite até ' + FREE_LIMITS.hold + ' ativos diferentes no HOLD.',
+      limitIco: '📊',
+      limitTitle: FREE_LIMITS.hold + ' ativos no HOLD (plano gratuito)',
+      limitDesc: 'Você já tem ' + Object.keys(st.hold.ativos).length + ' ativos. Faça upgrade para adicionar ilimitados.'
+    },
+    defi: {
+      icon: '🌊',
+      title: 'Limite de pools atingido',
+      sub: 'O plano gratuito permite até ' + FREE_LIMITS.defi + ' pools DeFi ativas simultâneas.',
+      limitIco: '🏊',
+      limitTitle: FREE_LIMITS.defi + ' pools DeFi (plano gratuito)',
+      limitDesc: 'Você já tem ' + st.defi.ativas.length + ' pools ativas. Faça upgrade para gerenciar ilimitadas.'
+    },
+    trade: {
+      icon: '⚡',
+      title: 'Limite de trades atingido',
+      sub: 'O plano gratuito permite registrar até ' + FREE_LIMITS.trade + ' trades.',
+      limitIco: '📈',
+      limitTitle: FREE_LIMITS.trade + ' trades registrados (plano gratuito)',
+      limitDesc: 'Você registrou ' + st.trade.eventos.filter(function(e){return e.tipo==='win'||e.tipo==='loss';}).length + ' trades. Faça upgrade para ilimitados.'
+    }
+  };
+
+  var cfg = configs[context] || configs.hold;
+
+  document.getElementById('paywall-icon').textContent = cfg.icon;
+  document.getElementById('paywall-title').textContent = cfg.title;
+  document.getElementById('paywall-sub').textContent = cfg.sub;
+  document.getElementById('paywall-limit-ico').textContent = cfg.limitIco;
+  document.getElementById('paywall-limit-title').textContent = cfg.limitTitle;
+  document.getElementById('paywall-limit-desc').textContent = cfg.limitDesc;
+  document.getElementById('paywall-overlay').classList.add('open');
+
+  // Close any open modal behind
+  document.getElementById('hold-overlay').classList.remove('open');
+  document.getElementById('trade-overlay').classList.remove('open');
+  var df = document.getElementById('defi-form-card');
+  if (df) df.style.display = 'none';
+}
+
+function paywallClose() {
+  document.getElementById('paywall-overlay').classList.remove('open');
+}
+
+function paywallGo() {
+  paywallClose();
+  window.open('planos.html', '_blank');
+}
+
+// Close on backdrop click
+document.getElementById('paywall-overlay').addEventListener('click', function(e) {
+  if (e.target === this) paywallClose();
+});
+
+// ══ Update sb-uplan label based on IS_PRO ══
+function _updatePlanLabel() {
+  var el = document.getElementById('sb-uplan');
+  if (!el) return;
+  el.textContent = IS_PRO ? '✨ Plano PRO' : 'Plano Gratuito';
+  el.style.color = IS_PRO ? 'var(--gold)' : '';
+}
+
+// ══ Show contextual nudge on HOLD page when at 3/3 ativos ══
+function _checkHoldNudge() {
+  if (IS_PRO) return;
+  var count = Object.keys(st.hold.ativos).length;
+  var existing = document.getElementById('hold-free-nudge');
+  if (count >= FREE_LIMITS.hold) {
+    if (!existing) {
+      var nudge = document.createElement('div');
+      nudge.id = 'hold-free-nudge';
+      nudge.style.cssText = 'background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(168,85,247,0.08));border:1px solid rgba(245,166,35,0.25);border-radius:var(--rl);padding:.8rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap';
+      nudge.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.2rem">🔒</span><div><div style="font-size:12px;font-weight:700">Você atingiu o limite de ' + FREE_LIMITS.hold + ' ativos (plano gratuito)</div><div style="font-size:11px;color:var(--muted2)">Faça upgrade para HOLD ilimitado</div></div></div>'
+        + '<button onclick="paywallShow('hold')" style="background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border:none;border-radius:var(--r);padding:7px 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Upgrade ⚡</button>';
+      var ph = document.querySelector('#page-hold .ph');
+      if (ph && ph.parentNode) ph.parentNode.insertBefore(nudge, ph.nextSibling);
+    }
+  } else {
+    if (existing) existing.remove();
+  }
+}
+
+function _checkDefiNudge() {
+  if (IS_PRO) return;
+  var count = st.defi.ativas.length;
+  var existing = document.getElementById('defi-free-nudge');
+  if (count >= FREE_LIMITS.defi) {
+    if (!existing) {
+      var nudge = document.createElement('div');
+      nudge.id = 'defi-free-nudge';
+      nudge.style.cssText = 'background:linear-gradient(135deg,rgba(0,210,170,0.06),rgba(168,85,247,0.06));border:1px solid rgba(0,210,170,0.2);border-radius:var(--rl);padding:.8rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap';
+      nudge.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.2rem">🌊</span><div><div style="font-size:12px;font-weight:700">Limite de ' + FREE_LIMITS.defi + ' pools DeFi ativas (plano gratuito)</div><div style="font-size:11px;color:var(--muted2)">Faça upgrade para pools ilimitadas</div></div></div>'
+        + '<button onclick="paywallShow('defi')" style="background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border:none;border-radius:var(--r);padding:7px 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Upgrade ⚡</button>';
+      var ph = document.querySelector('#page-defi .ph');
+      if (ph && ph.parentNode) ph.parentNode.insertBefore(nudge, ph.nextSibling);
+    }
+  } else {
+    if (existing) existing.remove();
+  }
+}
+
+function _checkTradeNudge() {
+  if (IS_PRO) return;
+  var trades = st.trade.eventos.filter(function(e){return e.tipo==='win'||e.tipo==='loss';}).length;
+  var existing = document.getElementById('trade-free-nudge');
+  if (trades >= FREE_LIMITS.trade) {
+    if (!existing) {
+      var nudge = document.createElement('div');
+      nudge.id = 'trade-free-nudge';
+      nudge.style.cssText = 'background:linear-gradient(135deg,rgba(245,166,35,0.06),rgba(168,85,247,0.06));border:1px solid rgba(245,166,35,0.2);border-radius:var(--rl);padding:.8rem 1.1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap';
+      nudge.innerHTML = '<div style="display:flex;align-items:center;gap:10px"><span style="font-size:1.2rem">⚡</span><div><div style="font-size:12px;font-weight:700">Limite de ' + FREE_LIMITS.trade + ' trades (plano gratuito)</div><div style="font-size:11px;color:var(--muted2)">Faça upgrade para trades ilimitados</div></div></div>'
+        + '<button onclick="paywallShow('trade')" style="background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border:none;border-radius:var(--r);padding:7px 16px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">Upgrade ⚡</button>';
+      var ph = document.querySelector('#trade-sub-meu .ph');
+      if (ph && ph.parentNode) ph.parentNode.insertBefore(nudge, ph.nextSibling);
+    }
+  } else {
+    if (existing) existing.remove();
+  }
+}
+
+// Hook into renderAll to always check nudges
+var _origRenderAll = renderAll;
+renderAll = function() {
+  _origRenderAll();
+  _updatePlanLabel();
+  setTimeout(function() {
+    _checkHoldNudge();
+    _checkDefiNudge();
+    _checkTradeNudge();
+  }, 50);
+};
+
+// Init
+_updatePlanLabel();
+
 updateDate();
 bancasLoad();
 document.getElementById('fData').value = todayStr();
 setExchange('BINGX');
 setType('trade');
 bancasRender();
+
+// ══════════════════════════════════════
+//  MÚLTIPLOS PORTFÓLIOS
+// ══════════════════════════════════════
+var MAX_PORTS_FREE = 2;
+var IS_PRO = false; // troque para true quando integrar pagamento
+
+// Estrutura: portfolios = { id: {name, data} }
+// activePortId = id do portfólio ativo
+var _ports = {};
+var _activePortId = 'default';
+
+function _portLoad() {
+  try {
+    var raw = localStorage.getItem('ct_portfolios');
+    if (raw) {
+      var saved = JSON.parse(raw);
+      _ports = saved.ports || {};
+      _activePortId = saved.active || 'default';
+    }
+  } catch(e) {}
+  // Garante portfólio default
+  if (!_ports['default']) {
+    _ports['default'] = { name: 'Principal', data: null };
+  }
+}
+
+function _portSave() {
+  try {
+    localStorage.setItem('ct_portfolios', JSON.stringify({
+      ports: _ports,
+      active: _activePortId
+    }));
+  } catch(e) {}
+}
+
+function _portSwitch(id) {
+  // Salva estado atual no portfólio ativo
+  _ports[_activePortId].data = JSON.stringify(st);
+  _portSave();
+  // Carrega novo portfólio
+  _activePortId = id;
+  if (_ports[id] && _ports[id].data) {
+    try { st = JSON.parse(_ports[id].data); } catch(e) {}
+  } else {
+    // Portfólio vazio — reset
+    st = { config:{meta:50000,pHold:10,pDefi:10,pTrade:70,pCaixa:10}, hold:{ativos:{},txns:[],transfers:[]}, defi:{ativas:[],historico:[]}, trade:{eventos:[]}, favoritos:[], alertas:[] };
+  }
+  _portRenderBar();
+  renderAll();
+  // Verifica se precisa mostrar demo
+  _checkShowDemo();
+}
+
+function portAdd() {
+  var portCount = Object.keys(_ports).length;
+  if (!IS_PRO && portCount >= MAX_PORTS_FREE) {
+    // Mostra paywall
+    if (confirm('O plano gratuito permite até ' + MAX_PORTS_FREE + ' portfólios.
+
+Faça upgrade para o PRO e tenha portfólios ilimitados!
+
+Ir para planos?')) {
+      window.open('planos.html', '_blank');
+    }
+    return;
+  }
+  var name = prompt('Nome do novo portfólio (ex: DeFi Focus, Long Term):');
+  if (!name || !name.trim()) return;
+  var id = 'port_' + Date.now();
+  _ports[id] = { name: name.trim(), data: null };
+  _portSave();
+  _portSwitch(id);
+}
+
+function portRename(id) {
+  var current = _ports[id] ? _ports[id].name : '';
+  var name = prompt('Novo nome do portfólio:', current);
+  if (!name || !name.trim()) return;
+  _ports[id].name = name.trim();
+  _portSave();
+  _portRenderBar();
+}
+
+function portDelete(id) {
+  if (id === 'default') { toast('Não é possível excluir o portfólio principal.', 'err'); return; }
+  if (!confirm('Excluir portfólio "' + (_ports[id]&&_ports[id].name) + '"? Todos os dados serão perdidos.')) return;
+  delete _ports[id];
+  _portSave();
+  _portSwitch('default');
+}
+
+function _portRenderBar() {
+  var tabs = document.getElementById('port-tabs');
+  if (!tabs) return;
+  var colors = ['var(--gold)', 'var(--blue)', 'var(--defi)', 'var(--purple)', 'var(--green)'];
+  var ids = Object.keys(_ports);
+  tabs.innerHTML = ids.map(function(id, i) {
+    var p = _ports[id];
+    var isActive = id === _activePortId;
+    return '<div class="port-btn' + (isActive ? ' active' : '') + '" onclick="_portSwitch('' + id + '')" title="Clique duplo para renomear" ondblclick="portRename('' + id + '')">'
+      + (isActive ? '' : '<span class="port-dot" style="background:' + colors[i % colors.length] + '"></span>')
+      + p.name
+      + (id !== 'default' && isActive ? '<span onclick="event.stopPropagation();portDelete('' + id + '')" style="margin-left:6px;opacity:.5;font-size:11px;cursor:pointer" title="Excluir">✕</span>' : '')
+      + '</div>';
+  }).join('');
+  // Plan label
+  var lbl = document.getElementById('port-plan-lbl');
+  if (lbl) {
+    var count = ids.length;
+    if (IS_PRO) {
+      lbl.innerHTML = '<span style="font-size:10px;background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border-radius:99px;padding:2px 8px;font-weight:800">PRO · Ilimitado</span>';
+    } else {
+      lbl.innerHTML = '<span class="port-lock" onclick="window.open('planos.html','_blank')">' + count + '/' + MAX_PORTS_FREE + ' · Upgrade ⚡</span>';
+    }
+  }
+}
+
+// ══════════════════════════════════════
+//  PORTFÓLIO DEMO
+// ══════════════════════════════════════
+var _DEMO_DATA = {
+  config:{meta:50000,pHold:40,pDefi:30,pTrade:20,pCaixa:10},
+  hold:{
+    ativos:{
+      'BTC':{name:'Bitcoin',ticker:'BTC',rank:1,cap:'$1.2T',color:'#f7931a',precoAtual:67500,txns:[{id:1,tipo:'buy',ticker:'BTC',qty:0.15,price:42000,date:'2024-01-15',notes:''}]},
+      'ETH':{name:'Ethereum',ticker:'ETH',rank:2,cap:'$400B',color:'#627eea',precoAtual:3200,txns:[{id:2,tipo:'buy',ticker:'ETH',qty:2.5,price:2200,date:'2024-02-10',notes:''}]},
+      'SOL':{name:'Solana',ticker:'SOL',rank:5,cap:'$80B',color:'#9945ff',precoAtual:185,txns:[{id:3,tipo:'buy',ticker:'SOL',qty:12,price:95,date:'2024-03-01',notes:''}]}
+    },
+    txns:[],transfers:[]
+  },
+  defi:{
+    ativas:[{id:9001,par:'BTC-USDC',prot:'Uniswap',inv:1200,costBasis:1200,bal:1410,taxPend:85,taxCol:120,precoAtual:67500,rangeMin:60000,rangeMax:75000,data:'15/01/24',logs:[]}],
+    historico:[{id:9002,par:'ETH-USDT',prot:'Curve',inv:800,costBasis:800,balFinal:950,taxColFinal:65,lucroFinal:215,data:'01/11/23',dataSaida:'15/01/24',diasTotal:75}]
+  },
+  trade:{eventos:[
+    {id:8001,tipo:'aporte',ativo:'',valor:500,data:'01/01/24',notes:'Banca inicial'},
+    {id:8002,tipo:'win',ativo:'BTC',valor:120,data:'10/01/24',notes:''},
+    {id:8003,tipo:'win',ativo:'ETH',valor:85,data:'20/01/24',notes:''},
+    {id:8004,tipo:'loss',ativo:'SOL',valor:-45,data:'05/02/24',notes:''},
+    {id:8005,tipo:'win',ativo:'BTC',valor:200,data:'15/02/24',notes:''}
+  ]},
+  favoritos:[{sym:'BTC',name:'Bitcoin',preco:67500,change24h:2.4},{sym:'ETH',name:'Ethereum',preco:3200,change24h:-0.8}],
+  alertas:[]
+};
+var _isDemo = false;
+
+function _checkShowDemo() {
+  var hasData = Object.keys(st.hold.ativos).length > 0
+    || st.defi.ativas.length > 0
+    || st.trade.eventos.length > 0;
+  var banner = document.getElementById('demo-banner');
+  if (!hasData && !_isDemo) {
+    // Ativa demo automaticamente
+    _isDemo = true;
+    var realSt = JSON.stringify(st);
+    st = JSON.parse(JSON.stringify(_DEMO_DATA));
+    if (banner) banner.style.display = '';
+    renderAll();
+    // Guarda estado real para restaurar
+    window._realStBackup = realSt;
+  } else if (hasData || _isDemo) {
+    // Tem dados reais
+    if (banner && !_isDemo) banner.style.display = 'none';
+  }
+}
+
+function demoUseReal() {
+  _isDemo = false;
+  if (window._realStBackup) {
+    try { st = JSON.parse(window._realStBackup); } catch(e) {
+      st = { config:{meta:50000,pHold:10,pDefi:10,pTrade:70,pCaixa:10}, hold:{ativos:{},txns:[],transfers:[]}, defi:{ativas:[],historico:[]}, trade:{eventos:[]}, favoritos:[], alertas:[] };
+    }
+  }
+  var banner = document.getElementById('demo-banner');
+  if (banner) banner.style.display = 'none';
+  renderAll();
+}
+
+// ══════════════════════════════════════
+//  SCORE DE SAÚDE DA CARTEIRA
+// ══════════════════════════════════════
+function calcHealthScore() {
+  var hT = hGetPortTotal(), dT = dGetTotal(), tT = tGetBancaAtual();
+  var total = hT + dT + tT;
+  if (total <= 0) {
+    document.getElementById('score-num').textContent = '—';
+    document.getElementById('score-title').textContent = 'Adicione ativos para ver seu score';
+    document.getElementById('score-desc').textContent = 'O score analisa diversificação, balanceamento e consistência da sua carteira.';
+    document.getElementById('score-items').innerHTML = '';
+    var fill = document.getElementById('score-ring-fill');
+    if (fill) { fill.style.strokeDashoffset = '188.5'; fill.style.stroke = 'var(--muted)'; }
+    document.getElementById('score-num').style.color = 'var(--muted2)';
+    return;
+  }
+
+  var score = 0;
+  var checks = [];
+
+  // 1. Diversificação: quantos ativos em HOLD (max 25pts)
+  var nAtivos = Object.keys(st.hold.ativos).length;
+  var divScore = Math.min(25, nAtivos * 8);
+  score += divScore;
+  checks.push({ label: 'Diversificação', ok: nAtivos >= 3, txt: nAtivos + ' ativo(s) em HOLD' });
+
+  // 2. Balanceamento entre segmentos (max 25pts)
+  var cfg = st.config;
+  var pHReal = total > 0 ? hT / total * 100 : 0;
+  var pDReal = total > 0 ? dT / total * 100 : 0;
+  var pTReal = total > 0 ? tT / total * 100 : 0;
+  var diffH = Math.abs(pHReal - cfg.pHold);
+  var diffD = Math.abs(pDReal - cfg.pDefi);
+  var diffT = Math.abs(pTReal - cfg.pTrade);
+  var avgDiff = (diffH + diffD + diffT) / 3;
+  var balScore = Math.max(0, 25 - avgDiff);
+  score += balScore;
+  checks.push({ label: 'Balanceamento', ok: avgDiff < 10, txt: avgDiff < 10 ? 'Próximo das metas' : 'Desbalanceado (' + avgDiff.toFixed(0) + '% de desvio)' });
+
+  // 3. DeFi ativo (max 20pts)
+  var nPools = st.defi.ativas.length;
+  var defiScore = nPools > 0 ? Math.min(20, nPools * 10) : 0;
+  score += defiScore;
+  checks.push({ label: 'DeFi', ok: nPools > 0, txt: nPools > 0 ? nPools + ' pool(s) ativa(s)' : 'Nenhuma pool ativa' });
+
+  // 4. Trade positivo (max 15pts)
+  var lucroTrade = tGetLucro();
+  var tradeScore = lucroTrade > 0 ? 15 : lucroTrade === 0 ? 7 : 0;
+  score += tradeScore;
+  checks.push({ label: 'Trade', ok: lucroTrade >= 0, txt: lucroTrade >= 0 ? 'Saldo positivo' : 'Saldo negativo' });
+
+  // 5. Meta definida (max 15pts)
+  var metaScore = cfg.meta > 0 && total > 0 ? Math.min(15, (total / cfg.meta) * 15) : 0;
+  score += metaScore;
+  checks.push({ label: 'Progresso', ok: total / cfg.meta >= 0.1, txt: (cfg.meta > 0 ? (total / cfg.meta * 100).toFixed(1) : 0) + '% da meta atingida' });
+
+  score = Math.round(Math.min(100, score));
+
+  // Cor e label
+  var color, label;
+  if (score >= 80) { color = 'var(--green)'; label = 'Excelente 🏆'; }
+  else if (score >= 60) { color = 'var(--gold)'; label = 'Boa 👍'; }
+  else if (score >= 40) { color = '#ff9f1c'; label = 'Regular ⚠️'; }
+  else { color = 'var(--red)'; label = 'Atenção ❗'; }
+
+  // Atualiza ring
+  var circumference = 188.5;
+  var offset = circumference - (score / 100) * circumference;
+  var fill = document.getElementById('score-ring-fill');
+  if (fill) { fill.style.strokeDashoffset = offset; fill.style.stroke = color; }
+  var numEl = document.getElementById('score-num');
+  if (numEl) { numEl.textContent = score; numEl.style.color = color; }
+  document.getElementById('score-title').textContent = label;
+  document.getElementById('score-desc').textContent = 'Score calculado com base em ' + nAtivos + ' ativo(s), ' + nPools + ' pool(s) e histórico de trades.';
+  document.getElementById('score-items').innerHTML = checks.map(function(c) {
+    return '<div class="score-item">'
+      + '<div class="score-item-dot" style="background:' + (c.ok ? 'var(--green)' : 'var(--red)') + '"></div>'
+      + c.label + ': <span style="color:var(--text)">' + c.txt + '</span></div>';
+  }).join('');
+}
+
+// ══ Hook renderGeral to also run score + demo check ══
+var _origRenderGeral2 = renderGeral;
+renderGeral = function() {
+  _origRenderGeral2();
+  calcHealthScore();
+};
+
+// ══ Init portfolios on login ══
+var _origOnLoginSuccess = onLoginSuccess;
+onLoginSuccess = function() {
+  _portLoad();
+  // Carrega dados do portfólio ativo no st
+  if (_ports[_activePortId] && _ports[_activePortId].data) {
+    try { st = JSON.parse(_ports[_activePortId].data); } catch(e) {}
+  }
+  _portRenderBar();
+  document.getElementById('login-screen').classList.add('hidden');
+  var name = currentUser.displayName || currentUser.email || 'Usuário';
+  document.getElementById('sb-av').textContent = name.slice(0, 2).toUpperCase();
+  document.getElementById('sb-uname').textContent = currentUser.email || name;
+  var ce = document.getElementById('cfg-email'); if (ce) ce.textContent = currentUser.email || name;
+  loadFS(function() {
+    // Depois de carregar do Firebase, salva no portfólio ativo e verifica demo
+    _ports[_activePortId].data = JSON.stringify(st);
+    _portSave();
+    renderAll();
+    initBgCanvas();
+    carregarNoticias();
+    iniciarMonitorAlertas();
+    setTimeout(_checkShowDemo, 300);
+  });
+};
+
+// ══ Hook save() to also persist portfolio ══
+var _origSave = save;
+save = function() {
+  _origSave();
+  _ports[_activePortId].data = JSON.stringify(st);
+  _portSave();
+};
 
 // ══ MARKET TICKER ══
 var _tickerData=[];
