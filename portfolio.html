@@ -694,6 +694,10 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
       Continuar com Google
     </button>
     <div class="login-footer">Ao criar conta você aceita nossos <a onclick="showTerms()">Termos</a> e <a onclick="showPrivacy()">Privacidade</a></div>
+  <div style="margin-top:1.5rem;padding-top:1.2rem;border-top:1px solid var(--border);text-align:center">
+    <button onclick="entrarComoVisitante()" style="background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;font-family:'Space Grotesk',sans-serif;transition:color .15s" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--muted2)'">Continuar sem login →</button>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px">Acesse o portfólio de exemplo. Seus dados não serão salvos.</div>
+  </div>
   </div>
 </div>
 
@@ -737,7 +741,7 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
     </div>
   </div>
   <div class="sb-footer">
-    <div class="sb-user" onclick="toggleSbMenu()">
+    <div class="sb-user" id="sb-user-area" onclick="toggleSbMenu()">
       <div class="sb-av" id="sb-av">?</div>
       <div style="flex:1;min-width:0">
         <div class="sb-uname" id="sb-uname">...</div>
@@ -1526,7 +1530,35 @@ try{ firebase.initializeApp(FIREBASE_CONFIG); auth=firebase.auth(); db2=firebase
 // ══ STATE ══
 var SK='ct_v4';
 var st={ config:{meta:50000,pHold:10,pDefi:10,pTrade:70,pCaixa:10}, hold:{ativos:{},txns:[],transfers:[]}, defi:{ativas:[],historico:[]}, trade:{eventos:[]}, favoritos:[], alertas:[] };
-function save(){ try{localStorage.setItem('ct_local',JSON.stringify(st));}catch(e){} setSS('sync'); if(syncTO)clearTimeout(syncTO); syncTO=setTimeout(syncFS,1500); }
+function save(){
+  if(_isVisitor && !currentUser){
+    // Show soft nudge instead of blocking
+    _showSaveNudge();
+    return;
+  }
+  try{localStorage.setItem('ct_local',JSON.stringify(st));}catch(e){}
+  setSS('sync');
+  if(syncTO)clearTimeout(syncTO);
+  syncTO=setTimeout(syncFS,1500);
+}
+
+var _nudgeShown = false;
+function _showSaveNudge(){
+  if(_nudgeShown) return;
+  _nudgeShown = true;
+  // Show toast with login CTA
+  var t = document.getElementById('toast');
+  if(t){
+    t.textContent = '';
+    t.innerHTML = '🔒 Crie uma conta gratuita para salvar seus dados. <span onclick="mostrarLogin()" style="color:var(--gold);cursor:pointer;font-weight:700;text-decoration:underline">Entrar agora</span>';
+    t.className = 'toast show';
+    t.style.background = 'var(--bg3)';
+    t.style.border = '1px solid rgba(245,166,35,.3)';
+    t.style.color = 'var(--text)';
+    t.style.maxWidth = '360px';
+    setTimeout(function(){t.classList.remove('show');_nudgeShown=false;t.style='';},5000);
+  }
+}
 function loadLocal(){ try{var r=localStorage.getItem('ct_local');if(r)st=JSON.parse(r);}catch(e){} }
 function syncFS(){ if(DEMO_MODE||!currentUser||!db2){setSS('off');return;} db2.collection('usuarios').doc(currentUser.uid).set({data:JSON.stringify(st),updatedAt:firebase.firestore.FieldValue.serverTimestamp()}).then(function(){setSS('ok');}).catch(function(){setSS('off');}); }
 function loadFS(cb){ if(DEMO_MODE||!currentUser||!db2){loadLocal();setSS('off');if(cb)cb();return;} setSS('sync'); db2.collection('usuarios').doc(currentUser.uid).get().then(function(doc){ if(doc.exists&&doc.data().data){try{st=JSON.parse(doc.data().data);}catch(e){}} else{loadLocal();syncFS();} setSS('ok');if(cb)cb(); }).catch(function(){loadLocal();setSS('off');if(cb)cb();}); }
@@ -1572,6 +1604,7 @@ function authAction(){
 function loginGoogle(){ if(DEMO_MODE){toast('Google não disponível no modo demo.','err');return;} auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){document.getElementById('l-err').textContent='Erro: '+e.message;}); }
 function logOut(){ if(DEMO_MODE){currentUser=null;document.getElementById('login-screen').classList.remove('hidden');return;} auth.signOut(); }
 function onLoginSuccess(){
+  _isVisitor = false;
   document.getElementById('login-screen').classList.add('hidden');
   var name=currentUser.displayName||currentUser.email||'Usuário';
   document.getElementById('sb-av').textContent=name.slice(0,2).toUpperCase();
@@ -1579,7 +1612,52 @@ function onLoginSuccess(){
   var ce=document.getElementById('cfg-email'); if(ce) ce.textContent=currentUser.email||name;
   loadFS(function(){ renderAll(); initBgCanvas(); carregarNoticias(); iniciarMonitorAlertas(); });
 }
-if(!DEMO_MODE){ auth.onAuthStateChanged(function(user){ if(user){currentUser=user;onLoginSuccess();}else{document.getElementById('login-screen').classList.remove('hidden');} }); } else { document.getElementById('login-screen').classList.remove('hidden'); }
+// Visitor mode functions
+function entrarComoVisitante(){
+  document.getElementById('login-screen').classList.add('hidden');
+  currentUser = null;
+  _isVisitor = true;
+  loadLocal();
+  renderAll();
+  initBgCanvas();
+  carregarNoticias();
+  iniciarMonitorAlertas();
+  _checkShowDemo();
+  _updateSidebarForVisitor();
+}
+
+function _updateSidebarForVisitor(){
+  var area = document.getElementById('sb-user-area');
+  if(!area) return;
+  if(_isVisitor && !currentUser){
+    area.innerHTML = '<div style="display:flex;align-items:center;gap:10px;padding:.8rem 1rem;cursor:pointer;width:100%" onclick="mostrarLogin()">'
+      + '<div style="width:32px;height:32px;border-radius:50%;background:var(--bg4);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">👤</div>'
+      + '<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--muted2)">Visitante</div>'
+      + '<div style="font-size:10px;color:var(--gold);font-weight:600">Entrar / Criar conta</div></div>'
+      + '</div>';
+  }
+}
+
+function mostrarLogin(){
+  document.getElementById('login-screen').classList.remove('hidden');
+}
+
+var _isVisitor = false;
+
+if(!DEMO_MODE){
+  auth.onAuthStateChanged(function(user){
+    if(user){
+      currentUser = user;
+      _isVisitor = false;
+      onLoginSuccess();
+    } else {
+      // Auto-enter as visitor — no login wall
+      entrarComoVisitante();
+    }
+  });
+} else {
+  entrarComoVisitante();
+}
 ['l-email','l-pass','l-pass2'].forEach(function(id){ var el=document.getElementById(id); if(el) el.addEventListener('keydown',function(e){if(e.key==='Enter')authAction();}); });
 function showTerms(){alert('Termos de Uso\n\nAs informações são apenas para controle pessoal. Não somos responsáveis por decisões de investimento. Você pode exportar ou apagar seus dados a qualquer momento.');}
 function showPrivacy(){alert('Política de Privacidade\n\nSeus dados são armazenados no Firebase (Google) com criptografia. Nunca são vendidos ou compartilhados. Em conformidade com a LGPD.');}
