@@ -1845,24 +1845,61 @@ function authAction(){
 }
 function loginGoogle(){ if(DEMO_MODE){toast('Google não disponível no modo demo.','err');return;} auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){var msg=e.message||'';document.getElementById('l-err').textContent=msg.indexOf('auth/unauthorized-domain')>=0?'Domínio não autorizado no Firebase. Acesse o Console Firebase → Authentication → Settings → Authorized domains e adicione mundodefi.com.br':'Erro: '+msg;}); }
 function logOut(){ if(DEMO_MODE){currentUser=null;document.getElementById('login-screen').classList.remove('hidden');return;} auth.signOut(); }
-// ── PRO WHITELIST — emails que sempre entram como PRO ──
-var _PRO_EMAILS = [
-  'juniordezzz@gmail.com',  // seu email principal
-  // adicione mais emails de membros PRO aqui
+// ── PLANOS: free, pro, premium ──
+// Seu email entra como PREMIUM automaticamente
+var _PREMIUM_EMAILS = [
+  'juniordezzz@gmail.com',  // founder — acesso total
 ];
+var _PRO_EMAILS = [
+  // emails de membros PRO (R$9,99/mês)
+];
+// Limites por plano
+var PLAN_LIMITS = {
+  free:    { hold: 3,  defi: 3,  trades: 10, portfolios: 2 },
+  pro:     { hold: 999, defi: 999, trades: 999, portfolios: 999 },
+  premium: { hold: 999, defi: 999, trades: 999, portfolios: 999 }
+};
+var USER_PLAN = 'free'; // será atualizado no login
 
 function _checkProAccess(email){
   if(!email) return;
   var emailLower = email.toLowerCase().trim();
-  if(_PRO_EMAILS.indexOf(emailLower) >= 0){
+  if(_PREMIUM_EMAILS.indexOf(emailLower) >= 0){
+    USER_PLAN = 'premium';
+    IS_PRO = true;
+    localStorage.setItem('ct_plano', 'premium');
+  } else if(_PRO_EMAILS.indexOf(emailLower) >= 0){
+    USER_PLAN = 'pro';
     IS_PRO = true;
     localStorage.setItem('ct_plano', 'pro');
   } else {
-    // Check localStorage (para quem pagou via integração futura)
-    var plano = localStorage.getItem('ct_plano') || 'free';
-    IS_PRO = (plano === 'pro');
+    var saved = localStorage.getItem('ct_plano') || 'free';
+    USER_PLAN = saved;
+    IS_PRO = (saved === 'pro' || saved === 'premium');
   }
   _updatePlanLabel();
+}
+
+function _updatePlanLabel(){
+  var el = document.getElementById('sb-uplan');
+  if(!el) return;
+  if(USER_PLAN==='premium'){
+    el.textContent='💎 Premium';
+    el.style.background='linear-gradient(135deg,#a855f7,#ec4899)';
+    el.style.webkitBackgroundClip='text';
+    el.style.webkitTextFillColor='transparent';
+    el.style.fontWeight='700';
+  } else if(USER_PLAN==='pro'){
+    el.textContent='⚡ Plano PRO';
+    el.style.color='var(--gold)';
+    el.style.background='';
+    el.style.webkitTextFillColor='';
+  } else {
+    el.textContent='Plano Gratuito';
+    el.style.color='';
+    el.style.background='';
+    el.style.webkitTextFillColor='';
+  }
 }
 
 function onLoginSuccess(){
@@ -1945,7 +1982,7 @@ function goPage(p, sbEl, tabKey){
   else if(p==='trade')renderTrade();
   else if(p==='favoritos')renderFavoritos();
   else if(p==='config')renderConfig();
-  _preloadTopPrices();
+  if(typeof _preloadTopPrices==='function')_preloadTopPrices();
 }
 </script>
 <script>
@@ -2353,16 +2390,23 @@ function setTradeTab(tab){
 function verificarAcessoPRO(){
   var lock = document.getElementById('est-lock');
   var cont = document.getElementById('est-content');
-  if(!IS_PRO){
-    if(lock) lock.style.display = 'block';
-    if(cont){ cont.style.opacity = '0.15'; cont.style.pointerEvents = 'none'; }
+  // Trade System is PREMIUM only
+  var hasPremiumAccess = (USER_PLAN === 'premium');
+  if(!hasPremiumAccess){
+    if(lock){
+      lock.style.display = 'block';
+      // Update lock message based on plan
+      var lockMsg = lock.querySelector('div > div:nth-child(3)');
+      if(lockMsg && USER_PLAN === 'pro'){
+        lockMsg.textContent = 'O Trade System é exclusivo do plano Premium. Faça upgrade para ter acesso.';
+      }
+    }
+    if(cont){ cont.style.opacity = '0.1'; cont.style.pointerEvents = 'none'; }
   } else {
     if(lock) lock.style.display = 'none';
     if(cont){ cont.style.opacity = '1'; cont.style.pointerEvents = ''; }
-    // Init trade system
     setTimeout(function(){
       if(typeof initTradeSystem === 'function') initTradeSystem();
-      else if(typeof init === 'function') init();
     }, 100);
   }
 }
@@ -3262,10 +3306,10 @@ function _portRenderBar() {
   tabs.innerHTML = ids.map(function(id, i) {
     var p = _ports[id];
     var isActive = id === _activePortId;
-    return '<div class="port-btn' + (isActive ? ' active' : '') + '" onclick="_portSwitch('' + id + '')" title="Clique duplo para renomear" ondblclick="portRename('' + id + '')">'
+    return '<div class="port-btn' + (isActive ? ' active' : '') + '" onclick="_portSwitch(\'' + id + '\')" title="Clique duplo para renomear" ondblclick="portRename(\'' + id + '\')">'
       + (isActive ? '' : '<span class="port-dot" style="background:' + colors[i % colors.length] + '"></span>')
       + p.name
-      + (id !== 'default' && isActive ? '<span onclick="event.stopPropagation();portDelete('' + id + '')" style="margin-left:6px;opacity:.5;font-size:11px;cursor:pointer" title="Excluir">✕</span>' : '')
+      + (id !== 'default' && isActive ? '<span onclick="event.stopPropagation();portDelete(\'' + id + '\')" style="margin-left:6px;opacity:.5;font-size:11px;cursor:pointer" title="Excluir">✕</span>' : '')
       + '</div>';
   }).join('');
   // Plan label
@@ -3275,7 +3319,7 @@ function _portRenderBar() {
     if (IS_PRO) {
       lbl.innerHTML = '<span style="font-size:10px;background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border-radius:99px;padding:2px 8px;font-weight:800">PRO · Ilimitado</span>';
     } else {
-      lbl.innerHTML = '<span class="port-lock" onclick="window.open('planos.html','_blank')">' + count + '/' + MAX_PORTS_FREE + ' · Upgrade ⚡</span>';
+      lbl.innerHTML = '<span class="port-lock" onclick="window.open(\'planos.html\',\'_blank\')">'+count+'/'+MAX_PORTS_FREE+' · Upgrade ⚡</span>';
     }
   }
 }
@@ -3423,11 +3467,17 @@ function calcHealthScore() {
 }
 
 // ══ Hook renderGeral to also run score + demo check ══
-var _origRenderGeral2 = renderGeral;
-renderGeral = function() {
-  _origRenderGeral2();
-  calcHealthScore();
-};
+var _origRenderGeralHealth = null;
+function _hookRenderGeral(){
+  if(typeof renderGeral === 'function' && !_origRenderGeralHealth){
+    _origRenderGeralHealth = renderGeral;
+    renderGeral = function(){
+      _origRenderGeralHealth();
+      try{ calcHealthScore(); }catch(e){}
+    };
+  }
+}
+setTimeout(_hookRenderGeral, 50);
 
 // ══ Init portfolios on login ══
 var _origOnLoginSuccess = onLoginSuccess;
