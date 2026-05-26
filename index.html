@@ -57,7 +57,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,8,13,0.95);backdrop-filt
 .t-chg.up{color:var(--green)}.t-chg.dn{color:var(--red)}.t-chg.nt{color:var(--muted2)}
 
 /* ── HERO (Investidor10 style: dark, big search bar) ── */
-.hero{position:relative;padding:4.5rem 1.5rem 3.5rem;overflow:hidden;text-align:center}
+.hero{position:relative;padding:4.5rem 1.5rem 3.5rem;overflow:visible;text-align:center}
 .hero-bg-img{position:absolute;inset:0;background:
   radial-gradient(ellipse 70% 60% at 50% 30%,rgba(240,165,0,0.07) 0%,transparent 60%),
   radial-gradient(ellipse 50% 40% at 80% 70%,rgba(0,229,255,0.04) 0%,transparent 60%),
@@ -86,7 +86,7 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,8,13,0.95);backdrop-filt
 .search-dropdown.open{display:block}
 .search-dropdown::-webkit-scrollbar{width:4px}
 .search-dropdown::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
-.sd-item{display:flex;align-items:center;gap:12px;padding:.8rem 1.2rem;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text)}
+.sd-item{display:flex;align-items:center;gap:12px;padding:.75rem 1.1rem;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text);min-width:0}
 .sd-item:last-child{border-bottom:none}
 .sd-item:hover{background:var(--bg3)}
 .sd-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0}
@@ -260,12 +260,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1
 <!-- ── HERO ── -->
 <section class="hero" id="topo">
   <div class="hero-bg-img"></div>
-  <!-- AI hero image -->
-  <div style="position:absolute;inset:0;z-index:0;overflow:hidden">
-    <img src="ChatGPT_Image_26_de_mai__de_2026__12_08_20.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:0.22;filter:saturate(0.8) brightness(0.7)"/>
-    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,8,13,0.3) 0%,rgba(7,8,13,0.0) 40%,rgba(7,8,13,0.0) 60%,rgba(7,8,13,0.95) 100%)"></div>
-  </div>
   <div class="hero-content">
+    <h1 class="hero-title">Pesquise qualquer criptomoeda para<br>acessar <span>cotação, fundamentos</span> e gráficos</h1>
     <div class="hero-search-wrap" style="position:relative;z-index:10">
       <div class="hero-search">
         <input type="text" id="hero-input" placeholder="Pesquise pelo ativo desejado (BTC, ETH, SOL...)" oninput="heroSearch(this.value)" onkeydown="heroKeyDown(event)" autocomplete="off"/>
@@ -660,10 +656,11 @@ var _LOCAL_COINS=[
   {id:'miggles',sym:'MIGG',name:'Miggles',color:'#ec4899'},
 ];
 
-// Build COINS_META from local list for rankings
-var COINS_IDS=_LOCAL_COINS.slice(0,15).map(function(c){return c.id;}).join(',');
+// Build COINS_META from local list
 var COINS_META={};
 _LOCAL_COINS.forEach(function(c){COINS_META[c.id]={sym:c.sym,name:c.name,color:c.color};});
+// Fetch top 30 for ticker + rankings
+var COINS_IDS='bitcoin,ethereum,solana,binancecoin,ripple,dogecoin,avalanche-2,the-open-network,cardano,chainlink,polkadot,uniswap,sui,litecoin,tron,shiba-inu,bitcoin-cash,near,stellar,monero,pepe,kaspa,injective-protocol,aptos,arbitrum,optimism,bonk,dogwifcoin,hyperliquid,floki';
 var _prices={};
 var _global={};
 
@@ -759,11 +756,12 @@ function rankRow(id,primary,secondary,secClass){
 
 function renderRankings(){
   if(!Object.keys(_prices).length)return;
-  var ids=Object.keys(COINS_META);
-  var list=ids.map(function(id){
+  // Only use coins that have price data
+  var list=Object.keys(_prices).map(function(id){
     var p=_prices[id];
-    return p?{id:id,price:p.usd,chg:p.usd_24h_change||0,mcap:p.usd_market_cap||0,vol:p.usd_24h_vol||0}:null;
+    return p&&p.usd?{id:id,price:p.usd,chg:p.usd_24h_change||0}:null;
   }).filter(Boolean);
+  if(!list.length)return;
 
   var col1,col2,col3;
   if(_rankTab==='gainers'){
@@ -783,11 +781,10 @@ function renderRankings(){
     document.querySelector('#rank-col-2').closest('.rank-card').querySelector('.rank-card-title').textContent='Queda Moderada 24h';
     document.querySelector('#rank-col-3').closest('.rank-card').querySelector('.rank-card-title').textContent='Resistindo à queda';
   } else {
-    // mcap / volume — use order from list
-    var topList=ids.slice(0,5);
-    col1=topList.map(function(id){var p=_prices[id];return p?rankRow(id,fmtP(p.usd),fmtC(p.usd_24h_change||0),p.usd_24h_change>=0?'up':'dn'):'';}).join('');
-    col2=ids.slice(5,10).map(function(id){var p=_prices[id];return p?rankRow(id,fmtP(p.usd),fmtC(p.usd_24h_change||0),p.usd_24h_change>=0?'up':'dn'):'';}).join('');
-    col3=ids.slice(10,15).map(function(id){var p=_prices[id];return p?rankRow(id,fmtP(p.usd),fmtC(p.usd_24h_change||0),p.usd_24h_change>=0?'up':'dn'):'';}).join('');
+    // mcap / volume — use fetched list order
+    col1=list.slice(0,5).map(function(c){return rankRow(c.id,fmtP(c.price),fmtC(c.chg),c.chg>=0?'up':'dn');}).join('');
+    col2=list.slice(5,10).map(function(c){return rankRow(c.id,fmtP(c.price),fmtC(c.chg),c.chg>=0?'up':'dn');}).join('');
+    col3=list.slice(10,15).map(function(c){return rankRow(c.id,fmtP(c.price),fmtC(c.chg),c.chg>=0?'up':'dn');}).join('');
     document.querySelector('#rank-col-1').closest('.rank-card').querySelector('.rank-card-title').textContent='Top Market Cap';
     document.querySelector('#rank-col-2').closest('.rank-card').querySelector('.rank-card-title').textContent='Mid Cap';
     document.querySelector('#rank-col-3').closest('.rank-card').querySelector('.rank-card-title').textContent='Outros Ativos';
