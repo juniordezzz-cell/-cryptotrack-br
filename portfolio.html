@@ -1943,13 +1943,9 @@ function goPage(p, sbEl, tabKey){
   else if(p==='hold')renderHold();
   else if(p==='defi')renderDefi();
   else if(p==='trade')renderTrade();
-  _preloadTopPrices();}
   else if(p==='favoritos')renderFavoritos();
-  
-  
-  }
   else if(p==='config')renderConfig();
-  
+  _preloadTopPrices();
 }
 </script>
 <script>
@@ -3228,11 +3224,7 @@ function portAdd() {
   var portCount = Object.keys(_ports).length;
   if (!IS_PRO && portCount >= MAX_PORTS_FREE) {
     // Mostra paywall
-    if (confirm('O plano gratuito permite até ' + MAX_PORTS_FREE + ' portfólios.
-
-Faça upgrade para o PRO e tenha portfólios ilimitados!
-
-Ir para planos?')) {
+    if (confirm('O plano gratuito permite até ' + MAX_PORTS_FREE + ' portfólios. Faça upgrade para o PRO e tenha portfólios ilimitados! Ir para planos?')) {
       window.open('planos.html', '_blank');
     }
     return;
