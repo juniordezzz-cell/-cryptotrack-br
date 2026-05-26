@@ -1838,8 +1838,10 @@ function authAction(){
   if(loginTab==='register'&&pass.length<6){errEl.textContent='Mínimo 6 caracteres.';return;}
   var btn=document.getElementById('l-btn'); btn.disabled=true; btn.textContent='Aguarde...';
   if(DEMO_MODE){currentUser={uid:'demo',email:email,displayName:email.split('@')[0]};onLoginSuccess();return;}
-  var p=loginTab==='login'?auth.signInWithEmailAndPassword(email,pass):auth.createUserWithEmailAndPassword(email,pass);
-  p.catch(function(e){ var msgs={'auth/user-not-found':'Email não encontrado.','auth/wrong-password':'Senha incorreta.','auth/email-already-in-use':'Email já cadastrado.','auth/invalid-email':'Email inválido.','auth/weak-password':'Senha fraca.','auth/invalid-credential':'Email ou senha incorretos.'}; errEl.textContent=msgs[e.code]||'Erro: '+e.message; btn.disabled=false; btn.textContent=loginTab==='login'?'Entrar':'Criar conta'; });
+  try{
+    var p=loginTab==='login'?auth.signInWithEmailAndPassword(email,pass):auth.createUserWithEmailAndPassword(email,pass);
+    p.catch(function(e){ var msgs={'auth/user-not-found':'Email não encontrado.','auth/wrong-password':'Senha incorreta.','auth/email-already-in-use':'Email já cadastrado.','auth/invalid-email':'Email inválido.','auth/weak-password':'Senha fraca.','auth/invalid-credential':'Email ou senha incorretos.'}; errEl.textContent=msgs[e.code]||'Erro: '+e.message; btn.disabled=false; btn.textContent=loginTab==='login'?'Entrar':'Criar conta'; });
+  }catch(err){ errEl.textContent='Erro: '+err.message; btn.disabled=false; btn.textContent=loginTab==='login'?'Entrar':'Criar conta'; }
 }
 function loginGoogle(){ if(DEMO_MODE){toast('Google não disponível no modo demo.','err');return;} auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){var msg=e.message||'';document.getElementById('l-err').textContent=msg.indexOf('auth/unauthorized-domain')>=0?'Domínio não autorizado no Firebase. Acesse o Console Firebase → Authentication → Settings → Authorized domains e adicione mundodefi.com.br':'Erro: '+msg;}); }
 function logOut(){ if(DEMO_MODE){currentUser=null;document.getElementById('login-screen').classList.remove('hidden');return;} auth.signOut(); }
@@ -1872,7 +1874,7 @@ function onLoginSuccess(){
   var ce=document.getElementById('cfg-email'); if(ce) ce.textContent=currentUser.email||name;
   // Check PRO access based on email
   _checkProAccess(currentUser.email);
-  loadFS(function(){ renderAll(); initBgCanvas(); });
+  loadFS(function(){ renderAll(); initBgCanvas(); try{_checkShowDemo();}catch(e){} });
 }
 // Visitor mode functions
 function entrarComoVisitante(){
@@ -1882,8 +1884,7 @@ function entrarComoVisitante(){
   loadLocal();
   renderAll();
   initBgCanvas();
-  carregarNoticias();
-    _checkShowDemo();
+  try{ _checkShowDemo(); }catch(e){}
   _updateSidebarForVisitor();
 }
 
@@ -3643,6 +3644,11 @@ setTimeout(function(){if(!_glLoaded){_glLoaded=true;_fetchGainersLosers();}},100
 
 
 // ══ TRADE SYSTEM JS ══
+var _tradeSystemInited = false;
+function initTradeSystem(){
+  if(_tradeSystemInited) return;
+  _tradeSystemInited = true;
+  try{
 
 // ===== CRYPTO LIST (500+ principais) =====
 const CRYPTOS = [
@@ -4011,6 +4017,9 @@ loadFromStorage();
 updateAll();
 setTimeout(()=>{refreshCharts('geral')},100);
 
+
+  } catch(e){ console.warn('Trade System init error:', e); }
+}
 </script>
 </body>
 </html>
