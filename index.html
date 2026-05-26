@@ -82,8 +82,10 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,8,13,0.95);backdrop-filt
 .hero-tag:hover{border-color:var(--gold);color:var(--gold);background:var(--gold3)}
 
 /* ── SEARCH DROPDOWN ── */
-.search-dropdown{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:640px;max-width:90vw;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);overflow:hidden;z-index:300;display:none;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.search-dropdown{position:absolute;top:calc(100% + 6px);left:50%;transform:translateX(-50%);width:min(640px,90vw);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);overflow:hidden;z-index:400;display:none;box-shadow:0 20px 60px rgba(0,0,0,.8);max-height:360px;overflow-y:auto}
 .search-dropdown.open{display:block}
+.search-dropdown::-webkit-scrollbar{width:4px}
+.search-dropdown::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
 .sd-item{display:flex;align-items:center;gap:12px;padding:.8rem 1.2rem;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);text-decoration:none;color:var(--text)}
 .sd-item:last-child{border-bottom:none}
 .sd-item:hover{background:var(--bg3)}
@@ -258,9 +260,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1
 <!-- ── HERO ── -->
 <section class="hero" id="topo">
   <div class="hero-bg-img"></div>
+  <!-- AI hero image -->
+  <div style="position:absolute;inset:0;z-index:0;overflow:hidden">
+    <img src="ChatGPT_Image_26_de_mai__de_2026__12_08_20.png" alt="" style="width:100%;height:100%;object-fit:cover;object-position:center 20%;opacity:0.22;filter:saturate(0.8) brightness(0.7)"/>
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(7,8,13,0.3) 0%,rgba(7,8,13,0.0) 40%,rgba(7,8,13,0.0) 60%,rgba(7,8,13,0.95) 100%)"></div>
+  </div>
   <div class="hero-content">
-    <h1 class="hero-title">Pesquise qualquer criptomoeda para<br>acessar <span>cotação, fundamentos</span> e gráficos</h1>
-    <div class="hero-search-wrap" style="position:relative">
+    <div class="hero-search-wrap" style="position:relative;z-index:10">
       <div class="hero-search">
         <input type="text" id="hero-input" placeholder="Pesquise pelo ativo desejado (BTC, ETH, SOL...)" oninput="heroSearch(this.value)" onkeydown="heroKeyDown(event)" autocomplete="off"/>
         <button class="hero-search-btn" onclick="heroSearchGo()">PESQUISAR</button>
@@ -425,24 +431,239 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1
 
 <script>
 // ══ DATA ══
-var COINS_IDS='bitcoin,ethereum,solana,binancecoin,ripple,dogecoin,avalanche-2,the-open-network,cardano,chainlink,polkadot,uniswap,sui,litecoin,tron';
-var COINS_META={
-  'bitcoin':{sym:'BTC',name:'Bitcoin',color:'#f7931a'},
-  'ethereum':{sym:'ETH',name:'Ethereum',color:'#627eea'},
-  'solana':{sym:'SOL',name:'Solana',color:'#9945ff'},
-  'binancecoin':{sym:'BNB',name:'BNB',color:'#f3ba2f'},
-  'ripple':{sym:'XRP',name:'XRP',color:'#375bd2'},
-  'dogecoin':{sym:'DOGE',name:'Dogecoin',color:'#c8a52b'},
-  'avalanche-2':{sym:'AVAX',name:'Avalanche',color:'#e84142'},
-  'the-open-network':{sym:'TON',name:'Toncoin',color:'#0098ea'},
-  'cardano':{sym:'ADA',name:'Cardano',color:'#0033ad'},
-  'chainlink':{sym:'LINK',name:'Chainlink',color:'#2a5ada'},
-  'polkadot':{sym:'DOT',name:'Polkadot',color:'#e6007a'},
-  'uniswap':{sym:'UNI',name:'Uniswap',color:'#ff007a'},
-  'sui':{sym:'SUI',name:'Sui',color:'#4da2ff'},
-  'litecoin':{sym:'LTC',name:'Litecoin',color:'#bfbbbb'},
-  'tron':{sym:'TRX',name:'TRON',color:'#eb0029'},
-};
+var _LOCAL_COINS=[
+  {id:'bitcoin',sym:'BTC',name:'Bitcoin',color:'#f7931a'},
+  {id:'ethereum',sym:'ETH',name:'Ethereum',color:'#627eea'},
+  {id:'tether',sym:'USDT',name:'Tether',color:'#26a17b'},
+  {id:'binancecoin',sym:'BNB',name:'BNB',color:'#f3ba2f'},
+  {id:'solana',sym:'SOL',name:'Solana',color:'#9945ff'},
+  {id:'usd-coin',sym:'USDC',name:'USD Coin',color:'#2775ca'},
+  {id:'ripple',sym:'XRP',name:'XRP',color:'#375bd2'},
+  {id:'dogecoin',sym:'DOGE',name:'Dogecoin',color:'#c8a52b'},
+  {id:'the-open-network',sym:'TON',name:'Toncoin',color:'#0098ea'},
+  {id:'cardano',sym:'ADA',name:'Cardano',color:'#0033ad'},
+  {id:'tron',sym:'TRX',name:'TRON',color:'#eb0029'},
+  {id:'avalanche-2',sym:'AVAX',name:'Avalanche',color:'#e84142'},
+  {id:'shiba-inu',sym:'SHIB',name:'Shiba Inu',color:'#e33a2c'},
+  {id:'chainlink',sym:'LINK',name:'Chainlink',color:'#2a5ada'},
+  {id:'polkadot',sym:'DOT',name:'Polkadot',color:'#e6007a'},
+  {id:'bitcoin-cash',sym:'BCH',name:'Bitcoin Cash',color:'#8dc351'},
+  {id:'uniswap',sym:'UNI',name:'Uniswap',color:'#ff007a'},
+  {id:'near',sym:'NEAR',name:'NEAR Protocol',color:'#00c08b'},
+  {id:'litecoin',sym:'LTC',name:'Litecoin',color:'#bfbbbb'},
+  {id:'wrapped-bitcoin',sym:'WBTC',name:'Wrapped Bitcoin',color:'#f7931a'},
+  {id:'dai',sym:'DAI',name:'Dai',color:'#f5ac37'},
+  {id:'internet-computer',sym:'ICP',name:'Internet Computer',color:'#29abe2'},
+  {id:'aptos',sym:'APT',name:'Aptos',color:'#60d5fa'},
+  {id:'ethereum-classic',sym:'ETC',name:'Ethereum Classic',color:'#328332'},
+  {id:'stellar',sym:'XLM',name:'Stellar',color:'#7d00ff'},
+  {id:'okb',sym:'OKB',name:'OKB',color:'#2b6df9'},
+  {id:'cosmos',sym:'ATOM',name:'Cosmos',color:'#2e3148'},
+  {id:'filecoin',sym:'FIL',name:'Filecoin',color:'#0090ff'},
+  {id:'sui',sym:'SUI',name:'Sui',color:'#4da2ff'},
+  {id:'hedera-hashgraph',sym:'HBAR',name:'Hedera',color:'#00b388'},
+  {id:'injective-protocol',sym:'INJ',name:'Injective',color:'#00b2ff'},
+  {id:'vechain',sym:'VET',name:'VeChain',color:'#15bdff'},
+  {id:'optimism',sym:'OP',name:'Optimism',color:'#ff0420'},
+  {id:'lido-dao',sym:'LDO',name:'Lido DAO',color:'#00a3ff'},
+  {id:'monero',sym:'XMR',name:'Monero',color:'#ff6600'},
+  {id:'maker',sym:'MKR',name:'MakerDAO',color:'#1aab9b'},
+  {id:'arbitrum',sym:'ARB',name:'Arbitrum',color:'#2d374b'},
+  {id:'pepe',sym:'PEPE',name:'Pepe',color:'#479c5e'},
+  {id:'whitebit',sym:'WBT',name:'WhiteBIT Coin',color:'#1e90ff'},
+  {id:'kaspa',sym:'KAS',name:'Kaspa',color:'#49daf8'},
+  {id:'polygon',sym:'MATIC',name:'Polygon',color:'#8247e5'},
+  {id:'aave',sym:'AAVE',name:'Aave',color:'#b6509e'},
+  {id:'theta-token',sym:'THETA',name:'Theta Network',color:'#2ab8e6'},
+  {id:'algorand',sym:'ALGO',name:'Algorand',color:'#00b4d8'},
+  {id:'the-graph',sym:'GRT',name:'The Graph',color:'#6f4cff'},
+  {id:'fantom',sym:'FTM',name:'Fantom',color:'#1969ff'},
+  {id:'flow',sym:'FLOW',name:'Flow',color:'#00ef8b'},
+  {id:'stacks',sym:'STX',name:'Stacks',color:'#5546ff'},
+  {id:'quant-network',sym:'QNT',name:'Quant',color:'#3a3a3a'},
+  {id:'elrond-erd-2',sym:'EGLD',name:'MultiversX',color:'#1b46c2'},
+  {id:'curve-dao-token',sym:'CRV',name:'Curve DAO',color:'#d9272e'},
+  {id:'eos',sym:'EOS',name:'EOS',color:'#000000'},
+  {id:'decentraland',sym:'MANA',name:'Decentraland',color:'#ff2d55'},
+  {id:'the-sandbox',sym:'SAND',name:'The Sandbox',color:'#04adef'},
+  {id:'axie-infinity',sym:'AXS',name:'Axie Infinity',color:'#0055d5'},
+  {id:'gala',sym:'GALA',name:'Gala',color:'#1d1d2e'},
+  {id:'pancakeswap-token',sym:'CAKE',name:'PancakeSwap',color:'#1fc7d4'},
+  {id:'iota',sym:'IOTA',name:'IOTA',color:'#242424'},
+  {id:'neo',sym:'NEO',name:'NEO',color:'#58bf00'},
+  {id:'chiliz',sym:'CHZ',name:'Chiliz',color:'#cd0124'},
+  {id:'1inch',sym:'1INCH',name:'1inch',color:'#d82122'},
+  {id:'compound-governance-token',sym:'COMP',name:'Compound',color:'#00d395'},
+  {id:'waves',sym:'WAVES',name:'Waves',color:'#0155ff'},
+  {id:'kucoin-shares',sym:'KCS',name:'KuCoin Token',color:'#0049c7'},
+  {id:'zcash',sym:'ZEC',name:'Zcash',color:'#ecb244'},
+  {id:'dash',sym:'DASH',name:'Dash',color:'#008de4'},
+  {id:'ravencoin',sym:'RVN',name:'Ravencoin',color:'#384182'},
+  {id:'basic-attention-token',sym:'BAT',name:'Basic Attention Token',color:'#ff5000'},
+  {id:'0x',sym:'ZRX',name:'0x Protocol',color:'#302c2c'},
+  {id:'yearn-finance',sym:'YFI',name:'Yearn Finance',color:'#006ae3'},
+  {id:'loopring',sym:'LRC',name:'Loopring',color:'#1c60ff'},
+  {id:'decred',sym:'DCR',name:'Decred',color:'#2ed6a1'},
+  {id:'omisego',sym:'OMG',name:'OMG Network',color:'#1a53f0'},
+  {id:'balancer',sym:'BAL',name:'Balancer',color:'#1e1e1e'},
+  {id:'sushiswap',sym:'SUSHI',name:'SushiSwap',color:'#fa52a0'},
+  {id:'qtum',sym:'QTUM',name:'Qtum',color:'#2895d8'},
+  {id:'nervos-network',sym:'CKB',name:'Nervos Network',color:'#3cc68a'},
+  {id:'oasis-network',sym:'ROSE',name:'Oasis Network',color:'#0092f6'},
+  {id:'zilliqa',sym:'ZIL',name:'Zilliqa',color:'#49c1bf'},
+  {id:'icon',sym:'ICX',name:'ICON',color:'#1fc5c9'},
+  {id:'ontology',sym:'ONT',name:'Ontology',color:'#32a4be'},
+  {id:'storj',sym:'STORJ',name:'Storj',color:'#2683ff'},
+  {id:'harmonyonetoken',sym:'ONE',name:'Harmony',color:'#00aee9'},
+  {id:'ankr',sym:'ANKR',name:'Ankr',color:'#2b6ef5'},
+  {id:'band-protocol',sym:'BAND',name:'Band Protocol',color:'#516aff'},
+  {id:'uma',sym:'UMA',name:'UMA',color:'#ff4a4a'},
+  {id:'ren',sym:'REN',name:'Ren',color:'#001433'},
+  {id:'numeraire',sym:'NMR',name:'Numeraire',color:'#004be0'},
+  {id:'origin-protocol',sym:'OGN',name:'Origin Protocol',color:'#1a82ff'},
+  {id:'republic-protocol',sym:'REN',name:'Ren',color:'#001433'},
+  {id:'dydx',sym:'DYDX',name:'dYdX',color:'#6966ff'},
+  {id:'immutable-x',sym:'IMX',name:'Immutable X',color:'#00c9ff'},
+  {id:'blur',sym:'BLUR',name:'Blur',color:'#ff6600'},
+  {id:'rocket-pool',sym:'RPL',name:'Rocket Pool',color:'#ff6600'},
+  {id:'render-token',sym:'RNDR',name:'Render',color:'#ff5400'},
+  {id:'woo-network',sym:'WOO',name:'WOO Network',color:'#2d49e0'},
+  {id:'superfarm',sym:'SUPER',name:'SuperFarm',color:'#8a47ff'},
+  {id:'siacoin',sym:'SC',name:'Siacoin',color:'#1ed660'},
+  {id:'holo',sym:'HOT',name:'Holo',color:'#00cbff'},
+  {id:'ocean-protocol',sym:'OCEAN',name:'Ocean Protocol',color:'#141414'},
+  {id:'fetch-ai',sym:'FET',name:'Fetch.ai',color:'#1a1f6e'},
+  {id:'celo',sym:'CELO',name:'Celo',color:'#fbcc5c'},
+  {id:'raydium',sym:'RAY',name:'Raydium',color:'#622aff'},
+  {id:'serum',sym:'SRM',name:'Serum',color:'#a879fd'},
+  {id:'orca',sym:'ORCA',name:'Orca',color:'#4da6ff'},
+  {id:'terra-luna-2',sym:'LUNA',name:'Terra',color:'#ffd83d'},
+  {id:'frax',sym:'FRAX',name:'Frax',color:'#000000'},
+  {id:'stepn',sym:'GMT',name:'STEPN',color:'#33d4a1'},
+  {id:'apecoin',sym:'APE',name:'ApeCoin',color:'#0054f9'},
+  {id:'gmx',sym:'GMX',name:'GMX',color:'#03d1cf'},
+  {id:'synthetix-network-token',sym:'SNX',name:'Synthetix',color:'#00d1ff'},
+  {id:'magic',sym:'MAGIC',name:'Magic',color:'#dc2626'},
+  {id:'liquity',sym:'LQTY',name:'Liquity',color:'#1542cd'},
+  {id:'pendle',sym:'PENDLE',name:'Pendle',color:'#3bffc8'},
+  {id:'jito-staked-sol',sym:'JITOSOL',name:'Jito Staked SOL',color:'#84cc16'},
+  {id:'bonk',sym:'BONK',name:'Bonk',color:'#f97316'},
+  {id:'dogwifcoin',sym:'WIF',name:'dogwifhat',color:'#e8a200'},
+  {id:'popcat',sym:'POPCAT',name:'Popcat',color:'#ff9f1c'},
+  {id:'book-of-meme',sym:'BOME',name:'BOME',color:'#ff4500'},
+  {id:'wif',sym:'WIF',name:'dogwifhat',color:'#e8a200'},
+  {id:'floki',sym:'FLOKI',name:'FLOKI',color:'#f5a623'},
+  {id:'baby-doge-coin',sym:'BABYDOGE',name:'Baby Doge',color:'#ffbb00'},
+  {id:'ondo-finance',sym:'ONDO',name:'Ondo Finance',color:'#6b21a8'},
+  {id:'hyperliquid',sym:'HYPE',name:'Hyperliquid',color:'#00e5ff'},
+  {id:'jup',sym:'JUP',name:'Jupiter',color:'#00c896'},
+  {id:'pyth-network',sym:'PYTH',name:'Pyth Network',color:'#a855f7'},
+  {id:'wormhole',sym:'W',name:'Wormhole',color:'#ffffff'},
+  {id:'io-net',sym:'IO',name:'io.net',color:'#00d4ff'},
+  {id:'mog-coin',sym:'MOG',name:'Mog Coin',color:'#8b5cf6'},
+  {id:'not',sym:'NOT',name:'Notcoin',color:'#f5a623'},
+  {id:'cat-in-a-dogs-world',sym:'MEW',name:'cat in a dogs world',color:'#ff6b6b'},
+  {id:'bittensor',sym:'TAO',name:'Bittensor',color:'#00d4aa'},
+  {id:'worldcoin-wld',sym:'WLD',name:'Worldcoin',color:'#000000'},
+  {id:'celestia',sym:'TIA',name:'Celestia',color:'#7c3aed'},
+  {id:'altlayer',sym:'ALT',name:'AltLayer',color:'#ff5733'},
+  {id:'manta-network',sym:'MANTA',name:'Manta Network',color:'#14b8a6'},
+  {id:'sei-network',sym:'SEI',name:'Sei',color:'#9d4edd'},
+  {id:'zksync',sym:'ZK',name:'ZKsync',color:'#8b5cf6'},
+  {id:'layer-zero',sym:'ZRO',name:'LayerZero',color:'#8b5cf6'},
+  {id:'eigenlayer',sym:'EIGEN',name:'EigenLayer',color:'#0ea5e9'},
+  {id:'morpho',sym:'MORPHO',name:'Morpho',color:'#4f46e5'},
+  {id:'resolv-usr',sym:'USR',name:'Resolv USR',color:'#6366f1'},
+  {id:'usual',sym:'USUAL',name:'Usual',color:'#7c3aed'},
+  {id:'virtuals-protocol',sym:'VIRTUAL',name:'Virtuals Protocol',color:'#a855f7'},
+  {id:'ai16z',sym:'AI16Z',name:'ai16z',color:'#3b82f6'},
+  {id:'arc',sym:'ARC',name:'Arc',color:'#06b6d4'},
+  {id:'griffain',sym:'GRIFFAIN',name:'Griffain',color:'#10b981'},
+  {id:'fartcoin',sym:'FARTCOIN',name:'Fartcoin',color:'#84cc16'},
+  {id:'zerebro',sym:'ZEREBRO',name:'Zerebro',color:'#8b5cf6'},
+  {id:'helium',sym:'HNT',name:'Helium',color:'#474dff'},
+  {id:'arweave',sym:'AR',name:'Arweave',color:'#222326'},
+  {id:'thorchain',sym:'RUNE',name:'THORChain',color:'#33ff99'},
+  {id:'axelar',sym:'AXL',name:'Axelar',color:'#ff4f8b'},
+  {id:'galxe',sym:'GAL',name:'Galxe',color:'#f97316'},
+  {id:'portal',sym:'PORTAL',name:'Portal',color:'#a855f7'},
+  {id:'strk',sym:'STRK',name:'Starknet',color:'#ec4899'},
+  {id:'dymension',sym:'DYM',name:'Dymension',color:'#f59e0b'},
+  {id:'manta-network',sym:'MANTA',name:'Manta',color:'#14b8a6'},
+  {id:'mantle',sym:'MNT',name:'Mantle',color:'#000000'},
+  {id:'linea',sym:'LINEA',name:'Linea',color:'#61dfff'},
+  {id:'scroll',sym:'SCR',name:'Scroll',color:'#f5a623'},
+  {id:'zeta-chain',sym:'ZETA',name:'ZetaChain',color:'#00bc8d'},
+  {id:'saga-2',sym:'SAGA',name:'Saga',color:'#6366f1'},
+  {id:'omni-network',sym:'OMNI',name:'Omni Network',color:'#7c3aed'},
+  {id:'renzo',sym:'REZ',name:'Renzo',color:'#4f46e5'},
+  {id:'slerf',sym:'SLERF',name:'SLERF',color:'#f97316'},
+  {id:'coq-inu',sym:'COQ',name:'Coq Inu',color:'#ef4444'},
+  {id:'turbo',sym:'TURBO',name:'Turbo',color:'#f59e0b'},
+  {id:'polyfarm',sym:'PFARM',name:'PolyFarm',color:'#8b5cf6'},
+  {id:'wen-4',sym:'WEN',name:'Wen',color:'#f97316'},
+  {id:'tau',sym:'TAU',name:'Tau',color:'#3b82f6'},
+  {id:'pixelverse',sym:'PIXEL',name:'Pixels',color:'#ec4899'},
+  {id:'aevo-exchange',sym:'AEVO',name:'Aevo',color:'#4f46e5'},
+  {id:'degen-base',sym:'DEGEN',name:'Degen',color:'#a855f7'},
+  {id:'myro',sym:'MYRO',name:'Myro',color:'#3b82f6'},
+  {id:'pawdy',sym:'PAWS',name:'Paws',color:'#f97316'},
+  {id:'trump',sym:'TRUMP',name:'TRUMP',color:'#ef4444'},
+  {id:'melania-meme',sym:'MELANIA',name:'Melania Meme',color:'#ec4899'},
+  {id:'vine-coin',sym:'VINE',name:'Vine Coin',color:'#00b47e'},
+  {id:'brainrot',sym:'BRAINROT',name:'Brainrot',color:'#8b5cf6'},
+  {id:'pudgy-penguins',sym:'PENGU',name:'Pudgy Penguins',color:'#60a5fa'},
+  {id:'mocaverse',sym:'MOCA',name:'Mocaverse',color:'#f97316'},
+  {id:'movement',sym:'MOVE',name:'Movement',color:'#a855f7'},
+  {id:'grass',sym:'GRASS',name:'Grass',color:'#84cc16'},
+  {id:'cookie-dao',sym:'COOKIE',name:'Cookie DAO',color:'#f59e0b'},
+  {id:'kaito',sym:'KAITO',name:'Kaito',color:'#3b82f6'},
+  {id:'zora',sym:'ZORA',name:'Zora',color:'#000000'},
+  {id:'beam-2',sym:'BEAM',name:'Beam',color:'#00d4ff'},
+  {id:'metaplex',sym:'MPLX',name:'Metaplex',color:'#9945ff'},
+  {id:'pyusd',sym:'PYUSD',name:'PayPal USD',color:'#003087'},
+  {id:'ethena',sym:'ENA',name:'Ethena',color:'#4f46e5'},
+  {id:'ethena-usde',sym:'USDE',name:'USDe',color:'#6366f1'},
+  {id:'lista-dao',sym:'LISTA',name:'Lista DAO',color:'#f97316'},
+  {id:'hamster-kombat',sym:'HMSTR',name:'Hamster Kombat',color:'#f59e0b'},
+  {id:'dogs-2',sym:'DOGS',name:'DOGS',color:'#60a5fa'},
+  {id:'cati',sym:'CATI',name:'Catizen',color:'#ec4899'},
+  {id:'x-empire',sym:'X',name:'X Empire',color:'#000000'},
+  {id:'major',sym:'MAJOR',name:'MAJOR',color:'#f97316'},
+  {id:'blum',sym:'BLUM',name:'Blum',color:'#3b82f6'},
+  {id:'goatseus-maximus',sym:'GOAT',name:'GOAT',color:'#84cc16'},
+  {id:'based-brett',sym:'BRETT',name:'Brett',color:'#3b82f6'},
+  {id:'mew',sym:'MEW',name:'cat in a dogs world',color:'#ff6b6b'},
+  {id:'banana-gun',sym:'BANANA',name:'Banana Gun',color:'#f59e0b'},
+  {id:'act-i-the-ai-prophecy',sym:'ACT',name:'ACT',color:'#8b5cf6'},
+  {id:'pnut',sym:'PNUT',name:'Peanut the Squirrel',color:'#a16207'},
+  {id:'chillguy',sym:'CHILLGUY',name:'Chill Guy',color:'#60a5fa'},
+  {id:'moodeng',sym:'MOODENG',name:'Moo Deng',color:'#f97316'},
+  {id:'neiro-ethereum',sym:'NEIRO',name:'Neiro',color:'#ec4899'},
+  {id:'boop',sym:'BOOP',name:'Boop',color:'#a855f7'},
+  {id:'gigachad-2',sym:'GIGA',name:'Gigachad',color:'#3b82f6'},
+  {id:'spx6900',sym:'SPX',name:'SPX6900',color:'#ef4444'},
+  {id:'zyn',sym:'ZYN',name:'Zyn',color:'#6366f1'},
+  {id:'drift-protocol',sym:'DRIFT',name:'Drift',color:'#3b82f6'},
+  {id:'tensor',sym:'TNSR',name:'Tensor',color:'#9945ff'},
+  {id:'marginfi',sym:'MRGN',name:'marginfi',color:'#f97316'},
+  {id:'kamino',sym:'KMNO',name:'Kamino',color:'#84cc16'},
+  {id:'meteora',sym:'MET',name:'Meteora',color:'#a855f7'},
+  {id:'solayer',sym:'LAYER',name:'Solayer',color:'#9945ff'},
+  {id:'fragmetric',sym:'FRAG',name:'Fragmetric',color:'#60a5fa'},
+  {id:'solaxy',sym:'SOLX',name:'Solaxy',color:'#9945ff'},
+  {id:'resistance-dog',sym:'RSTK',name:'Resistance Dog',color:'#ef4444'},
+  {id:'kendu-inu',sym:'KENDU',name:'Kendu Inu',color:'#3b82f6'},
+  {id:'kekius-maximus',sym:'KEKIUS',name:'Kekius Maximus',color:'#84cc16'},
+  {id:'degod',sym:'DGOD',name:'DeGod',color:'#000000'},
+  {id:'mad-lads',sym:'BONK',name:'Mad Lads',color:'#f97316'},
+  {id:'miggles',sym:'MIGG',name:'Miggles',color:'#ec4899'},
+];
+
+// Build COINS_META from local list for rankings
+var COINS_IDS=_LOCAL_COINS.slice(0,15).map(function(c){return c.id;}).join(',');
+var COINS_META={};
+_LOCAL_COINS.forEach(function(c){COINS_META[c.id]={sym:c.sym,name:c.name,color:c.color};});
 var _prices={};
 var _global={};
 
@@ -621,17 +842,17 @@ var _ddIdx=-1;
 
 function heroSearch(val){
   var dd=document.getElementById('search-dd');
-  if(!val||val.length<2){dd.classList.remove('open');return;}
+  if(!val||val.length<1){dd.classList.remove('open');return;}
   if(_searchTO)clearTimeout(_searchTO);
-  // Local instant results
+  // Local instant results from top 300 list
   var ql=val.toLowerCase();
-  var local=Object.keys(COINS_META).filter(function(id){
-    var m=COINS_META[id];
-    return m.name.toLowerCase().indexOf(ql)>=0||m.sym.toLowerCase().indexOf(ql)>=0;
-  }).slice(0,6);
+  var localMatches=_LOCAL_COINS.filter(function(c){
+    return c.name.toLowerCase().indexOf(ql)>=0||c.sym.toLowerCase().indexOf(ql)>=0;
+  }).slice(0,8);
+  var local=localMatches.map(function(c){return c.id;});
   if(local.length){
-    _searchData=local;
-    renderDD(local);
+    _searchData=localMatches;
+    renderDDLocal(localMatches);
   }
   // CoinGecko search
   _searchTO=setTimeout(function(){
@@ -640,26 +861,19 @@ function heroSearch(val){
       .then(function(d){
         var coins=(d.coins||[]).slice(0,6);
         if(!coins.length)return;
-        _searchData=coins.map(function(c){return c.id;});
-        var html=coins.map(function(c,i){
-          var p=_prices[c.id];
-          var color=COINS_META[c.id]?COINS_META[c.id].color:'#888';
-          return '<a class="sd-item" href="portfolio.html" onclick="ddSelect('+i+')">'
-            +(c.thumb?'<img src="'+c.thumb+'" style="width:32px;height:32px;border-radius:8px;object-fit:cover">'
-              :'<div class="sd-ico" style="background:'+color+'22;color:'+color+'">'+c.symbol.slice(0,2).toUpperCase()+'</div>')
-            +'<div><div class="sd-name">'+c.name+'</div><div class="sd-sym">'+c.symbol.toUpperCase()+'</div></div>'
-            +(p?'<div class="sd-price"><div class="sd-pval">'+fmtP(p.usd)+'</div><div class="sd-pchg '+(p.usd_24h_change>=0?'up':'dn')+'">'+fmtC(p.usd_24h_change)+'</div></div>':'')
-            +'</a>';
-        }).join('');
-        dd.innerHTML=html;
-        dd.classList.add('open');
+        var cgCoins=coins.map(function(c){
+          var km=_LOCAL_COINS.find(function(k){return k.id===c.id;});
+          return {id:c.id,sym:(c.symbol||'').toUpperCase(),name:c.name,color:km?km.color:'#888',thumb:c.thumb};
+        });
+        _searchData=cgCoins;
+        renderDDLocal(cgCoins);
       }).catch(function(){});
   },350);
 }
 
 function renderDD(ids){
   var dd=document.getElementById('search-dd');
-  var html=ids.map(function(id,i){
+  var html=ids.map(function(id){
     var m=COINS_META[id]||{sym:id.toUpperCase(),name:id,color:'#888'};
     var p=_prices[id];
     return '<a class="sd-item" href="portfolio.html">'
@@ -670,6 +884,21 @@ function renderDD(ids){
   }).join('');
   dd.innerHTML=html;
   dd.classList.add('open');
+}
+
+function renderDDLocal(coins){
+  var dd=document.getElementById('search-dd');
+  var html=coins.map(function(c){
+    var p=_prices[c.id];
+    return '<a class="sd-item" href="portfolio.html" style="text-decoration:none">'
+      +'<div class="sd-ico" style="background:'+c.color+'22;color:'+c.color+'">'+c.sym.slice(0,2)+'</div>'
+      +'<div style="flex:1;min-width:0"><div class="sd-name">'+c.name+'</div><div class="sd-sym">'+c.sym+'</div></div>'
+      +(p&&p.usd?'<div class="sd-price"><div class="sd-pval">'+fmtP(p.usd)+'</div><div class="sd-pchg '+(p.usd_24h_change>=0?'up':'dn')+'">'+fmtC(p.usd_24h_change)+'</div></div>':'')
+      +'</a>';
+  }).join('');
+  dd.innerHTML=html||'<div class="sd-empty">Nenhum resultado</div>';
+  dd.classList.add(html?'open':'');
+  if(html)dd.classList.add('open');
 }
 
 function heroKeyDown(e){
