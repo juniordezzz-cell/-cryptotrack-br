@@ -3204,12 +3204,8 @@ function jFetchCotacoes(){
   _jCotTimer=setInterval(jFetchCotacoes,60000);
 }
 
-updateDate(); var _phd=document.getElementById("ph-date"); if(_phd){var _n=new Date();_phd.textContent=_n.toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});}
-bancasLoad();
-document.getElementById('fData').value = todayStr();
-setExchange('BINGX');
-setType('trade');
-bancasRender();
+// Portfolio date badge (safe - uses ph-date from portfolio HTML)
+var _phd=document.getElementById("ph-date"); if(_phd){var _n=new Date();_phd.textContent=_n.toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"short",year:"numeric"});}
 
 // ══════════════════════════════════════
 //  MÚLTIPLOS PORTFÓLIOS
@@ -4054,7 +4050,7 @@ function loadFromStorage(){
   }catch(e){}
 }
 
-// ===== INIT =====
+// ===== INIT (runs inside initTradeSystem) =====
 loadFromStorage();
 updateAll();
 setTimeout(()=>{refreshCharts('geral')},100);
