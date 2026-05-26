@@ -478,6 +478,185 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
 .port-add{background:none;border:1px dashed var(--border2);color:var(--muted2);padding:5px 12px;border-radius:99px;font-size:11px;cursor:pointer;font-family:"Space Grotesk",sans-serif;transition:all .15s}
 .port-add:hover{border-color:var(--gold);color:var(--gold)}
 .port-lock{font-size:10px;background:linear-gradient(135deg,rgba(245,166,35,0.15),rgba(168,85,247,0.15));border:1px solid rgba(245,166,35,0.3);color:var(--gold);padding:4px 10px;border-radius:99px;cursor:pointer;font-family:"Space Grotesk",sans-serif;font-weight:600}
+/* ══ TRADE SYSTEM (Estratégia Avançada) ══ */
+#trade-system-wrap{font-family:'Syne',sans-serif}
+#trade-system-wrap .ts-bg{background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(155,92,255,0.12),transparent)}
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#06060f;
+  --bg2:#0d0d1e;
+  --bg3:#12122a;
+  --bg4:#1a1a35;
+  --purple:#9b5cff;
+  --purple2:#7b3fe4;
+  --purple3:#c084fc;
+  --neon:#bf7fff;
+  --cyan:#00e5ff;
+  --green:#00ff9d;
+  --red:#ff4d6d;
+  --yellow:#ffd166;
+  --text:#e2e0f0;
+  --text2:#9993c4;
+  --text3:#5f5a8a;
+  --border:#2a2550;
+  --border2:#3d3570;
+  --card:#0f0f22;
+  --card2:#141430;
+  --r:10px;
+  --r2:14px;
+}
+#trade-system-wrap .ts-wrap{height:100%;font-family:'Syne',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+#trade-system-wrap{background:var(--bg);background-image:radial-gradient(ellipse 80% 50% at 50% -20%,rgba(155,92,255,0.12),transparent)}
+
+/* HEADER */
+#trade-system-wrap .ts-header{display:flex;align-items:center;justify-content:space-between;padding:16px 28px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:linear-gradient(135deg,var(--purple2),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center}
+.logo-icon svg{width:18px;height:18px;fill:white}
+.logo-text{font-size:18px;font-weight:800;color:#fff;letter-spacing:1px}
+.logo-text span{color:var(--purple3)}
+.header-total{font-family:'Space Mono',monospace;font-size:13px;color:var(--text2)}
+.header-total strong{color:var(--green);font-size:15px}
+
+/* TABS */
+#trade-system-wrap .ts-nav{background:var(--bg2);padding:0 28px;border-bottom:1px solid var(--border);display:flex;gap:4px;overflow-x:auto}
+nav::-webkit-scrollbar{height:3px}
+nav::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+#trade-system-wrap .tab{padding:14px 20px;font-size:13px;font-weight:600;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all .2s;letter-spacing:.5px;text-transform:uppercase}
+.tab:hover{color:var(--text2)}
+#trade-system-wrap .tab.active{color:var(--purple3);border-bottom-color:var(--purple)}
+.tab .tab-dot{width:6px;height:6px;border-radius:50%;display:inline-block;margin-right:7px;vertical-align:middle}
+
+/* MAIN */
+#trade-system-wrap .ts-main{padding:24px 28px;max-width:1400px;margin:0 auto}
+#trade-system-wrap .ts-page{display:none}
+#trade-system-wrap .ts-page.active{display:block;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* SECTION TITLE */
+.section-#trade-system-wrap .ts-header{margin-bottom:20px}
+.section-title{font-size:22px;font-weight:800;color:#fff}
+.section-sub{font-size:13px;color:var(--text3);margin-top:3px}
+
+/* METRIC CARDS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.metric-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;transition:border-color .2s}
+.metric-card:hover{border-color:var(--border2)}
+.metric-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.metric-value{font-family:'Space Mono',monospace;font-size:22px;font-weight:700;color:#fff}
+.metric-value.green{color:var(--green)}
+.metric-value.red{color:var(--red)}
+.metric-value.purple{color:var(--purple3)}
+.metric-value.yellow{color:var(--yellow)}
+.metric-sub{font-size:11px;color:var(--text3);margin-top:4px;font-family:'Space Mono',monospace}
+
+/* PROGRESS BAR */
+.goal-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px 22px;margin-bottom:20px}
+.goal-#trade-system-wrap .ts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.goal-title{font-size:13px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.7px}
+.goal-amounts{font-family:'Space Mono',monospace;font-size:13px;color:var(--text3)}
+.goal-amounts span{color:#fff}
+.progress-track{height:8px;background:var(--bg4);border-radius:4px;overflow:hidden;margin-bottom:8px}
+.progress-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple2),var(--cyan));transition:width .6s cubic-bezier(.4,0,.2,1);position:relative}
+.progress-fill::after{content:'';position:absolute;right:0;top:0;width:4px;height:100%;background:var(--cyan);border-radius:2px;box-shadow:0 0 8px var(--cyan)}
+.goal-footer{display:flex;justify-content:space-between;font-size:12px;color:var(--text3);font-family:'Space Mono',monospace}
+.goal-footer .pct{color:var(--purple3);font-weight:700}
+.goal-footer .remaining{color:var(--text3)}
+
+/* GRID CHARTS */
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:20px}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:18px}
+.chart-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px}
+.chart-wrap{position:relative;height:200px}
+
+/* TOKENS LIST */
+.tokens-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:20px}
+.tokens-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:14px}
+.tokens-grid{display:flex;flex-wrap:wrap;gap:8px}
+.token-badge{background:var(--bg4);border:1px solid var(--border2);border-radius:6px;padding:5px 12px;font-size:12px;font-weight:700;color:var(--text2);font-family:'Space Mono',monospace;letter-spacing:.5px;transition:all .2s;cursor:default}
+.token-badge:hover{border-color:var(--purple);color:var(--purple3)}
+
+/* REGISTER BUTTON */
+.btn-register{background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff;border:none;border-radius:var(--r);padding:11px 22px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .2s;letter-spacing:.5px}
+.btn-register:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(155,92,255,.4)}
+.btn-register:active{transform:translateY(0)}
+.page-actions{display:flex;justify-content:flex-end;margin-bottom:20px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r2);padding:28px;width:100%;max-width:480px;position:relative}
+.modal-#trade-system-wrap .ts-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
+.modal-title{font-size:17px;font-weight:800;color:#fff}
+.modal-close{background:none;border:none;color:var(--text3);cursor:pointer;font-size:22px;line-height:1;padding:4px}
+.modal-close:hover{color:var(--text)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.form-row.full{grid-template-columns:1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px}
+.form-input,.form-select{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:10px 13px;color:var(--text);font-family:'Space Mono',monospace;font-size:13px;outline:none;transition:border-color .2s;width:100%}
+.form-input:focus,.form-select:focus{border-color:var(--purple)}
+.form-select option{background:var(--bg3)}
+.autocomplete-wrap{position:relative}
+.autocomplete-list{position:absolute;top:100%;left:0;right:0;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);max-height:180px;overflow-y:auto;z-index:200;margin-top:3px;display:none}
+.autocomplete-list.open{display:block}
+.autocomplete-item{padding:9px 13px;font-family:'Space Mono',monospace;font-size:12px;cursor:pointer;display:flex;align-items:center;gap:8px;transition:background .15s}
+.autocomplete-item:hover{background:var(--bg4)}
+.autocomplete-item .symbol{color:var(--purple3);font-weight:700;min-width:60px}
+.autocomplete-item .name{color:var(--text3)}
+.form-row-result{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.result-btn{background:var(--bg4);border:1px solid var(--border);border-radius:var(--r);padding:9px;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;font-family:'Syne',sans-serif;letter-spacing:.5px}
+.result-btn.win{color:var(--green);border-color:rgba(0,255,157,.2)}
+.result-btn.win.active,.result-btn.win:hover{background:rgba(0,255,157,.1);border-color:var(--green)}
+.result-btn.loss{color:var(--red);border-color:rgba(255,77,109,.2)}
+.result-btn.loss.active,.result-btn.loss:hover{background:rgba(255,77,109,.1);border-color:var(--red)}
+.result-btn.breakeven{color:var(--yellow);border-color:rgba(255,209,102,.2)}
+.result-btn.breakeven.active,.result-btn.breakeven:hover{background:rgba(255,209,102,.1);border-color:var(--yellow)}
+.btn-submit{width:100%;background:linear-gradient(135deg,var(--purple2),var(--purple));color:#fff;border:none;border-radius:var(--r);padding:13px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:8px}
+.btn-submit:hover{box-shadow:0 4px 20px rgba(155,92,255,.4)}
+
+/* TRADE TABLE */
+.table-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
+.table-header-row{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.table-section-title{font-size:12px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.7px}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--bg4)}
+th{padding:11px 18px;font-size:11px;font-weight:700;color:var(--text3);text-align:left;text-transform:uppercase;letter-spacing:.7px}
+tbody tr{border-top:1px solid var(--border);transition:background .15s}
+tbody tr:hover{background:var(--bg4)}
+td{padding:12px 18px;font-size:13px;color:var(--text)}
+td.mono{font-family:'Space Mono',monospace;font-size:12px}
+td.green{color:var(--green);font-family:'Space Mono',monospace;font-weight:700}
+td.red{color:var(--red);font-family:'Space Mono',monospace;font-weight:700}
+td.yellow{color:var(--yellow);font-family:'Space Mono',monospace}
+.badge{display:inline-block;padding:3px 9px;border-radius:5px;font-size:11px;font-weight:700;font-family:'Space Mono',monospace}
+.badge.win{background:rgba(0,255,157,.1);color:var(--green)}
+.badge.loss{background:rgba(255,77,109,.1);color:var(--red)}
+.badge.be{background:rgba(255,209,102,.1);color:var(--yellow)}
+.empty-state{text-align:center;padding:48px 20px;color:var(--text3);font-size:13px}
+.empty-state .empty-icon{font-size:32px;margin-bottom:12px;opacity:.4}
+
+/* OVERVIEW BANCAS */
+.bancas-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-bottom:20px}
+.banca-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.banca-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;opacity:.8}
+.banca-swing::before{background:linear-gradient(90deg,var(--cyan),var(--purple3))}
+.banca-alavancagem::before{background:linear-gradient(90deg,var(--red),var(--yellow))}
+.banca-wm::before{background:linear-gradient(90deg,var(--purple),var(--cyan))}
+.banca-3030::before{background:linear-gradient(90deg,var(--green),var(--cyan))}
+.banca-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.banca-name{font-size:14px;font-weight:800;color:#fff;margin-bottom:4px}
+.banca-obj{font-size:12px;color:var(--text3);margin-bottom:14px}
+.banca-value{font-family:'Space Mono',monospace;font-size:24px;font-weight:700;color:var(--purple3)}
+.banca-allocated{font-family:'Space Mono',monospace;font-size:12px;color:var(--text3);margin-top:2px}
+.banca-pnl{font-family:'Space Mono',monospace;font-size:13px;margin-top:8px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
 /* ══ AD SLOT ══ */
 .ad-slot{background:var(--bg2);border:1px dashed var(--border2);border-radius:var(--rl);padding:1.2rem;text-align:center;color:var(--muted);font-size:12px;margin-bottom:1rem;min-height:80px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
 
@@ -977,217 +1156,455 @@ tbody tr:hover td{background:rgba(245,166,35,.03)}
 
         <!-- CONTEUDO para assinantes -->
         <div id="est-content">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;padding:.8rem 1.2rem;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);border-radius:var(--rl)">
-            <span style="font-size:1.2rem">🎯</span>
-            <div><div style="font-size:13px;font-weight:700;color:#c084fc">Estratégia Avançada — Exclusivo PRO</div><div style="font-size:11px;color:var(--muted2)">Controle suas bancas BingX e Binance com detalhamento completo</div></div>
-          </div>
+          <div id="trade-system-wrap">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:1.2rem;padding:.7rem 1.1rem;background:rgba(168,85,247,.08);border:1px solid rgba(168,85,247,.25);border-radius:var(--rl)">
+              <span style="font-size:1.1rem">🎯</span>
+              <div><div style="font-size:13px;font-weight:700;color:#c084fc">Trade System — Exclusivo PRO</div><div style="font-size:11px;color:var(--muted2)">Controle suas bancas com análises detalhadas por estratégia</div></div>
+            </div>
+<nav>
+  <div class="tab active" onclick="switchTab('geral')" data-tab="geral">
+    <span class="tab-dot" style="background:#9b5cff"></span>Geral
+  </div>
+  <div class="tab" onclick="switchTab('swing')" data-tab="swing">
+    <span class="tab-dot" style="background:#00e5ff"></span>Swing Trade
+  </div>
+  <div class="tab" onclick="switchTab('alavancagem')" data-tab="alavancagem">
+    <span class="tab-dot" style="background:#ff4d6d"></span>Alavancagem
+  </div>
+  <div class="tab" onclick="switchTab('wm')" data-tab="wm">
+    <span class="tab-dot" style="background:#c084fc"></span>WM
+  </div>
+  <div class="tab" onclick="switchTab('3030')" data-tab="3030">
+    <span class="tab-dot" style="background:#00ff9d"></span>30 em 30
+  </div>
+</nav>
+<main>
 
+<!-- ====== GERAL ====== -->
+<div class="page active" id="page-geral">
+  <div class="section-header">
+    <div class="section-title">Visão Geral do Sistema</div>
+    <div class="section-sub">Consolidado de todas as bancas — $150 alocados</div>
+  </div>
 
-  <!-- ── CARDS ── -->
-  <div class="cards-row">
-    <div class="card blue">
-      <div class="card-label">Banca Inicial</div>
-      <div class="card-value blue">$<input id="bancaInicialInput" type="number" step="0.01" min="0" placeholder="0.00" oninput="bancasSave(); bancasRender();"></div>
-      <div class="card-sub">Capital base</div>
+  <div class="metrics" id="metrics-geral">
+    <div class="metric-card">
+      <div class="metric-label">Capital Total</div>
+      <div class="metric-value purple" id="g-total">$150.00</div>
+      <div class="metric-sub">4 bancas ativas</div>
     </div>
-    <div class="card green">
-      <div class="card-label">Banca Atual</div>
-      <div class="card-value green" id="bancaAtual">$0.00</div>
-      <div class="card-sub" id="totalTradesLabel">0 trades</div>
+    <div class="metric-card">
+      <div class="metric-label">Lucro Líquido</div>
+      <div class="metric-value green" id="g-lucro">+$0.00</div>
+      <div class="metric-sub">Desde o início</div>
     </div>
-    <div class="card yellow">
-      <div class="card-label">Lucro / Prejuízo</div>
-      <div class="card-value" id="lucroVal" style="color:var(--green)">+$0.00</div>
-      <div class="card-sub" id="aportesLabel">Aportes: $0.00</div>
+    <div class="metric-card">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-value" id="g-wr">—</div>
+      <div class="metric-sub" id="g-wr-sub">0 operações</div>
     </div>
-    <div class="card purple">
-      <div class="card-label">Variação Total</div>
-      <div class="card-value purple" id="variacaoVal">+0.00%</div>
-      <div class="card-sub" id="baseLabel">Base: $0.00</div>
+    <div class="metric-card">
+      <div class="metric-label">Total Trades</div>
+      <div class="metric-value" id="g-trades">0</div>
+      <div class="metric-sub">Todas as bancas</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Melhor Trade</div>
+      <div class="metric-value green" id="g-best">—</div>
+      <div class="metric-sub" id="g-best-sub">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pior Trade</div>
+      <div class="metric-value red" id="g-worst">—</div>
+      <div class="metric-sub" id="g-worst-sub">—</div>
     </div>
   </div>
 
-  <!-- ── STATS ── -->
-  <div class="stats-row">
-    <div class="stat-card">
-      <div class="stat-number green" id="acertos">0</div>
-      <div class="stat-label">Acertos (wins)</div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">🎯 Meta Geral</div>
+      <div class="goal-amounts">Atual: <span id="g-meta-atual">$150.00</span> / Meta: <span>$300.00</span></div>
     </div>
-    <div class="stat-card">
-      <div class="stat-number red" id="erros">0</div>
-      <div class="stat-label">Erros (losses)</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-number purple" id="winrateVal">0%</div>
-      <div class="stat-label">Win rate</div>
-      <div class="winrate-bar"><div class="winrate-fill" id="winrateFill" style="width:0%"></div></div>
+    <div class="progress-track"><div class="progress-fill" id="g-meta-bar" style="width:50%"></div></div>
+    <div class="goal-footer">
+      <span class="pct" id="g-meta-pct">50%</span>
+      <span class="remaining" id="g-meta-rem">Faltam $150.00</span>
     </div>
   </div>
 
-  <!-- ── CHARTS ── -->
-  <div class="charts-row">
+  <div class="bancas-grid">
+    <div class="banca-card banca-swing" onclick="switchTab('swing')">
+      <div class="banca-name">Swing Trade</div>
+      <div class="banca-obj">Construção de patrimônio</div>
+      <div class="banca-value" id="ov-swing">$60.00</div>
+      <div class="banca-allocated">Alocado: $60.00</div>
+      <div class="banca-pnl" id="ov-swing-pnl" style="color:var(--text3)">P&L: —</div>
+    </div>
+    <div class="banca-card banca-alavancagem" onclick="switchTab('alavancagem')">
+      <div class="banca-name">Alavancagem</div>
+      <div class="banca-obj">Explosão de capital</div>
+      <div class="banca-value" id="ov-alav">$40.00</div>
+      <div class="banca-allocated">Alocado: $40.00</div>
+      <div class="banca-pnl" id="ov-alav-pnl" style="color:var(--text3)">P&L: —</div>
+    </div>
+    <div class="banca-card banca-wm" onclick="switchTab('wm')">
+      <div class="banca-name">WM</div>
+      <div class="banca-obj">Laboratório estratégico</div>
+      <div class="banca-value" id="ov-wm">$20.00</div>
+      <div class="banca-allocated">Alocado: $20.00</div>
+      <div class="banca-pnl" id="ov-wm-pnl" style="color:var(--text3)">P&L: —</div>
+    </div>
+    <div class="banca-card banca-3030" onclick="switchTab('3030')">
+      <div class="banca-name">30 em 30</div>
+      <div class="banca-obj">$1/dia → dobrar em 30d</div>
+      <div class="banca-value" id="ov-3030">$30.00</div>
+      <div class="banca-allocated">Alocado: $30.00</div>
+      <div class="banca-pnl" id="ov-3030-pnl" style="color:var(--text3)">P&L: —</div>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column:1/-1">
+      <div class="chart-title">Evolução Geral da Banca</div>
+      <div class="chart-wrap" style="height:220px"><canvas id="chart-geral-line" role="img" aria-label="Evolução do capital total ao longo do tempo">Capital total evolução</canvas></div>
+    </div>
     <div class="chart-card">
+      <div class="chart-title">Wins vs Losses (Geral)</div>
+      <div class="chart-wrap"><canvas id="chart-geral-bar" role="img" aria-label="Wins e losses de todas as bancas">Wins e losses</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Banca</div>
+      <div class="chart-wrap"><canvas id="chart-geral-pie" role="img" aria-label="Distribuição do capital por banca">Distribuição</canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ====== SWING TRADE ====== -->
+<div class="page" id="page-swing">
+  <div class="section-header">
+    <div class="section-title">📈 Swing Trade</div>
+    <div class="section-sub">Construção de patrimônio — análise macro e técnica</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn-register" onclick="openModal('swing')">+ Registrar Trade</button>
+  </div>
+  <div class="metrics" id="metrics-swing">
+    <div class="metric-card">
+      <div class="metric-label">Banca Inicial</div>
+      <div class="metric-value purple">$60.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Banca Atual</div>
+      <div class="metric-value" id="swing-atual">$60.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Lucro Líquido</div>
+      <div class="metric-value green" id="swing-lucro">+$0.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-value" id="swing-wr">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Nº Trades</div>
+      <div class="metric-value" id="swing-ntrades">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Drawdown Máx.</div>
+      <div class="metric-value red" id="swing-dd">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Melhor Trade</div>
+      <div class="metric-value green" id="swing-best">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pior Trade</div>
+      <div class="metric-value red" id="swing-worst">—</div>
+    </div>
+  </div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">🎯 Meta Swing</div>
+      <div class="goal-amounts">Atual: <span id="swing-meta-atual">$60.00</span> / Meta: <span>$120.00</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="swing-meta-bar" style="width:50%"></div></div>
+    <div class="goal-footer">
+      <span class="pct" id="swing-meta-pct">50%</span>
+      <span class="remaining" id="swing-meta-rem">Faltam $60.00</span>
+    </div>
+  </div>
+  <div class="tokens-section">
+    <div class="tokens-title">Tokens Foco</div>
+    <div class="tokens-grid">
+      <span class="token-badge">BTC</span><span class="token-badge">SOL</span><span class="token-badge">AAVE</span>
+      <span class="token-badge">LINK</span><span class="token-badge">AVAX</span><span class="token-badge">UNI</span><span class="token-badge">RENDER</span>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column:1/-1">
       <div class="chart-title">Evolução da Banca</div>
-      <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-swing-line" role="img" aria-label="Evolução da banca swing trade">Evolução</canvas></div>
     </div>
     <div class="chart-card">
-      <div class="chart-title">Distribuição</div>
-      <div class="donut-wrap"><canvas id="donutChart"></canvas></div>
-      <div class="donut-legend" id="donutLegend"></div>
+      <div class="chart-title">Wins vs Losses</div>
+      <div class="chart-wrap"><canvas id="chart-swing-bar" role="img" aria-label="Wins e losses swing">WL</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Token</div>
+      <div class="chart-wrap"><canvas id="chart-swing-pie" role="img" aria-label="Trades por token swing">Tokens</canvas></div>
     </div>
   </div>
+  <div class="table-card">
+    <div class="table-header-row"><div class="table-section-title">Histórico de Trades</div></div>
+    <div id="table-swing"></div>
+  </div>
+</div>
 
-  <!-- ── FORM ── -->
-  <div class="section">
-    <div class="section-title">Registrar Evento</div>
-
-    <!-- Exchange selector -->
-    <div style="margin-bottom:14px;">
-      <div style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Exchange</div>
-      <div class="exchange-tabs">
-        <button class="ex-tab active bingx" id="exBingx" onclick="setExchange('BINGX')">BINGX</button>
-        <button class="ex-tab binance"       id="exBinance" onclick="setExchange('BINANCE')">BINANCE</button>
-      </div>
+<!-- ====== ALAVANCAGEM ====== -->
+<div class="page" id="page-alavancagem">
+  <div class="section-header">
+    <div class="section-title">⚡ Alavancagem</div>
+    <div class="section-sub">Explosão de capital — scalping e momentum de alta volatilidade</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn-register" onclick="openModal('alavancagem')">+ Registrar Trade</button>
+  </div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Banca Inicial</div>
+      <div class="metric-value purple">$40.00</div>
     </div>
-
-    <!-- Tipo do evento -->
-    <div style="margin-bottom:14px;">
-      <div style="font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Tipo</div>
-      <div class="type-tabs">
-        <button class="type-tab active" id="typeTrade"   onclick="setType('trade')">Trade</button>
-        <button class="type-tab"        id="typeAporte"  onclick="setType('aporte')">Aporte</button>
-        <button class="type-tab"        id="typeRetirada" onclick="setType('retirada')">Retirada</button>
-      </div>
+    <div class="metric-card">
+      <div class="metric-label">Banca Atual</div>
+      <div class="metric-value" id="alav-atual">$40.00</div>
     </div>
-
-    <!-- Campos base -->
-    <div class="form-row cols-4">
-      <div class="field">
-        <label>Ativo</label>
-        <input id="fAtivo" type="text" placeholder="PEPE, WIF, ARC..." autocomplete="off">
-      </div>
-      <div class="field">
-        <label>Valor ($)</label>
-        <input id="fValor" type="number" step="0.01" min="0" placeholder="ex: 3.50">
-      </div>
-      <div class="field" id="resultadoField">
-        <label>Resultado</label>
-        <div class="resultado-group">
-          <div class="res-btn win active" id="resWin" onclick="setResultado('win')">✓ Win</div>
-          <div class="res-btn loss"       id="resLoss" onclick="setResultado('loss')">✗ Loss</div>
-        </div>
-      </div>
-      <div class="field">
-        <label>Data</label>
-        <input id="fData" type="text" placeholder="14/05">
-      </div>
+    <div class="metric-card">
+      <div class="metric-label">Lucro Líquido</div>
+      <div class="metric-value green" id="alav-lucro">+$0.00</div>
     </div>
-
-    <!-- Campos extras — ambas exchanges -->
-    <div class="binance-extras" id="tradeExtras">
-      <div class="binance-extras-title" id="extrasTitle">▸ Filtros de Qualidade — BINGX</div>
-      <div class="form-row cols-3">
-        <div class="field">
-          <label>RSI entrada</label>
-          <input id="fRsi" type="number" min="0" max="100" placeholder="ex: 28">
-        </div>
-        <div class="field">
-          <label>Nível de esticamento</label>
-          <input id="fEsticamento" type="text" placeholder="Alto / Extremo / Normal">
-        </div>
-        <div class="field">
-          <label>Motivo da confirmação</label>
-          <input id="fMotivo" type="text" placeholder="Div bullish, OB, rejeição...">
-        </div>
-      </div>
-      <div class="filter-row">
-        <div class="filter-item">
-          <label>Candle rejeição?</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" id="rej_S" onclick="toggleFilter('rej','S')">S</button>
-            <button class="toggle-btn" id="rej_N" onclick="toggleFilter('rej','N')">N</button>
-          </div>
-        </div>
-        <div class="filter-item">
-          <label>Volume caiu?</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" id="vol_S" onclick="toggleFilter('vol','S')">S</button>
-            <button class="toggle-btn" id="vol_N" onclick="toggleFilter('vol','N')">N</button>
-          </div>
-        </div>
-        <div class="filter-item">
-          <label>Divergência?</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" id="div_S" onclick="toggleFilter('div','S')">S</button>
-            <button class="toggle-btn" id="div_N" onclick="toggleFilter('div','N')">N</button>
-          </div>
-        </div>
-        <div class="filter-item">
-          <label>Funding extremo?</label>
-          <div class="toggle-group">
-            <button class="toggle-btn" id="fund_S" onclick="toggleFilter('fund','S')">S</button>
-            <button class="toggle-btn" id="fund_N" onclick="toggleFilter('fund','N')">N</button>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>Observação emocional</label>
-        <input id="fEmocional" type="text" placeholder="Disciplinado, ansioso, sem pressa...">
-      </div>
+    <div class="metric-card">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-value" id="alav-wr">—</div>
     </div>
-
-    <div style="margin-top:12px;">
-      <button class="btn-add bingx" id="btnAdd" onclick="addTrade()">+ Adicionar trade</button>
+    <div class="metric-card">
+      <div class="metric-label">Nº Trades</div>
+      <div class="metric-value" id="alav-ntrades">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Drawdown Máx.</div>
+      <div class="metric-value red" id="alav-dd">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Melhor Trade</div>
+      <div class="metric-value green" id="alav-best">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pior Trade</div>
+      <div class="metric-value red" id="alav-worst">—</div>
     </div>
   </div>
-
-  <!-- ── HISTÓRICO ── -->
-  <div class="section">
-    <div class="history-header">
-      <div class="section-title" style="margin-bottom:0;">Histórico Completo</div>
-      <div class="filter-bar">
-        <select class="filter-select" id="filterExchange" onchange="renderHistory()">
-          <option value="">Todas exchanges</option>
-          <option value="BINGX">BINGX</option>
-          <option value="BINANCE">BINANCE</option>
-        </select>
-        <select class="filter-select" id="filterType" onchange="renderHistory()">
-          <option value="">Todos tipos</option>
-          <option value="trade">Trade</option>
-          <option value="aporte">Aporte</option>
-          <option value="retirada">Retirada</option>
-        </select>
-        <select class="filter-select" id="filterResult" onchange="renderHistory()">
-          <option value="">Todos resultados</option>
-          <option value="win">Wins</option>
-          <option value="loss">Losses</option>
-        </select>
-      </div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">🎯 Meta Alavancagem</div>
+      <div class="goal-amounts">Atual: <span id="alav-meta-atual">$40.00</span> / Meta: <span>$200.00</span></div>
     </div>
-    <div style="overflow-x:auto; margin-top:14px;">
-      <table>
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Exchange</th>
-            <th>Ativo</th>
-            <th>Tipo</th>
-            <th>Resultado</th>
-            <th>Valor ($)</th>
-            <th>RSI</th>
-            <th>Rej.</th>
-            <th>Vol.</th>
-            <th>Div.</th>
-            <th>Fund.</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="histBody"></tbody>
-      </table>
+    <div class="progress-track"><div class="progress-fill" id="alav-meta-bar" style="width:20%"></div></div>
+    <div class="goal-footer">
+      <span class="pct" id="alav-meta-pct">20%</span>
+      <span class="remaining" id="alav-meta-rem">Faltam $160.00</span>
     </div>
   </div>
+  <div class="tokens-section">
+    <div class="tokens-title">Tokens Foco</div>
+    <div class="tokens-grid">
+      <span class="token-badge">HYPE</span><span class="token-badge">ARC</span><span class="token-badge">FARTCOIN</span>
+      <span class="token-badge">PUMP</span><span class="token-badge">JUP</span><span class="token-badge">RAY</span>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column:1/-1">
+      <div class="chart-title">Evolução da Banca</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-alav-line" role="img" aria-label="Evolução banca alavancagem">Evolução</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Wins vs Losses</div>
+      <div class="chart-wrap"><canvas id="chart-alav-bar" role="img" aria-label="WL alavancagem">WL</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Token</div>
+      <div class="chart-wrap"><canvas id="chart-alav-pie" role="img" aria-label="Tokens alavancagem">Tokens</canvas></div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-header-row"><div class="table-section-title">Histórico de Trades</div></div>
+    <div id="table-alavancagem"></div>
+  </div>
+</div>
 
+<!-- ====== WM ====== -->
+<div class="page" id="page-wm">
+  <div class="section-header">
+    <div class="section-title">🔬 WM</div>
+    <div class="section-sub">Laboratório estratégico — validação de edge e execução</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn-register" onclick="openModal('wm')">+ Registrar Trade</button>
+  </div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Banca Inicial</div>
+      <div class="metric-value purple">$20.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Banca Atual</div>
+      <div class="metric-value" id="wm-atual">$20.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Lucro Líquido</div>
+      <div class="metric-value green" id="wm-lucro">+$0.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-value" id="wm-wr">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Nº Trades</div>
+      <div class="metric-value" id="wm-ntrades">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Drawdown Máx.</div>
+      <div class="metric-value red" id="wm-dd">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Melhor Trade</div>
+      <div class="metric-value green" id="wm-best">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pior Trade</div>
+      <div class="metric-value red" id="wm-worst">—</div>
+    </div>
+  </div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">🎯 Meta WM</div>
+      <div class="goal-amounts">Atual: <span id="wm-meta-atual">$20.00</span> / Meta: <span>$50.00</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="wm-meta-bar" style="width:40%"></div></div>
+    <div class="goal-footer">
+      <span class="pct" id="wm-meta-pct">40%</span>
+      <span class="remaining" id="wm-meta-rem">Faltam $30.00</span>
+    </div>
+  </div>
+  <div class="tokens-section">
+    <div class="tokens-title">Tokens Foco</div>
+    <div class="tokens-grid">
+      <span class="token-badge">JTO</span><span class="token-badge">PYTH</span><span class="token-badge">METEORA</span>
+      <span class="token-badge">PENDLE</span><span class="token-badge">SOL</span>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column:1/-1">
+      <div class="chart-title">Evolução da Banca</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-wm-line" role="img" aria-label="Evolução banca WM">Evolução</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Wins vs Losses</div>
+      <div class="chart-wrap"><canvas id="chart-wm-bar" role="img" aria-label="WL WM">WL</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Token</div>
+      <div class="chart-wrap"><canvas id="chart-wm-pie" role="img" aria-label="Tokens WM">Tokens</canvas></div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-header-row"><div class="table-section-title">Histórico de Trades</div></div>
+    <div id="table-wm"></div>
+  </div>
+</div>
 
+<!-- ====== 30 EM 30 ====== -->
+<div class="page" id="page-3030">
+  <div class="section-header">
+    <div class="section-title">🎯 30 em 30</div>
+    <div class="section-sub">$1/dia — transformar $30 em $60 em 30 dias</div>
+  </div>
+  <div class="page-actions">
+    <button class="btn-register" onclick="openModal('3030')">+ Registrar Trade</button>
+  </div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Banca Inicial</div>
+      <div class="metric-value purple">$30.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Banca Atual</div>
+      <div class="metric-value" id="t3030-atual">$30.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Lucro Líquido</div>
+      <div class="metric-value green" id="t3030-lucro">+$0.00</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Win Rate</div>
+      <div class="metric-value" id="t3030-wr">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Nº Trades</div>
+      <div class="metric-value" id="t3030-ntrades">0</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Drawdown Máx.</div>
+      <div class="metric-value red" id="t3030-dd">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Melhor Trade</div>
+      <div class="metric-value green" id="t3030-best">—</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Pior Trade</div>
+      <div class="metric-value red" id="t3030-worst">—</div>
+    </div>
+  </div>
+  <div class="goal-card">
+    <div class="goal-header">
+      <div class="goal-title">🎯 Meta 30 em 30</div>
+      <div class="goal-amounts">Atual: <span id="t3030-meta-atual">$30.00</span> / Meta: <span>$60.00</span></div>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="t3030-meta-bar" style="width:50%"></div></div>
+    <div class="goal-footer">
+      <span class="pct" id="t3030-meta-pct">50%</span>
+      <span class="remaining" id="t3030-meta-rem">Faltam $30.00</span>
+    </div>
+  </div>
+  <div class="tokens-section">
+    <div class="tokens-title">Tokens Foco</div>
+    <div class="tokens-grid">
+      <span class="token-badge">SOL</span><span class="token-badge">JUP</span><span class="token-badge">LINK</span>
+      <span class="token-badge">PYTH</span><span class="token-badge">RAY</span>
+    </div>
+  </div>
+  <div class="charts-grid">
+    <div class="chart-card" style="grid-column:1/-1">
+      <div class="chart-title">Evolução da Banca</div>
+      <div class="chart-wrap" style="height:200px"><canvas id="chart-3030-line" role="img" aria-label="Evolução banca 30 em 30">Evolução</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Wins vs Losses</div>
+      <div class="chart-wrap"><canvas id="chart-3030-bar" role="img" aria-label="WL 30em30">WL</canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-title">Distribuição por Token</div>
+      <div class="chart-wrap"><canvas id="chart-3030-pie" role="img" aria-label="Tokens 30em30">Tokens</canvas></div>
+    </div>
+  </div>
+  <div class="table-card">
+    <div class="table-header-row"><div class="table-section-title">Histórico de Trades</div></div>
+    <div id="table-3030"></div>
+  </div>
+</div>
+
+</main>
+          </div>
         </div><!-- /est-content -->
       </div><!-- /trade-sub-estrategia -->
     </div><!-- /page-trade -->
@@ -1424,8 +1841,28 @@ function authAction(){
   var p=loginTab==='login'?auth.signInWithEmailAndPassword(email,pass):auth.createUserWithEmailAndPassword(email,pass);
   p.catch(function(e){ var msgs={'auth/user-not-found':'Email não encontrado.','auth/wrong-password':'Senha incorreta.','auth/email-already-in-use':'Email já cadastrado.','auth/invalid-email':'Email inválido.','auth/weak-password':'Senha fraca.','auth/invalid-credential':'Email ou senha incorretos.'}; errEl.textContent=msgs[e.code]||'Erro: '+e.message; btn.disabled=false; btn.textContent=loginTab==='login'?'Entrar':'Criar conta'; });
 }
-function loginGoogle(){ if(DEMO_MODE){toast('Google não disponível no modo demo.','err');return;} auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){document.getElementById('l-err').textContent='Erro: '+e.message;}); }
+function loginGoogle(){ if(DEMO_MODE){toast('Google não disponível no modo demo.','err');return;} auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(function(e){var msg=e.message||'';document.getElementById('l-err').textContent=msg.indexOf('auth/unauthorized-domain')>=0?'Domínio não autorizado no Firebase. Acesse o Console Firebase → Authentication → Settings → Authorized domains e adicione mundodefi.com.br':'Erro: '+msg;}); }
 function logOut(){ if(DEMO_MODE){currentUser=null;document.getElementById('login-screen').classList.remove('hidden');return;} auth.signOut(); }
+// ── PRO WHITELIST — emails que sempre entram como PRO ──
+var _PRO_EMAILS = [
+  'juniordezzz@gmail.com',  // seu email principal
+  // adicione mais emails de membros PRO aqui
+];
+
+function _checkProAccess(email){
+  if(!email) return;
+  var emailLower = email.toLowerCase().trim();
+  if(_PRO_EMAILS.indexOf(emailLower) >= 0){
+    IS_PRO = true;
+    localStorage.setItem('ct_plano', 'pro');
+  } else {
+    // Check localStorage (para quem pagou via integração futura)
+    var plano = localStorage.getItem('ct_plano') || 'free';
+    IS_PRO = (plano === 'pro');
+  }
+  _updatePlanLabel();
+}
+
 function onLoginSuccess(){
   _isVisitor = false;
   document.getElementById('login-screen').classList.add('hidden');
@@ -1433,6 +1870,8 @@ function onLoginSuccess(){
   document.getElementById('sb-av').textContent=name.slice(0,2).toUpperCase();
   document.getElementById('sb-uname').textContent=currentUser.email||name;
   var ce=document.getElementById('cfg-email'); if(ce) ce.textContent=currentUser.email||name;
+  // Check PRO access based on email
+  _checkProAccess(currentUser.email);
   loadFS(function(){ renderAll(); initBgCanvas(); });
 }
 // Visitor mode functions
@@ -1915,23 +2354,19 @@ function setTradeTab(tab){
 }
 
 function verificarAcessoPRO(){
-  // Check in Firestore if user has PRO plan
-  // For now: check localStorage flag 'ct_plano'
-  var plano = localStorage.getItem('ct_plano') || 'free';
   var lock = document.getElementById('est-lock');
-  var content = document.getElementById('est-content');
-  if(plano === 'free'){
-    // Show lock
+  var cont = document.getElementById('est-content');
+  if(!IS_PRO){
     if(lock) lock.style.display = 'block';
-    if(content) content.style.opacity = '0.15';
-    if(content) content.style.pointerEvents = 'none';
+    if(cont){ cont.style.opacity = '0.15'; cont.style.pointerEvents = 'none'; }
   } else {
-    // PRO or Premium — show content
     if(lock) lock.style.display = 'none';
-    if(content) content.style.opacity = '1';
-    if(content) content.style.pointerEvents = '';
-    // Init bancas tracker
-    if(typeof initBancas === 'function') initBancas();
+    if(cont){ cont.style.opacity = '1'; cont.style.pointerEvents = ''; }
+    // Init trade system
+    setTimeout(function(){
+      if(typeof initTradeSystem === 'function') initTradeSystem();
+      else if(typeof init === 'function') init();
+    }, 100);
   }
 }
 
@@ -3205,6 +3640,376 @@ if(typeof renderGeral==='function'){
 }
 // Also load on startup after 1s
 setTimeout(function(){if(!_glLoaded){_glLoaded=true;_fetchGainersLosers();}},1000);
+
+
+// ══ TRADE SYSTEM JS ══
+
+// ===== CRYPTO LIST (500+ principais) =====
+const CRYPTOS = [
+  {s:'BTC',n:'Bitcoin'},{s:'ETH',n:'Ethereum'},{s:'SOL',n:'Solana'},{s:'BNB',n:'BNB'},
+  {s:'XRP',n:'Ripple'},{s:'USDC',n:'USD Coin'},{s:'ADA',n:'Cardano'},{s:'AVAX',n:'Avalanche'},
+  {s:'DOGE',n:'Dogecoin'},{s:'TRX',n:'TRON'},{s:'LINK',n:'Chainlink'},{s:'DOT',n:'Polkadot'},
+  {s:'MATIC',n:'Polygon'},{s:'LTC',n:'Litecoin'},{s:'SHIB',n:'Shiba Inu'},{s:'DAI',n:'Dai'},
+  {s:'UNI',n:'Uniswap'},{s:'ATOM',n:'Cosmos'},{s:'XLM',n:'Stellar'},{s:'NEAR',n:'NEAR Protocol'},
+  {s:'BCH',n:'Bitcoin Cash'},{s:'ALGO',n:'Algorand'},{s:'VET',n:'VeChain'},{s:'ICP',n:'Internet Computer'},
+  {s:'FIL',n:'Filecoin'},{s:'HBAR',n:'Hedera'},{s:'APT',n:'Aptos'},{s:'ARB',n:'Arbitrum'},
+  {s:'OP',n:'Optimism'},{s:'MANA',n:'Decentraland'},{s:'SAND',n:'The Sandbox'},{s:'AXS',n:'Axie Infinity'},
+  {s:'THETA',n:'Theta Network'},{s:'EOS',n:'EOS'},{s:'AAVE',n:'Aave'},{s:'GRT',n:'The Graph'},
+  {s:'SNX',n:'Synthetix'},{s:'MKR',n:'Maker'},{s:'COMP',n:'Compound'},{s:'CRV',n:'Curve DAO'},
+  {s:'1INCH',n:'1inch'},{s:'SUSHI',n:'SushiSwap'},{s:'YFI',n:'yearn.finance'},{s:'BAL',n:'Balancer'},
+  {s:'ZRX',n:'0x Protocol'},{s:'ENJ',n:'Enjin Coin'},{s:'CHZ',n:'Chiliz'},{s:'BAT',n:'Basic Attention'},
+  {s:'FLOW',n:'Flow'},{s:'HNT',n:'Helium'},{s:'ZEC',n:'Zcash'},{s:'DASH',n:'Dash'},
+  {s:'XMR',n:'Monero'},{s:'CAKE',n:'PancakeSwap'},{s:'XTZ',n:'Tezos'},{s:'WAVES',n:'Waves'},
+  {s:'NEO',n:'NEO'},{s:'KLAY',n:'Klaytn'},{s:'KSM',n:'Kusama'},{s:'ROSE',n:'Oasis Network'},
+  {s:'ONE',n:'Harmony'},{s:'IOTA',n:'IOTA'},{s:'ZIL',n:'Zilliqa'},{s:'HOT',n:'Holo'},
+  {s:'AUDIO',n:'Audius'},{s:'CELR',n:'Celer Network'},{s:'SKL',n:'SKALE'},{s:'STORJ',n:'Storj'},
+  {s:'OGN',n:'Origin Protocol'},{s:'LRC',n:'Loopring'},{s:'CVC',n:'Civic'},{s:'KNC',n:'Kyber Network'},
+  {s:'BNT',n:'Bancor'},{s:'REP',n:'Augur'},{s:'RLC',n:'iExec RLC'},{s:'MTL',n:'Metal DAO'},
+  {s:'FET',n:'Fetch.ai'},{s:'OCEAN',n:'Ocean Protocol'},{s:'NMR',n:'Numeraire'},{s:'MLN',n:'Enzyme'},
+  {s:'BAND',n:'Band Protocol'},{s:'REN',n:'Ren'},{s:'OXT',n:'Orchid'},{s:'TWT',n:'Trust Wallet'},
+  {s:'SXP',n:'Swipe'},{s:'ALPHA',n:'Alpha Finance'},{s:'DYDX',n:'dYdX'},{s:'IMX',n:'Immutable'},
+  {s:'LDO',n:'Lido DAO'},{s:'RPL',n:'Rocket Pool'},{s:'CVX',n:'Convex Finance'},{s:'FXS',n:'Frax Share'},
+  {s:'PENDLE',n:'Pendle'},{s:'JUP',n:'Jupiter'},{s:'RAY',n:'Raydium'},{s:'PYTH',n:'Pyth Network'},
+  {s:'JTO',n:'Jito'},{s:'RENDER',n:'Render'},{s:'RNDR',n:'Render Token'},{s:'HYPE',n:'Hyperliquid'},
+  {s:'ARC',n:'ARC'},{s:'FARTCOIN',n:'Fartcoin'},{s:'PUMP',n:'PumpFun'},{s:'METEORA',n:'Meteora'},
+  {s:'BONK',n:'Bonk'},{s:'WIF',n:'dogwifhat'},{s:'POPCAT',n:'Popcat'},{s:'MEW',n:'cat in a dogs world'},
+  {s:'BRETT',n:'Brett'},{s:'PEPE',n:'Pepe'},{s:'FLOKI',n:'Floki'},{s:'TURBO',n:'Turbo'},
+  {s:'MOG',n:'Mog Coin'},{s:'BOME',n:'BOOK OF MEME'},{s:'TRUMP',n:'OFFICIAL TRUMP'},{s:'MELANIA',n:'MELANIA MEME'},
+  {s:'TON',n:'Toncoin'},{s:'SUI',n:'Sui'},{s:'SEI',n:'Sei'},{s:'INJ',n:'Injective'},
+  {s:'TIA',n:'Celestia'},{s:'BLUR',n:'Blur'},{s:'MAGIC',n:'Magic'},{s:'GMX',n:'GMX'},
+  {s:'GNS',n:'Gains Network'},{s:'RDNT',n:'Radiant Capital'},{s:'VELA',n:'Vela Exchange'},
+  {s:'PERP',n:'Perpetual Protocol'},{s:'DRIFT',n:'Drift Protocol'},{s:'MANGO',n:'Mango Markets'},
+  {s:'PORT',n:'Port Finance'},{s:'LARIX',n:'Larix'},{s:'SLND',n:'Solend'},{s:'TULIP',n:'Tulip Protocol'},
+  {s:'MNGO',n:'Mango'},{s:'ORCA',n:'Orca'},{s:'STEP',n:'Step Finance'},{s:'SLIM',n:'Solanium'},
+  {s:'GENE',n:'Genopets'},{s:'SAMO',n:'Samoyedcoin'},{s:'COPE',n:'Cope'},{s:'SRM',n:'Serum'},
+  {s:'FIDA',n:'Bonfida'},{s:'MAPS',n:'Maps.me Token'},{s:'OXY',n:'Oxygen'},{s:'MEDIA',n:'Media Network'},
+  {s:'PORT3',n:'Port3 Network'},{s:'STRM',n:'Stream Protocol'},{s:'GEM',n:'GemGuardian'},
+  {s:'FTM',n:'Fantom'},{s:'KAVA',n:'Kava'},{s:'CELO',n:'Celo'},{s:'QNT',n:'Quant'},
+  {s:'EGLD',n:'MultiversX'},{s:'HBAR',n:'Hedera'},{s:'XDC',n:'XDC Network'},{s:'CSPR',n:'Casper'},
+  {s:'MINA',n:'Mina Protocol'},{s:'CFX',n:'Conflux'},{s:'GLMR',n:'Moonbeam'},{s:'MOVR',n:'Moonriver'},
+  {s:'ACA',n:'Acala'},{s:'ASTR',n:'Astar'},{s:'CLV',n:'Clover Finance'},{s:'PHA',n:'Phala Network'},
+  {s:'PARA',n:'Paralink'},{s:'LAO',n:'LAO'},{s:'AGLD',n:'Adventure Gold'},{s:'ENS',n:'Ethereum Name Service'},
+  {s:'LOOKS',n:'LooksRare'},{s:'RARI',n:'Rarible'},{s:'SUPER',n:'SuperFarm'},{s:'ALICE',n:'My Neighbor Alice'},
+  {s:'TLM',n:'Alien Worlds'},{s:'HERO',n:'Metahero'},{s:'GHST',n:'Aavegotchi'},{s:'TOWER',n:'Crazy Defense Heroes'},
+  {s:'GODS',n:'Gods Unchained'},{s:'ILV',n:'Illuvium'},{s:'YIELD',n:'Yield Guild Games'},{s:'YGG',n:'Yield Guild Games'},
+  {s:'PYR',n:'Vulcan Forged'},{s:'STARL',n:'Star Atlas'},{s:'ATLAS',n:'Star Atlas'},{s:'POLIS',n:'Star Atlas DAO'},
+  {s:'SLP',n:'Smooth Love Potion'},{s:'RON',n:'Ronin'},{s:'GALA',n:'Gala'},{s:'GMT',n:'STEPN'},
+  {s:'GST',n:'Green Satoshi Token'},{s:'SWEAT',n:'Sweat Economy'},{s:'DESO',n:'Decentralized Social'},
+  {s:'MASK',n:'Mask Network'},{s:'RSS3',n:'RSS3'},{s:'CYBER',n:'CyberConnect'},{s:'NEST',n:'NEST Protocol'},
+  {s:'ID',n:'Space ID'},{s:'APE',n:'ApeCoin'},{s:'LOOKS',n:'LooksRare'},{s:'X2Y2',n:'X2Y2'},
+  {s:'RARE',n:'SuperRare'},{s:'NFTX',n:'NFTX'},{s:'WHALE',n:'WHALE'},{s:'LOOT',n:'Loot'},
+  {s:'STMX',n:'StormX'},{s:'CELR',n:'Celer'},{s:'BFC',n:'Bifrost'},{s:'NULS',n:'Nuls'},
+  {s:'WAN',n:'Wanchain'},{s:'PIVX',n:'PIVX'},{s:'NAV',n:'NavCoin'},{s:'PAC',n:'PACcoin'},
+  {s:'XVG',n:'Verge'},{s:'DCR',n:'Decred'},{s:'LSK',n:'Lisk'},{s:'ARK',n:'Ark'},
+  {s:'DGB',n:'DigiByte'},{s:'SC',n:'Siacoin'},{s:'XEM',n:'NEM'},{s:'STEEM',n:'Steem'},
+  {s:'HIVE',n:'Hive'},{s:'ETC',n:'Ethereum Classic'},{s:'BTG',n:'Bitcoin Gold'},{s:'BSV',n:'Bitcoin SV'},
+  {s:'BCHA',n:'Bitcoin Cash ABC'},{s:'RVN',n:'Ravencoin'},{s:'KMD',n:'Komodo'},{s:'SYS',n:'Syscoin'},
+  {s:'VTHO',n:'VeThor Token'},{s:'WAN',n:'Wanchain'},{s:'POWR',n:'Power Ledger'},{s:'AGI',n:'SingularityNET'},
+  {s:'AGIX',n:'SingularityNET'},{s:'NKN',n:'NKN'},{s:'PHB',n:'Phoenix Global'},{s:'PUNDIX',n:'Pundi X'},
+  {s:'RIF',n:'RSK Infrastructure Framework'},{s:'COTI',n:'COTI'},{s:'ARDR',n:'Ardor'},
+  {s:'IGNIS',n:'Ignis'},{s:'AION',n:'Aion'},{s:'DENT',n:'Dent'},{s:'MITH',n:'Mithril'},
+  {s:'MOC',n:'Moss Coin'},{s:'GO',n:'GoChain'},{s:'MONA',n:'MonaCoin'},{s:'BCD',n:'Bitcoin Diamond'},
+  {s:'SATS',n:'Ordinals'},{s:'ORDI',n:'Ordinals'},{s:'RATS',n:'RATS'},{s:'NALS',n:'Nals'},
+  {s:'TRAC',n:'Tracers'},{s:'NODE',n:'DappNode'},{s:'ZKS',n:'ZKSwap'},{s:'ZETA',n:'ZetaChain'},
+  {s:'PYUSD',n:'PayPal USD'},{s:'USDT',n:'Tether'},{s:'BUSD',n:'Binance USD'},{s:'TUSD',n:'TrueUSD'},
+  {s:'FRAX',n:'Frax'},{s:'LUSD',n:'Liquity USD'},{s:'GUSD',n:'Gemini Dollar'},{s:'USDD',n:'USDD'},
+  {s:'USDP',n:'Pax Dollar'},{s:'CUSD',n:'Celo Dollar'},{s:'EUROC',n:'Euro Coin'},{s:'EURS',n:'STASIS EURO'},
+  {s:'STETH',n:'Lido Staked Ether'},{s:'RETH',n:'Rocket Pool ETH'},{s:'CBETH',n:'Coinbase ETH'},
+  {s:'WBTC',n:'Wrapped Bitcoin'},{s:'WETH',n:'Wrapped Ether'},{s:'WSOL',n:'Wrapped SOL'},
+];
+
+// ===== STATE =====
+const bancas = {
+  swing:       {initial:60,  goal:120,  trades:[], acutal:60},
+  alavancagem: {initial:40,  goal:200,  trades:[], actual:40},
+  wm:          {initial:20,  goal:50,   trades:[], actual:20},
+  '3030':      {initial:30,  goal:60,   trades:[], actual:30},
+};
+let currentResult = null;
+let charts = {};
+
+// ===== TABS =====
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector(`[data-tab="${name}"]`).classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  setTimeout(()=>refreshCharts(name),50);
+}
+
+// ===== MODAL =====
+function openModal(banca){
+  const names={swing:'Swing Trade',alavancagem:'Alavancagem',wm:'WM','3030':'30 em 30'};
+  document.getElementById('modal-title').textContent='Registrar Trade — '+names[banca];
+  document.getElementById('modal-banca').value=banca;
+  document.getElementById('f-data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('f-token').value='';
+  document.getElementById('f-valor').value='';
+  document.getElementById('f-resultado').value='';
+  document.getElementById('f-obs').value='';
+  currentResult=null;
+  ['win','loss','be'].forEach(c=>document.getElementById('btn-'+c).classList.remove('active'));
+  document.getElementById('modal-overlay').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-overlay').classList.remove('open');document.getElementById('autocomplete-list').classList.remove('open')}
+function closeModalOutside(e){if(e.target===document.getElementById('modal-overlay'))closeModal()}
+function setResult(r){
+  currentResult=r;
+  ['win','loss','be'].forEach(c=>document.getElementById('btn-'+c).classList.remove('active'));
+  const map={WIN:'win',LOSS:'loss',BE:'be'};
+  document.getElementById('btn-'+map[r]).classList.add('active');
+  const val=parseFloat(document.getElementById('f-resultado').value)||0;
+  if(r==='WIN'&&val<=0&&val!==0){}
+  if(r==='LOSS'&&val>0)document.getElementById('f-resultado').value=(-val).toFixed(2);
+  if(r==='BE')document.getElementById('f-resultado').value='0.00';
+}
+
+// ===== AUTOCOMPLETE =====
+function handleTokenInput(val){
+  const list=document.getElementById('autocomplete-list');
+  if(!val||val.length<1){list.classList.remove('open');return}
+  const q=val.toUpperCase();
+  const matches=CRYPTOS.filter(c=>c.s.startsWith(q)||c.n.toUpperCase().startsWith(q)).slice(0,8);
+  if(!matches.length){list.classList.remove('open');return}
+  list.innerHTML=matches.map(c=>`<div class="autocomplete-item" onclick="selectToken('${c.s}')"><span class="symbol">${c.s}</span><span class="name">${c.n}</span></div>`).join('');
+  list.classList.add('open');
+}
+function selectToken(sym){
+  document.getElementById('f-token').value=sym;
+  document.getElementById('autocomplete-list').classList.remove('open');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.autocomplete-wrap'))document.getElementById('autocomplete-list').classList.remove('open')});
+
+// ===== SAVE TRADE =====
+function saveTrade(){
+  const banca=document.getElementById('modal-banca').value;
+  const data=document.getElementById('f-data').value;
+  const tipo=document.getElementById('f-tipo').value;
+  const token=document.getElementById('f-token').value.trim().toUpperCase();
+  const valor=parseFloat(document.getElementById('f-valor').value)||0;
+  const resultado=parseFloat(document.getElementById('f-resultado').value)||0;
+  const obs=document.getElementById('f-obs').value;
+  if(!data||!token||!currentResult){alert('Preencha data, token e resultado!');return}
+  const trade={id:Date.now(),data,tipo,token,valor,resultado,status:currentResult,obs};
+  bancas[banca].trades.push(trade);
+  saveToStorage();
+  closeModal();
+  updateAll();
+  refreshCharts(banca);
+  refreshCharts('geral');
+}
+
+// ===== METRICS COMPUTE =====
+function computeMetrics(banca){
+  const b=bancas[banca];
+  const trades=b.trades;
+  const total=trades.reduce((s,t)=>s+t.resultado,0);
+  const atual=b.initial+total;
+  const wins=trades.filter(t=>t.status==='WIN').length;
+  const losses=trades.filter(t=>t.status==='LOSS').length;
+  const wr=trades.length>0?Math.round(wins/trades.length*100):null;
+  const resultados=trades.map(t=>t.resultado);
+  const best=resultados.length?Math.max(...resultados):null;
+  const worst=resultados.length?Math.min(...resultados):null;
+  let dd=0,peak=b.initial,cur=b.initial;
+  for(const t of trades){cur+=t.resultado;if(cur>peak)peak=cur;const d=peak-cur;if(d>dd)dd=d;}
+  const bestTrade=best!==null?trades.find(t=>t.resultado===best):null;
+  const worstTrade=worst!==null?trades.find(t=>t.resultado===worst):null;
+  return{atual,total,wins,losses,wr,best,worst,dd,bestTrade,worstTrade,count:trades.length};
+}
+
+function fmtUSD(v){return(v>=0?'+':'')+v.toFixed(2)}
+function fmtAbs(v){return v===null?'—':'$'+Math.abs(v).toFixed(2)}
+function fmtPct(v){return v===null?'—':v+'%'}
+
+function updateBanca(banca){
+  const m=computeMetrics(banca);
+  const prefix=banca==='3030'?'t3030':banca;
+  const setEl=(id,val)=>{const e=document.getElementById(id);if(e)e.textContent=val};
+  const setClass=(id,cls)=>{const e=document.getElementById(id);if(e){e.className='metric-value '+cls}};
+  setEl(prefix+'-atual','$'+m.atual.toFixed(2));
+  setClass(prefix+'-atual',m.atual>=bancas[banca].initial?'green':'red');
+  setEl(prefix+'-lucro',fmtUSD(m.total));
+  setClass(prefix+'-lucro',m.total>=0?'green':'red');
+  setEl(prefix+'-wr',fmtPct(m.wr));
+  setEl(prefix+'-ntrades',m.count);
+  setEl(prefix+'-dd',m.dd>0?'-$'+m.dd.toFixed(2):'—');
+  setEl(prefix+'-best',m.best!==null?fmtUSD(m.best):'—');
+  setEl(prefix+'-worst',m.worst!==null?fmtUSD(m.worst):'—');
+  const goal=bancas[banca].goal;
+  const pct=Math.min(100,Math.round(m.atual/goal*100));
+  const rem=goal-m.atual;
+  setEl(prefix+'-meta-atual','$'+m.atual.toFixed(2));
+  setEl(prefix+'-meta-pct',pct+'%');
+  setEl(prefix+'-meta-rem','Faltam $'+Math.max(0,rem).toFixed(2));
+  const bar=document.getElementById(prefix+'-meta-bar');
+  if(bar)bar.style.width=pct+'%';
+  renderTable(banca);
+}
+
+function updateGeral(){
+  const all=['swing','alavancagem','wm','3030'];
+  let total=0,lucro=0,wins=0,losses=0,best=null,worst=null,bestSub='',worstSub='';
+  for(const b of all){
+    const m=computeMetrics(b);
+    total+=m.atual; lucro+=m.total; wins+=m.wins; losses+=m.losses;
+    if(best===null||m.best>best){best=m.best;bestSub=m.bestTrade?m.bestTrade.token:''}
+    if(worst===null||m.worst<worst){worst=m.worst;worstSub=m.worstTrade?m.worstTrade.token:''}
+    const ov=b==='3030'?'ov-3030':b==='alavancagem'?'ov-alav':b==='wm'?'ov-wm':'ov-swing';
+    const pvEl=document.getElementById(ov);if(pvEl)pvEl.textContent='$'+m.atual.toFixed(2);
+    const pnlEl=document.getElementById(ov+'-pnl');
+    if(pnlEl){pnlEl.textContent='P&L: '+(m.total>=0?'+':'')+m.total.toFixed(2);pnlEl.style.color=m.total>0?'var(--green)':m.total<0?'var(--red)':'var(--text3)'}
+  }
+  document.getElementById('g-total').textContent='$'+total.toFixed(2);
+  document.getElementById('header-total').textContent='$'+total.toFixed(2);
+  const lEl=document.getElementById('g-lucro');lEl.textContent=fmtUSD(lucro);lEl.className='metric-value '+(lucro>=0?'green':'red');
+  const tc=wins+losses;
+  document.getElementById('g-wr').textContent=tc>0?Math.round(wins/tc*100)+'%':'—';
+  document.getElementById('g-wr-sub').textContent=tc+' operações';
+  document.getElementById('g-trades').textContent=tc;
+  document.getElementById('g-best').textContent=best!==null?fmtUSD(best):'—';
+  document.getElementById('g-best-sub').textContent=bestSub||'—';
+  document.getElementById('g-worst').textContent=worst!==null?fmtUSD(worst):'—';
+  document.getElementById('g-worst-sub').textContent=worstSub||'—';
+  const goal=300,pct=Math.min(100,Math.round(total/goal*100)),rem=goal-total;
+  document.getElementById('g-meta-atual').textContent='$'+total.toFixed(2);
+  document.getElementById('g-meta-pct').textContent=pct+'%';
+  document.getElementById('g-meta-rem').textContent='Faltam $'+Math.max(0,rem).toFixed(2);
+  document.getElementById('g-meta-bar').style.width=pct+'%';
+}
+
+function updateAll(){
+  ['swing','alavancagem','wm','3030'].forEach(b=>updateBanca(b));
+  updateGeral();
+}
+
+// ===== TABLE =====
+function renderTable(banca){
+  const prefix=banca==='3030'?'table-3030':'table-'+banca;
+  const el=document.getElementById(prefix);
+  if(!el)return;
+  const trades=[...bancas[banca].trades].reverse();
+  if(!trades.length){el.innerHTML=`<div class="empty-state"><div class="empty-icon">📭</div>Nenhum trade registrado — clique em "+ Registrar Trade"</div>`;return}
+  el.innerHTML=`<table><thead><tr>
+    <th>#</th><th>Data</th><th>Tipo</th><th>Token</th><th>Valor</th><th>Resultado</th><th>Status</th><th>Banca Após</th><th>Obs</th>
+  </tr></thead><tbody>${trades.map((t,i)=>{
+    const idx=bancas[banca].trades.length-i;
+    let running=bancas[banca].initial;
+    for(let j=0;j<bancas[banca].trades.length;j++){running+=bancas[banca].trades[j].resultado;if(bancas[banca].trades[j].id===t.id)break}
+    const sc=t.resultado>0?'green':t.resultado<0?'red':'yellow';
+    const bc=t.status==='WIN'?'win':t.status==='LOSS'?'loss':'be';
+    return`<tr>
+      <td class="mono">${idx}</td>
+      <td>${t.data}</td>
+      <td><span class="badge" style="background:rgba(155,92,255,.15);color:var(--purple3)">${t.tipo}</span></td>
+      <td><strong>${t.token}</strong></td>
+      <td class="mono">$${(t.valor||0).toFixed(2)}</td>
+      <td class="mono ${sc}">${fmtUSD(t.resultado)}</td>
+      <td><span class="badge ${bc}">${t.status}</span></td>
+      <td class="mono">$${running.toFixed(2)}</td>
+      <td style="color:var(--text3);font-size:12px">${t.obs||'—'}</td>
+    </tr>`}).join('')}</tbody></table>`;
+}
+
+// ===== CHARTS =====
+const C={
+  purple:'#9b5cff',cyan:'#00e5ff',green:'#00ff9d',red:'#ff4d6d',
+  yellow:'#ffd166',bg:'#1a1a35',grid:'rgba(255,255,255,0.05)',text:'#9993c4'
+};
+function chartDefaults(){return{plugins:{legend:{display:false}},scales:{x:{grid:{color:C.grid},ticks:{color:C.text,font:{size:11}}},y:{grid:{color:C.grid},ticks:{color:C.text,font:{size:11},callback:v=>'$'+v}}}}}
+
+function getEvolution(banca){
+  const b=bancas[banca];
+  let cur=b.initial;
+  const pts=[{x:'Início',y:cur}];
+  for(const t of b.trades){cur+=t.resultado;pts.push({x:t.data||t.token,y:parseFloat(cur.toFixed(2))})}
+  return{labels:pts.map(p=>p.x),data:pts.map(p=>p.y)}
+}
+
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id]}}
+
+function buildLineChart(id,banca,color){
+  destroyChart(id);
+  const cv=document.getElementById(id);if(!cv)return;
+  const ev=getEvolution(banca);
+  charts[id]=new Chart(cv,{type:'line',data:{labels:ev.labels,datasets:[{label:'Banca',data:ev.data,borderColor:color,backgroundColor:color+'22',fill:true,tension:0.4,pointBackgroundColor:color,pointRadius:4,borderWidth:2}]},options:{...chartDefaults(),responsive:true,maintainAspectRatio:false}});
+}
+
+function buildBarChart(id,banca,color){
+  destroyChart(id);
+  const cv=document.getElementById(id);if(!cv)return;
+  const m=computeMetrics(banca);
+  charts[id]=new Chart(cv,{type:'bar',data:{labels:['Wins','Losses','Break Even'],datasets:[{data:[m.wins,m.losses,bancas[banca].trades.filter(t=>t.status==='BE').length],backgroundColor:[C.green+'88',C.red+'88',C.yellow+'88'],borderColor:[C.green,C.red,C.yellow],borderWidth:1}]},options:{...chartDefaults(),responsive:true,maintainAspectRatio:false}});
+}
+
+function buildPieChart(id,banca){
+  destroyChart(id);
+  const cv=document.getElementById(id);if(!cv)return;
+  const trades=bancas[banca].trades;
+  if(!trades.length){const ctx=cv.getContext('2d');ctx.clearRect(0,0,cv.width,cv.height);return}
+  const map={};for(const t of trades)map[t.token]=(map[t.token]||0)+1;
+  const labels=Object.keys(map);const data=Object.values(map);
+  const colors=[C.purple,C.cyan,C.green,C.red,C.yellow,'#ff9f40','#c084fc','#38bdf8','#fb7185','#a3e635'];
+  charts[id]=new Chart(cv,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors.slice(0,labels.length),borderColor:'#06060f',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'right',labels:{color:C.text,font:{size:11},boxWidth:12}}}}});
+}
+
+function buildGeralLineChart(){
+  destroyChart('chart-geral-line');
+  const cv=document.getElementById('chart-geral-line');if(!cv)return;
+  const all=['swing','alavancagem','wm','3030'];
+  const colors=[C.cyan,C.red,C.purple,C.green];
+  const names=['Swing','Alavancagem','WM','30em30'];
+  const datasets=all.map((b,i)=>{
+    const ev=getEvolution(b);
+    return{label:names[i],data:ev.data,labels:ev.labels,borderColor:colors[i],fill:false,tension:0.4,pointRadius:3,borderWidth:2};
+  });
+  const maxLen=Math.max(...datasets.map(d=>d.data.length));
+  const labels=datasets.reduce((a,b)=>b.data.length>a.data.length?b:a).labels;
+  charts['chart-geral-line']=new Chart(cv,{type:'line',data:{labels,datasets:datasets.map(d=>({...d,data:d.data}))},options:{...chartDefaults(),responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{color:C.text,font:{size:11},boxWidth:12}}}}});
+}
+
+function buildGeralBarChart(){
+  destroyChart('chart-geral-bar');
+  const cv=document.getElementById('chart-geral-bar');if(!cv)return;
+  const all=['swing','alavancagem','wm','3030'];
+  const names=['Swing','Alav','WM','3030'];
+  const wins=all.map(b=>computeMetrics(b).wins);
+  const losses=all.map(b=>computeMetrics(b).losses);
+  charts['chart-geral-bar']=new Chart(cv,{type:'bar',data:{labels:names,datasets:[{label:'Wins',data:wins,backgroundColor:C.green+'88',borderColor:C.green,borderWidth:1},{label:'Losses',data:losses,backgroundColor:C.red+'88',borderColor:C.red,borderWidth:1}]},options:{...chartDefaults(),responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{color:C.text,font:{size:11},boxWidth:12}}}}});
+}
+
+function buildGeralPieChart(){
+  destroyChart('chart-geral-pie');
+  const cv=document.getElementById('chart-geral-pie');if(!cv)return;
+  const all=['swing','alavancagem','wm','3030'];
+  const names=['Swing','Alavancagem','WM','30 em 30'];
+  const vals=all.map(b=>computeMetrics(b).atual);
+  charts['chart-geral-pie']=new Chart(cv,{type:'doughnut',data:{labels:names,datasets:[{data:vals,backgroundColor:[C.cyan+'aa',C.red+'aa',C.purple+'aa',C.green+'aa'],borderColor:'#06060f',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'right',labels:{color:C.text,font:{size:11},boxWidth:12}}}}});
+}
+
+function refreshCharts(tab){
+  if(tab==='geral'){buildGeralLineChart();buildGeralBarChart();buildGeralPieChart()}
+  else if(tab==='swing'){buildLineChart('chart-swing-line','swing',C.cyan);buildBarChart('chart-swing-bar','swing',C.cyan);buildPieChart('chart-swing-pie','swing')}
+  else if(tab==='alavancagem'){buildLineChart('chart-alav-line','alavancagem',C.red);buildBarChart('chart-alav-bar','alavancagem',C.red);buildPieChart('chart-alav-pie','alavancagem')}
+  else if(tab==='wm'){buildLineChart('chart-wm-line','wm',C.purple);buildBarChart('chart-wm-bar','wm',C.purple);buildPieChart('chart-wm-pie','wm')}
+  else if(tab==='3030'){buildLineChart('chart-3030-line','3030',C.green);buildBarChart('chart-3030-bar','3030',C.green);buildPieChart('chart-3030-pie','3030')}
+}
+
+// ===== STORAGE =====
+function saveToStorage(){
+  try{localStorage.setItem('ts_bancas',JSON.stringify(bancas))}catch(e){}
+}
+function loadFromStorage(){
+  try{
+    const raw=localStorage.getItem('ts_bancas');
+    if(raw){const loaded=JSON.parse(raw);for(const k in loaded){if(bancas[k])bancas[k].trades=loaded[k].trades||[]}}
+  }catch(e){}
+}
+
+// ===== INIT =====
+loadFromStorage();
+updateAll();
+setTimeout(()=>{refreshCharts('geral')},100);
 
 </script>
 </body>
