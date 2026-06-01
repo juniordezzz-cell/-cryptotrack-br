@@ -48,8 +48,11 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,8,13,0.95);backdrop-filt
 .ticker-strip::before{left:0;background:linear-gradient(to right,var(--bg2),transparent)}
 .ticker-strip::after{right:0;background:linear-gradient(to left,var(--bg2),transparent)}
 .ticker-track{display:flex;align-items:center;height:100%;white-space:nowrap;animation:tickScroll 45s linear infinite}
+.ticker-track.loading{animation-play-state:paused}
 .ticker-track:hover{animation-play-state:paused}
 @keyframes tickScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.t-skel{display:inline-block;width:48px;height:11px;border-radius:3px;background:linear-gradient(90deg,var(--bg3) 25%,var(--bg4) 50%,var(--bg3) 75%);background-size:200% 100%;animation:skelShim 1.4s infinite}
+@keyframes skelShim{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .t-item{display:inline-flex;align-items:center;gap:6px;padding:0 20px;height:100%;border-right:1px solid var(--border);font-size:11px}
 .t-sym{font-family:var(--mono);font-weight:600;font-size:11px}
 .t-price{font-family:var(--mono);font-size:11px;color:var(--muted2)}
@@ -66,8 +69,9 @@ nav{position:sticky;top:0;z-index:200;background:rgba(7,8,13,0.95);backdrop-filt
 /* grid lines like Investidor10 */
 .hero-bg-img::after{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:50px 50px;mask-image:radial-gradient(ellipse 90% 80% at 50% 50%,black 30%,transparent 100%)}
 .hero-content{position:relative;z-index:1;max-width:780px;margin:0 auto}
-.hero-title{font-family:var(--display);font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:700;line-height:1.15;letter-spacing:-.025em;margin-bottom:2rem;opacity:0;animation:fadeUp .7s .1s forwards}
+.hero-title{font-family:var(--display);font-size:clamp(1.9rem,4.5vw,3.2rem);font-weight:700;line-height:1.2;letter-spacing:-.025em;margin-bottom:.6rem;opacity:0;animation:fadeUp .7s .1s forwards}
 .hero-title span{color:var(--gold)}
+.hero-sub{font-size:14px;color:var(--muted2);font-weight:300;margin-bottom:2rem;opacity:0;animation:fadeUp .7s .18s forwards;line-height:1.6}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 /* SEARCH BAR — exact Investidor10 style */
 .hero-search-wrap{opacity:0;animation:fadeUp .7s .25s forwards}
@@ -243,17 +247,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1
 
 <!-- ── TICKER ── -->
 <div class="ticker-strip">
-  <div class="ticker-track" id="ticker-track">
-    <div class="t-item"><span class="t-sym" style="color:#f7931a">BTC</span><span class="t-price" id="tk-btc-p">—</span><span class="t-chg nt" id="tk-btc-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#627eea">ETH</span><span class="t-price" id="tk-eth-p">—</span><span class="t-chg nt" id="tk-eth-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#9945ff">SOL</span><span class="t-price" id="tk-sol-p">—</span><span class="t-chg nt" id="tk-sol-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#f3ba2f">BNB</span><span class="t-price" id="tk-bnb-p">—</span><span class="t-chg nt" id="tk-bnb-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#375bd2">XRP</span><span class="t-price" id="tk-xrp-p">—</span><span class="t-chg nt" id="tk-xrp-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#c8a52b">DOGE</span><span class="t-price" id="tk-doge-p">—</span><span class="t-chg nt" id="tk-doge-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#e84142">AVAX</span><span class="t-price" id="tk-avax-p">—</span><span class="t-chg nt" id="tk-avax-c">—</span></div>
-    <div class="t-item"><span class="t-sym" style="color:#0098ea">TON</span><span class="t-price" id="tk-ton-p">—</span><span class="t-chg nt" id="tk-ton-c">—</span></div>
-    <div class="t-item"><span class="t-sym">USD</span><span class="t-price" id="tk-usd-p">—</span><span class="t-chg nt">BRL</span></div>
-    <div class="t-item"><span class="t-sym">EUR</span><span class="t-price" id="tk-eur-p">—</span><span class="t-chg nt">BRL</span></div>
+  <div class="ticker-track loading" id="ticker-track">
+    <div class="t-item"><span class="t-sym" style="color:#f7931a">BTC</span><span class="t-price" id="tk-btc-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-btc-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#627eea">ETH</span><span class="t-price" id="tk-eth-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-eth-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#9945ff">SOL</span><span class="t-price" id="tk-sol-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-sol-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#f3ba2f">BNB</span><span class="t-price" id="tk-bnb-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-bnb-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#375bd2">XRP</span><span class="t-price" id="tk-xrp-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-xrp-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#c8a52b">DOGE</span><span class="t-price" id="tk-doge-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-doge-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#e84142">AVAX</span><span class="t-price" id="tk-avax-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-avax-c"></span></div>
+    <div class="t-item"><span class="t-sym" style="color:#0098ea">TON</span><span class="t-price" id="tk-ton-p"><span class="t-skel"></span></span><span class="t-chg nt" id="tk-ton-c"></span></div>
+    <div class="t-item"><span class="t-sym">USD</span><span class="t-price" id="tk-usd-p"><span class="t-skel"></span></span><span class="t-chg nt">BRL</span></div>
+    <div class="t-item"><span class="t-sym">EUR</span><span class="t-price" id="tk-eur-p"><span class="t-skel"></span></span><span class="t-chg nt">BRL</span></div>
   </div>
 </div>
 
@@ -261,7 +265,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:2.5rem 1
 <section class="hero" id="topo">
   <div class="hero-bg-img"></div>
   <div class="hero-content">
-    <h1 class="hero-title">Pesquise qualquer criptomoeda para<br>acessar <span>cotação, fundamentos</span> e gráficos</h1>
+    <h1 class="hero-title">Pesquise pelo ativo desejado para ter acesso a<br><span>cotação, fundamentos</span> e gráficos</h1>
+    <p class="hero-sub">Portfólio · DeFi · Calculadoras · Rankings · Notícias · Estudos — tudo em uma plataforma</p>
     <div class="hero-search-wrap" style="position:relative;z-index:10">
       <div class="hero-search">
         <input type="text" id="hero-input" placeholder="Pesquise pelo ativo desejado (BTC, ETH, SOL...)" oninput="heroSearch(this.value)" onkeydown="heroKeyDown(event)" autocomplete="off"/>
@@ -669,35 +674,74 @@ function fmtC(c){return(c>=0?'▲ +':'▼ ')+Math.abs(c).toFixed(2)+'%';}
 function fmtB(v){if(v>=1e12)return'$'+(v/1e12).toFixed(2)+'T';if(v>=1e9)return'$'+(v/1e9).toFixed(1)+'B';return'$'+v.toLocaleString();}
 
 // ══ TICKER FETCH ══
+// Fallback prices (aproximados) caso a API demore ou falhe
+var _FALLBACK={
+  bitcoin:{usd:97000,usd_24h_change:0},
+  ethereum:{usd:2600,usd_24h_change:0},
+  solana:{usd:165,usd_24h_change:0},
+  binancecoin:{usd:620,usd_24h_change:0},
+  ripple:{usd:2.1,usd_24h_change:0},
+  dogecoin:{usd:0.18,usd_24h_change:0},
+  'avalanche-2':{usd:22,usd_24h_change:0},
+  'the-open-network':{usd:3.1,usd_24h_change:0}
+};
+
+function tickerApplyData(d,isFallback){
+  var map=[
+    ['bitcoin','tk-btc-p','tk-btc-c','ms-btc','ms-btc-c'],
+    ['ethereum','tk-eth-p','tk-eth-c','ms-eth','ms-eth-c'],
+    ['solana','tk-sol-p','tk-sol-c','ms-sol','ms-sol-c'],
+    ['binancecoin','tk-bnb-p','tk-bnb-c',null,null],
+    ['ripple','tk-xrp-p','tk-xrp-c',null,null],
+    ['dogecoin','tk-doge-p','tk-doge-c',null,null],
+    ['avalanche-2','tk-avax-p','tk-avax-c',null,null],
+    ['the-open-network','tk-ton-p','tk-ton-c',null,null],
+  ];
+  map.forEach(function(m){
+    var c=d[m[0]];if(!c)return;
+    var pp=document.getElementById(m[1]);var pc=document.getElementById(m[2]);
+    if(pp)pp.textContent=fmtP(c.usd);
+    if(pc){
+      if(isFallback){pc.textContent='';pc.className='t-chg nt';}
+      else{pc.textContent=fmtC(c.usd_24h_change);pc.className='t-chg '+(c.usd_24h_change>=0?'up':'dn');}
+    }
+    if(m[3]){var mp=document.getElementById(m[3]);if(mp)mp.textContent=fmtP(c.usd);}
+    if(m[4]){var mc=document.getElementById(m[4]);if(mc){
+      if(isFallback){mc.textContent='—';mc.className='ms-chg nt';}
+      else{mc.textContent=fmtC(c.usd_24h_change);mc.className='ms-chg '+(c.usd_24h_change>=0?'up':'dn');}
+    }}
+  });
+  // Remove skeleton shimmer + start scroll
+  var track=document.getElementById('ticker-track');
+  if(track){
+    track.classList.remove('loading');
+    if(!track._dup){track._dup=true;track.innerHTML+=track.innerHTML;}
+  }
+}
+
+// Duplica o ticker imediatamente com skeletons para o scroll já começar
+(function(){
+  var track=document.getElementById('ticker-track');
+  if(track&&!track._dup){track._dup=true;track.innerHTML+=track.innerHTML;}
+})();
+
 function fetchTicker(){
+  // Aplica fallback após 1s se API não responder
+  var _fbTimer=setTimeout(function(){
+    if(!Object.keys(_prices).length){tickerApplyData(_FALLBACK,true);}
+  },1000);
+
   fetch('https://api.coingecko.com/api/v3/simple/price?ids='+COINS_IDS+'&vs_currencies=usd&include_24hr_change=true')
     .then(function(r){return r.json();})
     .then(function(d){
+      clearTimeout(_fbTimer);
       _prices=d;
-      var map=[
-        ['bitcoin','tk-btc-p','tk-btc-c','ms-btc','ms-btc-c'],
-        ['ethereum','tk-eth-p','tk-eth-c','ms-eth','ms-eth-c'],
-        ['solana','tk-sol-p','tk-sol-c','ms-sol','ms-sol-c'],
-        ['binancecoin','tk-bnb-p','tk-bnb-c',null,null],
-        ['ripple','tk-xrp-p','tk-xrp-c',null,null],
-        ['dogecoin','tk-doge-p','tk-doge-c',null,null],
-        ['avalanche-2','tk-avax-p','tk-avax-c',null,null],
-        ['the-open-network','tk-ton-p','tk-ton-c',null,null],
-      ];
-      map.forEach(function(m){
-        var c=d[m[0]];if(!c)return;
-        var pp=document.getElementById(m[1]);var pc=document.getElementById(m[2]);
-        if(pp)pp.textContent=fmtP(c.usd);
-        if(pc){pc.textContent=fmtC(c.usd_24h_change);pc.className='t-chg '+(c.usd_24h_change>=0?'up':'dn');}
-        if(m[3]){var mp=document.getElementById(m[3]);if(mp)mp.textContent=fmtP(c.usd);}
-        if(m[4]){var mc=document.getElementById(m[4]);if(mc){mc.textContent=fmtC(c.usd_24h_change);mc.className='ms-chg '+(c.usd_24h_change>=0?'up':'dn');}}
-      });
-      // Rankings
+      tickerApplyData(d,false);
       renderRankings();
-      // Duplicate ticker
-      var track=document.getElementById('ticker-track');
-      if(track&&!track._dup){track._dup=true;track.innerHTML+=track.innerHTML;}
-    }).catch(function(){});
+    }).catch(function(){
+      clearTimeout(_fbTimer);
+      tickerApplyData(_FALLBACK,true);
+    });
 
   // Fiat
   fetch('https://api.exchangerate-api.com/v4/latest/BRL')
@@ -707,7 +751,10 @@ function fetchTicker(){
       var up=document.getElementById('tk-usd-p');if(up)up.textContent='R$'+usd.toFixed(4).replace('.',',');
       var ep=document.getElementById('tk-eur-p');if(ep)ep.textContent='R$'+eur.toFixed(4).replace('.',',');
       var msu=document.getElementById('ms-usd');if(msu)msu.textContent='R$'+usd.toFixed(4).replace('.',',');
-    }).catch(function(){});
+    }).catch(function(){
+      var up=document.getElementById('tk-usd-p');if(up)up.textContent='R$5,70';
+      var ep=document.getElementById('tk-eur-p');if(ep)ep.textContent='R$6,20';
+    });
 
   // Global
   fetch('https://api.coingecko.com/api/v3/global')
