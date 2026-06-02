@@ -118,8 +118,8 @@ nav{position:sticky;top:0;z-index:300;background:rgba(7,8,13,0.97);backdrop-filt
 .tab-btn{padding:8px 16px;font-size:12px;font-weight:600;color:var(--muted2);background:transparent;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s;white-space:nowrap;font-family:var(--font)}
 .tab-btn:hover{color:var(--text)}
 .tab-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
-.tab-panel{display:none}
-.tab-panel.active{display:block}
+.tab-panel{display:none!important}
+.tab-panel.active{display:block!important}
 
 /* MAIN GRID */
 .main-grid{display:grid;grid-template-columns:1fr 320px;gap:14px;align-items:start}
@@ -367,7 +367,61 @@ function shortAddr(a){return a?a.slice(0,6)+'…'+a.slice(-4):'';}
 // ══ STATE ══
 var _coinId='';var _data=null;var _usdBRL=null;var _btcPrice=null;
 var _chart=null;var _period='7';var _aiPT='';var _aiEN='';var _aiLang='pt';
-var _searchTO=null;var _top500=[];
+var _searchTO=null;
+// Top 50 estáticos — busca instantânea sem depender da API
+var _STATIC_COINS=[
+  {id:'bitcoin',name:'Bitcoin',symbol:'BTC',image:'https://assets.coingecko.com/coins/images/1/thumb/bitcoin.png',current_price:97000},
+  {id:'ethereum',name:'Ethereum',symbol:'ETH',image:'https://assets.coingecko.com/coins/images/279/thumb/ethereum.png',current_price:2600},
+  {id:'tether',name:'Tether',symbol:'USDT',image:'https://assets.coingecko.com/coins/images/325/thumb/Tether.png',current_price:1},
+  {id:'binancecoin',name:'BNB',symbol:'BNB',image:'https://assets.coingecko.com/coins/images/825/thumb/bnb-icon2_2x.png',current_price:620},
+  {id:'solana',name:'Solana',symbol:'SOL',image:'https://assets.coingecko.com/coins/images/4128/thumb/solana.png',current_price:165},
+  {id:'ripple',name:'XRP',symbol:'XRP',image:'https://assets.coingecko.com/coins/images/44/thumb/xrp-symbol-white-128.png',current_price:2.1},
+  {id:'usd-coin',name:'USD Coin',symbol:'USDC',image:'https://assets.coingecko.com/coins/images/6319/thumb/usdc.png',current_price:1},
+  {id:'dogecoin',name:'Dogecoin',symbol:'DOGE',image:'https://assets.coingecko.com/coins/images/5/thumb/dogecoin.png',current_price:0.18},
+  {id:'cardano',name:'Cardano',symbol:'ADA',image:'https://assets.coingecko.com/coins/images/975/thumb/cardano.png',current_price:0.45},
+  {id:'tron',name:'TRON',symbol:'TRX',image:'https://assets.coingecko.com/coins/images/1094/thumb/tron-logo.png',current_price:0.12},
+  {id:'avalanche-2',name:'Avalanche',symbol:'AVAX',image:'https://assets.coingecko.com/coins/images/12559/thumb/Avalanche_Circle_RedWhite_Trans.png',current_price:22},
+  {id:'shiba-inu',name:'Shiba Inu',symbol:'SHIB',image:'https://assets.coingecko.com/coins/images/11939/thumb/shiba.png',current_price:0.000015},
+  {id:'chainlink',name:'Chainlink',symbol:'LINK',image:'https://assets.coingecko.com/coins/images/877/thumb/chainlink-new-logo.png',current_price:14},
+  {id:'polkadot',name:'Polkadot',symbol:'DOT',image:'https://assets.coingecko.com/coins/images/12171/thumb/polkadot.png',current_price:4.5},
+  {id:'the-open-network',name:'Toncoin',symbol:'TON',image:'https://assets.coingecko.com/coins/images/17980/thumb/ton_symbol.png',current_price:3.1},
+  {id:'bitcoin-cash',name:'Bitcoin Cash',symbol:'BCH',image:'https://assets.coingecko.com/coins/images/780/thumb/bitcoin-cash-circle.png',current_price:380},
+  {id:'near',name:'NEAR Protocol',symbol:'NEAR',image:'https://assets.coingecko.com/coins/images/10365/thumb/near.jpg',current_price:3.2},
+  {id:'litecoin',name:'Litecoin',symbol:'LTC',image:'https://assets.coingecko.com/coins/images/2/thumb/litecoin.png',current_price:85},
+  {id:'uniswap',name:'Uniswap',symbol:'UNI',image:'https://assets.coingecko.com/coins/images/12504/thumb/uniswap-uni.png',current_price:6.5},
+  {id:'internet-computer',name:'Internet Computer',symbol:'ICP',image:'https://assets.coingecko.com/coins/images/14495/thumb/Internet_Computer_logo.png',current_price:8},
+  {id:'ethereum-classic',name:'Ethereum Classic',symbol:'ETC',image:'https://assets.coingecko.com/coins/images/453/thumb/ethereum-classic-logo.png',current_price:18},
+  {id:'aptos',name:'Aptos',symbol:'APT',image:'https://assets.coingecko.com/coins/images/26455/thumb/aptos_round.png',current_price:5.5},
+  {id:'stellar',name:'Stellar',symbol:'XLM',image:'https://assets.coingecko.com/coins/images/100/thumb/Stellar_symbol_black_RGB.png',current_price:0.11},
+  {id:'monero',name:'Monero',symbol:'XMR',image:'https://assets.coingecko.com/coins/images/69/thumb/monero_logo.png',current_price:160},
+  {id:'vechain',name:'VeChain',symbol:'VET',image:'https://assets.coingecko.com/coins/images/1167/thumb/VET_Token_Icon.png',current_price:0.025},
+  {id:'injective-protocol',name:'Injective',symbol:'INJ',image:'https://assets.coingecko.com/coins/images/12882/thumb/Secondary_Symbol.png',current_price:16},
+  {id:'filecoin',name:'Filecoin',symbol:'FIL',image:'https://assets.coingecko.com/coins/images/12817/thumb/filecoin.png',current_price:3.5},
+  {id:'arbitrum',name:'Arbitrum',symbol:'ARB',image:'https://assets.coingecko.com/coins/images/16547/thumb/photo_2023-03-29_21.47.00.jpeg',current_price:0.45},
+  {id:'optimism',name:'Optimism',symbol:'OP',image:'https://assets.coingecko.com/coins/images/25244/thumb/Optimism.png',current_price:0.8},
+  {id:'cosmos',name:'Cosmos',symbol:'ATOM',image:'https://assets.coingecko.com/coins/images/1481/thumb/cosmos_hub.png',current_price:4.2},
+  {id:'render-token',name:'Render',symbol:'RENDER',image:'https://assets.coingecko.com/coins/images/11636/thumb/rndr.png',current_price:4.1},
+  {id:'sui',name:'Sui',symbol:'SUI',image:'https://assets.coingecko.com/coins/images/26375/thumb/sui_asset.jpeg',current_price:2.8},
+  {id:'the-graph',name:'The Graph',symbol:'GRT',image:'https://assets.coingecko.com/coins/images/13397/thumb/Graph_Token.png',current_price:0.12},
+  {id:'aave',name:'Aave',symbol:'AAVE',image:'https://assets.coingecko.com/coins/images/12645/thumb/AAVE.png',current_price:160},
+  {id:'pepe',name:'Pepe',symbol:'PEPE',image:'https://assets.coingecko.com/coins/images/29850/thumb/pepe-token.jpeg',current_price:0.000009},
+  {id:'wrapped-bitcoin',name:'Wrapped Bitcoin',symbol:'WBTC',image:'https://assets.coingecko.com/coins/images/7598/thumb/wrapped_bitcoin_wbtc.png',current_price:97000},
+  {id:'ondo-finance',name:'Ondo',symbol:'ONDO',image:'https://assets.coingecko.com/coins/images/26580/thumb/ONDO.png',current_price:0.8},
+  {id:'sei-network',name:'Sei',symbol:'SEI',image:'https://assets.coingecko.com/coins/images/28205/thumb/Sei_Logo_-_Transparent.png',current_price:0.25},
+  {id:'floki',name:'FLOKI',symbol:'FLOKI',image:'https://assets.coingecko.com/coins/images/16746/thumb/PNG_image.png',current_price:0.00007},
+  {id:'maker',name:'Maker',symbol:'MKR',image:'https://assets.coingecko.com/coins/images/1364/thumb/Mark_Maker.png',current_price:1400},
+  {id:'lido-dao',name:'Lido DAO',symbol:'LDO',image:'https://assets.coingecko.com/coins/images/13573/thumb/Lido_DAO.png',current_price:0.8},
+  {id:'mantle',name:'Mantle',symbol:'MNT',image:'https://assets.coingecko.com/coins/images/30980/thumb/token-logo.png',current_price:0.6},
+  {id:'worldcoin-wld',name:'Worldcoin',symbol:'WLD',image:'https://assets.coingecko.com/coins/images/31069/thumb/worldcoin.jpeg',current_price:1.1},
+  {id:'jasmy',name:'JasmyCoin',symbol:'JASMY',image:'https://assets.coingecko.com/coins/images/13876/thumb/JASMY200x200.jpg',current_price:0.017},
+  {id:'bonk',name:'Bonk',symbol:'BONK',image:'https://assets.coingecko.com/coins/images/28600/thumb/bonk.jpg',current_price:0.000018},
+  {id:'polygon',name:'Polygon',symbol:'POL',image:'https://assets.coingecko.com/coins/images/32440/thumb/polygon.png',current_price:0.22},
+  {id:'celestia',name:'Celestia',symbol:'TIA',image:'https://assets.coingecko.com/coins/images/31967/thumb/tia.jpg',current_price:3.0},
+  {id:'pyth-network',name:'Pyth Network',symbol:'PYTH',image:'https://assets.coingecko.com/coins/images/31924/thumb/pyth.png',current_price:0.13},
+  {id:'wormhole',name:'Wormhole',symbol:'W',image:'https://assets.coingecko.com/coins/images/35087/thumb/wormhole-token.png',current_price:0.12},
+  {id:'jupiter-exchange-solana',name:'Jupiter',symbol:'JUP',image:'https://assets.coingecko.com/coins/images/34188/thumb/jup.png',current_price:0.55}
+];
+var _top500=_STATIC_COINS.slice();
 
 // ══ GET ID ══
 function getCoinId(){var p=new URLSearchParams(window.location.search);return(p.get('id')||p.get('coin')||'').toLowerCase().trim();}
@@ -385,21 +439,45 @@ function fetchTicker(){
   var fb=setTimeout(function(){tickerApply(_FB,true);},1200);
   fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple&vs_currencies=usd&include_24hr_change=true')
     .then(function(r){return r.json();}).then(function(d){clearTimeout(fb);tickerApply(d,false);}).catch(function(){clearTimeout(fb);tickerApply(_FB,true);});
-  fetch('https://api.exchangerate-api.com/v4/latest/BRL').then(function(r){return r.json();}).then(function(fx){
-    _usdBRL=1/fx.rates.USD;
-    var up=document.getElementById('tk-usd-p');if(up)up.textContent='R$'+(1/fx.rates.USD).toFixed(4).replace('.',',');
-    updateSubPrices();
-  }).catch(function(){_usdBRL=5.7;});
+  // Fetch BRL rate with fallback — set _usdBRL immediately so renderPage can use it
+  _usdBRL=5.7; // fallback instantâneo
+  fetch('https://api.exchangerate-api.com/v4/latest/BRL')
+    .then(function(r){return r.json();})
+    .then(function(fx){
+      _usdBRL=1/fx.rates.USD;
+      var up=document.getElementById('tk-usd-p');if(up)up.textContent='R$'+_usdBRL.toFixed(4).replace('.',',');
+      updateSubPrices();
+    })
+    .catch(function(){
+      // Keep fallback 5.70
+      var up=document.getElementById('tk-usd-p');if(up)up.textContent='R$5,7000';
+    });
 }
 
 // ══ FETCH TOP 500 for nav search ══
 function fetchTop500(){
+  // Fetch live list and merge — static coins already loaded as fallback
   fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
-    .then(function(r){return r.json();}).then(function(d){_top500=_top500.concat(d);})
-    .catch(function(){});
-  fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2')
-    .then(function(r){return r.json();}).then(function(d){_top500=_top500.concat(d);})
-    .catch(function(){});
+    .then(function(r){return r.json();})
+    .then(function(d){
+      // Merge: update prices of existing, add new ones
+      d.forEach(function(coin){
+        var existing=_top500.findIndex(function(c){return c.id===coin.id;});
+        if(existing>=0){_top500[existing]=coin;}
+        else{_top500.push(coin);}
+      });
+    }).catch(function(){});
+  setTimeout(function(){
+    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2')
+      .then(function(r){return r.json();})
+      .then(function(d){
+        d.forEach(function(coin){
+          var existing=_top500.findIndex(function(c){return c.id===coin.id;});
+          if(existing>=0){_top500[existing]=coin;}
+          else{_top500.push(coin);}
+        });
+      }).catch(function(){});
+  },1500); // stagger to avoid rate limit
 }
 
 // ══ NAV TOKEN SEARCH ══
@@ -424,7 +502,8 @@ function navTokenSearch(val){
 function renderNavDD(coins){
   var dd=document.getElementById('nav-token-dd');
   var html=coins.map(function(c){
-    return '<a class="ntdd-item" href="token.html?id='+c.id+'" target="_blank">'
+    // Navigate in same tab so user doesn't stay on error page
+    return '<a class="ntdd-item" href="token.html?id='+c.id+'">'
       +(c.image?'<img class="ntdd-ico" src="'+c.image+'" alt="'+c.name+'" onerror="this.style.display=\'none\'">'
         :'<div class="ntdd-ico-txt" style="background:#1e1f2e">'+c.symbol.slice(0,2)+'</div>')
       +'<div style="flex:1;min-width:0"><div class="ntdd-name">'+c.name+'</div><div class="ntdd-sym">'+c.symbol+'</div></div>'
@@ -489,20 +568,42 @@ function switchTab(name){
 // ══ AI ANALYSIS ══
 async function runAI(coinName,symbol,price,chg24,chg7,mcap,vol){
   var wrap=document.getElementById('ai-wrap');if(!wrap)return;
-  wrap.innerHTML='<div class="ai-header"><span class="ai-badge">🤖 Análise IA — Gerando...</span></div><div class="ai-loading"><div class="ai-loading-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><span style="font-size:12px;color:var(--muted2)">Analisando dados do mercado...</span></div><div class="ai-skel" style="width:100%;height:11px"></div><div class="ai-skel" style="width:85%;height:11px"></div><div class="ai-skel" style="width:90%;height:11px"></div>';
+  wrap.innerHTML='<div style="padding:1rem"><div class="ai-header" style="margin-bottom:.8rem"><span class="ai-badge">🤖 Análise IA — Gerando...</span></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:.8rem"><div class="dot"></div><div class="dot"></div><div class="dot"></div><span style="font-size:12px;color:var(--muted2);margin-left:4px">Analisando dados do mercado...</span></div><div class="ai-skel" style="width:100%;height:11px;margin-bottom:7px"></div><div class="ai-skel" style="width:85%;height:11px;margin-bottom:7px"></div><div class="ai-skel" style="width:90%;height:11px"></div></div>';
   var prompt='Você é um analista técnico de criptomoedas sênior. Faça uma análise técnica e fundamentalista COMPLETA e DETALHADA do token abaixo. Responda em português brasileiro.\n\nToken: '+coinName+' ('+symbol+')\nPreço atual: '+price+'\nVariação 24h: '+chg24+'\nVariação 7d: '+chg7+'\nMarket Cap: '+mcap+'\nVolume 24h: '+vol+'\n\nEstruture sua análise com:\n1. **Cenário atual**: contexto macro e posição do token no mercado\n2. **Análise técnica**: tendência, suportes e resistências prováveis, momentum\n3. **Fundamentos**: avaliação do market cap, volume relativo, força do projeto\n4. **Sinais**: Bull ou Bear? Justifique\n5. **Atenção**: riscos específicos a este token agora\n\nSeja direto, use dados concretos, escreva como se estivesse ensinando a um investidor intermediário. Máximo 400 palavras.';
   try{
-    var resp=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})});
+    // 25s timeout para a análise principal
+    var ctrl=new AbortController();
+    var aiTimer=setTimeout(function(){ctrl.abort();},25000);
+    var resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',signal:ctrl.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:prompt}]})
+    });
+    clearTimeout(aiTimer);
+    if(!resp.ok){throw new Error('AI API error '+resp.status);}
     var json=await resp.json();
     var text=(json.content&&json.content[0]&&json.content[0].text)?json.content[0].text:'Análise indisponível no momento.';
     _aiPT=text;
-    // Get English version
-    var resp2=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Translate the following crypto analysis to English, keeping the same structure and data:\n\n'+text}]})});
-    var json2=await resp2.json();
-    _aiEN=(json2.content&&json2.content[0]&&json2.content[0].text)?json2.content[0].text:text;
+    // English version — separate timeout
+    try{
+      var ctrl2=new AbortController();
+      var aiTimer2=setTimeout(function(){ctrl2.abort();},20000);
+      var resp2=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',signal:ctrl2.signal,
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Translate the following crypto analysis to English, keeping the same structure and data:\n\n'+text}]})
+      });
+      clearTimeout(aiTimer2);
+      var json2=await resp2.json();
+      _aiEN=(json2.content&&json2.content[0]&&json2.content[0].text)?json2.content[0].text:text;
+    }catch(e2){_aiEN=text;}
     renderAI(_aiPT);
   }catch(e){
-    if(wrap)wrap.innerHTML='<div class="ai-body" style="padding:1rem">Análise temporariamente indisponível.</div>';
+    var wrap2=document.getElementById('ai-wrap');
+    if(wrap2){
+      var msg=e.name==='AbortError'?'Tempo limite excedido. Tente recarregar a página.':'Análise temporariamente indisponível.';
+      wrap2.innerHTML='<div style="padding:1rem;font-size:12px;color:var(--muted2)">⚠️ '+msg+'</div>';
+    }
   }
 }
 function renderAI(text){
@@ -531,7 +632,7 @@ async function renderPage(d,chartPts){
   _data=d;
   var md=d.market_data;
   var price=md.current_price.usd;
-  var chg1=md.price_change_percentage_1h_in_currency?md.price_change_percentage_1h_in_currency.usd:null;
+  var chg1=(md.price_change_percentage_1h_in_currency&&md.price_change_percentage_1h_in_currency.usd!=null)?md.price_change_percentage_1h_in_currency.usd:null;
   var chg24=md.price_change_percentage_24h;
   var chg7=md.price_change_percentage_7d;
   var chg30=md.price_change_percentage_30d;
@@ -641,7 +742,7 @@ async function renderPage(d,chartPts){
   html+='<div class="card">';
   html+='<div class="card-hdr"><span class="card-ttl">Dados CoinGecko</span><div class="period-btns">';
   [['1','24h'],['7','7d'],['30','30d'],['365','1Y'],['max','Tudo']].forEach(function(p){
-    html+='<button class="period-btn'+(_period===p[0]?' active':'')+'" data-p="'+p[0]+'" onclick="changePeriod(\''+p[0]+'\')">'+p[1]+'</button>';
+    var _act=(_period===p[0]);html+='<button class="period-btn'+(_act?' active':'')+'" data-p="'+p[0]+'" onclick="changePeriod(\''+p[0]+'\')">'+p[1]+'</button>';
   });
   html+='</div></div>';
   html+='<div class="chart-wrap" id="chart-fallback-wrap"><div class="chart-loading"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><canvas id="fallback-chart"></canvas></div>';
@@ -662,7 +763,7 @@ async function renderPage(d,chartPts){
     {l:'Volume (24h)',v:fmtB(vol),s:'Variação: '+fmtC(chg24)},
     {l:'Vol/Mcap (24h)',v:mcap&&vol?(vol/mcap*100).toFixed(2)+'%':'—',s:'Ratio de liquidez'},
     {l:'FDV',v:fdv?fmtB(fdv):'—',s:'Valor totalmente diluído'},
-    {l:'Fornec. Circulante',v:fmtN(supply)+' '+symbol,s:maxS?'Máx: '+fmtN(maxS)+' '+symbol:'Sem limite'},
+    {l:'Fornec. Circulante',v:fmtN(supply)+' '+symbol,s:maxS?'Máx: '+fmtN(maxS)+' '+symbol:(maxS===null?'Dado indisponível':'Sem limite máximo')},
     {l:'ATH',v:ath?fmtP(ath):'—',s:athChg?'Do ATH: '+athChg.toFixed(1)+'%':null},
   ];
   funds.forEach(function(f){
@@ -832,8 +933,28 @@ async function renderPage(d,chartPts){
 
 // ══ HELPERS ══
 function getTVSymbol(sym,id){
-  var known={'bitcoin':'BINANCE:BTCUSDT','ethereum':'BINANCE:ETHUSDT','solana':'BINANCE:SOLUSDT','binancecoin':'BINANCE:BNBUSDT','ripple':'BINANCE:XRPUSDT','dogecoin':'BINANCE:DOGEUSDT','cardano':'BINANCE:ADAUSDT','avalanche-2':'BINANCE:AVAXUSDT','polkadot':'BINANCE:DOTUSDT','chainlink':'BINANCE:LINKUSDT','litecoin':'BINANCE:LTCUSDT','uniswap':'BINANCE:UNIUSDT','the-open-network':'BINANCE:TONUSDT'};
-  return known[id]||'BINANCE:'+sym+'USDT';
+  // Mapeamento completo — prioriza pares com maior liquidez
+  var known={
+    'bitcoin':'BINANCE:BTCUSDT','ethereum':'BINANCE:ETHUSDT','solana':'BINANCE:SOLUSDT',
+    'binancecoin':'BINANCE:BNBUSDT','ripple':'BINANCE:XRPUSDT','dogecoin':'BINANCE:DOGEUSDT',
+    'cardano':'BINANCE:ADAUSDT','avalanche-2':'BINANCE:AVAXUSDT','polkadot':'BINANCE:DOTUSDT',
+    'chainlink':'BINANCE:LINKUSDT','litecoin':'BINANCE:LTCUSDT','uniswap':'BINANCE:UNIUSDT',
+    'the-open-network':'BINANCE:TONUSDT','shiba-inu':'BINANCE:SHIBUSDT','tron':'BINANCE:TRXUSDT',
+    'near':'BINANCE:NEARUSDT','cosmos':'BINANCE:ATOMUSDT','stellar':'BINANCE:XLMUSDT',
+    'injective-protocol':'BINANCE:INJUSDT','arbitrum':'BINANCE:ARBUSDT','optimism':'BINANCE:OPUSDT',
+    'sui':'BINANCE:SUIUSDT','aptos':'BINANCE:APTUSDT','filecoin':'BINANCE:FILUSDT',
+    'aave':'BINANCE:AAVEUSDT','maker':'BINANCE:MKRUSDT','internet-computer':'BINANCE:ICPUSDT',
+    'ethereum-classic':'BINANCE:ETCUSDT','lido-dao':'BINANCE:LDOUSDT','render-token':'BINANCE:RENDERUSDT',
+    'the-graph':'BINANCE:GRTUSDT','pepe':'BINANCE:PEPEUSDT','bitcoin-cash':'BINANCE:BCHUSDT',
+    'monero':'KRAKEN:XMRUSD','celestia':'BINANCE:TIAUSDT','pyth-network':'BINANCE:PYTHUSDT',
+    'wrapped-bitcoin':'BINANCE:WBTCUSDT','polygon':'BINANCE:POLUSDT','usd-coin':'BINANCE:USDCUSDT',
+    'tether':'BINANCE:USDTUSDC','jupiter-exchange-solana':'BINANCE:JUPUSDT','bonk':'BINANCE:BONKUSDT',
+    'floki':'BINANCE:FLOKIUSDT','worldcoin-wld':'BINANCE:WLDUSDT','mantle':'BINANCE:MNTUSDT',
+    'ondo-finance':'BINANCE:ONDOUSDT','sei-network':'BINANCE:SEIUSDT','wormhole':'BINANCE:WUSDT'
+  };
+  if(known[id])return known[id];
+  // Fallback: CRYPTOCAP funciona para qualquer token como gráfico de market cap
+  return 'CRYPTOCAP:'+sym;
 }
 function getLayerInfo(cats,id){
   var known={'bitcoin':'<strong>Bitcoin (BTC)</strong> é a primeira criptomoeda do mundo, criada em 2009 por Satoshi Nakamoto. Funciona como <strong>reserva de valor descentralizada</strong> — o "ouro digital". Não é programável como Ethereum, mas é a rede mais segura e descentralizada existente. É <strong>Layer 1 nativo</strong>, sem smart contracts avançados.','ethereum':'<strong>Ethereum (ETH)</strong> é a principal plataforma de <strong>smart contracts</strong> do mundo — Layer 1. É a base de 90%+ do ecossistema DeFi, NFTs e dApps. Em 2022 migrou para Proof of Stake (The Merge), tornando-se deflacionário em períodos de alta atividade. Toda a economia Web3 roda em cima de Ethereum.','solana':'<strong>Solana (SOL)</strong> é uma blockchain Layer 1 de alta performance — 65.000 TPS teórico, fees de frações de centavo. Usa Proof of History (PoH) + PoS. Rival direta de Ethereum para DeFi e NFTs. Cresceu muito com o ecossistema de meme coins em 2024.','binancecoin':'<strong>BNB</strong> é o token nativo da Binance e da BNB Chain (Layer 1). Usado para pagar taxas na maior exchange do mundo e como gas na BNB Chain. Tem queimas trimestrais que reduzem o supply.','ripple':'<strong>XRP</strong> é o token da rede Ripple, focado em <strong>pagamentos internacionais</strong> para instituições financeiras. Extremamente rápido (3-5 segundos) e barato. Centralizado comparado ao Bitcoin.'};
@@ -901,12 +1022,24 @@ async function init(){
       fetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'?localization=false&tickers=true&market_data=true&community_data=true&developer_data=true&sparkline=false'),
       fetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'/market_chart?vs_currency=usd&days=7')
     ]);
-    if(!coinResp.ok){showError('Token <strong>'+_coinId+'</strong> não encontrado. Verifique o ID.');return;}
+    if(!coinResp.ok){
+      if(coinResp.status===404){showError('Token <strong>'+_coinId+'</strong> não encontrado. Verifique o ID e tente <a href="index.html" style="color:var(--gold)">buscar no início</a>.');}
+      else{showError('Erro '+coinResp.status+' ao carregar token. Tente novamente em instantes.');}
+      return;
+    }
     var coinData=await coinResp.json();
+    // CoinGecko às vezes retorna 200 com {error:'...'} para IDs inválidos
+    if(coinData.error||!coinData.market_data){
+      showError('Token <strong>'+_coinId+'</strong> não encontrado. Verifique o ID e tente <a href="index.html" style="color:var(--gold)">buscar no início</a>.');
+      return;
+    }
     var chartData=await chartResp.json();
     _data=coinData;
     await renderPage(coinData,chartData.prices||[]);
-  }catch(e){showError('Erro ao carregar dados. Verifique sua conexão.');}
+  }catch(e){
+    console.error('init error:',e);
+    showError('Erro ao carregar dados. Verifique sua conexão e tente novamente.');
+  }
 }
 
 fetchTicker();
