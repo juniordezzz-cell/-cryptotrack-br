@@ -432,7 +432,7 @@ async function cgFetch(url){
 // ══ STATE ══
 var _coinId='';var _data=null;var _usdBRL=5.7;var _btcPrice=null;
 var _chart=null;var _period='7';var _aiPT='';var _aiEN='';var _aiLang='pt';
-var _searchTO=null;var _voteState=null;
+var _searchTO=null;var _voteState=null;var _aiParams=null;var _aiLoaded=false;
 var _sentBull=62;var _sentBear=38;
 
 // ══ STATIC COINS (top 50 + more) ══
@@ -598,6 +598,11 @@ function changePeriod(p){
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.toggle('active',b.dataset.tab===name);});
   document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.toggle('active',p.dataset.panel===name);});
+  // Lazy-load AI only when user opens the tab for the first time
+  if(name==='analise'&&!_aiLoaded&&_aiParams){
+    _aiLoaded=true;
+    runAI(_aiParams.name,_aiParams.symbol,_aiParams.price,_aiParams.chg24,_aiParams.chg7,_aiParams.chg30,_aiParams.mcap,_aiParams.vol,_aiParams.ath,_aiParams.athChg,_aiParams.rank,_aiParams.layer);
+  }
 }
 
 // ══ TRADINGVIEW SYMBOL ══
@@ -765,7 +770,7 @@ function showError(msg){
 }
 
 // ══ RENDER PAGE ══
-async function renderPage(d,chartPts){
+function renderPage(d,chartPts){
   _data=d;
   var md=d.market_data;
   var price=md.current_price.usd;
@@ -800,9 +805,9 @@ async function renderPage(d,chartPts){
 
   document.title=name+' ('+symbol+') — MundoDeFi';
 
-  // Translate description
+  // Description — show original immediately, translate lazily after render
   var rawDesc=d.description&&d.description.en?d.description.en:'';
-  var descPT=rawDesc?await translateText(rawDesc):'Descrição não disponível para este ativo.';
+  var descPT=rawDesc||'Descrição não disponível para este ativo.';
 
   // Layer info
   var layerInfo=getLayerInfo(cats,d.id);
@@ -939,7 +944,7 @@ async function renderPage(d,chartPts){
   // TAB: ANÁLISE IA
   html+='<div class="tab-panel" data-panel="analise">';
   html+='<div class="card"><div class="card-hdr"><span class="card-ttl">Análise de IA — MundoDeFi</span><span style="font-size:10px;color:var(--purple)">Powered by Claude AI</span></div>';
-  html+='<div id="ai-wrap" class="ai-wrap"><div class="ai-header"><span class="ai-badge"><span class="ai-pulse"></span> Preparando análise...</span></div><div class="ai-skel" style="width:100%"></div><div class="ai-skel" style="width:82%"></div><div class="ai-skel" style="width:91%"></div><div class="ai-skel" style="width:76%"></div><div class="ai-skel" style="width:88%"></div><div class="ai-skel" style="width:70%"></div></div>';
+  html+='<div id="ai-wrap" class="ai-wrap"><div style="padding:1.5rem;text-align:center"><div style="font-size:2rem;margin-bottom:.7rem">🤖</div><div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:.4rem">Análise de IA com Claude</div><div style="font-size:12px;color:var(--muted2);margin-bottom:1.2rem">Análise técnica + fundamentalista completa gerada por IA.<br>Clique para gerar — leva ~10 segundos.</div><button onclick="if(!_aiLoaded&&_aiParams){_aiLoaded=true;runAI(_aiParams.name,_aiParams.symbol,_aiParams.price,_aiParams.chg24,_aiParams.chg7,_aiParams.chg30,_aiParams.mcap,_aiParams.vol,_aiParams.ath,_aiParams.athChg,_aiParams.rank,_aiParams.layer);}" style="background:linear-gradient(135deg,rgba(168,85,247,.2),rgba(77,159,255,.15));border:1px solid rgba(168,85,247,.4);color:#c084fc;padding:10px 24px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:all .2s" onmouseover="this.style.opacity=.8" onmouseout="this.style.opacity=1">✨ Gerar Análise Agora</button></div></div>';
   html+='</div>';
 
   // SENTIMENT
@@ -1116,13 +1121,20 @@ async function renderPage(d,chartPts){
 
   document.getElementById('app').innerHTML=html;
 
-  // Post-render
+  // Post-render (non-blocking)
   setTimeout(function(){
     if(chartPts&&chartPts.length)drawChart(chartPts);
     var sf=document.getElementById('supply-bar-fill');if(sf&&supplyPct)sf.style.width=Math.min(supplyPct,100)+'%';
-    // run AI on analysis tab activation
-    runAI(name,symbol,fmtP(price),fmtC(chg24),fmtC(chg7),fmtC(chg30),fmtB(mcap),fmtB(vol),fmtP(ath),athChg?athChg.toFixed(1)+'%':'—',rank||'—',layerInfo.label);
-  },80);
+    // lazy translate description after page is already visible
+    if(rawDesc){
+      translateText(rawDesc).then(function(pt){
+        var el=document.getElementById('about-desc');
+        if(el)el.innerHTML=pt;
+      }).catch(function(){});
+    }
+  },100);
+  // Store AI params — only fires when user clicks the tab
+  _aiParams={name:name,symbol:symbol,price:fmtP(price),chg24:fmtC(chg24),chg7:fmtC(chg7),chg30:fmtC(chg30),mcap:fmtB(mcap),vol:fmtB(vol),ath:fmtP(ath),athChg:athChg?athChg.toFixed(1)+'%':'—',rank:rank||'—',layer:layerInfo.label};
 }
 
 function toggleDesc(){
@@ -1154,7 +1166,7 @@ async function init(){
     var chartPts=[];
     try{var chartData=await chartResp.json();chartPts=chartData.prices||[];}catch(ec){}
     _data=coinData;
-    await renderPage(coinData,chartPts);
+    renderPage(coinData,chartPts);
   }catch(e){
     console.error('init error:',e);
     showError('Erro ao carregar dados. Verifique sua conexão e tente novamente.');
@@ -1162,8 +1174,8 @@ async function init(){
 }
 
 fetchTicker();
-fetchTop500();
-setTimeout(init,300);
+setTimeout(init,100); // start loading token ASAP
+setTimeout(fetchTop500,3000); // search list loads after token data
 </script>
 </body>
 </html>
