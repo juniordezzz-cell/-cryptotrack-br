@@ -1188,5 +1188,185 @@ document.querySelectorAll('.snav-item[href^="#"]').forEach(function(a){
   });
 });
 </script>
+
+<!-- ══ MUNDODEFI IA — Chat Widget (Gemini) ══ -->
+<style>
+#mdf-chat-fab{position:fixed;bottom:28px;right:28px;z-index:9999;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e09000);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(240,165,0,.4);transition:transform .2s,box-shadow .2s}
+#mdf-chat-fab:hover{transform:translateY(-3px) scale(1.05);box-shadow:0 8px 32px rgba(240,165,0,.5)}
+#mdf-chat-fab svg{width:24px;height:24px;fill:#000}
+#mdf-chat-panel{position:fixed;bottom:96px;right:28px;z-index:9998;width:370px;max-width:calc(100vw - 40px);background:var(--bg2);border:1px solid var(--border2);border-radius:20px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,.8);display:none;flex-direction:column;max-height:520px;animation:mdfSlideUp .25s ease}
+#mdf-chat-panel.open{display:flex}
+@keyframes mdfSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#mdf-chat-header{padding:14px 16px;background:var(--bg3);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+#mdf-chat-header .mdf-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 2px rgba(0,214,143,.2)}
+#mdf-chat-header h3{font-family:var(--display);font-size:14px;font-weight:700;color:var(--text);letter-spacing:-.01em;flex:1}
+#mdf-chat-header span{font-size:11px;color:var(--muted2)}
+#mdf-close-btn{background:none;border:none;cursor:pointer;color:var(--muted2);font-size:18px;line-height:1;padding:2px 4px;transition:color .15s}
+#mdf-close-btn:hover{color:var(--text)}
+#mdf-messages{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent}
+#mdf-messages::-webkit-scrollbar{width:3px}
+#mdf-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+.mdf-msg{display:flex;gap:8px;max-width:90%}
+.mdf-msg.user{align-self:flex-end;flex-direction:row-reverse}
+.mdf-msg .mdf-bubble{padding:9px 13px;border-radius:14px;font-size:13px;line-height:1.55;color:var(--text);background:var(--bg4);border:1px solid var(--border)}
+.mdf-msg.user .mdf-bubble{background:linear-gradient(135deg,var(--gold),#e09000);color:#000;border-color:transparent;font-weight:500}
+.mdf-msg .mdf-av{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;background:var(--gold2);border:1px solid rgba(240,165,0,.2);color:var(--gold);font-family:var(--display)}
+.mdf-typing{display:none;align-self:flex-start}
+.mdf-typing .mdf-bubble{display:flex;gap:4px;align-items:center;padding:11px 14px}
+.mdf-typing .mdf-td{width:5px;height:5px;border-radius:50%;background:var(--muted2);animation:mdfBounce 1.2s infinite}
+.mdf-typing .mdf-td:nth-child(2){animation-delay:.2s}
+.mdf-typing .mdf-td:nth-child(3){animation-delay:.4s}
+@keyframes mdfBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
+#mdf-chips{padding:0 14px 10px;display:flex;gap:6px;flex-wrap:wrap;flex-shrink:0}
+.mdf-chip{padding:4px 11px;font-size:11px;cursor:pointer;border:1px solid var(--border2);border-radius:99px;background:var(--bg3);color:var(--muted2);transition:all .15s;font-family:var(--font)}
+.mdf-chip:hover{border-color:var(--gold);color:var(--gold);background:var(--gold3)}
+#mdf-footer{padding:10px 14px;border-top:1px solid var(--border);display:flex;gap:8px;flex-shrink:0;background:var(--bg3)}
+#mdf-input{flex:1;padding:9px 13px;font-size:13px;border:1px solid var(--border2);border-radius:99px;background:var(--bg4);color:var(--text);outline:none;font-family:var(--font);transition:border-color .15s}
+#mdf-input:focus{border-color:var(--gold)}
+#mdf-input::placeholder{color:var(--muted)}
+#mdf-send{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#e09000);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,box-shadow .15s;flex-shrink:0}
+#mdf-send:hover{transform:scale(1.08);box-shadow:0 4px 16px rgba(240,165,0,.4)}
+#mdf-send:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
+#mdf-send svg{width:15px;height:15px;fill:#000}
+#mdf-key-area{padding:10px 14px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:8px}
+#mdf-key-area.hidden{display:none}
+#mdf-key-input{flex:1;padding:7px 12px;font-size:12px;border:1px solid var(--border2);border-radius:99px;background:var(--bg4);color:var(--text);outline:none;font-family:var(--mono);transition:border-color .15s}
+#mdf-key-input:focus{border-color:var(--gold)}
+#mdf-key-input::placeholder{color:var(--muted)}
+#mdf-key-save{padding:7px 14px;border-radius:99px;background:var(--gold2);border:1px solid rgba(240,165,0,.3);color:var(--gold);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap}
+#mdf-key-save:hover{background:var(--gold);color:#000}
+</style>
+
+<!-- FAB button -->
+<button id="mdf-chat-fab" onclick="mdfToggle()" aria-label="Abrir chat IA MundoDeFi">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.85.5 3.58 1.37 5.07L2 22l4.93-1.37A9.96 9.96 0 0012 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+</button>
+
+<!-- Chat panel -->
+<div id="mdf-chat-panel">
+  <div id="mdf-chat-header">
+    <div class="mdf-dot"></div>
+    <h3>MundoDeFi IA</h3>
+    <span>Gemini · grátis</span>
+    <button id="mdf-close-btn" onclick="mdfToggle()" aria-label="Fechar chat">✕</button>
+  </div>
+
+  <div id="mdf-key-area">
+    <input id="mdf-key-input" type="password" placeholder="Cole sua chave do Gemini (AQ...)..." />
+    <button id="mdf-key-save" onclick="mdfSaveKey()">Salvar</button>
+  </div>
+
+  <div id="mdf-messages">
+    <div class="mdf-msg bot">
+      <div class="mdf-av">MD</div>
+      <div class="mdf-bubble">Olá! Sou a IA do MundoDeFi 🌱 Tire suas dúvidas sobre DeFi, tokens, carteiras e muito mais!</div>
+    </div>
+  </div>
+
+  <div class="mdf-msg mdf-typing" id="mdf-typing" style="padding:0 14px">
+    <div class="mdf-av">MD</div>
+    <div class="mdf-bubble">
+      <div class="mdf-td"></div><div class="mdf-td"></div><div class="mdf-td"></div>
+    </div>
+  </div>
+
+  <div id="mdf-chips">
+    <div class="mdf-chip" onclick="mdfChip(this.textContent)">O que é DeFi?</div>
+    <div class="mdf-chip" onclick="mdfChip(this.textContent)">Yield farming</div>
+    <div class="mdf-chip" onclick="mdfChip(this.textContent)">Pool de liquidez</div>
+    <div class="mdf-chip" onclick="mdfChip(this.textContent)">Solana vs ETH</div>
+  </div>
+
+  <div id="mdf-footer">
+    <input id="mdf-input" type="text" placeholder="Pergunta sobre DeFi..." />
+    <button id="mdf-send" onclick="mdfSend()" aria-label="Enviar">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+    </button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var GEMINI_KEY='';
+  var history=[];
+  var SYSTEM='Você é a IA do MundoDeFi, assistente especializado em DeFi, criptomoedas e finanças descentralizadas. Responda sempre em português do Brasil, de forma clara e educacional. Foque em: DeFi, yield farming, pools de liquidez, tokens, Solana, Ethereum, carteiras Web3 e trading cripto. Respostas objetivas de até 3 parágrafos. Nunca dê conselhos financeiros diretos.';
+
+  window.mdfToggle=function(){
+    var p=document.getElementById('mdf-chat-panel');
+    p.classList.toggle('open');
+  };
+
+  window.mdfSaveKey=function(){
+    var val=document.getElementById('mdf-key-input').value.trim();
+    if(val.length<10){alert('Chave inválida. Verifique e tente novamente.');return;}
+    GEMINI_KEY=val;
+    document.getElementById('mdf-key-area').classList.add('hidden');
+    document.getElementById('mdf-key-input').value='';
+    mdfAddMsg('Chave salva! Pode fazer sua pergunta 👇','bot');
+  };
+
+  function mdfAddMsg(text,role){
+    var wrap=document.getElementById('mdf-messages');
+    var div=document.createElement('div');
+    div.className='mdf-msg '+role;
+    var av='<div class="mdf-av">'+(role==='bot'?'MD':'Eu')+'</div>';
+    var esc=text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    div.innerHTML=(role==='bot'?av:'')+'<div class="mdf-bubble">'+esc+'</div>'+(role==='user'?av:'');
+    wrap.appendChild(div);
+    wrap.scrollTop=wrap.scrollHeight;
+  }
+
+  function mdfTyping(show){
+    var t=document.getElementById('mdf-typing');
+    t.style.display=show?'flex':'none';
+    document.getElementById('mdf-messages').scrollTop=99999;
+  }
+
+  async function mdfCallGemini(msg){
+    history.push({role:'user',parts:[{text:msg}]});
+    var res=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key='+GEMINI_KEY,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({system_instruction:{parts:[{text:SYSTEM}]},contents:history})
+    });
+    var data=await res.json();
+    if(data.error)throw new Error(data.error.message);
+    var reply=data.candidates?.[0]?.content?.parts?.[0]?.text||'Sem resposta.';
+    history.push({role:'model',parts:[{text:reply}]});
+    return reply;
+  }
+
+  window.mdfSend=async function(){
+    if(!GEMINI_KEY){alert('Cole sua chave do Gemini primeiro.');return;}
+    var input=document.getElementById('mdf-input');
+    var btn=document.getElementById('mdf-send');
+    var text=input.value.trim();
+    if(!text)return;
+    input.value='';btn.disabled=true;
+    mdfAddMsg(text,'user');mdfTyping(true);
+    try{
+      var reply=await mdfCallGemini(text);
+      mdfTyping(false);mdfAddMsg(reply,'bot');
+    }catch(e){
+      mdfTyping(false);mdfAddMsg('Erro: '+e.message,'bot');
+    }
+    btn.disabled=false;input.focus();
+  };
+
+  window.mdfChip=function(text){
+    if(!GEMINI_KEY){
+      document.getElementById('mdf-chat-panel').classList.add('open');
+      alert('Cole sua chave do Gemini primeiro.');return;
+    }
+    document.getElementById('mdf-input').value=text;
+    mdfSend();
+  };
+
+  document.getElementById('mdf-input').addEventListener('keydown',function(e){
+    if(e.key==='Enter')mdfSend();
+  });
+})();
+</script>
+<!-- ══ FIM DO CHAT WIDGET ══ -->
+
 </body>
 </html>
