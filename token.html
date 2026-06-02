@@ -352,10 +352,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.2rem;t
 // ══ UTILS ══
 function fmtP(v){
   if(v===null||v===undefined||isNaN(v))return'—';
-  if(v>=1000)return'$'+v.toLocaleString('pt-BR',{maximumFractionDigits:0});
-  if(v>=1)return'$'+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:4});
-  if(v>=0.01)return'$'+v.toLocaleString('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:6});
-  return'$'+v.toLocaleString('pt-BR',{minimumFractionDigits:6,maximumFractionDigits:8});
+  // Usa en-US para preços em dólar — ponto como decimal, vírgula como milhar
+  if(v>=1000)return'$'+v.toLocaleString('en-US',{maximumFractionDigits:0});
+  if(v>=1)return'$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4});
+  if(v>=0.01)return'$'+v.toLocaleString('en-US',{minimumFractionDigits:4,maximumFractionDigits:6});
+  return'$'+v.toLocaleString('en-US',{minimumFractionDigits:6,maximumFractionDigits:8});
 }
 function fmtBRL(v,r){if(!v||!r)return'—';var b=v*r;if(b>=1e9)return'R$'+(b/1e9).toFixed(2)+'B';if(b>=1e6)return'R$'+(b/1e6).toFixed(2)+'M';if(b>=1000)return'R$'+b.toLocaleString('pt-BR',{maximumFractionDigits:0});return'R$'+b.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:4});}
 function fmtC(v,suf){if(v===null||v===undefined)return'—';return(v>=0?'+':'')+v.toFixed(2)+'%'+(suf||'');}
@@ -363,6 +364,36 @@ function fmtB(v){if(!v&&v!==0)return'—';if(v>=1e12)return'$'+(v/1e12).toFixed(
 function fmtN(v){if(!v&&v!==0)return'—';return v.toLocaleString('pt-BR',{maximumFractionDigits:0});}
 function clr(v){return v===null||v===undefined?'nt':v>=0?'up':'dn';}
 function shortAddr(a){return a?a.slice(0,6)+'…'+a.slice(-4):'';}
+
+// ══ CORS PROXY HELPER ══
+// A CoinGecko bloqueia fetch direto de origens externas (CORS).
+// Usamos proxies em sequência. corsproxy.io retorna o JSON puro.
+// allorigins usa /raw?url= que também retorna direto.
+var CG_PROXIES=[
+  'https://corsproxy.io/?url=',
+  'https://api.allorigins.win/raw?url='
+];
+// Wrapper de Response que substitui o JSON pelo conteúdo correto quando necessário
+function makeFakeResp(json,status){
+  return{ok:status>=200&&status<300,status:status,json:function(){return Promise.resolve(json);}};
+}
+async function cgFetch(url){
+  for(var i=0;i<CG_PROXIES.length;i++){
+    try{
+      var r=await fetch(CG_PROXIES[i]+encodeURIComponent(url));
+      if(!r.ok&&r.status!==404)continue;
+      var text=await r.text();
+      var parsed=JSON.parse(text);
+      // allorigins às vezes envolve em {contents:"..."}
+      if(parsed&&typeof parsed.contents==='string'){
+        try{parsed=JSON.parse(parsed.contents);}catch(e2){}
+      }
+      return makeFakeResp(parsed,r.status);
+    }catch(e){}
+  }
+  // Último recurso: direto (funciona em localhost ou servidor com CORS configurado)
+  return fetch(url);
+}
 
 // ══ STATE ══
 var _coinId='';var _data=null;var _usdBRL=null;var _btcPrice=null;
@@ -437,7 +468,7 @@ function tickerApply(d,fb){
 (function(){var t=document.getElementById('ticker-track');if(t&&!t._dup){t._dup=true;t.innerHTML+=t.innerHTML;}})();
 function fetchTicker(){
   var fb=setTimeout(function(){tickerApply(_FB,true);},1200);
-  fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple&vs_currencies=usd&include_24hr_change=true')
+  cgFetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,binancecoin,ripple&vs_currencies=usd&include_24hr_change=true')
     .then(function(r){return r.json();}).then(function(d){clearTimeout(fb);tickerApply(d,false);}).catch(function(){clearTimeout(fb);tickerApply(_FB,true);});
   // Fetch BRL rate with fallback — set _usdBRL immediately so renderPage can use it
   _usdBRL=5.7; // fallback instantâneo
@@ -457,7 +488,7 @@ function fetchTicker(){
 // ══ FETCH TOP 500 for nav search ══
 function fetchTop500(){
   // Fetch live list and merge — static coins already loaded as fallback
-  fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
+  cgFetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1')
     .then(function(r){return r.json();})
     .then(function(d){
       // Merge: update prices of existing, add new ones
@@ -468,7 +499,7 @@ function fetchTop500(){
       });
     }).catch(function(){});
   setTimeout(function(){
-    fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2')
+    cgFetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=2')
       .then(function(r){return r.json();})
       .then(function(d){
         d.forEach(function(coin){
@@ -489,7 +520,7 @@ function navTokenSearch(val){
   var local=_top500.filter(function(c){return c.name.toLowerCase().indexOf(ql)>=0||c.symbol.toLowerCase().indexOf(ql)>=0;}).slice(0,8);
   if(local.length){renderNavDD(local);}
   _searchTO=setTimeout(function(){
-    fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(val))
+    cgFetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(val))
       .then(function(r){return r.json();}).then(function(d){
         var coins=(d.coins||[]).slice(0,8).map(function(c){
           var lm=_top500.find(function(x){return x.id===c.id;});
@@ -550,7 +581,7 @@ function drawChart(pts){
 function fetchChart(id,days){
   var wrap=document.getElementById('chart-fallback-wrap');if(!wrap)return;
   var ld=wrap.querySelector('.chart-loading');if(ld)ld.style.display='flex';
-  fetch('https://api.coingecko.com/api/v3/coins/'+id+'/market_chart?vs_currency=usd&days='+days)
+  cgFetch('https://api.coingecko.com/api/v3/coins/'+id+'/market_chart?vs_currency=usd&days='+days)
     .then(function(r){return r.json();}).then(function(d){if(ld)ld.style.display='none';if(d.prices&&d.prices.length)drawChart(d.prices);}).catch(function(){if(ld)ld.style.display='none';});
 }
 function changePeriod(p){
@@ -1019,8 +1050,8 @@ async function init(){
   if(!_coinId){showError('Nenhum token especificado. Use <strong>token.html?id=bitcoin</strong>');return;}
   try{
     var [coinResp,chartResp]=await Promise.all([
-      fetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'?localization=false&tickers=true&market_data=true&community_data=true&developer_data=true&sparkline=false'),
-      fetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'/market_chart?vs_currency=usd&days=7')
+      cgFetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'?localization=false&tickers=true&market_data=true&community_data=true&developer_data=true&sparkline=false'),
+      cgFetch('https://api.coingecko.com/api/v3/coins/'+_coinId+'/market_chart?vs_currency=usd&days=7')
     ]);
     if(!coinResp.ok){
       if(coinResp.status===404){showError('Token <strong>'+_coinId+'</strong> não encontrado. Verifique o ID e tente <a href="index.html" style="color:var(--gold)">buscar no início</a>.');}
@@ -1029,13 +1060,15 @@ async function init(){
     }
     var coinData=await coinResp.json();
     // CoinGecko às vezes retorna 200 com {error:'...'} para IDs inválidos
-    if(coinData.error||!coinData.market_data){
+    if(!coinData||coinData.error||!coinData.market_data){
       showError('Token <strong>'+_coinId+'</strong> não encontrado. Verifique o ID e tente <a href="index.html" style="color:var(--gold)">buscar no início</a>.');
       return;
     }
-    var chartData=await chartResp.json();
+    // Chart é opcional — não bloqueia se falhar
+    var chartPts=[];
+    try{var chartData=await chartResp.json();chartPts=chartData.prices||[];}catch(ec){}
     _data=coinData;
-    await renderPage(coinData,chartData.prices||[]);
+    await renderPage(coinData,chartPts);
   }catch(e){
     console.error('init error:',e);
     showError('Erro ao carregar dados. Verifique sua conexão e tente novamente.');
@@ -1044,7 +1077,8 @@ async function init(){
 
 fetchTicker();
 fetchTop500();
-init();
+// Aguarda um pouco para o ticker/BRL ter chance de carregar antes de renderizar
+setTimeout(init, 300);
 </script>
 </body>
 </html>
