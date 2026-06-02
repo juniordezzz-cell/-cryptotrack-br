@@ -1298,7 +1298,7 @@ document.querySelectorAll('.snav-item[href^="#"]').forEach(function(a){
 
   window.mdfSaveKey=function(){
     var val=document.getElementById('mdf-key-input').value.trim();
-    if(val.length<10){alert('Chave inválida. Verifique e tente novamente.');return;}
+    if(val.length<10){mdfAddMsg('⚠️ Chave inválida. Verifique e tente novamente.','bot');return;}
     GEMINI_KEY=val;
     document.getElementById('mdf-key-area').classList.add('hidden');
     document.getElementById('mdf-key-input').value='';
@@ -1336,7 +1336,7 @@ document.querySelectorAll('.snav-item[href^="#"]').forEach(function(a){
   }
 
   window.mdfSend=async function(){
-    if(!GEMINI_KEY){alert('Cole sua chave do Gemini primeiro.');return;}
+    if(!GEMINI_KEY){mdfNeedKey();return;}
     var input=document.getElementById('mdf-input');
     var btn=document.getElementById('mdf-send');
     var text=input.value.trim();
@@ -1352,11 +1352,14 @@ document.querySelectorAll('.snav-item[href^="#"]').forEach(function(a){
     btn.disabled=false;input.focus();
   };
 
+  function mdfNeedKey(){
+    document.getElementById('mdf-chat-panel').classList.add('open');
+    mdfAddMsg('⚠️ Cole sua chave do Gemini no campo acima e clique em Salvar para ativar a IA.','bot');
+    document.getElementById('mdf-key-input').focus();
+  }
+
   window.mdfChip=function(text){
-    if(!GEMINI_KEY){
-      document.getElementById('mdf-chat-panel').classList.add('open');
-      alert('Cole sua chave do Gemini primeiro.');return;
-    }
+    if(!GEMINI_KEY){mdfNeedKey();return;}
     document.getElementById('mdf-input').value=text;
     mdfSend();
   };
