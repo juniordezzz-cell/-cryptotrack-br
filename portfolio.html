@@ -292,9 +292,9 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
     <div class="sb-nav">
       <div class="sb-section">Principal</div>
       <div class="sb-item active" id="sbi-geral" onclick="goPage('geral',this)"><span class="sb-ico">📊</span>Dashboard</div>
-      <div class="sb-item" id="sbi-hold" onclick="goPage('hold',this)"><span class="sb-ico">💎</span>HOLD</div>
-      <div class="sb-item" id="sbi-defi" onclick="goPage('defi',this)"><span class="sb-ico">🌊</span>DeFi</div>
-      <div class="sb-item" id="sbi-trade" onclick="goPage('trade',this)"><span class="sb-ico">⚡</span>Trade</div>
+      <a href="hold.html" class="sb-item"><span class="sb-ico">💎</span>HOLD</a>
+      <a href="defi.html" class="sb-item"><span class="sb-ico">🌊</span>DeFi</a>
+      <a href="trade.html" class="sb-item"><span class="sb-ico">⚡</span>Trade</a>
       <div class="sb-section">Ferramentas</div>
       <div class="sb-item" id="sbi-favoritos" onclick="goPage('favoritos',this)"><span class="sb-ico">⭐</span>Favoritos</div>
       <a href="calculadoras.html" class="sb-item" target="_blank"><span class="sb-ico">🧮</span>Calculadoras</a>
@@ -326,9 +326,9 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
     <div class="topbar">
       <div class="tb-tabs">
         <button class="tb-tab active" onclick="goPage('geral',null,'geral')">Dashboard</button>
-        <button class="tb-tab" onclick="goPage('hold',null,'hold')">HOLD</button>
-        <button class="tb-tab" onclick="goPage('defi',null,'defi')">DeFi</button>
-        <button class="tb-tab" onclick="goPage('trade',null,'trade')">Trade</button>
+        <a href="hold.html" class="tb-tab" style="text-decoration:none">💎 HOLD</a>
+        <a href="defi.html" class="tb-tab" style="text-decoration:none">🌊 DeFi</a>
+        <a href="trade.html" class="tb-tab" style="text-decoration:none">⚡ Trade</a>
       </div>
       <div class="tb-right">
         <span class="tb-total" id="tn-total">$0,00</span>
@@ -361,8 +361,8 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
         <div class="metrics m4">
           <div class="mc mc-gold"><label>Total do Portfólio</label><div class="mv mv-gold" id="g-total">$0,00</div><div class="mc-sub">Meta: <span id="g-meta">$0,00</span></div></div>
           <div class="mc" id="g-pnl-mc"><label>P&L Total</label><div class="mv" id="g-pnl">$0,00</div><div class="mc-sub"><span id="g-pnl-pct">0%</span> retorno</div></div>
-          <div class="mc mc-blue"><label>HOLD</label><div class="mv mv-blue" id="g-hold-total">$0,00</div><div class="mc-sub" id="g-hold-pct">0% da carteira</div></div>
-          <div class="mc mc-defi"><label>DeFi + Trade</label><div class="mv" style="color:var(--defi)" id="g-defi-total">$0,00</div><div class="mc-sub" id="g-meta-pct">0% da meta</div></div>
+          <div class="mc mc-blue" style="cursor:pointer" onclick="window.location.href='hold.html'"><label>HOLD <span style="font-size:9px;color:var(--muted2)">↗ abrir</span></label><div class="mv mv-blue" id="g-hold-total">$0,00</div><div class="mc-sub" id="g-hold-pct">0% da carteira</div></div>
+          <div class="mc mc-defi" style="cursor:pointer" onclick="window.location.href='defi.html'"><label>DeFi <span style="font-size:9px;color:var(--muted2)">↗ abrir</span></label><div class="mv" style="color:var(--defi)" id="g-defi-total">$0,00</div><div class="mc-sub" id="g-meta-pct">0% da meta</div></div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
           <div class="card">
@@ -386,115 +386,58 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
             </table>
           </div>
         </div>
-      </div>
 
-      <!-- HOLD -->
-      <div class="page" id="page-hold">
-        <div class="ph">
-          <div><h1>💎 HOLD</h1><p>Portfólio de longo prazo</p></div>
-          <div class="ph-actions">
-            <button class="btn btn-ghost btn-sm" onclick="openHoldModal('transfer')">↔ Transferência</button>
-            <button class="btn btn-gold btn-sm" onclick="openHoldModal('buy')">+ Add Transação</button>
-          </div>
+        <!-- ACESSO RÁPIDO ÀS SUB-PÁGINAS -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:1rem">
+          <a href="hold.html" style="text-decoration:none">
+            <div class="card" style="border-left:2px solid var(--blue);cursor:pointer;margin-bottom:0;transition:border-color .2s,transform .15s">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:1.2rem;margin-bottom:.3rem">💎</div>
+                  <div style="font-family:var(--display);font-size:13px;font-weight:700;color:var(--blue)">HOLD</div>
+                  <div style="font-size:11px;color:var(--muted2);margin-top:2px">Ativos de longo prazo</div>
+                  <div class="mono mv-blue" style="font-size:.95rem;font-weight:700;margin-top:.5rem" id="gcard-hold">$0,00</div>
+                </div>
+                <span style="font-size:16px;color:var(--muted)">↗</span>
+              </div>
+            </div>
+          </a>
+          <a href="defi.html" style="text-decoration:none">
+            <div class="card" style="border-left:2px solid var(--defi);cursor:pointer;margin-bottom:0">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:1.2rem;margin-bottom:.3rem">🌊</div>
+                  <div style="font-family:var(--display);font-size:13px;font-weight:700;color:var(--defi)">DeFi</div>
+                  <div style="font-size:11px;color:var(--muted2);margin-top:2px">Pools e yield farming</div>
+                  <div class="mono" style="color:var(--defi);font-size:.95rem;font-weight:700;margin-top:.5rem" id="gcard-defi">$0,00</div>
+                </div>
+                <span style="font-size:16px;color:var(--muted)">↗</span>
+              </div>
+            </div>
+          </a>
+          <a href="trade.html" style="text-decoration:none">
+            <div class="card" style="border-left:2px solid var(--gold);cursor:pointer;margin-bottom:0">
+              <div style="display:flex;align-items:center;justify-content:space-between">
+                <div>
+                  <div style="font-size:1.2rem;margin-bottom:.3rem">⚡</div>
+                  <div style="font-family:var(--display);font-size:13px;font-weight:700;color:var(--gold)">Trade</div>
+                  <div style="font-size:11px;color:var(--muted2);margin-top:2px">Banca e operações</div>
+                  <div class="mono mv-gold" style="font-size:.95rem;font-weight:700;margin-top:.5rem" id="gcard-trade">$0,00</div>
+                </div>
+                <span style="font-size:16px;color:var(--muted)">↗</span>
+              </div>
+            </div>
+          </a>
         </div>
-        <div class="metrics m4">
-          <div class="mc mc-blue"><label>Total HOLD</label><div class="mv mv-blue" id="h-total">$0,00</div></div>
-          <div class="mc"><label>Investido</label><div class="mv" id="h-inv">$0,00</div></div>
-          <div class="mc" id="h-pnl-mc"><label>P&L</label><div class="mv" id="h-pnl">$0,00</div></div>
-          <div class="mc"><label>Ativos</label><div class="mv" id="h-count">0</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:1rem">
-          <div class="card">
-            <div class="card-hdr"><span class="card-title">Evolução do Portfólio</span></div>
-            <div style="height:140px"><canvas id="c-hold-evol"></canvas></div>
-          </div>
-          <div class="card">
-            <div class="card-hdr"><span class="card-title">Alocação</span></div>
-            <div style="height:100px"><canvas id="c-hold-alloc"></canvas></div>
-            <div id="c-hold-leg" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:10px"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Ativos</span></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>#</th><th>Ativo</th><th>Qtd</th><th>Cap</th><th>Preço Atual</th><th>Total</th><th>Alocação</th><th>PM</th><th>P&L</th><th>%</th><th>Ações</th></tr></thead>
-              <tbody id="h-tbody"></tbody>
-            </table>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Últimas Transações</span></div>
-          <div id="h-txn-list"></div>
-        </div>
+      </div><!-- /page-geral -->
+      <div class="page" id="page-hold" style="padding:2rem 1.5rem">
+        <script>window.location.href='hold.html';</script>
       </div>
-
-      <!-- DEFI -->
-      <div class="page" id="page-defi">
-        <div class="ph">
-          <div><h1>🌊 DeFi</h1><p>Pools de liquidez e yield farming</p></div>
-          <div class="ph-actions">
-            <button class="btn btn-gold btn-sm" onclick="openDefiModal()">+ Nova Pool</button>
-          </div>
-        </div>
-        <div class="metrics m4">
-          <div class="mc mc-defi"><label>Investido</label><div class="mv" style="color:var(--defi)" id="d-inv">$0,00</div></div>
-          <div class="mc"><label>Saldo Atual</label><div class="mv" id="d-bal">$0,00</div></div>
-          <div class="mc"><label>Taxas Pendentes</label><div class="mv mv-gold" id="d-taxpend">$0,00</div></div>
-          <div class="mc"><label>Lucro Total</label><div class="mv" id="d-lucro">$0,00</div></div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Pools Ativas <span id="d-nativas" style="color:var(--defi)">0</span></span></div>
-          <div id="d-pools-list"><div style="color:var(--muted2);text-align:center;padding:2rem;font-size:12px">Nenhuma pool ativa</div></div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Fechar Pool</span></div>
-          <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end">
-            <div class="fgrp"><label>Pool</label><select class="fselect" id="d-sel-pool"><option value="">Selecione uma pool</option></select></div>
-            <button class="btn btn-red" onclick="fecharPoolAcao()">Fechar Pool</button>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Histórico <span id="d-nfech" style="color:var(--muted2)">0</span></span></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>Par</th><th>Protocolo</th><th>Investido</th><th>Saldo Final</th><th>Taxas</th><th>Lucro</th><th>Dias</th><th>Data Saída</th></tr></thead>
-              <tbody id="d-hist-tbody"></tbody>
-            </table>
-          </div>
-        </div>
+      <div class="page" id="page-defi" style="padding:2rem 1.5rem">
+        <script>window.location.href='defi.html';</script>
       </div>
-
-      <!-- TRADE -->
-      <div class="page" id="page-trade">
-        <div class="ph">
-          <div><h1>⚡ Trade</h1><p>Histórico de operações e banca</p></div>
-          <div class="ph-actions">
-            <button class="btn btn-gold btn-sm" onclick="openTradeModal()">+ Registrar</button>
-          </div>
-        </div>
-        <div class="metrics m4">
-          <div class="mc mc-gold"><label>Banca Atual</label><div class="mv mv-gold" id="t-banca">$0,00</div></div>
-          <div class="mc"><label>Banca Inicial</label><div class="mv" id="t-banca-ini">$0,00</div></div>
-          <div class="mc"><label>Lucro Total</label><div class="mv" id="t-lucro">$0,00</div></div>
-          <div class="mc"><label>Win Rate</label><div class="mv" id="t-wr">0%</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1rem">
-          <div class="mc m2" style="grid-column:1;display:grid;grid-template-columns:1fr 1fr;gap:10px;background:transparent;border:none;padding:0">
-            <div class="mc"><label>Total Wins</label><div class="mv mv-green" id="t-wins">0</div></div>
-            <div class="mc"><label>Total Losses</label><div class="mv mv-red" id="t-losses">0</div></div>
-          </div>
-          <div class="mc" style="grid-column:2"><label>Maior Win</label><div class="mv mv-green" id="t-max-win">$0,00</div></div>
-        </div>
-        <div class="card">
-          <div class="card-hdr"><span class="card-title">Histórico de Operações</span></div>
-          <div class="tbl-wrap">
-            <table>
-              <thead><tr><th>Data</th><th>Tipo</th><th>Ativo</th><th>Valor</th><th>Notas</th><th></th></tr></thead>
-              <tbody id="t-tbody"></tbody>
-            </table>
-          </div>
-        </div>
+      <div class="page" id="page-trade" style="padding:2rem 1.5rem">
+        <script>window.location.href='trade.html';</script>
       </div>
 
       <!-- FAVORITOS -->
@@ -549,142 +492,6 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 </div><!-- /app -->
 
 <!-- MODALS -->
-
-<!-- HOLD MODAL -->
-<div class="modal-overlay" id="hold-overlay">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title" id="hold-modal-title">Add Transação</div>
-      <button class="modal-x" onclick="closeHoldModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div id="hold-form-buy">
-        <div class="frow">
-          <div class="fgrp">
-            <label>Tipo</label>
-            <select class="fselect" id="h-tipo" onchange="holdTipoChange()">
-              <option value="buy">Compra</option>
-              <option value="sell">Venda</option>
-            </select>
-          </div>
-        </div>
-        <div class="frow">
-          <div class="fgrp coin-search-wrap">
-            <label>Token</label>
-            <input class="finput" id="h-search" placeholder="Digite BTC, ETH, SOL..." oninput="holdCoinSearch(this.value)" autocomplete="off"/>
-            <div class="coin-dd" id="h-coin-dd"></div>
-          </div>
-        </div>
-        <div class="frow fg2">
-          <div class="fgrp"><label>Quantidade</label><input class="finput" type="number" id="h-qty" placeholder="0.00" min="0" step="any"/></div>
-          <div class="fgrp"><label>Preço USD</label><input class="finput" type="number" id="h-price" placeholder="0.00" min="0" step="any"/></div>
-        </div>
-        <div class="frow">
-          <div class="fgrp"><label>Data</label><input class="finput" type="date" id="h-date"/></div>
-        </div>
-      </div>
-      <div id="hold-form-transfer" style="display:none">
-        <div class="frow">
-          <div class="fgrp"><label>Token</label><input class="finput" id="h-tr-ticker" placeholder="BTC"/></div>
-        </div>
-        <div class="frow fg2">
-          <div class="fgrp"><label>Quantidade</label><input class="finput" type="number" id="h-tr-qty" placeholder="0.00" min="0" step="any"/></div>
-          <div class="fgrp"><label>Destino</label><input class="finput" id="h-tr-dest" placeholder="ex: Ledger"/></div>
-        </div>
-        <div class="frow">
-          <div class="fgrp"><label>Data</label><input class="finput" type="date" id="h-tr-date"/></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeHoldModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarHold()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- DEFI MODAL -->
-<div class="modal-overlay" id="defi-overlay">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title">Nova Pool DeFi</div>
-      <button class="modal-x" onclick="closeDefiModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="frow fg2">
-        <div class="fgrp"><label>Par</label><input class="finput" id="df-par" placeholder="BTC-USDC"/></div>
-        <div class="fgrp"><label>Protocolo</label><input class="finput" id="df-prot" placeholder="Uniswap"/></div>
-      </div>
-      <div class="frow fg2">
-        <div class="fgrp"><label>Investido USD</label><input class="finput" type="number" id="df-inv" placeholder="0.00" min="0" step="any"/></div>
-        <div class="fgrp"><label>Data Abertura</label><input class="finput" type="date" id="df-data"/></div>
-      </div>
-      <div class="frow fg2">
-        <div class="fgrp"><label>Range Mín</label><input class="finput" type="number" id="df-rmin" placeholder="0"/></div>
-        <div class="fgrp"><label>Range Máx</label><input class="finput" type="number" id="df-rmax" placeholder="0"/></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeDefiModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="addPool()">Abrir Pool</button>
-    </div>
-  </div>
-</div>
-
-<!-- TRADE MODAL -->
-<div class="modal-overlay" id="trade-overlay">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title">Registrar Operação</div>
-      <button class="modal-x" onclick="closeTradeModal()">✕</button>
-    </div>
-    <div class="modal-body">
-      <div class="frow">
-        <div class="fgrp"><label>Tipo</label>
-          <select class="fselect" id="tm-tipo">
-            <option value="aporte">Aporte</option>
-            <option value="win">Win</option>
-            <option value="loss">Loss</option>
-            <option value="retirada">Retirada</option>
-          </select>
-        </div>
-      </div>
-      <div class="frow fg2">
-        <div class="fgrp"><label>Ativo (opcional)</label><input class="finput" id="tm-ativo" placeholder="BTC, ETH..."/></div>
-        <div class="fgrp"><label>Valor USD</label><input class="finput" type="number" id="tm-valor" placeholder="0.00" min="0" step="any"/></div>
-      </div>
-      <div class="frow fg2">
-        <div class="fgrp"><label>Data</label><input class="finput" type="date" id="tm-data"/></div>
-        <div class="fgrp"><label>Notas</label><input class="finput" id="tm-notes" placeholder="Opcional"/></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="closeTradeModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarTrade()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- DEFI UPDATE MODAL -->
-<div class="modal-overlay" id="defi-upd-overlay">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title">Atualizar Pool</div>
-      <button class="modal-x" onclick="document.getElementById('defi-upd-overlay').classList.remove('open')">✕</button>
-    </div>
-    <div class="modal-body">
-      <input type="hidden" id="upd-pool-id"/>
-      <div class="frow fg2">
-        <div class="fgrp"><label>Saldo Atual USD</label><input class="finput" type="number" id="upd-bal" placeholder="0.00" min="0" step="any"/></div>
-        <div class="fgrp"><label>Taxas Coletadas</label><input class="finput" type="number" id="upd-tax" placeholder="0.00" min="0" step="any"/></div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-ghost" onclick="document.getElementById('defi-upd-overlay').classList.remove('open')">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarDefiUpd()">Salvar</button>
-    </div>
-  </div>
-</div>
 
 <!-- FAV MODAL -->
 <div class="modal-overlay" id="fav-overlay">
@@ -1133,6 +940,9 @@ function renderGeral() {
   document.getElementById('g-hold-pct').textContent=(total>0?(hT/total*100).toFixed(1):0)+'% da carteira';
   document.getElementById('g-defi-total').textContent=fmt(dT+tT);
   document.getElementById('g-update').textContent='Atualizado '+new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  var ghH=document.getElementById('gcard-hold');if(ghH)ghH.textContent=fmt(hT);
+  var ghD=document.getElementById('gcard-defi');if(ghD)ghD.textContent=fmt(dT);
+  var ghT=document.getElementById('gcard-trade');if(ghT)ghT.textContent=fmt(tT);
   document.getElementById('tn-total').textContent=fmt(total);
   var segs=[
     {nome:'HOLD',valor:hT,pIdeal:st.config.pHold,cor:'#4b96ff'},
@@ -1336,220 +1146,6 @@ function renderConfig(){
   document.getElementById('cfg-caixa').value=st.config.pCaixa||10;
 }
 
-// ══ HOLD ACTIONS ══
-function openHoldModal(tipo) {
-  holdTab = tipo;
-  document.getElementById('hold-form-buy').style.display=tipo==='transfer'?'none':'block';
-  document.getElementById('hold-form-transfer').style.display=tipo==='transfer'?'block':'none';
-  document.getElementById('hold-modal-title').textContent=tipo==='buy'?'Comprar Ativo':tipo==='sell'?'Vender Ativo':'Registrar Transferência';
-  document.getElementById('h-date').value=hoje();
-  document.getElementById('h-tr-date').value=hoje();
-  document.getElementById('hold-overlay').classList.add('open');
-}
-function closeHoldModal(){ document.getElementById('hold-overlay').classList.remove('open'); _holdSelCoin=null; document.getElementById('h-search').value=''; document.getElementById('h-coin-dd').classList.remove('open'); }
-function holdTipoChange(){ openHoldModal(document.getElementById('h-tipo').value); }
-
-var _holdDdTO=null;
-var _KNOWN_COINS=[
-  {id:'bitcoin',sym:'BTC',name:'Bitcoin',color:'#f7931a'},{id:'ethereum',sym:'ETH',name:'Ethereum',color:'#627eea'},{id:'solana',sym:'SOL',name:'Solana',color:'#9945ff'},{id:'binancecoin',sym:'BNB',name:'BNB',color:'#f3ba2f'},{id:'ripple',sym:'XRP',name:'XRP',color:'#375bd2'},{id:'dogecoin',sym:'DOGE',name:'Dogecoin',color:'#c8a52b'},{id:'cardano',sym:'ADA',name:'Cardano',color:'#0033ad'},{id:'avalanche-2',sym:'AVAX',name:'Avalanche',color:'#e84142'},{id:'chainlink',sym:'LINK',name:'Chainlink',color:'#2a5ada'},{id:'polkadot',sym:'DOT',name:'Polkadot',color:'#e6007a'},{id:'uniswap',sym:'UNI',name:'Uniswap',color:'#ff007a'},{id:'near',sym:'NEAR',name:'NEAR',color:'#00c08b'},{id:'the-open-network',sym:'TON',name:'Toncoin',color:'#0098ea'},{id:'sui',sym:'SUI',name:'Sui',color:'#4da2ff'},{id:'litecoin',sym:'LTC',name:'Litecoin',color:'#bfbbbb'},{id:'tron',sym:'TRX',name:'TRON',color:'#eb0029'},{id:'stellar',sym:'XLM',name:'Stellar',color:'#7d00ff'},{id:'hyperliquid',sym:'HYPE',name:'Hyperliquid',color:'#00e5ff'},{id:'pepe',sym:'PEPE',name:'Pepe',color:'#479c5e'},{id:'shiba-inu',sym:'SHIB',name:'Shiba Inu',color:'#e33a2c'},{id:'bonk',sym:'BONK',name:'Bonk',color:'#f97316'},{id:'dogwifcoin',sym:'WIF',name:'dogwifhat',color:'#e8a200'},{id:'aptos',sym:'APT',name:'Aptos',color:'#60d5fa'},{id:'injective-protocol',sym:'INJ',name:'Injective',color:'#00b2ff'},{id:'sei-network',sym:'SEI',name:'Sei',color:'#9d4edd'},{id:'bittensor',sym:'TAO',name:'Bittensor',color:'#00d4aa'},{id:'worldcoin-wld',sym:'WLD',name:'Worldcoin',color:'#000000'},{id:'jup',sym:'JUP',name:'Jupiter',color:'#00c896'},{id:'render-token',sym:'RNDR',name:'Render',color:'#ff5400'},{id:'hedera-hashgraph',sym:'HBAR',name:'Hedera',color:'#00b388'},{id:'ondo-finance',sym:'ONDO',name:'Ondo',color:'#6b21a8'},{id:'kaspa',sym:'KAS',name:'Kaspa',color:'#49daf8'},{id:'fetch-ai',sym:'FET',name:'Fetch.ai',color:'#1a1f6e'},{id:'arweave',sym:'AR',name:'Arweave',color:'#222326'},{id:'immutable-x',sym:'IMX',name:'Immutable X',color:'#00c9ff'},{id:'optimism',sym:'OP',name:'Optimism',color:'#ff0420'},{id:'arbitrum',sym:'ARB',name:'Arbitrum',color:'#2d374b'},{id:'polygon',sym:'MATIC',name:'Polygon',color:'#8247e5'},{id:'floki',sym:'FLOKI',name:'FLOKI',color:'#f5a623'},{id:'movement',sym:'MOVE',name:'Movement',color:'#a855f7'}
-];
-var _holdPriceCache={};
-
-function holdCoinSearch(val){
-  val=(val||'').trim();
-  var dd=document.getElementById('h-coin-dd');
-  if(!val||val.length<1){dd.classList.remove('open');return;}
-  if(_holdDdTO)clearTimeout(_holdDdTO);
-  var ql=val.toLowerCase();
-  var local=_KNOWN_COINS.filter(function(c){return c.name.toLowerCase().indexOf(ql)>=0||c.sym.toLowerCase().indexOf(ql)>=0;}).slice(0,8);
-  if(local.length) renderHoldDd(local);
-  _holdDdTO=setTimeout(function(){
-    fetch('https://api.coingecko.com/api/v3/search?query='+encodeURIComponent(val))
-      .then(function(r){return r.json();})
-      .then(function(d){
-        var coins=(d.coins||[]).slice(0,8).map(function(c){return {id:c.id,sym:(c.symbol||'').toUpperCase(),name:c.name,color:getColor(c.symbol,''),thumb:c.thumb};});
-        if(coins.length) renderHoldDd(coins);
-      }).catch(function(){});
-  },400);
-}
-
-function renderHoldDd(coins){
-  var dd=document.getElementById('h-coin-dd');
-  dd.innerHTML=coins.map(function(c,i){
-    var p=_holdPriceCache[c.id];
-    return '<div class="coin-dd-item" onclick="selectHoldCoinFromDd('+i+')" data-idx="'+i+'">'
-      +(c.thumb?'<img src="'+c.thumb+'" style="width:24px;height:24px;border-radius:6px;object-fit:cover">'
-        :'<div style="width:24px;height:24px;border-radius:6px;background:'+(c.color||'#888')+'22;color:'+(c.color||'#888')+';display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">'+c.sym.slice(0,2)+'</div>')
-      +'<div style="flex:1"><div style="font-size:12px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:var(--muted2)">'+c.sym+'</div></div>'
-      +(p?'<div style="text-align:right"><div style="font-family:var(--mono);font-size:11px">'+fmt(p.usd)+'</div></div>':'')
-      +'</div>';
-  }).join('');
-  dd._coins = coins;
-  dd.classList.add('open');
-  // Fetch prices for uncached coins
-  var uncached=coins.filter(function(c){return !_holdPriceCache[c.id];});
-  if(uncached.length){
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids='+uncached.map(function(c){return c.id;}).join(',')+'&vs_currencies=usd&include_24hr_change=true')
-      .then(function(r){return r.json();})
-      .then(function(p){Object.assign(_holdPriceCache,p);renderHoldDd(coins);})
-      .catch(function(){});
-  }
-}
-
-function selectHoldCoinFromDd(i){
-  var dd=document.getElementById('h-coin-dd');
-  if(!dd._coins) return;
-  var coin=dd._coins[i];
-  if(!coin) return;
-  selectHoldCoin(coin.sym, coin);
-}
-
-function selectHoldCoin(sym, coinData){
-  if(!coinData){
-    var found=_KNOWN_COINS.find(function(c){return c.sym===sym;});
-    if(found) coinData=found; else { document.getElementById('h-search').value=sym; return; }
-  }
-  _holdSelCoin=coinData;
-  document.getElementById('h-search').value=coinData.name+' ('+coinData.sym+')';
-  document.getElementById('h-coin-dd').classList.remove('open');
-  // Fill price
-  var p=_holdPriceCache[coinData.id];
-  if(p&&p.usd) { document.getElementById('h-price').value=p.usd; }
-  else if(coinData.id){
-    fetch('https://api.coingecko.com/api/v3/simple/price?ids='+coinData.id+'&vs_currencies=usd')
-      .then(function(r){return r.json();})
-      .then(function(pr){if(pr[coinData.id]){_holdPriceCache[coinData.id]=pr[coinData.id];document.getElementById('h-price').value=pr[coinData.id].usd;}})
-      .catch(function(){});
-  }
-}
-
-function salvarHold(){
-  if(holdTab==='transfer'){ salvarHoldTransfer(); return; }
-  var ticker, name, color;
-  if(_holdSelCoin){
-    ticker=_holdSelCoin.sym;
-    name=_holdSelCoin.name;
-    color=_holdSelCoin.color||getColor(_holdSelCoin.sym,0);
-  } else {
-    var searchVal=(document.getElementById('h-search').value||'').trim().toUpperCase();
-    if(!searchVal){toast('Selecione um token.','err');return;}
-    ticker=searchVal;
-    name=searchVal;
-    color=getColor(searchVal,0);
-  }
-  var tipo=document.getElementById('h-tipo').value;
-  var qty=parseFloat(document.getElementById('h-qty').value)||0;
-  var price=parseFloat(document.getElementById('h-price').value)||0;
-  var date=document.getElementById('h-date').value||hoje();
-  if(!qty||qty<=0){toast('Informe a quantidade.','err');return;}
-  if(!price||price<=0){toast('Informe o preço.','err');return;}
-  if(tipo==='buy'&&!st.hold.ativos[ticker]){
-    if(!checkLimit('hold')) return;
-  }
-  if(!st.hold.ativos[ticker]){
-    st.hold.ativos[ticker]={ name:name, ticker:ticker, color:color, precoAtual:price, rank:null, cap:null };
-  }
-  st.hold.ativos[ticker].precoAtual=price;
-  var finalQty=tipo==='sell'?-Math.abs(qty):Math.abs(qty);
-  st.hold.txns.push({ id:Date.now(), tipo:tipo, ticker:ticker, qty:finalQty, price:price, date:date });
-  save(); renderAll(); closeHoldModal(); toast(tipo==='buy'?'Compra registrada!':'Venda registrada!','ok');
-}
-
-function salvarHoldTransfer(){
-  var ticker=(document.getElementById('h-tr-ticker').value||'').trim().toUpperCase();
-  var qty=parseFloat(document.getElementById('h-tr-qty').value)||0;
-  var dest=(document.getElementById('h-tr-dest').value||'').trim();
-  var date=document.getElementById('h-tr-date').value||hoje();
-  if(!ticker||!qty){toast('Preencha ticker e quantidade.','err');return;}
-  st.hold.txns.push({ id:Date.now(), tipo:'transfer-out', ticker:ticker, qty:-qty, price:0, date:date, dest:dest });
-  st.hold.transfers.push({ id:Date.now(), ticker:ticker, qty:qty, dest:dest, date:date });
-  save(); renderAll(); closeHoldModal(); toast('Transferência registrada!','ok');
-}
-
-function hAtualizarPreco(ticker){
-  var novoPreco=parseFloat(prompt('Novo preço de '+ticker+' (USD):', st.hold.ativos[ticker].precoAtual||0));
-  if(isNaN(novoPreco)||novoPreco<0){toast('Preço inválido.','err');return;}
-  st.hold.ativos[ticker].precoAtual=novoPreco;
-  save(); renderAll(); toast('Preço atualizado!','ok');
-}
-
-function hRemoverAtivo(ticker){
-  if(!confirm('Remover '+ticker+' e todas as suas transações?'))return;
-  delete st.hold.ativos[ticker];
-  st.hold.txns=st.hold.txns.filter(function(t){return t.ticker!==ticker;});
-  save(); renderAll(); toast(ticker+' removido.','ok');
-}
-
-// ══ DEFI ACTIONS ══
-function openDefiModal(){ document.getElementById('df-data').value=hoje(); document.getElementById('defi-overlay').classList.add('open'); }
-function closeDefiModal(){ document.getElementById('defi-overlay').classList.remove('open'); }
-
-function addPool(){
-  if(!checkLimit('defi')) return;
-  var par=(document.getElementById('df-par').value||'').trim().toUpperCase();
-  var prot=(document.getElementById('df-prot').value||'').trim();
-  var inv=parseFloat(document.getElementById('df-inv').value)||0;
-  var data=document.getElementById('df-data').value||hoje();
-  var rmin=parseFloat(document.getElementById('df-rmin').value)||0;
-  var rmax=parseFloat(document.getElementById('df-rmax').value)||0;
-  if(!par||!inv){toast('Preencha par e valor.','err');return;}
-  st.defi.ativas.push({ id:Date.now(), par:par, prot:prot, inv:inv, costBasis:inv, bal:inv, taxPend:0, taxCol:0, rangeMin:rmin, rangeMax:rmax, data:new Date(data).toLocaleDateString('pt-BR') });
-  save(); renderAll(); closeDefiModal(); toast('Pool aberta!','ok');
-}
-
-function openDefiUpd(id){
-  var pool=st.defi.ativas.find(function(p){return p.id===id;});
-  if(!pool) return;
-  document.getElementById('upd-pool-id').value=id;
-  document.getElementById('upd-bal').value=pool.bal||pool.inv;
-  document.getElementById('upd-tax').value=pool.taxPend||0;
-  document.getElementById('defi-upd-overlay').classList.add('open');
-}
-
-function salvarDefiUpd(){
-  var id=parseInt(document.getElementById('upd-pool-id').value);
-  var pool=st.defi.ativas.find(function(p){return p.id===id;});
-  if(!pool) return;
-  pool.bal=parseFloat(document.getElementById('upd-bal').value)||pool.bal;
-  pool.taxPend=parseFloat(document.getElementById('upd-tax').value)||0;
-  save(); renderAll(); document.getElementById('defi-upd-overlay').classList.remove('open'); toast('Pool atualizada!','ok');
-}
-
-function fecharPoolAcao(){
-  var id=parseInt(document.getElementById('d-sel-pool').value);
-  if(!id){toast('Selecione uma pool.','err');return;}
-  if(!confirm('Fechar esta pool e mover para o histórico?'))return;
-  var idx=st.defi.ativas.findIndex(function(p){return p.id===id;});
-  if(idx<0) return;
-  var pool=st.defi.ativas.splice(idx,1)[0];
-  var dias=Math.round((new Date()-new Date(pool.data.split('/').reverse().join('-')))/864e5)||0;
-  var lucro=(pool.bal||pool.inv)-(pool.costBasis||pool.inv)+(pool.taxCol||0)+(pool.taxPend||0);
-  st.defi.historico.push({ id:Date.now(), par:pool.par, prot:pool.prot, inv:pool.inv, costBasis:pool.costBasis||pool.inv, balFinal:pool.bal||pool.inv, taxColFinal:(pool.taxCol||0)+(pool.taxPend||0), lucroFinal:lucro, data:pool.data, dataSaida:new Date().toLocaleDateString('pt-BR'), diasTotal:dias });
-  save(); renderAll(); toast('Pool fechada!','ok');
-}
-
-// ══ TRADE ACTIONS ══
-function openTradeModal(){ document.getElementById('tm-data').value=hoje(); document.getElementById('trade-overlay').classList.add('open'); }
-function closeTradeModal(){ document.getElementById('trade-overlay').classList.remove('open'); }
-
-function salvarTrade(){
-  var tipo=document.getElementById('tm-tipo').value;
-  var ativo=(document.getElementById('tm-ativo').value||'').trim();
-  var raw=parseFloat(document.getElementById('tm-valor').value);
-  var data=document.getElementById('tm-data').value||hoje();
-  var notes=(document.getElementById('tm-notes').value||'').trim();
-  if(isNaN(raw)||raw<=0){toast('Informe um valor válido.','err');return;}
-  if((tipo==='win'||tipo==='loss')&&!checkLimit('trades')) return;
-  var valor=tipo==='win'?Math.abs(raw):tipo==='aporte'?Math.abs(raw):tipo==='loss'?-Math.abs(raw):-Math.abs(raw);
-  st.trade.eventos.push({ id:Date.now(), tipo:tipo, ativo:ativo, valor:valor, data:data, notes:notes });
-  save(); renderAll(); closeTradeModal(); toast('Operação registrada!','ok');
-}
-
-function removerTrade(id){
-  if(!confirm('Remover esta operação?'))return;
-  st.trade.eventos=st.trade.eventos.filter(function(e){return e.id!==id;});
-  save(); renderAll(); toast('Operação removida.','ok');
-}
 
 // ══ FAVORITOS ACTIONS ══
 function openFavModal(){ document.getElementById('fav-search').value=''; document.getElementById('fav-overlay').classList.add('open'); }
