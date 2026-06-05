@@ -72,23 +72,23 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 /* ══ SIDEBAR ══ */
 .sb{width:var(--sidebar);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
 .sb::-webkit-scrollbar{width:3px}.sb::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.sb-logo{display:flex;align-items:center;gap:10px;padding:1.1rem 1rem .9rem;border-bottom:1px solid var(--border);text-decoration:none;flex-shrink:0}
-.sb-logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;font-weight:800;color:#000;flex-shrink:0}
+.sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1rem 1rem;border-bottom:1px solid var(--border);text-decoration:none;flex-shrink:0}
+.sb-logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:800;color:#000;flex-shrink:0}
 .sb-logo-name{font-family:var(--display);font-size:15px;font-weight:800;letter-spacing:-.01em}
 .sb-logo-name span{color:var(--gold)}
 .sb-logo-sub{font-size:9px;color:var(--muted2)}
-.sb-nav{flex:1;padding:.6rem 0}
-.sb-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);padding:.8rem 1rem .35rem}
-.sb-item{display:flex;align-items:center;gap:9px;padding:.6rem 1rem;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent;margin:1px 0;text-decoration:none}
+.sb-nav{flex:1;padding:.7rem 0}
+.sb-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);padding:.9rem 1rem .4rem}
+.sb-item{display:flex;align-items:center;gap:9px;padding:.7rem 1rem;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent;margin:1px 0;text-decoration:none}
 .sb-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
-.sb-item.active{color:var(--text);background:rgba(245,166,35,.06);border-left-color:var(--gold)}
-.sb-ico{width:18px;text-align:center;font-size:14px;flex-shrink:0}
-.sb-footer{padding:.8rem;border-top:1px solid var(--border)}
-.sb-user{display:flex;align-items:center;gap:9px;padding:.55rem .75rem;border-radius:var(--r);cursor:pointer;transition:background .15s}
+.sb-item.active{color:var(--text);background:rgba(245,166,35,.07);border-left-color:var(--gold)}
+.sb-ico{width:18px;text-align:center;font-size:15px;flex-shrink:0}
+.sb-footer{padding:.9rem;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:.6rem .75rem;border-radius:var(--r);cursor:pointer;transition:background .15s}
 .sb-user:hover{background:var(--bg3)}
-.sb-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#000;flex-shrink:0}
+.sb-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0}
 .sb-user-info{flex:1;min-width:0}
-.sb-user-name{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sb-user-plan{font-size:10px;color:var(--muted2)}
 .sb-user-plan.premium{color:var(--purple)}.sb-user-plan.pro{color:var(--gold)}
 .sb-sync{width:7px;height:7px;border-radius:50%;flex-shrink:0}
@@ -99,21 +99,21 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* ══ TOPBAR — estilo Investidor10 ══ */
-.topbar{height:54px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;gap:1rem}
+.topbar{height:60px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;gap:1rem}
 .tb-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
-.tb-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:800;color:#000}
-.tb-logo-name{font-family:var(--display);font-size:15px;font-weight:800}
+.tb-logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:800;color:#000}
+.tb-logo-name{font-family:var(--display);font-size:16px;font-weight:800}
 .tb-logo-name span{color:var(--gold)}
-.tb-nav{display:flex;align-items:center;gap:3px;flex:1;padding:0 1.5rem}
-.tb-nav-item{padding:6px 16px;border-radius:var(--r);font-size:13px;font-weight:500;color:var(--muted2);text-decoration:none;transition:all .15s;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:var(--font)}
+.tb-nav{display:flex;align-items:center;gap:2px;flex:1;padding:0 1.5rem}
+.tb-nav-item{padding:8px 18px;border-radius:var(--r);font-size:14px;font-weight:500;color:var(--muted2);text-decoration:none;transition:all .15s;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px}
 .tb-nav-item:hover{color:var(--text);background:rgba(255,255,255,.04)}
 .tb-nav-item.active{color:var(--text);background:var(--bg4);font-weight:600}
 .tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-total{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--gold)}
-.tb-btn{padding:7px 16px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--muted2)}
-.tb-btn:hover{color:var(--text);border-color:var(--border2)}
+.tb-total{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--gold)}
+.tb-btn{padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--muted2)}
+.tb-btn:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.04)}
 .tb-btn.gold{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
-.tb-btn.gold:hover{opacity:.9}
+.tb-btn.gold:hover{opacity:.9;box-shadow:0 4px 14px rgba(245,166,35,.25)}
 
 /* ══ DEMO BANNER ══ */
 #demo-banner{background:linear-gradient(135deg,rgba(75,150,255,.07),rgba(157,113,255,.07));border-bottom:1px solid rgba(75,150,255,.2);padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:1rem;flex-wrap:wrap}
@@ -125,25 +125,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .content::-webkit-scrollbar{width:4px}.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
 /* ══ DASHBOARD SHELL — sub-abas estilo Investidor10 ══ */
-.dash-subnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;gap:0;flex-shrink:0}
-.dash-tab{padding:14px 20px;font-size:14px;font-weight:500;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:7px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
-.dash-tab:hover{color:var(--text)}
+.dash-subnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;gap:0;flex-shrink:0;overflow-x:auto}
+.dash-subnav::-webkit-scrollbar{height:2px}.dash-subnav::-webkit-scrollbar-thumb{background:var(--border2)}
+.dash-tab{padding:16px 22px;font-size:14px;font-weight:500;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:8px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
+.dash-tab:hover{color:var(--text);background:rgba(255,255,255,.025)}
 .dash-tab.active{color:var(--text);border-bottom-color:var(--gold);font-weight:600}
-.dash-tab-ico{font-size:15px}
+.dash-tab-ico{font-size:16px}
 
 /* ══ DASH PAGE ══ */
 .dash-page{display:none;padding:2rem 2rem 3rem;max-width:1280px;margin:0 auto;width:100%}
 .dash-page.active{display:block}
 
-/* ══ SUMMARY CARDS — exato estilo Investidor10 ══ */
-.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
-.sum-card{background:var(--bg2);padding:1.4rem 1.6rem;position:relative;transition:background .15s}
+/* ══ SUMMARY CARDS — estilo Investidor10 melhorado ══ */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 20px rgba(0,0,0,.2)}
+.sum-card{background:var(--bg2);padding:1.6rem 1.8rem;position:relative;transition:background .15s;border-right:1px solid var(--border)}
+.sum-card:last-child{border-right:none}
 .sum-card:hover{background:var(--bg3)}
-.sum-card-ico{font-size:18px;margin-bottom:.6rem;display:block;opacity:.7}
-.sum-card-label{font-size:12px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
-.sum-card-val{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.4rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+.sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .2s}
+.sum-card:hover::before{opacity:1}
+.sum-card:nth-child(1)::before{background:var(--gold)}
+.sum-card:nth-child(2)::before{background:var(--green)}
+.sum-card:nth-child(3)::before{background:var(--defi)}
+.sum-card:nth-child(4)::before{background:var(--blue)}
+.sum-card-ico{font-size:20px;margin-bottom:.7rem;display:block}
+.sum-card-label{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
+.sum-card-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
+.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:3px}
 .sum-card-badge.up{background:var(--green2);color:var(--green)}
 .sum-card-badge.dn{background:var(--red2);color:var(--red)}
 .sum-card-badge.neu{background:var(--bg4);color:var(--muted2)}
@@ -151,11 +159,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 
 /* ══ CHART ROW ══ */
 .chart-row{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;margin-bottom:1.5rem}
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.6rem;transition:border-color .2s}
+.chart-card:hover{border-color:var(--border2)}
 .chart-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;gap:1rem;flex-wrap:wrap}
 .chart-card-title{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
 .chart-card-ctrl{display:flex;align-items:center;gap:6px}
-.ctrl-btn{padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);transition:all .15s}
+.ctrl-btn{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);transition:all .15s}
 .ctrl-btn:hover{color:var(--text);border-color:var(--border2)}
 .ctrl-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
 .chart-legend{display:flex;gap:14px;margin-bottom:.8rem;flex-wrap:wrap}
@@ -199,20 +208,26 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 
 /* ══ QUICK ACCESS CARDS ══ */
 .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:1.5rem}
-.quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem;text-decoration:none;color:var(--text);transition:all .18s;display:block;position:relative;overflow:hidden}
-.quick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--qc-color,var(--gold));opacity:.8}
-.quick-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
-.quick-card-emoji{font-size:1.4rem;margin-bottom:.5rem;display:block}
-.quick-card-title{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:3px}
+.quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.6rem;text-decoration:none;color:var(--text);transition:all .2s;display:block;position:relative;overflow:hidden}
+.quick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--qc-color,var(--gold));opacity:.9}
+.quick-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 10px 35px rgba(0,0,0,.35)}
+.quick-card-emoji{font-size:1.6rem;margin-bottom:.6rem;display:block}
+.quick-card-title{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:4px}
 .quick-card-sub{font-size:12px;color:var(--muted2)}
-.quick-card-val{font-family:var(--mono);font-size:1.1rem;font-weight:700;margin-top:.6rem}
-.quick-card-arrow{position:absolute;top:1.2rem;right:1.2rem;font-size:14px;color:var(--muted)}
+.quick-card-val{font-family:var(--mono);font-size:1.25rem;font-weight:700;margin-top:.7rem}
+.quick-card-arrow{position:absolute;top:1.3rem;right:1.3rem;font-size:14px;color:var(--muted)}
 
 /* ══ GENERIC CARD ══ */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem;margin-bottom:1.2rem;transition:border-color .2s}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;margin-bottom:1.2rem;transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:8px}
-.card-title{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:-.01em}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:8px}
+.card-title{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
+
+/* ══ SECTION HEADER ══ */
+.dash-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.dash-section-title{font-family:var(--display);font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
+.dash-section-title-ico{font-size:18px}
+.dash-section-sub{font-size:12px;color:var(--muted2);margin-top:2px}
 
 /* ══ ALLOC TABLE (config) ══ */
 .tbl-wrap{overflow-x:auto;border-radius:var(--r)}
@@ -244,13 +259,15 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 .ph-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 /* ══ BUTTONS ══ */
-.btn{padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:6px}
-.btn-sm{padding:5px 13px;font-size:12px}
-.btn-gold{background:var(--gold);color:#000;border-color:var(--gold)}.btn-gold:hover{opacity:.9}
-.btn-green{background:var(--green2);color:var(--green);border-color:rgba(21,199,132,.3)}.btn-green:hover{background:rgba(21,199,132,.2)}
-.btn-red{background:var(--red2);color:var(--red);border-color:rgba(234,57,67,.3)}.btn-red:hover{background:rgba(234,57,67,.2)}
-.btn-ghost{background:transparent;color:var(--muted2);border-color:var(--border2)}.btn-ghost:hover{color:var(--text)}
-.btn-blue{background:var(--blue2);color:var(--blue);border-color:rgba(75,150,255,.3)}
+.btn{padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;letter-spacing:.01em}
+.btn:active{transform:scale(.98)}
+.btn-sm{padding:7px 15px;font-size:12px}
+.btn-lg{padding:13px 28px;font-size:15px;font-weight:700}
+.btn-gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}.btn-gold:hover{opacity:.88;box-shadow:0 4px 16px rgba(245,166,35,.25)}
+.btn-green{background:var(--green2);color:var(--green);border-color:rgba(21,199,132,.3)}.btn-green:hover{background:rgba(21,199,132,.22)}
+.btn-red{background:var(--red2);color:var(--red);border-color:rgba(234,57,67,.3)}.btn-red:hover{background:rgba(234,57,67,.22)}
+.btn-ghost{background:transparent;color:var(--muted2);border-color:var(--border2)}.btn-ghost:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.04)}
+.btn-blue{background:var(--blue2);color:var(--blue);border-color:rgba(75,150,255,.3)}.btn-blue:hover{background:rgba(75,150,255,.2)}
 
 /* ══ BADGES ══ */
 .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;font-family:var(--mono)}
@@ -366,6 +383,9 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
       <div class="sb-section">Ferramentas</div>
       <div class="sb-item" id="sbi-favoritos" onclick="goPage('favoritos',this)"><span class="sb-ico">⭐</span>Favoritos</div>
       <a href="calculadoras.html" class="sb-item"><span class="sb-ico">🧮</span>Calculadoras</a>
+      <a href="calculadoras.html#dca" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>DCA</a>
+      <a href="calculadoras.html#juros" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>Juros Compostos</a>
+      <a href="calculadoras.html#pool" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>Pool Liquidez</a>
       <a href="estudos.html" class="sb-item"><span class="sb-ico">📚</span>Estudos</a>
       <div class="sb-section">Conta</div>
       <div class="sb-item" id="sbi-config" onclick="goPage('config',this)"><span class="sb-ico">⚙️</span>Configurações</div>
@@ -397,6 +417,7 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
         <div class="tb-logo-name">Mundo<span>DeFi</span></div>
       </a>
       <nav class="tb-nav">
+        <a href="index.html" class="tb-nav-item" title="Voltar ao site">🏠 Início</a>
         <a href="hold.html" class="tb-nav-item">💎 HOLD</a>
         <a href="defi.html" class="tb-nav-item">🌊 DeFi</a>
         <a href="trade.html" class="tb-nav-item">⚡ Trade</a>
@@ -430,14 +451,27 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
           <button class="dash-tab" id="dtab-patrimonio" onclick="setDashTab('patrimonio')"><span class="dash-tab-ico">📈</span>Patrimônio</button>
           <button class="dash-tab" id="dtab-rentabilidade" onclick="setDashTab('rentabilidade')"><span class="dash-tab-ico">💹</span>Rentabilidade</button>
           <button class="dash-tab" id="dtab-lancamentos" onclick="setDashTab('lancamentos')"><span class="dash-tab-ico">📝</span>Lançamentos</button>
-          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 4px">
-            <button class="btn btn-ghost btn-sm" onclick="renderGeral()">↺ Atualizar</button>
-            <button class="btn btn-gold btn-sm" onclick="openConfigModal()">⚙ Metas</button>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 8px">
+            <button class="btn btn-ghost btn-sm" onclick="renderGeral()" style="font-size:13px;padding:8px 16px">↺ Atualizar</button>
+            <button class="btn btn-gold btn-sm" onclick="openConfigModal()" style="font-size:13px;padding:8px 16px">⚙ Metas</button>
           </div>
         </div>
 
         <!-- ── RESUMO ── -->
         <div class="dash-page active" id="dash-resumo">
+
+          <!-- Header da seção -->
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px">
+            <div>
+              <div style="font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.02em">Visão Geral do Portfólio</div>
+              <div style="font-size:13px;color:var(--muted2);margin-top:3px" id="dash-lastupdate">Atualize para carregar seus dados</div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button class="btn btn-ghost" onclick="renderGeral()" style="font-size:13px">↺ Atualizar dados</button>
+              <button class="btn btn-gold" onclick="openConfigModal()" style="font-size:13px">⚙ Configurar Metas</button>
+            </div>
+          </div>
+
           <!-- 4 cards topo — estilo Investidor10 -->
           <div class="sum-grid">
             <div class="sum-card">
@@ -531,7 +565,10 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 
           <div class="card">
             <div class="card-hdr">
-              <span class="card-title">Alocação por Segmento</span>
+              <div>
+                <div class="card-title">📐 Alocação por Segmento</div>
+                <div style="font-size:12px;color:var(--muted2);margin-top:2px">Comparativo entre alocação atual e meta definida</div>
+              </div>
               <span style="font-size:12px;color:var(--muted2)" id="g-update">—</span>
             </div>
             <div class="tbl-wrap">
