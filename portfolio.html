@@ -67,53 +67,33 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .login-note{font-size:11px;color:var(--muted2);text-align:center;margin-top:.5rem}
 
 /* ══ APP SHELL ══ */
-#app{display:flex;height:100%;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100%;overflow:hidden}
 
-/* ══ SIDEBAR ══ */
-.sb{width:var(--sidebar);flex-shrink:0;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden}
-.sb::-webkit-scrollbar{width:3px}.sb::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.sb-logo{display:flex;align-items:center;gap:10px;padding:1.2rem 1rem 1rem;border-bottom:1px solid var(--border);text-decoration:none;flex-shrink:0}
-.sb-logo-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:800;color:#000;flex-shrink:0}
-.sb-logo-name{font-family:var(--display);font-size:15px;font-weight:800;letter-spacing:-.01em}
-.sb-logo-name span{color:var(--gold)}
-.sb-logo-sub{font-size:9px;color:var(--muted2)}
-.sb-nav{flex:1;padding:.7rem 0}
-.sb-section{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.14em;color:var(--muted);padding:.9rem 1rem .4rem}
-.sb-item{display:flex;align-items:center;gap:9px;padding:.7rem 1rem;cursor:pointer;color:var(--muted2);font-size:13px;font-weight:500;transition:all .15s;border-left:2px solid transparent;margin:1px 0;text-decoration:none}
-.sb-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
-.sb-item.active{color:var(--text);background:rgba(245,166,35,.07);border-left-color:var(--gold)}
-.sb-ico{width:18px;text-align:center;font-size:15px;flex-shrink:0}
-.sb-footer{padding:.9rem;border-top:1px solid var(--border)}
-.sb-user{display:flex;align-items:center;gap:9px;padding:.6rem .75rem;border-radius:var(--r);cursor:pointer;transition:background .15s}
-.sb-user:hover{background:var(--bg3)}
-.sb-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000;flex-shrink:0}
-.sb-user-info{flex:1;min-width:0}
-.sb-user-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sb-user-plan{font-size:10px;color:var(--muted2)}
-.sb-user-plan.premium{color:var(--purple)}.sb-user-plan.pro{color:var(--gold)}
-.sb-sync{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.sb-sync.ok{background:var(--green)}.sb-sync.sync{background:var(--gold);animation:pulse-dot 1s infinite}.sb-sync.off{background:var(--muted)}
+/* ══ SIDEBAR — oculta no layout novo, IDs mantidos pro JS ══ */
+.sb{display:none}
 @keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* ══ MAIN ══ */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
-/* ══ TOPBAR — estilo Investidor10 ══ */
-.topbar{height:60px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;flex-shrink:0;gap:1rem}
-.tb-logo{display:flex;align-items:center;gap:9px;text-decoration:none;flex-shrink:0}
-.tb-logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:15px;font-weight:800;color:#000}
-.tb-logo-name{font-family:var(--display);font-size:16px;font-weight:800}
+/* ══ TOPBAR — idêntico à imagem ══ */
+.topbar{height:52px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 1.2rem;flex-shrink:0;gap:10px}
+.tb-back{width:28px;height:28px;border-radius:6px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;text-decoration:none;flex-shrink:0;transition:all .15s}
+.tb-back:hover{color:var(--text)}
+.tb-logo{display:flex;align-items:center;gap:0;text-decoration:none;flex-shrink:0}
+.tb-logo-name{font-family:var(--display);font-size:15px;font-weight:800;color:var(--text)}
 .tb-logo-name span{color:var(--gold)}
-.tb-nav{display:flex;align-items:center;gap:2px;flex:1;padding:0 1.5rem}
-.tb-nav-item{padding:8px 18px;border-radius:var(--r);font-size:14px;font-weight:500;color:var(--muted2);text-decoration:none;transition:all .15s;white-space:nowrap;border:none;background:none;cursor:pointer;font-family:var(--font);display:inline-flex;align-items:center;gap:6px}
-.tb-nav-item:hover{color:var(--text);background:rgba(255,255,255,.04)}
-.tb-nav-item.active{color:var(--text);background:var(--bg4);font-weight:600}
-.tb-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.tb-total{font-family:var(--mono);font-size:15px;font-weight:700;color:var(--gold)}
-.tb-btn{padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--muted2)}
-.tb-btn:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.04)}
+.tb-selector{display:inline-flex;align-items:center;gap:6px;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:5px 10px;font-size:13px;font-weight:500;color:var(--text);cursor:pointer;flex-shrink:0;font-family:var(--font);transition:border-color .15s}
+.tb-selector:hover{border-color:var(--gold)}
+.tb-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.tb-total{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--gold)}
+.tb-btn{padding:6px 12px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid var(--border2);background:transparent;color:var(--muted2)}
+.tb-btn:hover{color:var(--text)}
 .tb-btn.gold{background:var(--gold);border-color:var(--gold);color:#000;font-weight:700}
-.tb-btn.gold:hover{opacity:.9;box-shadow:0 4px 14px rgba(245,166,35,.25)}
+.tb-btn-pro{background:var(--gold);border:none;color:#000;padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);transition:opacity .15s;letter-spacing:.01em}
+.tb-btn-pro:hover{opacity:.88}
+.tb-close{width:32px;height:32px;border-radius:6px;background:var(--bg3);border:1px solid var(--border2);color:var(--muted2);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;transition:all .15s;flex-shrink:0}
+.tb-close:hover{color:var(--red);border-color:rgba(234,57,67,.4)}
 
 /* ══ DEMO BANNER ══ */
 #demo-banner{background:linear-gradient(135deg,rgba(75,150,255,.07),rgba(157,113,255,.07));border-bottom:1px solid rgba(75,150,255,.2);padding:.6rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:1rem;flex-wrap:wrap}
@@ -124,34 +104,27 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .content{flex:1;overflow-y:auto;overflow-x:hidden}
 .content::-webkit-scrollbar{width:4px}.content::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
-/* ══ DASHBOARD SHELL — sub-abas estilo Investidor10 ══ */
-.dash-subnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.5rem;display:flex;align-items:center;gap:0;flex-shrink:0;overflow-x:auto}
+/* ══ DASHBOARD SHELL — abas ══ */
+.dash-subnav{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 1.2rem;display:flex;align-items:center;gap:0;flex-shrink:0;overflow-x:auto}
 .dash-subnav::-webkit-scrollbar{height:2px}.dash-subnav::-webkit-scrollbar-thumb{background:var(--border2)}
-.dash-tab{padding:16px 22px;font-size:14px;font-weight:500;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none;display:flex;align-items:center;gap:8px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
-.dash-tab:hover{color:var(--text);background:rgba(255,255,255,.025)}
+.dash-tab{padding:14px 16px;font-size:13px;font-weight:500;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;background:none;border-top:none;border-left:none;border-right:none;font-family:var(--font)}
+.dash-tab:hover{color:var(--text)}
 .dash-tab.active{color:var(--text);border-bottom-color:var(--gold);font-weight:600}
-.dash-tab-ico{font-size:16px}
+.dash-tab-ico{font-size:14px}
 
 /* ══ DASH PAGE ══ */
 .dash-page{display:none;padding:2rem 2rem 3rem;max-width:1280px;margin:0 auto;width:100%}
 .dash-page.active{display:block}
 
-/* ══ SUMMARY CARDS — estilo Investidor10 melhorado ══ */
-.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 20px rgba(0,0,0,.2)}
-.sum-card{background:var(--bg2);padding:1.6rem 1.8rem;position:relative;transition:background .15s;border-right:1px solid var(--border)}
-.sum-card:last-child{border-right:none}
+/* ══ SUMMARY CARDS — exato estilo Investidor10 ══ */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
+.sum-card{background:var(--bg2);padding:1.4rem 1.6rem;position:relative;transition:background .15s}
 .sum-card:hover{background:var(--bg3)}
-.sum-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:0;transition:opacity .2s}
-.sum-card:hover::before{opacity:1}
-.sum-card:nth-child(1)::before{background:var(--gold)}
-.sum-card:nth-child(2)::before{background:var(--green)}
-.sum-card:nth-child(3)::before{background:var(--defi)}
-.sum-card:nth-child(4)::before{background:var(--blue)}
-.sum-card-ico{font-size:20px;margin-bottom:.7rem;display:block}
-.sum-card-label{font-size:11px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.4rem}
-.sum-card-val{font-family:var(--mono);font-size:1.75rem;font-weight:700;letter-spacing:-.03em;line-height:1.1}
-.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.5rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:3px}
+.sum-card-ico{font-size:18px;margin-bottom:.6rem;display:block;opacity:.7}
+.sum-card-label{font-size:12px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
+.sum-card-val{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:-.02em;line-height:1.1}
+.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.4rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
 .sum-card-badge.up{background:var(--green2);color:var(--green)}
 .sum-card-badge.dn{background:var(--red2);color:var(--red)}
 .sum-card-badge.neu{background:var(--bg4);color:var(--muted2)}
@@ -159,12 +132,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 
 /* ══ CHART ROW ══ */
 .chart-row{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;margin-bottom:1.5rem}
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.6rem;transition:border-color .2s}
-.chart-card:hover{border-color:var(--border2)}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem}
 .chart-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;gap:1rem;flex-wrap:wrap}
 .chart-card-title{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
 .chart-card-ctrl{display:flex;align-items:center;gap:6px}
-.ctrl-btn{padding:6px 14px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);transition:all .15s}
+.ctrl-btn{padding:5px 13px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);transition:all .15s}
 .ctrl-btn:hover{color:var(--text);border-color:var(--border2)}
 .ctrl-btn.active{background:var(--text);color:var(--bg);border-color:var(--text)}
 .chart-legend{display:flex;gap:14px;margin-bottom:.8rem;flex-wrap:wrap}
@@ -208,26 +180,20 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 
 /* ══ QUICK ACCESS CARDS ══ */
 .quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:1.5rem}
-.quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.6rem;text-decoration:none;color:var(--text);transition:all .2s;display:block;position:relative;overflow:hidden}
-.quick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--qc-color,var(--gold));opacity:.9}
-.quick-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 10px 35px rgba(0,0,0,.35)}
-.quick-card-emoji{font-size:1.6rem;margin-bottom:.6rem;display:block}
-.quick-card-title{font-family:var(--display);font-size:15px;font-weight:700;margin-bottom:4px}
+.quick-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem;text-decoration:none;color:var(--text);transition:all .18s;display:block;position:relative;overflow:hidden}
+.quick-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--qc-color,var(--gold));opacity:.8}
+.quick-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 30px rgba(0,0,0,.3)}
+.quick-card-emoji{font-size:1.4rem;margin-bottom:.5rem;display:block}
+.quick-card-title{font-family:var(--display);font-size:14px;font-weight:700;margin-bottom:3px}
 .quick-card-sub{font-size:12px;color:var(--muted2)}
-.quick-card-val{font-family:var(--mono);font-size:1.25rem;font-weight:700;margin-top:.7rem}
-.quick-card-arrow{position:absolute;top:1.3rem;right:1.3rem;font-size:14px;color:var(--muted)}
+.quick-card-val{font-family:var(--mono);font-size:1.1rem;font-weight:700;margin-top:.6rem}
+.quick-card-arrow{position:absolute;top:1.2rem;right:1.2rem;font-size:14px;color:var(--muted)}
 
 /* ══ GENERIC CARD ══ */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;margin-bottom:1.2rem;transition:border-color .2s}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem;margin-bottom:1.2rem;transition:border-color .2s}
 .card:hover{border-color:var(--border2)}
-.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;flex-wrap:wrap;gap:8px}
-.card-title{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
-
-/* ══ SECTION HEADER ══ */
-.dash-section-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
-.dash-section-title{font-family:var(--display);font-size:17px;font-weight:700;display:flex;align-items:center;gap:8px}
-.dash-section-title-ico{font-size:18px}
-.dash-section-sub{font-size:12px;color:var(--muted2);margin-top:2px}
+.card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem;flex-wrap:wrap;gap:8px}
+.card-title{font-family:var(--display);font-size:14px;font-weight:700;letter-spacing:-.01em}
 
 /* ══ ALLOC TABLE (config) ══ */
 .tbl-wrap{overflow-x:auto;border-radius:var(--r)}
@@ -259,15 +225,13 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 .ph-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 
 /* ══ BUTTONS ══ */
-.btn{padding:10px 20px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:7px;letter-spacing:.01em}
-.btn:active{transform:scale(.98)}
-.btn-sm{padding:7px 15px;font-size:12px}
-.btn-lg{padding:13px 28px;font-size:15px;font-weight:700}
-.btn-gold{background:var(--gold);color:#000;border-color:var(--gold);font-weight:700}.btn-gold:hover{opacity:.88;box-shadow:0 4px 16px rgba(245,166,35,.25)}
-.btn-green{background:var(--green2);color:var(--green);border-color:rgba(21,199,132,.3)}.btn-green:hover{background:rgba(21,199,132,.22)}
-.btn-red{background:var(--red2);color:var(--red);border-color:rgba(234,57,67,.3)}.btn-red:hover{background:rgba(234,57,67,.22)}
-.btn-ghost{background:transparent;color:var(--muted2);border-color:var(--border2)}.btn-ghost:hover{color:var(--text);border-color:var(--border2);background:rgba(255,255,255,.04)}
-.btn-blue{background:var(--blue2);color:var(--blue);border-color:rgba(75,150,255,.3)}.btn-blue:hover{background:rgba(75,150,255,.2)}
+.btn{padding:8px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s;border:1px solid transparent;display:inline-flex;align-items:center;gap:6px}
+.btn-sm{padding:5px 13px;font-size:12px}
+.btn-gold{background:var(--gold);color:#000;border-color:var(--gold)}.btn-gold:hover{opacity:.9}
+.btn-green{background:var(--green2);color:var(--green);border-color:rgba(21,199,132,.3)}.btn-green:hover{background:rgba(21,199,132,.2)}
+.btn-red{background:var(--red2);color:var(--red);border-color:rgba(234,57,67,.3)}.btn-red:hover{background:rgba(234,57,67,.2)}
+.btn-ghost{background:transparent;color:var(--muted2);border-color:var(--border2)}.btn-ghost:hover{color:var(--text)}
+.btn-blue{background:var(--blue2);color:var(--blue);border-color:rgba(75,150,255,.3)}
 
 /* ══ BADGES ══ */
 .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;font-family:var(--mono)}
@@ -368,65 +332,32 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 <!-- APP -->
 <div id="app">
 
-  <!-- SIDEBAR -->
-  <nav class="sb">
-    <a href="index.html" class="sb-logo">
-      <div class="sb-logo-mark">M</div>
-      <div><div class="sb-logo-name">Mundo<span>DeFi</span></div><div class="sb-logo-sub">Portfólio</div></div>
-    </a>
-    <div class="sb-nav">
-      <div class="sb-section">Principal</div>
-      <div class="sb-item active" id="sbi-geral" onclick="goPage('geral',this)"><span class="sb-ico">📊</span>Dashboard</div>
-      <a href="hold.html" class="sb-item"><span class="sb-ico">💎</span>HOLD</a>
-      <a href="defi.html" class="sb-item"><span class="sb-ico">🌊</span>DeFi</a>
-      <a href="trade.html" class="sb-item"><span class="sb-ico">⚡</span>Trade</a>
-      <div class="sb-section">Ferramentas</div>
-      <div class="sb-item" id="sbi-favoritos" onclick="goPage('favoritos',this)"><span class="sb-ico">⭐</span>Favoritos</div>
-      <a href="calculadoras.html" class="sb-item"><span class="sb-ico">🧮</span>Calculadoras</a>
-      <a href="calculadoras.html#dca" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>DCA</a>
-      <a href="calculadoras.html#juros" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>Juros Compostos</a>
-      <a href="calculadoras.html#pool" class="sb-item" style="padding-left:2.2rem;font-size:12px"><span class="sb-ico" style="font-size:12px">↳</span>Pool Liquidez</a>
-      <a href="estudos.html" class="sb-item"><span class="sb-ico">📚</span>Estudos</a>
-      <div class="sb-section">Conta</div>
-      <div class="sb-item" id="sbi-config" onclick="goPage('config',this)"><span class="sb-ico">⚙️</span>Configurações</div>
-    </div>
-    <div class="sb-footer">
-      <a href="planos.html" target="_blank" style="display:flex;align-items:center;gap:9px;padding:.6rem .75rem;border-radius:var(--r);background:linear-gradient(135deg,rgba(245,166,35,.08),rgba(168,85,247,.08));border:1px solid rgba(245,166,35,.2);text-decoration:none;margin-bottom:.5rem">
-        <span style="font-size:15px">👑</span>
-        <div style="flex:1"><div style="font-size:12px;font-weight:700;color:var(--gold)">Ver Planos</div><div style="font-size:10px;color:var(--muted2)" id="sb-uplan">Plano Gratuito</div></div>
-        <span style="font-size:10px;background:var(--gold);color:#000;padding:2px 7px;border-radius:4px;font-weight:800">PRO</span>
-      </a>
-      <div class="sb-user" onclick="toggleUserMenu()">
-        <div class="sb-avatar" id="sb-av">?</div>
-        <div class="sb-user-info">
-          <div class="sb-user-name" id="sb-uname">Visitante</div>
-          <div class="sb-user-plan" id="sb-uplan2">Não conectado</div>
-        </div>
-        <div class="sb-sync off" id="sb-sync"></div>
-      </div>
-    </div>
+  <!-- SIDEBAR (oculta — IDs mantidos para o JS funcionar) -->
+  <nav class="sb" style="display:none">
+    <div id="sb-uplan"></div>
+    <div id="sb-av"></div>
+    <div id="sb-uname"></div>
+    <div id="sb-uplan2"></div>
+    <div id="sb-sync" class="sb-sync off"></div>
   </nav>
 
   <!-- MAIN -->
   <div class="main">
 
-    <!-- TOPBAR — estilo Investidor10 -->
+    <!-- TOPBAR — idêntico à imagem -->
     <div class="topbar">
+      <a href="index.html" class="tb-back" title="Voltar ao site">‹</a>
       <a href="index.html" class="tb-logo">
-        <div class="tb-logo-mark">M</div>
-        <div class="tb-logo-name">Mundo<span>DeFi</span></div>
+        <div class="tb-logo-name"><span>Mundo</span>DeFi</div>
       </a>
-      <nav class="tb-nav">
-        <a href="index.html" class="tb-nav-item" title="Voltar ao site">🏠 Início</a>
-        <a href="hold.html" class="tb-nav-item">💎 HOLD</a>
-        <a href="defi.html" class="tb-nav-item">🌊 DeFi</a>
-        <a href="trade.html" class="tb-nav-item">⚡ Trade</a>
-        <a href="calculadoras.html" class="tb-nav-item">🧮 Calculadoras</a>
-      </nav>
+      <button class="tb-selector" onclick="alert('Seletor de carteira em breve')">
+        🪙 Criptomoedas ▾
+      </button>
       <div class="tb-right">
         <span class="tb-total" id="tn-total">$0,00</span>
         <button class="tb-btn" onclick="toggleTheme()">🌙</button>
-        <button class="tb-btn gold" id="tb-login-btn" onclick="showLogin()">Entrar</button>
+        <button class="tb-btn-pro" onclick="window.open('planos.html','_blank')">Upgrade PRO</button>
+        <button class="tb-close" id="tb-login-btn" onclick="showLogin()" title="Entrar / Conta">✕</button>
       </div>
     </div>
 
@@ -445,33 +376,34 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
       <!-- ══ PAGE: DASHBOARD ══ -->
       <div id="page-geral-wrap">
 
-        <!-- Sub-abas estilo Investidor10 -->
+        <!-- Sub-abas — todas funcionais -->
         <div class="dash-subnav" id="dash-subnav">
+          <!-- Abas do dashboard (renderizam conteúdo aqui) -->
           <button class="dash-tab active" id="dtab-resumo" onclick="setDashTab('resumo')"><span class="dash-tab-ico">📋</span>Resumo</button>
           <button class="dash-tab" id="dtab-patrimonio" onclick="setDashTab('patrimonio')"><span class="dash-tab-ico">📈</span>Patrimônio</button>
           <button class="dash-tab" id="dtab-rentabilidade" onclick="setDashTab('rentabilidade')"><span class="dash-tab-ico">💹</span>Rentabilidade</button>
           <button class="dash-tab" id="dtab-lancamentos" onclick="setDashTab('lancamentos')"><span class="dash-tab-ico">📝</span>Lançamentos</button>
-          <div style="margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 8px">
-            <button class="btn btn-ghost btn-sm" onclick="renderGeral()" style="font-size:13px;padding:8px 16px">↺ Atualizar</button>
-            <button class="btn btn-gold btn-sm" onclick="openConfigModal()" style="font-size:13px;padding:8px 16px">⚙ Metas</button>
+          <!-- Separador visual -->
+          <div style="width:1px;background:var(--border);margin:10px 4px;align-self:stretch"></div>
+          <!-- Abas de redirecionamento (vão para outras páginas) -->
+          <a href="hold.html" class="dash-tab" style="color:var(--blue)"><span class="dash-tab-ico">💎</span>HOLD ↗</a>
+          <a href="defi.html" class="dash-tab" style="color:var(--defi)"><span class="dash-tab-ico">🌊</span>DeFi ↗</a>
+          <a href="trade.html" class="dash-tab" style="color:var(--gold)"><span class="dash-tab-ico">⚡</span>Trade ↗</a>
+          <!-- Separador -->
+          <div style="width:1px;background:var(--border);margin:10px 4px;align-self:stretch"></div>
+          <!-- Abas internas extras -->
+          <button class="dash-tab" id="dtab-favoritos" onclick="setDashTab('favoritos')"><span class="dash-tab-ico">⭐</span>Favoritos</button>
+          <button class="dash-tab" id="dtab-irpf" onclick="setDashTab('irpf')"><span class="dash-tab-ico">🧾</span>IRPF</button>
+          <button class="dash-tab" id="dtab-config" onclick="setDashTab('config')"><span class="dash-tab-ico">⚙️</span>Config</button>
+          <!-- Botão atualizar no canto -->
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 4px;flex-shrink:0">
+            <button class="btn btn-ghost btn-sm" onclick="renderGeral()" title="Atualizar dados">↺</button>
+            <button class="btn btn-gold btn-sm" onclick="openConfigModal()">⚙ Metas</button>
           </div>
         </div>
 
         <!-- ── RESUMO ── -->
         <div class="dash-page active" id="dash-resumo">
-
-          <!-- Header da seção -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:12px">
-            <div>
-              <div style="font-family:var(--display);font-size:20px;font-weight:800;letter-spacing:-.02em">Visão Geral do Portfólio</div>
-              <div style="font-size:13px;color:var(--muted2);margin-top:3px" id="dash-lastupdate">Atualize para carregar seus dados</div>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-ghost" onclick="renderGeral()" style="font-size:13px">↺ Atualizar dados</button>
-              <button class="btn btn-gold" onclick="openConfigModal()" style="font-size:13px">⚙ Configurar Metas</button>
-            </div>
-          </div>
-
           <!-- 4 cards topo — estilo Investidor10 -->
           <div class="sum-grid">
             <div class="sum-card">
@@ -565,10 +497,7 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 
           <div class="card">
             <div class="card-hdr">
-              <div>
-                <div class="card-title">📐 Alocação por Segmento</div>
-                <div style="font-size:12px;color:var(--muted2);margin-top:2px">Comparativo entre alocação atual e meta definida</div>
-              </div>
+              <span class="card-title">Alocação por Segmento</span>
               <span style="font-size:12px;color:var(--muted2)" id="g-update">—</span>
             </div>
             <div class="tbl-wrap">
@@ -721,9 +650,86 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
 
+        <!-- ── FAVORITOS ── -->
+        <div class="dash-page" id="dash-favoritos">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px">
+            <div>
+              <div style="font-family:var(--display);font-size:18px;font-weight:700">⭐ Favoritos</div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:2px">Tokens que você acompanha com preço ao vivo</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-ghost btn-sm" onclick="renderFavoritos()">↺ Atualizar preços</button>
+              <button class="btn btn-gold btn-sm" onclick="openFavModal()">+ Adicionar token</button>
+            </div>
+          </div>
+          <div class="metrics m4" id="fav-grid"><div style="color:var(--muted2);font-size:13px;padding:2rem">Nenhum favorito adicionado.</div></div>
+        </div>
+
+        <!-- ── IRPF CRIPTO ── -->
+        <div class="dash-page" id="dash-irpf">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem">
+            <div>
+              <div style="font-family:var(--display);font-size:18px;font-weight:700">🧾 IRPF Cripto</div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:2px">Controle de ganhos para declaração do Imposto de Renda</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:1rem">
+            <div class="card-hdr"><span class="card-title">Resumo Anual</span></div>
+            <div class="metrics m3" style="margin-bottom:0" id="irpf-cards">
+              <div class="mc mc-blue"><label>Ganho de Capital (HOLD)</label><div class="mv mv-green" id="irpf-hold">$0,00</div><div class="mc-sub">Vendas com lucro</div></div>
+              <div class="mc mc-defi"><label>Yield DeFi Coletado</label><div class="mv mv-gold" id="irpf-defi">$0,00</div><div class="mc-sub">Taxas e rendimentos</div></div>
+              <div class="mc mc-gold"><label>Resultado Trade</label><div class="mv" id="irpf-trade">$0,00</div><div class="mc-sub">P&L das operações</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Observações</span></div>
+            <div style="font-size:13px;color:var(--muted2);line-height:1.7">
+              <p>• Operações acima de <b style="color:var(--text)">R$35.000/mês</b> em crypto estão sujeitas a IRPF no Brasil.</p>
+              <p style="margin-top:.5rem">• Alíquota de <b style="color:var(--text)">15% a 22,5%</b> sobre o ganho de capital conforme faixa.</p>
+              <p style="margin-top:.5rem">• Consulte sempre um contador especializado em cripto.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── CONFIG ── -->
+        <div class="dash-page" id="dash-config">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:1.5rem">⚙️ Configurações</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">Meta do Portfólio</span></div>
+              <div class="fgrp" style="margin-bottom:1rem"><label>Meta em USD</label><input class="finput" type="number" id="cfg-meta" placeholder="50000"/></div>
+              <div class="card-title" style="margin-bottom:.9rem;font-size:13px">Alocação Ideal (%)</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem">
+                <div class="fgrp"><label>HOLD %</label><input class="finput" type="number" id="cfg-hold" placeholder="40"/></div>
+                <div class="fgrp"><label>DeFi %</label><input class="finput" type="number" id="cfg-defi" placeholder="30"/></div>
+                <div class="fgrp"><label>Trade %</label><input class="finput" type="number" id="cfg-trade" placeholder="20"/></div>
+                <div class="fgrp"><label>Caixa %</label><input class="finput" type="number" id="cfg-caixa" placeholder="10"/></div>
+              </div>
+              <button class="btn btn-gold" onclick="salvarConfig()">💾 Salvar Configurações</button>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">Conta</span></div>
+              <div style="margin-bottom:1.2rem">
+                <div style="font-size:11px;color:var(--muted2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Email</div>
+                <div style="font-size:14px;font-weight:600" id="cfg-email">—</div>
+              </div>
+              <div style="margin-bottom:1.5rem">
+                <div style="font-size:11px;color:var(--muted2);margin-bottom:4px;text-transform:uppercase;letter-spacing:.06em">Plano</div>
+                <div style="font-size:14px;font-weight:600" id="cfg-plan">Gratuito</div>
+              </div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="btn btn-ghost btn-sm" onclick="toggleTheme()">🌙 Tema</button>
+                <a href="planos.html" target="_blank" class="btn btn-gold btn-sm">👑 Ver Planos</a>
+                <button class="btn btn-red btn-sm" onclick="confirmLogout()">Sair</button>
+                <button class="btn btn-ghost btn-sm" onclick="limparTudo()" style="color:var(--red)">🗑 Limpar Dados</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div><!-- /page-geral-wrap -->
 
-      <!-- FAVORITOS -->
+      <!-- FAVORITOS (legado — mantido por compatibilidade) -->
       <div class="page" id="page-favoritos" style="display:none">
         <div class="ph">
           <div><h1>⭐ Favoritos</h1><p>Tokens que você acompanha</p></div>
@@ -1092,13 +1098,14 @@ function onLoginSuccess() {
   _isVisitor = false;
   document.getElementById('login-screen').classList.add('hidden');
   document.getElementById('demo-banner').classList.add('hidden');
-  document.getElementById('tb-login-btn').style.display = 'none';
+  document.getElementById('tb-login-btn').style.display = '';
   var name = currentUser.displayName || currentUser.email || 'Usuário';
-  document.getElementById('sb-av').textContent = name.slice(0,2).toUpperCase();
-  document.getElementById('sb-uname').textContent = currentUser.email || name;
+  var sbAv = document.getElementById('sb-av'); if(sbAv) sbAv.textContent = name.slice(0,2).toUpperCase();
+  var sbUname = document.getElementById('sb-uname'); if(sbUname) sbUname.textContent = currentUser.email || name;
   var cfgEmail = document.getElementById('cfg-email');
   if (cfgEmail) cfgEmail.textContent = currentUser.email || name;
   checkPlanByEmail(currentUser.email);
+  updateCloseBtn();
   loadFS(function(){ renderAll(); });
 }
 
@@ -1113,6 +1120,32 @@ function confirmLogout() {
 function toggleUserMenu() {
   if (!currentUser && !_isVisitor) { showLogin(); return; }
   if (currentUser) { confirmLogout(); }
+}
+
+// Atualizar aparência do botão fechar/entrar
+function updateCloseBtn() {
+  var btn = document.getElementById('tb-login-btn');
+  if (!btn) return;
+  if (currentUser) {
+    var name = currentUser.displayName || currentUser.email || 'U';
+    btn.textContent = name.slice(0,2).toUpperCase();
+    btn.title = 'Logado como ' + (currentUser.email || name) + ' — Clique para sair';
+    btn.style.fontSize = '11px';
+    btn.style.fontWeight = '700';
+    btn.style.background = 'linear-gradient(135deg,var(--gold),#ff8c00)';
+    btn.style.color = '#000';
+    btn.style.border = 'none';
+    btn.onclick = function(){ confirmLogout(); };
+  } else {
+    btn.textContent = '✕';
+    btn.title = 'Entrar na conta';
+    btn.style.fontSize = '16px';
+    btn.style.fontWeight = '400';
+    btn.style.background = '';
+    btn.style.color = '';
+    btn.style.border = '';
+    btn.onclick = function(){ showLogin(); };
+  }
 }
 
 // ══ FIREBASE AUTH STATE ══
@@ -1516,15 +1549,31 @@ var cEvol=null, cGPie=null, cGBar=null, cHEvol=null, cHAlloc=null, cPatEvol=null
 function setDashTab(tab) {
   currentDashTab = tab;
   document.querySelectorAll('.dash-tab').forEach(function(b){ b.classList.remove('active'); });
-  document.querySelectorAll('.dash-page').forEach(function(p){ p.classList.remove('active'); });
+  document.querySelectorAll('.dash-page').forEach(function(p){ p.classList.remove('active'); p.style.display='none'; });
   var btn = document.getElementById('dtab-'+tab);
   var pg = document.getElementById('dash-'+tab);
   if(btn) btn.classList.add('active');
-  if(pg) pg.classList.add('active');
+  if(pg){ pg.classList.add('active'); pg.style.display='block'; }
   if(tab==='resumo') renderResumo();
   else if(tab==='patrimonio') renderPatrimonio();
   else if(tab==='rentabilidade') renderRentabilidade();
   else if(tab==='lancamentos') renderLancamentos();
+  else if(tab==='favoritos') renderFavoritos();
+  else if(tab==='irpf') renderIRPF();
+  else if(tab==='config') renderConfig();
+}
+
+// ══ RENDER IRPF ══
+function renderIRPF() {
+  // Ganho de capital HOLD: valor atual - custo
+  var hT=hGetPortTotal();
+  var hI=Object.values(st.hold.ativos).reduce(function(s,a){var q=hGetQty(a.ticker);return s+q*hGetMed(a.ticker);},0);
+  var hGain=hT-hI;
+  var defiYield=dGetTC()+dGetTP();
+  var tradeResult=tGetLucro();
+  var el1=document.getElementById('irpf-hold'); if(el1){el1.textContent=fmtS(hGain);el1.className='mv '+(hGain>=0?'mv-green':'mv-red');}
+  var el2=document.getElementById('irpf-defi'); if(el2) el2.textContent=fmt(defiYield);
+  var el3=document.getElementById('irpf-trade'); if(el3){el3.textContent=fmtS(tradeResult);el3.className='mv '+(tradeResult>=0?'mv-green':'mv-red');}
 }
 
 // ══ RENDER GERAL (entry point) ══
@@ -1776,33 +1825,18 @@ function renderLancamentos() {
   }).join('');
 }
 
-// ══ NAVIGATION (override) ══
+// ══ NAVIGATION — simplificado (sidebar removida) ══
 function goPage(p, sbEl, tabKey) {
-  // Esconder tudo
-  document.querySelectorAll('.page').forEach(function(el){ el.style.display='none'; });
-  var gw=document.getElementById('page-geral-wrap');
-  if(gw) gw.style.display='none';
-  document.querySelectorAll('.sb-item').forEach(function(el){ el.classList.remove('active'); });
-  document.getElementById('dash-subnav').style.display='none';
-
-  if(p==='geral'){
-    if(gw) gw.style.display='block';
-    document.getElementById('dash-subnav').style.display='flex';
-    var sbi=document.getElementById('sbi-geral');
-    if(sbEl) sbEl.classList.add('active');
-    else if(sbi) sbi.classList.add('active');
-    renderGeral();
-  } else {
-    var pg=document.getElementById('page-'+p);
-    if(pg){ pg.style.display='block'; pg.classList.add('active'); }
-    var sbi2=document.getElementById('sbi-'+p);
-    if(sbEl) sbEl.classList.add('active');
-    else if(sbi2) sbi2.classList.add('active');
-    if(p==='favoritos') renderFavoritos();
-    else if(p==='config') renderConfig();
-    else if(p==='hold'||p==='defi'||p==='trade'){ if(pg) pg.style.display='block'; }
-  }
-  currentPage=p;
+  // Redirecionar hold/defi/trade para suas páginas
+  if(p==='hold'){ window.location.href='hold.html'; return; }
+  if(p==='defi'){ window.location.href='defi.html'; return; }
+  if(p==='trade'){ window.location.href='trade.html'; return; }
+  // Favoritos e config agora são abas do dashboard
+  if(p==='favoritos'){ setDashTab('favoritos'); return; }
+  if(p==='config'){ setDashTab('config'); return; }
+  // Geral = dashboard
+  currentPage = p;
+  renderGeral();
   var total=hGetPortTotal()+dGetTotal()+tGetBancaAtual();
   document.getElementById('tn-total').textContent=fmt(total);
 }
