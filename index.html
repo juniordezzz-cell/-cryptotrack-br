@@ -465,8 +465,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
         <div class="mega-menu" style="min-width:700px;left:-160px;transform:none">
           <div class="mega-col">
             <div class="mega-col-title">Calculadoras</div>
-            <a href="ferramentas.html#juros" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.12)">📈</div><div class="mega-link-text"><div class="mega-link-name">Juros Compostos</div><div class="mega-link-desc">Simule crescimento com aportes</div></div></a>
-            <a href="ferramentas.html#dca" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🔄</div><div class="mega-link-text"><div class="mega-link-name">Calculadora DCA</div><div class="mega-link-desc">Dollar-cost averaging</div></div></a>
+            <a href="calculadoras.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.12)">📈</div><div class="mega-link-text"><div class="mega-link-name">Juros Compostos</div><div class="mega-link-desc">Simule crescimento com aportes</div></div></a>
+            <a href="calculadoras.html#tab-lucro" onclick="setTimeout(function(){document.querySelector('[onclick*=lucro]')&&document.querySelector('[onclick*=lucro]').click()},200)" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🪙</div><div class="mega-link-text"><div class="mega-link-name">Lucro Cripto</div><div class="mega-link-desc">Calcule lucro com taxas e IR</div></div></a>
             <a href="ferramentas.html#liquidacao" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">⚠️</div><div class="mega-link-text"><div class="mega-link-name">Calc. Liquidação</div><div class="mega-link-desc">Preço de liquidação de futuros</div></div></a>
             <a href="ferramentas.html#aprapy" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">💹</div><div class="mega-link-text"><div class="mega-link-name">APR → APY</div><div class="mega-link-desc">Converta rendimentos anuais</div></div></a>
           </div>
@@ -813,8 +813,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     </a>
 
     <!-- Juros Compostos -->
-    <a href="ferramentas.html#juros" class="tool-card" style="--tc:var(--purple)">
-      <div class="tool-preview">
+    <a href="calculadoras.html" class="tool-card" style="--tc:var(--purple)">      <div class="tool-preview">
         <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
           <rect width="240" height="120" fill="#07080d"/>
           <line x1="22" y1="14" x2="22" y2="100" stroke="#1e1f2e" stroke-width=".8"/><line x1="22" y1="100" x2="226" y2="100" stroke="#1e1f2e" stroke-width=".8"/>
@@ -869,33 +868,36 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       </div>
     </a>
 
-    <!-- DCA -->
-    <a href="ferramentas.html#dca" class="tool-card" style="--tc:var(--blue)">
+    <!-- Lucro Cripto (2ª aba das calculadoras originais) -->
+    <a href="calculadoras.html" class="tool-card" style="--tc:var(--green)">
       <div class="tool-preview">
         <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
           <rect width="240" height="120" fill="#07080d"/>
           <rect x="14" y="14" width="212" height="92" rx="5" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".8"/>
           <line x1="14" y1="36" x2="226" y2="36" stroke="#1e1f2e" stroke-width=".7"/>
-          <text x="22" y="28" fill="#888aa8" font-size="7.5" font-family="DM Sans,sans-serif" font-weight="600">DCA Bitcoin — 12 meses</text>
-          <rect x="22" y="88" width="12" height="12" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="38" y="80" width="12" height="20" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="54" y="74" width="12" height="26" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="70" y="62" width="12" height="38" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="86" y="58" width="12" height="42" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="102" y="66" width="12" height="34" rx="2" fill="#4d9fff" opacity=".8"/>
-          <rect x="118" y="50" width="12" height="50" rx="2" fill="#f0a500" opacity=".8"/>
-          <rect x="134" y="44" width="12" height="56" rx="2" fill="#f0a500" opacity=".85"/>
-          <rect x="150" y="54" width="12" height="46" rx="2" fill="#f0a500" opacity=".8"/>
-          <rect x="166" y="42" width="12" height="58" rx="2" fill="#f0a500" opacity=".9"/>
-          <rect x="182" y="46" width="12" height="54" rx="2" fill="#f0a500" opacity=".85"/>
-          <rect x="198" y="38" width="12" height="62" rx="2" fill="#f0a500" opacity=".95"/>
-          <line x1="22" y1="54" x2="218" y2="54" stroke="#00e5ff" stroke-width="1" stroke-dasharray="3 2" opacity=".6"/>
-          <text x="102" y="50" fill="#00e5ff" font-size="6" font-family="JetBrains Mono,monospace">preço médio $78.4K</text>
+          <text x="22" y="28" fill="#888aa8" font-size="7.5" font-family="DM Sans,sans-serif" font-weight="600">Lucro Cripto — BTC</text>
+          <!-- bars: investido, saída, taxas, lucro -->
+          <rect x="28" y="56" width="28" height="38" rx="3" fill="rgba(77,159,255,.7)"/>
+          <text x="42" y="53" text-anchor="middle" fill="#4d9fff" font-size="6" font-family="JetBrains Mono,monospace">$9.500</text>
+          <rect x="72" y="44" width="28" height="50" rx="3" fill="rgba(0,214,143,.7)"/>
+          <text x="86" y="41" text-anchor="middle" fill="#00d68f" font-size="6" font-family="JetBrains Mono,monospace">$14.200</text>
+          <rect x="116" y="82" width="28" height="12" rx="3" fill="rgba(255,77,106,.6)"/>
+          <text x="130" y="79" text-anchor="middle" fill="#ff4d6a" font-size="6" font-family="JetBrains Mono,monospace">Taxas</text>
+          <rect x="160" y="62" width="28" height="32" rx="3" fill="rgba(0,214,143,.95)"/>
+          <text x="174" y="59" text-anchor="middle" fill="#00d68f" font-size="6" font-family="JetBrains Mono,monospace">+$4.700</text>
+          <!-- labels -->
+          <text x="42" y="100" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="DM Sans">Invest.</text>
+          <text x="86" y="100" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="DM Sans">Saída</text>
+          <text x="130" y="100" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="DM Sans">Taxas</text>
+          <text x="174" y="100" text-anchor="middle" fill="#00d68f" font-size="6" font-family="DM Sans">Lucro</text>
+          <!-- ROI badge -->
+          <rect x="172" y="17" width="46" height="14" rx="3" fill="rgba(0,214,143,.12)" stroke="rgba(0,214,143,.3)" stroke-width=".7"/>
+          <text x="195" y="27" text-anchor="middle" fill="#00d68f" font-size="7.5" font-family="JetBrains Mono,monospace" font-weight="700">+49.5%</text>
         </svg>
       </div>
       <div class="tool-body">
-        <div class="tool-hdr"><div class="tool-icon" style="background:rgba(77,159,255,.12)">🔄</div><div class="tool-name">Calculadora DCA</div></div>
-        <div class="tool-desc">Simule aportes periódicos em BTC, ETH, SOL com histórico de preços real.</div>
+        <div class="tool-hdr"><div class="tool-icon" style="background:rgba(0,214,143,.12)">🪙</div><div class="tool-name">Lucro Cripto</div></div>
+        <div class="tool-desc">Calcule seu lucro real com preço de entrada, saída, taxas de exchange e imposto de renda.</div>
         <div class="tool-foot"><span class="tool-badge" style="background:rgba(240,165,0,.12);color:var(--gold)">✓ Gratuito</span><span class="tool-arrow">→</span></div>
       </div>
     </a>
@@ -1113,8 +1115,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     </div>
     <div>
       <div class="footer-col-title">Ferramentas</div>
-      <a href="ferramentas.html#juros" class="footer-link">Juros Compostos</a>
-      <a href="ferramentas.html#dca" class="footer-link">Calculadora DCA</a>
+      <a href="calculadoras.html" class="footer-link">Juros Compostos</a>
+      <a href="calculadoras.html" class="footer-link">Calculadora DCA</a>
       <a href="ferramentas.html#pool" class="footer-link">Pool de Liquidez</a>
       <a href="ferramentas.html#yield" class="footer-link">Yield Farming</a>
       <a href="ferramentas.html#liquidacao" class="footer-link">Calc. Liquidação</a>
