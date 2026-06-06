@@ -116,23 +116,29 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14
 .dash-page{display:none;padding:2rem 2rem 3rem;max-width:1280px;margin:0 auto;width:100%}
 .dash-page.active{display:block}
 
-/* ══ SUMMARY CARDS — exato estilo Investidor10 ══ */
-.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-bottom:2rem;background:var(--border);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden}
-.sum-card{background:var(--bg2);padding:1.4rem 1.6rem;position:relative;transition:background .15s}
-.sum-card:hover{background:var(--bg3)}
-.sum-card-ico{font-size:18px;margin-bottom:.6rem;display:block;opacity:.7}
-.sum-card-label{font-size:12px;font-weight:600;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.3rem}
-.sum-card-val{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:-.02em;line-height:1.1}
-.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.4rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:600;padding:2px 7px;border-radius:4px;display:inline-flex;align-items:center;gap:3px}
+/* ══ SUMMARY CARDS ══ */
+.sum-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.8rem}
+.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.4rem 1.6rem;position:relative;transition:all .18s;overflow:hidden}
+.sum-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.sum-card:nth-child(1)::after{background:var(--gold)}
+.sum-card:nth-child(2)::after{background:var(--green)}
+.sum-card:nth-child(3)::after{background:var(--defi)}
+.sum-card:nth-child(4)::after{background:var(--blue)}
+.sum-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.sum-card-ico{font-size:13px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.8rem;display:flex;align-items:center;gap:6px}
+.sum-card-label{display:none}
+.sum-card-val{font-family:var(--display);font-size:1.9rem;font-weight:800;letter-spacing:-.03em;line-height:1.1;margin-bottom:.6rem}
+.sum-card-sub{font-size:12px;color:var(--muted2);margin-top:.3rem;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.sum-card-badge{font-family:var(--mono);font-size:11px;font-weight:700;padding:3px 8px;border-radius:5px;display:inline-flex;align-items:center;gap:3px}
 .sum-card-badge.up{background:var(--green2);color:var(--green)}
 .sum-card-badge.dn{background:var(--red2);color:var(--red)}
 .sum-card-badge.neu{background:var(--bg4);color:var(--muted2)}
 .val-gold{color:var(--gold)}.val-green{color:var(--green)}.val-red{color:var(--red)}.val-blue{color:var(--blue)}.val-defi{color:var(--defi)}
 
 /* ══ CHART ROW ══ */
-.chart-row{display:grid;grid-template-columns:1fr 380px;gap:1.5rem;margin-bottom:1.5rem}
-.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem}
+.chart-row{display:grid;grid-template-columns:1fr 340px;gap:1.2rem;margin-bottom:1.5rem}
+.chart-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:1.5rem;transition:border-color .18s}
+.chart-card:hover{border-color:var(--border2)}
 .chart-card-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem;gap:1rem;flex-wrap:wrap}
 .chart-card-title{font-family:var(--display);font-size:15px;font-weight:700;letter-spacing:-.01em}
 .chart-card-ctrl{display:flex;align-items:center;gap:6px}
@@ -290,6 +296,33 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 .paywall-cta{width:100%;padding:13px;border-radius:var(--r);border:none;background:linear-gradient(135deg,var(--gold),#e09000);color:#000;font-family:var(--display);font-size:15px;font-weight:700;cursor:pointer;margin-bottom:.8rem}
 .paywall-skip{background:none;border:none;color:var(--muted2);font-size:13px;cursor:pointer;font-family:var(--font)}
 
+/* ══ TABELA MEUS ATIVOS (estilo imagem) ══ */
+.ativos-main-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:1.5rem}
+.ativos-main-hdr{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1.2rem;border-bottom:1px solid var(--border)}
+.ativos-main-title{font-family:var(--display);font-size:15px;font-weight:700}
+.ativos-main-count{font-size:13px;color:var(--muted2);font-weight:400;margin-left:6px}
+.ativos-main-table{width:100%;border-collapse:collapse;font-size:13px}
+.ativos-main-table thead th{background:var(--bg3);padding:.65rem 1.1rem;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted2);white-space:nowrap;border-bottom:1px solid var(--border2)}
+.ativos-main-table tbody td{padding:.9rem 1.1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+.ativos-main-table tbody tr:last-child td{border-bottom:none}
+.ativos-main-table tbody tr:hover td{background:rgba(255,255,255,.018);cursor:pointer}
+.am-coin{display:flex;align-items:center;gap:10px}
+.am-ico{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.am-name{font-size:13px;font-weight:600}
+.am-sym{font-size:11px;color:var(--muted2);margin-top:1px}
+.am-qty{font-size:13px;font-weight:600;font-family:var(--mono)}
+.am-pm{font-size:11px;color:var(--muted2);margin-top:1px;font-family:var(--mono)}
+.am-val{font-size:14px;font-weight:700;font-family:var(--mono)}
+.am-chg{font-size:13px;font-weight:700;font-family:var(--mono)}
+.am-chg.up{color:var(--green)}.am-chg.dn{color:var(--red)}
+.am-chg2{font-size:11px;color:var(--muted2);margin-top:1px;font-family:var(--mono)}
+.am-rent{font-size:13px;font-weight:700;font-family:var(--mono)}
+.am-pct-val{font-size:14px;font-weight:700;font-family:var(--mono)}
+.am-pbar{height:3px;background:var(--bg4);border-radius:2px;margin-top:5px;overflow:hidden;min-width:60px}
+.am-pbar-fill{height:100%;border-radius:2px}
+/* ══ INFO BANNER ══ */
+.info-banner{background:rgba(75,150,255,.07);border:1px solid rgba(75,150,255,.2);border-radius:var(--rl);padding:.8rem 1.2rem;display:flex;align-items:center;gap:10px;margin-bottom:1.5rem;font-size:13px;color:var(--muted2)}
+.info-banner-dot{width:8px;height:8px;border-radius:50%;background:var(--blue);flex-shrink:0;animation:pulse-dot 2s infinite}
 /* ══ TOAST ══ */
 .toast{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%) translateY(20px);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px 20px;font-size:13px;font-weight:500;z-index:999;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
@@ -344,20 +377,19 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
   <!-- MAIN -->
   <div class="main">
 
-    <!-- TOPBAR — idêntico à imagem -->
+    <!-- TOPBAR — igual à imagem -->
     <div class="topbar">
       <a href="index.html" class="tb-back" title="Voltar ao site">‹</a>
       <a href="index.html" class="tb-logo">
         <div class="tb-logo-name"><span>Mundo</span>DeFi</div>
       </a>
-      <button class="tb-selector" onclick="alert('Seletor de carteira em breve')">
-        🪙 Criptomoedas ▾
-      </button>
+      <div class="tb-selector">
+        <span style="font-size:13px">🪙</span> Criptomoedas <span style="font-size:10px;color:var(--muted2)">▾</span>
+      </div>
       <div class="tb-right">
-        <span class="tb-total" id="tn-total">$0,00</span>
-        <button class="tb-btn" onclick="toggleTheme()">🌙</button>
+        <button class="tb-btn" onclick="toggleTheme()" title="Alternar tema">🌙</button>
         <button class="tb-btn-pro" onclick="window.open('planos.html','_blank')">Upgrade PRO</button>
-        <button class="tb-close" id="tb-login-btn" onclick="showLogin()" title="Entrar / Conta">✕</button>
+        <button class="tb-close" id="tb-login-btn" onclick="showLogin()" title="Entrar">✕</button>
       </div>
     </div>
 
@@ -376,125 +408,124 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
       <!-- ══ PAGE: DASHBOARD ══ -->
       <div id="page-geral-wrap">
 
-        <!-- Sub-abas — todas funcionais -->
+        <!-- Abas do dashboard -->
         <div class="dash-subnav" id="dash-subnav">
-          <!-- Abas do dashboard (renderizam conteúdo aqui) -->
-          <button class="dash-tab active" id="dtab-resumo" onclick="setDashTab('resumo')"><span class="dash-tab-ico">📋</span>Resumo</button>
-          <button class="dash-tab" id="dtab-patrimonio" onclick="setDashTab('patrimonio')"><span class="dash-tab-ico">📈</span>Patrimônio</button>
-          <button class="dash-tab" id="dtab-rentabilidade" onclick="setDashTab('rentabilidade')"><span class="dash-tab-ico">💹</span>Rentabilidade</button>
-          <button class="dash-tab" id="dtab-lancamentos" onclick="setDashTab('lancamentos')"><span class="dash-tab-ico">📝</span>Lançamentos</button>
-          <!-- Separador visual -->
-          <div style="width:1px;background:var(--border);margin:10px 4px;align-self:stretch"></div>
-          <!-- Abas de redirecionamento (vão para outras páginas) -->
-          <a href="hold.html" class="dash-tab" style="color:var(--blue)"><span class="dash-tab-ico">💎</span>HOLD ↗</a>
-          <a href="defi.html" class="dash-tab" style="color:var(--defi)"><span class="dash-tab-ico">🌊</span>DeFi ↗</a>
-          <a href="trade.html" class="dash-tab" style="color:var(--gold)"><span class="dash-tab-ico">⚡</span>Trade ↗</a>
-          <!-- Separador -->
-          <div style="width:1px;background:var(--border);margin:10px 4px;align-self:stretch"></div>
-          <!-- Abas internas extras -->
-          <button class="dash-tab" id="dtab-favoritos" onclick="setDashTab('favoritos')"><span class="dash-tab-ico">⭐</span>Favoritos</button>
-          <button class="dash-tab" id="dtab-irpf" onclick="setDashTab('irpf')"><span class="dash-tab-ico">🧾</span>IRPF</button>
-          <button class="dash-tab" id="dtab-config" onclick="setDashTab('config')"><span class="dash-tab-ico">⚙️</span>Config</button>
-          <!-- Botão atualizar no canto -->
-          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 4px;flex-shrink:0">
-            <button class="btn btn-ghost btn-sm" onclick="renderGeral()" title="Atualizar dados">↺</button>
-            <button class="btn btn-gold btn-sm" onclick="openConfigModal()">⚙ Metas</button>
+          <button class="dash-tab active" id="dtab-resumo" onclick="setDashTab('resumo')">📋 Resumo</button>
+          <button class="dash-tab" id="dtab-patrimonio" onclick="setDashTab('patrimonio')">📈 Patrimônio</button>
+          <button class="dash-tab" id="dtab-historico" onclick="setDashTab('historico')">📝 Histórico</button>
+          <button class="dash-tab" id="dtab-metas" onclick="setDashTab('metas')">🎯 Metas</button>
+          <button class="dash-tab" id="dtab-irpf" onclick="setDashTab('irpf')">🧾 IRPF Cripto</button>
+          <button class="dash-tab" id="dtab-ia" onclick="setDashTab('ia')">🤖 Análise IA</button>
+          <div style="width:1px;background:var(--border2);margin:12px 6px;align-self:stretch;flex-shrink:0"></div>
+          <a href="hold.html" class="dash-tab" style="color:var(--blue);font-weight:600">💎 HOLD</a>
+          <a href="defi.html" class="dash-tab" style="color:var(--defi);font-weight:600">🌊 DeFi</a>
+          <a href="trade.html" class="dash-tab" style="color:var(--gold);font-weight:600">⚡ Trade</a>
+          <div style="margin-left:auto;display:flex;align-items:center;gap:6px;padding:0 8px;flex-shrink:0">
+            <button class="btn btn-ghost btn-sm" onclick="renderGeral()" title="Atualizar">↺</button>
           </div>
         </div>
 
         <!-- ── RESUMO ── -->
         <div class="dash-page active" id="dash-resumo">
-          <!-- 4 cards topo — estilo Investidor10 -->
+
+          <!-- Banner info -->
+          <div class="info-banner">
+            <div class="info-banner-dot"></div>
+            <span>Sincronizando dados — adicione ativos em <a href="hold.html" style="color:var(--blue);text-decoration:none;font-weight:600">HOLD</a>, pools em <a href="defi.html" style="color:var(--defi);text-decoration:none;font-weight:600">DeFi</a> ou operações em <a href="trade.html" style="color:var(--gold);text-decoration:none;font-weight:600">Trade</a>.</span>
+          </div>
+
+          <!-- 4 cards topo -->
           <div class="sum-grid">
             <div class="sum-card">
-              <span class="sum-card-ico">🏦</span>
-              <div class="sum-card-label">Patrimônio Total</div>
+              <div class="sum-card-ico">🏦 PATRIMÔNIO TOTAL</div>
               <div class="sum-card-val val-gold" id="g-total">$0,00</div>
               <div class="sum-card-sub">
-                Meta: <span id="g-meta">$0,00</span>
                 <span class="sum-card-badge neu" id="g-meta-pct-badge">0%</span>
+                Meta: <span id="g-meta">$0,00</span>
               </div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:.3rem" id="g-investido-sub">Investido: —</div>
             </div>
             <div class="sum-card" id="g-pnl-card">
-              <span class="sum-card-ico">💰</span>
-              <div class="sum-card-label">Lucro Total (P&L)</div>
+              <div class="sum-card-ico">💰 LUCRO TOTAL</div>
               <div class="sum-card-val" id="g-pnl">$0,00</div>
               <div class="sum-card-sub">
                 <span id="g-pnl-pct-badge" class="sum-card-badge neu">0%</span>
-                retorno sobre investido
               </div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:.3rem" id="g-pnl-sub">Capital + DeFi + Trade</div>
             </div>
             <div class="sum-card">
-              <span class="sum-card-ico">🌊</span>
-              <div class="sum-card-label">Yield DeFi (taxas)</div>
+              <div class="sum-card-ico">🌊 RENDIMENTOS DEFI (12M)</div>
               <div class="sum-card-val val-defi" id="g-defi-yield">$0,00</div>
-              <div class="sum-card-sub">
+              <div class="sum-card-sub" id="g-defi-sub">
                 <span id="g-defi-pools" class="sum-card-badge neu">0 pools</span>
-                ativas agora
               </div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:.3rem">Pools + Staking coletados</div>
             </div>
             <div class="sum-card">
-              <span class="sum-card-ico">📊</span>
-              <div class="sum-card-label">Rentabilidade</div>
+              <div class="sum-card-ico">📊 RENTABILIDADE</div>
               <div class="sum-card-val val-green" id="g-rent">0,00%</div>
               <div class="sum-card-sub">
-                Win Rate trade: <span id="g-wr" style="color:var(--text);font-weight:600">0%</span>
+                Win Rate: <span id="g-wr" style="color:var(--text);font-weight:600">0%</span>
               </div>
+              <div style="font-size:12px;color:var(--muted2);margin-top:.3rem">Sobre capital investido</div>
             </div>
           </div>
 
-          <!-- Gráfico evolução + alocação -->
+          <!-- Gráficos: Evolução + Donut alocação (igual imagem) -->
           <div class="chart-row">
             <div class="chart-card">
               <div class="chart-card-hdr">
                 <span class="chart-card-title">Evolução do Patrimônio</span>
                 <div class="chart-card-ctrl">
-                  <button class="ctrl-btn active" onclick="setChtPer(this,'all')">Todo período</button>
+                  <button class="ctrl-btn" onclick="setChtPer(this,'3m')">3M</button>
+                  <button class="ctrl-btn active" onclick="setChtPer(this,'6m')">6M</button>
+                  <button class="ctrl-btn" onclick="setChtPer(this,'12m')">12M</button>
+                  <button class="ctrl-btn" onclick="setChtPer(this,'all')">All</button>
                 </div>
               </div>
-              <div class="chart-legend">
-                <span class="cleg-item"><span class="cleg-dot" style="background:#4b96ff"></span>HOLD</span>
-                <span class="cleg-item"><span class="cleg-dot" style="background:#00d2aa"></span>DeFi</span>
-                <span class="cleg-item"><span class="cleg-dot" style="background:#f5a623"></span>Trade</span>
-              </div>
-              <div style="height:200px"><canvas id="c-evol"></canvas></div>
+              <div style="height:220px"><canvas id="c-evol"></canvas></div>
             </div>
             <div class="chart-card">
               <div class="chart-card-hdr">
-                <span class="chart-card-title">Ativos na Carteira</span>
+                <span class="chart-card-title">Alocação</span>
+                <div class="chart-card-ctrl">
+                  <button class="ctrl-btn active">Tipo</button>
+                </div>
               </div>
-              <div style="display:flex;gap:1.2rem;align-items:center">
-                <div style="width:150px;height:150px;flex-shrink:0"><canvas id="c-geral-pie"></canvas></div>
-                <div id="c-geral-leg" style="display:flex;flex-direction:column;gap:8px;font-size:13px;min-width:0"></div>
+              <div style="display:flex;align-items:center;justify-content:center;height:160px">
+                <canvas id="c-geral-pie" width="160" height="160"></canvas>
               </div>
+              <div id="c-geral-leg" style="display:flex;flex-direction:column;gap:7px;font-size:13px;margin-top:.8rem"></div>
             </div>
           </div>
 
-          <!-- Quick access + alloc table -->
-          <div class="quick-grid">
-            <a href="hold.html" class="quick-card" style="--qc-color:var(--blue)">
-              <span class="quick-card-arrow">↗</span>
-              <span class="quick-card-emoji">💎</span>
-              <div class="quick-card-title" style="color:var(--blue)">HOLD</div>
-              <div class="quick-card-sub">Ativos de longo prazo</div>
-              <div class="quick-card-val" style="color:var(--blue)" id="gcard-hold">$0,00</div>
-            </a>
-            <a href="defi.html" class="quick-card" style="--qc-color:var(--defi)">
-              <span class="quick-card-arrow">↗</span>
-              <span class="quick-card-emoji">🌊</span>
-              <div class="quick-card-title" style="color:var(--defi)">DeFi</div>
-              <div class="quick-card-sub">Pools e yield farming</div>
-              <div class="quick-card-val" style="color:var(--defi)" id="gcard-defi">$0,00</div>
-            </a>
-            <a href="trade.html" class="quick-card" style="--qc-color:var(--gold)">
-              <span class="quick-card-arrow">↗</span>
-              <span class="quick-card-emoji">⚡</span>
-              <div class="quick-card-title" style="color:var(--gold)">Trade</div>
-              <div class="quick-card-sub">Banca e operações</div>
-              <div class="quick-card-val val-gold" id="gcard-trade">$0,00</div>
-            </a>
+          <!-- Tabela Meus Ativos Cripto (igual à imagem) -->
+          <div class="ativos-main-wrap">
+            <div class="ativos-main-hdr">
+              <div>
+                <span class="ativos-main-title">Meus Ativos Cripto</span>
+                <span class="ativos-main-count" id="g-ativos-count">(0 ativos)</span>
+              </div>
+              <a href="hold.html" class="btn btn-gold btn-sm">+ Adicionar Ativo</a>
+            </div>
+            <table class="ativos-main-table">
+              <thead>
+                <tr>
+                  <th>ATIVO</th>
+                  <th>QTD / PREÇO MÉDIO</th>
+                  <th>VALOR TOTAL</th>
+                  <th>VARIAÇÃO</th>
+                  <th>RENTABILIDADE</th>
+                  <th>% CARTEIRA</th>
+                </tr>
+              </thead>
+              <tbody id="g-ativos-tbody">
+                <tr><td colspan="6" class="empty-td">Nenhum ativo — <a href="hold.html" style="color:var(--blue)">adicionar em HOLD ↗</a></td></tr>
+              </tbody>
+            </table>
           </div>
 
+          <!-- Alocação por segmento (compacta, abaixo da tabela) -->
           <div class="card">
             <div class="card-hdr">
               <span class="card-title">Alocação por Segmento</span>
@@ -632,11 +663,11 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
           </div>
         </div>
 
-        <!-- ── LANÇAMENTOS ── -->
-        <div class="dash-page" id="dash-lancamentos">
+        <!-- ── HISTÓRICO ── -->
+        <div class="dash-page" id="dash-historico">
           <div class="card">
             <div class="card-hdr">
-              <span class="card-title">Todas as Transações</span>
+              <span class="card-title">Histórico de Transações</span>
               <div style="display:flex;gap:8px;align-items:center">
                 <select class="finput" style="width:160px;padding:6px 10px;font-size:13px" id="lanc-filter" onchange="renderLancamentos()">
                   <option value="all">Todos os tipos</option>
@@ -647,6 +678,42 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
               </div>
             </div>
             <div id="lanc-list"></div>
+          </div>
+        </div>
+
+        <!-- ── METAS ── -->
+        <div class="dash-page" id="dash-metas">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:1.5rem">🎯 Metas de Alocação</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">Configurar Metas</span></div>
+              <div class="fgrp" style="margin-bottom:1rem"><label>Meta Total (USD)</label><input class="finput" type="number" id="cfg-meta" placeholder="50000"/></div>
+              <div style="font-size:12px;font-weight:700;color:var(--muted2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.8rem">Alocação Ideal (%)</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem">
+                <div class="fgrp"><label>HOLD %</label><input class="finput" type="number" id="cfg-hold" placeholder="40"/></div>
+                <div class="fgrp"><label>DeFi %</label><input class="finput" type="number" id="cfg-defi" placeholder="30"/></div>
+                <div class="fgrp"><label>Trade %</label><input class="finput" type="number" id="cfg-trade" placeholder="20"/></div>
+                <div class="fgrp"><label>Caixa %</label><input class="finput" type="number" id="cfg-caixa" placeholder="10"/></div>
+              </div>
+              <button class="btn btn-gold" onclick="salvarConfig()">💾 Salvar Metas</button>
+            </div>
+            <div class="card">
+              <div class="card-hdr"><span class="card-title">Progresso Atual</span></div>
+              <div id="metas-progress-list" style="display:flex;flex-direction:column;gap:12px">
+                <div style="color:var(--muted2);font-size:13px">Salve suas metas para ver o progresso.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── ANÁLISE IA ── -->
+        <div class="dash-page" id="dash-ia">
+          <div style="font-family:var(--display);font-size:18px;font-weight:700;margin-bottom:1.5rem">🤖 Análise IA</div>
+          <div class="card" style="text-align:center;padding:3rem 2rem">
+            <div style="font-size:3rem;margin-bottom:1rem">🤖</div>
+            <div style="font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:.5rem">Análise Inteligente do Portfólio</div>
+            <div style="font-size:13px;color:var(--muted2);max-width:400px;margin:0 auto 1.5rem">Disponível no plano PRO — receba insights automáticos sobre seu portfólio, sugestões de rebalanceamento e alertas de risco.</div>
+            <a href="planos.html" class="btn btn-gold">⚡ Upgrade para PRO</a>
           </div>
         </div>
 
@@ -697,13 +764,13 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="card">
               <div class="card-hdr"><span class="card-title">Meta do Portfólio</span></div>
-              <div class="fgrp" style="margin-bottom:1rem"><label>Meta em USD</label><input class="finput" type="number" id="cfg-meta" placeholder="50000"/></div>
+              <div class="fgrp" style="margin-bottom:1rem"><label>Meta em USD</label><input class="finput" type="number" id="cfg-meta3" placeholder="50000"/></div>
               <div class="card-title" style="margin-bottom:.9rem;font-size:13px">Alocação Ideal (%)</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem">
-                <div class="fgrp"><label>HOLD %</label><input class="finput" type="number" id="cfg-hold" placeholder="40"/></div>
-                <div class="fgrp"><label>DeFi %</label><input class="finput" type="number" id="cfg-defi" placeholder="30"/></div>
-                <div class="fgrp"><label>Trade %</label><input class="finput" type="number" id="cfg-trade" placeholder="20"/></div>
-                <div class="fgrp"><label>Caixa %</label><input class="finput" type="number" id="cfg-caixa" placeholder="10"/></div>
+                <div class="fgrp"><label>HOLD %</label><input class="finput" type="number" id="cfg-hold3" placeholder="40"/></div>
+                <div class="fgrp"><label>DeFi %</label><input class="finput" type="number" id="cfg-defi3" placeholder="30"/></div>
+                <div class="fgrp"><label>Trade %</label><input class="finput" type="number" id="cfg-trade3" placeholder="20"/></div>
+                <div class="fgrp"><label>Caixa %</label><input class="finput" type="number" id="cfg-caixa3" placeholder="10"/></div>
               </div>
               <button class="btn btn-gold" onclick="salvarConfig()">💾 Salvar Configurações</button>
             </div>
@@ -729,52 +796,6 @@ tbody tr:hover td{background:rgba(255,255,255,.015)}
 
       </div><!-- /page-geral-wrap -->
 
-      <!-- FAVORITOS (legado — mantido por compatibilidade) -->
-      <div class="page" id="page-favoritos" style="display:none">
-        <div class="ph">
-          <div><h1>⭐ Favoritos</h1><p>Tokens que você acompanha</p></div>
-          <div class="ph-actions">
-            <button class="btn btn-gold btn-sm" onclick="openFavModal()">+ Adicionar</button>
-            <button class="btn btn-ghost btn-sm" onclick="renderFavoritos()">↺ Atualizar</button>
-          </div>
-        </div>
-        <div class="metrics m4" id="fav-grid"><div style="color:var(--muted2);font-size:13px">Nenhum favorito adicionado.</div></div>
-      </div>
-
-      <!-- CONFIG -->
-      <div class="page" id="page-config" style="display:none">
-        <div class="ph"><div><h1>⚙️ Configurações</h1><p>Metas de alocação e conta</p></div></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-          <div class="card">
-            <div class="card-hdr"><span class="card-title">Meta do Portfólio</span></div>
-            <div class="fgrp" style="margin-bottom:1rem"><label>Meta em USD</label><input class="finput" type="number" id="cfg-meta" placeholder="50000"/></div>
-            <div class="card-title" style="margin-bottom:.9rem;font-size:13px">Alocação Ideal (%)</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:1.2rem">
-              <div class="fgrp"><label>HOLD %</label><input class="finput" type="number" id="cfg-hold" placeholder="40"/></div>
-              <div class="fgrp"><label>DeFi %</label><input class="finput" type="number" id="cfg-defi" placeholder="30"/></div>
-              <div class="fgrp"><label>Trade %</label><input class="finput" type="number" id="cfg-trade" placeholder="20"/></div>
-              <div class="fgrp"><label>Caixa %</label><input class="finput" type="number" id="cfg-caixa" placeholder="10"/></div>
-            </div>
-            <button class="btn btn-gold" onclick="salvarConfig()">Salvar Configurações</button>
-          </div>
-          <div class="card">
-            <div class="card-hdr"><span class="card-title">Conta</span></div>
-            <div style="margin-bottom:1.2rem">
-              <div style="font-size:12px;color:var(--muted2);margin-bottom:4px">Email</div>
-              <div style="font-size:14px;font-weight:600" id="cfg-email">—</div>
-            </div>
-            <div style="margin-bottom:1.2rem">
-              <div style="font-size:12px;color:var(--muted2);margin-bottom:4px">Plano</div>
-              <div style="font-size:14px;font-weight:600" id="cfg-plan">Gratuito</div>
-            </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap">
-              <button class="btn btn-ghost btn-sm" onclick="toggleTheme()">🌙 Tema</button>
-              <button class="btn btn-red btn-sm" onclick="confirmLogout()">Sair</button>
-              <button class="btn btn-ghost btn-sm" onclick="limparTudo()" style="color:var(--red)">🗑 Limpar Dados</button>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- Redirect pages -->
       <div id="page-hold" style="display:none"><script>window.location.href='hold.html';</script></div>
@@ -1459,11 +1480,23 @@ function renderFavGrid(){
 
 // ══ RENDER CONFIG ══
 function renderConfig(){
-  document.getElementById('cfg-meta').value=st.config.meta||50000;
-  document.getElementById('cfg-hold').value=st.config.pHold||40;
-  document.getElementById('cfg-defi').value=st.config.pDefi||30;
-  document.getElementById('cfg-trade').value=st.config.pTrade||20;
-  document.getElementById('cfg-caixa').value=st.config.pCaixa||10;
+  // Aba Metas
+  var m=document.getElementById('cfg-meta'); if(m) m.value=st.config.meta||50000;
+  var h=document.getElementById('cfg-hold'); if(h) h.value=st.config.pHold||40;
+  var d=document.getElementById('cfg-defi'); if(d) d.value=st.config.pDefi||30;
+  var t=document.getElementById('cfg-trade'); if(t) t.value=st.config.pTrade||20;
+  var c=document.getElementById('cfg-caixa'); if(c) c.value=st.config.pCaixa||10;
+  // Aba Config (usa cfg-*2)
+  var m2=document.getElementById('cfg-meta2'); if(m2) m2.value=st.config.meta||50000;
+  var h2=document.getElementById('cfg-hold2'); if(h2) h2.value=st.config.pHold||40;
+  var d2=document.getElementById('cfg-defi2'); if(d2) d2.value=st.config.pDefi||30;
+  var t2=document.getElementById('cfg-trade2'); if(t2) t2.value=st.config.pTrade||20;
+  var c2=document.getElementById('cfg-caixa2'); if(c2) c2.value=st.config.pCaixa||10;
+  var m3=document.getElementById('cfg-meta3'); if(m3) m3.value=st.config.meta||50000;
+  var h3=document.getElementById('cfg-hold3'); if(h3) h3.value=st.config.pHold||40;
+  var d3=document.getElementById('cfg-defi3'); if(d3) d3.value=st.config.pDefi||30;
+  var t3=document.getElementById('cfg-trade3'); if(t3) t3.value=st.config.pTrade||20;
+  var c3=document.getElementById('cfg-caixa3'); if(c3) c3.value=st.config.pCaixa||10;
 }
 
 
@@ -1556,11 +1589,45 @@ function setDashTab(tab) {
   if(pg){ pg.classList.add('active'); pg.style.display='block'; }
   if(tab==='resumo') renderResumo();
   else if(tab==='patrimonio') renderPatrimonio();
-  else if(tab==='rentabilidade') renderRentabilidade();
-  else if(tab==='lancamentos') renderLancamentos();
-  else if(tab==='favoritos') renderFavoritos();
+  else if(tab==='historico') renderLancamentos();
+  else if(tab==='metas') renderMetas();
   else if(tab==='irpf') renderIRPF();
-  else if(tab==='config') renderConfig();
+  else if(tab==='ia') { /* placeholder PRO */ }
+}
+
+function renderMetas() {
+  // Preencher campos com valores atuais
+  var m=document.getElementById('cfg-meta'); if(m) m.value=st.config.meta||50000;
+  var h=document.getElementById('cfg-hold'); if(h) h.value=st.config.pHold||40;
+  var d=document.getElementById('cfg-defi'); if(d) d.value=st.config.pDefi||30;
+  var t=document.getElementById('cfg-trade'); if(t) t.value=st.config.pTrade||20;
+  var c=document.getElementById('cfg-caixa'); if(c) c.value=st.config.pCaixa||10;
+  // Progresso
+  var hT=hGetPortTotal(), dT=dGetTotal(), tT=tGetBancaAtual(), total=hT+dT+tT;
+  var meta=st.config.meta||1;
+  var segs=[
+    {nome:'💎 HOLD',val:hT,ideal:st.config.pHold,cor:'var(--blue)'},
+    {nome:'🌊 DeFi',val:dT,ideal:st.config.pDefi,cor:'var(--defi)'},
+    {nome:'⚡ Trade',val:tT,ideal:st.config.pTrade,cor:'var(--gold)'}
+  ];
+  var list=document.getElementById('metas-progress-list');
+  if(!list) return;
+  list.innerHTML=segs.map(function(s){
+    var real=total>0?(s.val/total*100):0;
+    var metaV=meta*(s.ideal/100);
+    var diff=s.val-metaV;
+    return '<div style="padding:.8rem 0;border-bottom:1px solid var(--border)">'
+      +'<div style="display:flex;justify-content:space-between;margin-bottom:.4rem">'
+      +'<span style="font-weight:600;font-size:13px">'+s.nome+'</span>'
+      +'<span style="font-family:var(--mono);font-size:12px;color:var(--muted2)">'+fmt(s.val)+' / Meta: '+fmt(metaV)+'</span>'
+      +'</div>'
+      +'<div style="height:6px;background:var(--bg4);border-radius:3px;overflow:hidden;margin-bottom:.4rem">'
+      +'<div style="height:100%;width:'+Math.min(100,real/s.ideal*100)+'%;background:'+s.cor+';border-radius:3px;transition:width .4s"></div>'
+      +'</div>'
+      +'<div style="font-size:12px;color:'+(diff>=0?'var(--green)':'var(--red)')+'">'+
+      (diff>=0?'✓ No alvo':'↓ Faltam '+fmt(Math.abs(diff)))+'</div>'
+      +'</div>';
+  }).join('');
 }
 
 // ══ RENDER IRPF ══
@@ -1597,31 +1664,34 @@ function renderResumo() {
   var defiYield=dGetTC()+dGetTP();
   var wr=tGetWR();
 
-  // Cards topo
+  // Card 1 — Patrimônio
   document.getElementById('g-total').textContent=fmt(total);
   document.getElementById('g-meta').textContent=fmt(meta);
   var metaPct=meta>0?(total/meta*100).toFixed(1):0;
   var mb=document.getElementById('g-meta-pct-badge');
-  mb.textContent=metaPct+'%'; mb.className='sum-card-badge '+(metaPct>=100?'up':'neu');
+  mb.textContent='+'+metaPct+'%'; mb.className='sum-card-badge '+(metaPct>=100?'up':'neu');
+  var gi=document.getElementById('g-investido-sub');
+  if(gi) gi.textContent='Investido: '+fmt(totalInv);
 
+  // Card 2 — Lucro
   var pnlEl=document.getElementById('g-pnl');
   pnlEl.textContent=(pnl>=0?'+ ':'− ')+'$'+Math.abs(pnl).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
   pnlEl.className='sum-card-val '+(pnl>=0?'val-green':'val-red');
   var pb=document.getElementById('g-pnl-pct-badge');
   pb.textContent=(pPct>=0?'+':'')+pPct.toFixed(2)+'%';
   pb.className='sum-card-badge '+(pPct>=0?'up':'dn');
-  document.getElementById('g-pnl-card').style.borderLeft='';
+  var ps=document.getElementById('g-pnl-sub');
+  if(ps) ps.textContent='Capital: '+fmt(hT-hI)+' · DeFi: '+fmt(dT-dI);
 
+  // Card 3 — DeFi
   document.getElementById('g-defi-yield').textContent=fmt(defiYield);
-  document.getElementById('g-defi-pools').textContent=st.defi.ativas.length+' pools';
+  var dpEl=document.getElementById('g-defi-pools');
+  dpEl.textContent=st.defi.ativas.length+' pools'; dpEl.className='sum-card-badge neu';
+
+  // Card 4 — Rentabilidade
   document.getElementById('g-rent').textContent=(rent>=0?'+':'')+rent.toFixed(2)+'%';
   document.getElementById('g-rent').className='sum-card-val '+(rent>=0?'val-green':'val-red');
   document.getElementById('g-wr').textContent=wr.toFixed(1)+'%';
-
-  // Quick cards
-  var ghH=document.getElementById('gcard-hold');if(ghH)ghH.textContent=fmt(hT);
-  var ghD=document.getElementById('gcard-defi');if(ghD)ghD.textContent=fmt(dT);
-  var ghT=document.getElementById('gcard-trade');if(ghT)ghT.textContent=fmt(tT);
 
   // Alloc table
   document.getElementById('g-update').textContent='Atualizado '+new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
@@ -1646,22 +1716,67 @@ function renderResumo() {
     tbody.appendChild(tr);
   });
 
-  // Gráfico evolução (stacked por meses)
+  // ── Tabela Meus Ativos Cripto ──
+  var ativos=Object.values(st.hold.ativos).filter(function(a){return hGetQty(a.ticker)>0.000001;});
+  var countEl=document.getElementById('g-ativos-count');
+  if(countEl) countEl.textContent='('+ativos.length+' '+(ativos.length===1?'ativo':'ativos')+')';
+  var ativTbody=document.getElementById('g-ativos-tbody');
+  if(ativTbody){
+    if(!ativos.length){
+      ativTbody.innerHTML='<tr><td colspan="6" class="empty-td">Nenhum ativo — <a href="hold.html" style="color:var(--blue)">adicionar em HOLD ↗</a></td></tr>';
+    } else {
+      ativTbody.innerHTML=ativos.slice().sort(function(a,b){return hGetTotal(b.ticker)-hGetTotal(a.ticker);}).map(function(a,i){
+        var qty=hGetQty(a.ticker);
+        var med=hGetMed(a.ticker);
+        var val=hGetTotal(a.ticker);
+        var cost=qty*med;
+        var pl=val-cost;
+        var plP=med>0?((a.precoAtual||0)-med)/med*100:0;
+        var alloc=total>0?val/total*100:0;
+        var color=getColor(a.ticker,i);
+        return '<tr onclick="window.location='hold.html'">'
+          +'<td><div class="am-coin">'
+          +'<div class="am-ico" style="background:'+color+'">'+a.ticker.slice(0,2)+'</div>'
+          +'<div><div class="am-name">'+a.name+'</div><div class="am-sym">'+a.ticker+'</div></div>'
+          +'</div></td>'
+          +'<td><div class="am-qty">'+qty.toFixed(4)+' '+a.ticker+'</div>'
+          +'<div class="am-pm">PM: '+fmt(med)+'</div></td>'
+          +'<td><div class="am-val">'+fmt(val)+'</div></td>'
+          +'<td><div class="am-chg '+(plP>=0?'up':'dn')+'">'+(plP>=0?'+':'')+plP.toFixed(1)+'% '+(plP>=0?'▲':'▼')+'</div>'
+          +'<div class="am-chg2">'+(pl>=0?'+':'')+fmt(pl)+'</div></td>'
+          +'<td><div class="am-rent '+(plP>=0?'val-green':'val-red')+'">'+(plP>=0?'+':'')+plP.toFixed(1)+'%</div></td>'
+          +'<td><div class="am-pct-val">'+alloc.toFixed(1)+'%</div>'
+          +'<div class="am-pbar"><div class="am-pbar-fill" style="width:'+Math.min(100,alloc)+'%;background:'+color+'"></div></div></td>'
+          +'</tr>';
+      }).join('');
+    }
+  }
+
+  // ── Gráfico barras empilhadas (igual à imagem) ──
   if(cEvol){cEvol.destroy();cEvol=null;}
   var pts=buildEvolHistory();
-  cEvol=new Chart(document.getElementById('c-evol'),{type:'line',data:{labels:pts.map(function(p){return p.d;}),datasets:[
-    {label:'HOLD',data:pts.map(function(p){return p.h;}),borderColor:'#4b96ff',backgroundColor:'rgba(75,150,255,0.08)',borderWidth:2,pointRadius:pts.length<8?3:1,tension:0.4,fill:true},
-    {label:'DeFi',data:pts.map(function(p){return p.d2;}),borderColor:'#00d2aa',backgroundColor:'rgba(0,210,170,0.06)',borderWidth:2,pointRadius:pts.length<8?3:1,tension:0.4,fill:true},
-    {label:'Trade',data:pts.map(function(p){return p.t;}),borderColor:'#f5a623',backgroundColor:'rgba(245,166,35,0.06)',borderWidth:2,pointRadius:pts.length<8?3:1,tension:0.4,fill:true}
-  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(10,10,20,.92)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,bodyColor:'#ecedf5',callbacks:{label:function(ctx){return ' '+ctx.dataset.label+': '+fmt(ctx.parsed.y);}}}},scales:{x:{ticks:{color:'var(--muted2)',font:{size:11}},grid:{color:'rgba(128,128,128,0.07)'}},y:{ticks:{color:'var(--muted2)',font:{size:11},callback:function(v){return '$'+v.toFixed(0);}},grid:{color:'rgba(128,128,128,0.07)'}}}}});
+  cEvol=new Chart(document.getElementById('c-evol'),{type:'bar',data:{labels:pts.map(function(p){return p.d;}),datasets:[
+    {label:'HOLD',data:pts.map(function(p){return p.h;}),backgroundColor:'rgba(75,150,255,0.6)',borderColor:'#4b96ff',borderWidth:1,borderRadius:3},
+    {label:'DeFi',data:pts.map(function(p){return p.d2;}),backgroundColor:'rgba(0,210,170,0.55)',borderColor:'#00d2aa',borderWidth:1,borderRadius:3},
+    {label:'Trade',data:pts.map(function(p){return p.t;}),backgroundColor:'rgba(245,166,35,0.55)',borderColor:'#f5a623',borderWidth:1,borderRadius:3}
+  ]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#7e8099',font:{size:11},boxWidth:10}},tooltip:{backgroundColor:'rgba(10,10,20,.92)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,bodyColor:'#ecedf5',callbacks:{label:function(ctx){return ' '+ctx.dataset.label+': '+fmt(ctx.parsed.y);}}}},scales:{x:{stacked:true,ticks:{color:'#7e8099',font:{size:11}},grid:{color:'rgba(128,128,128,0.05)'}},y:{stacked:true,ticks:{color:'#7e8099',font:{size:11},callback:function(v){return '$'+v.toFixed(0);}},grid:{color:'rgba(128,128,128,0.05)'}}}}});
 
-  // Gráfico pizza alocação
+  // ── Donut alocação (igual à imagem) ──
   if(cGPie){cGPie.destroy();cGPie=null;}
   var vals=segs.map(function(s){return parseFloat(s.valor.toFixed(2));});
   var labels=segs.map(function(s){return s.nome;});
   var colors=segs.map(function(s){return s.cor;});
-  cGPie=new Chart(document.getElementById('c-geral-pie'),{type:'doughnut',data:{labels:labels,datasets:[{data:vals,backgroundColor:colors.map(function(c){return c+'cc';}),borderColor:colors,borderWidth:2,hoverOffset:8}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(10,10,20,.9)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,bodyColor:'#ecedf5',callbacks:{label:function(ctx){return ' '+ctx.label+': '+fmt(ctx.parsed);}}}}}});
-  document.getElementById('c-geral-leg').innerHTML=labels.map(function(l,i){return '<span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:'+colors[i]+'"></span><span style="font-weight:600">'+l+'</span><span style="color:var(--muted2)">'+( total>0?(vals[i]/total*100).toFixed(1):0)+'%</span></span>';}).join('');
+  cGPie=new Chart(document.getElementById('c-geral-pie'),{type:'doughnut',data:{labels:labels,datasets:[{data:vals,backgroundColor:colors,borderColor:'#0d0f16',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(10,10,20,.9)',borderColor:'rgba(255,255,255,.1)',borderWidth:1,bodyColor:'#ecedf5',callbacks:{label:function(ctx){return ' '+ctx.label+': '+fmt(ctx.parsed);}}}}}});
+  document.getElementById('c-geral-leg').innerHTML=labels.map(function(l,i){
+    var pct=total>0?(vals[i]/total*100).toFixed(0):0;
+    return '<div style="display:flex;align-items:center;justify-content:space-between;gap:8px">'
+      +'<div style="display:flex;align-items:center;gap:7px">'
+      +'<span style="width:10px;height:10px;border-radius:50%;background:'+colors[i]+';flex-shrink:0"></span>'
+      +'<span style="font-size:13px">'+l+'</span>'
+      +'</div>'
+      +'<span style="font-family:var(--mono);font-size:13px;font-weight:700">'+pct+'%</span>'
+      +'</div>';
+  }).join('');
 }
 
 function buildEvolHistory(){
