@@ -173,9 +173,9 @@ function render(){
 
   // KPIs módulos
   document.getElementById('k-hold').textContent=MDFI.fmt(MDFI.hPatrimonio());
-  document.getElementById('k-hold-sub').textContent=st.hold.ativos.length+' ativos';
+  document.getElementById('k-hold-sub').textContent=MDFI.hAtivos().length+' ativos';
   document.getElementById('k-defi').textContent=MDFI.fmt(MDFI.dPatrimonio());
-  document.getElementById('k-defi-sub').textContent=st.defi.posicoes.length+' posições';
+  document.getElementById('k-defi-sub').textContent=MDFI.dPosicoes().length+' posições';
   document.getElementById('k-trade').textContent=MDFI.fmt(MDFI.tBancaAtual());
   document.getElementById('k-trade-sub').textContent=MDFI.tTotalOps()+' operações';
 
@@ -187,7 +187,7 @@ function render(){
 
 function resultadoMensal(){
   var st=MDFI.st(); var now=new Date(); var ym=now.getFullYear()+'-'+(now.getMonth()+1);
-  var tradeM=st.trade.operacoes.filter(function(o){ if(!o.data)return false; var d=new Date(o.data); return d.getFullYear()+'-'+(d.getMonth()+1)===ym; }).reduce(function(s,o){return s+(o.resultado||0);},0);
+  var tradeM=MDFI.tOps().filter(function(o){ if(!o.data)return false; var d=new Date(o.data); return d.getFullYear()+'-'+(d.getMonth()+1)===ym; }).reduce(function(s,o){return s+(o.resultado||0);},0);
   return tradeM + MDFI.rendaPassivaMensal();
 }
 
@@ -270,6 +270,9 @@ function doAuth(){
   fn(email,pass).then(function(){ closeAuthModal(); toast('Bem-vindo!','ok'); }).catch(function(e){ toast(e.message,'err'); });
 }
 function doGoogle(){ MDFI.loginGoogle().then(function(){ closeAuthModal(); toast('Bem-vindo!','ok'); }).catch(function(e){ toast(e.message,'err'); }); }
+
+/* ─── troca de carteira ─── */
+window.onWalletChange=function(){ render(); if(MDFI.hAtivos().length) MDFI.refreshHoldPrices(render); };
 
 /* ─── INIT ─── */
 MDFI.loadLocal();
