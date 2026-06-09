@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HOLD · MundoDeFi</title>
+<link rel="stylesheet" href="mundodefi.css">
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<div class="page-wrap">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">💎 HOLD</h1>
+      <p class="page-sub">Carteira de investimentos de longo prazo · preços via CoinGecko</p>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-ghost btn-sm" onclick="atualizarPrecos()">↺ Atualizar preços</button>
+      <button class="btn btn-gold" onclick="openAtivoModal()">+ Adicionar Ativo</button>
+    </div>
+  </div>
+
+  <!-- KPIs -->
+  <div class="kpi-grid c4">
+    <div class="kpi" style="--kpi-accent:var(--blue)">
+      <div class="kpi-label">💎 Patrimônio HOLD</div>
+      <div class="kpi-value v-blue" id="k-patrimonio">—</div>
+      <div class="kpi-sub">Investido: <span id="k-investido">—</span></div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--green)">
+      <div class="kpi-label">💰 Lucro HOLD</div>
+      <div class="kpi-value" id="k-lucro">—</div>
+      <div class="kpi-sub"><span class="kpi-badge neu" id="k-lucro-badge">—</span></div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--gold)">
+      <div class="kpi-label">📊 Rentabilidade</div>
+      <div class="kpi-value v-gold" id="k-rent">—</div>
+      <div class="kpi-sub">sobre capital investido</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--neon)">
+      <div class="kpi-label">🪙 Ativos</div>
+      <div class="kpi-value v-neon" id="k-qtd">—</div>
+      <div class="kpi-sub">na carteira</div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-row">
+    <div class="chart-box">
+      <div class="chart-box-head"><span class="chart-box-title">Evolução do Patrimônio</span></div>
+      <div class="chart-area" style="height:240px"><canvas id="chart-evol"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-box-head"><span class="chart-box-title">Distribuição dos Ativos</span></div>
+      <div class="chart-area" style="height:180px;display:flex;align-items:center;justify-content:center"><canvas id="chart-dist" width="180" height="180"></canvas></div>
+      <div class="donut-legend" id="dist-legend"></div>
+    </div>
+  </div>
+
+  <!-- Tabela -->
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">Meus Ativos</span><span style="font-size:12px;color:var(--muted2)" id="tbl-update">—</span></div>
+    <div class="tbl-wrap">
+      <table class="data">
+        <thead><tr>
+          <th>Ativo</th><th>Quantidade</th><th>Preço Médio</th><th>Preço Atual</th>
+          <th>Valor Atual</th><th>Lucro/Prejuízo</th><th>Participação</th><th>Ações</th>
+        </tr></thead>
+        <tbody id="ativos-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Ativo -->
+<div class="modal-overlay" id="ativo-modal">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="ativo-modal-title">Adicionar Ativo</span><button class="modal-close" onclick="closeAtivoModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="ativo-id">
+      <div class="fgrp">
+        <label>Buscar criptomoeda</label>
+        <input class="finput" type="text" id="coin-search" placeholder="Bitcoin, ETH, Solana..." autocomplete="off" oninput="onSearchInput()">
+        <div class="search-results" id="coin-results"></div>
+      </div>
+      <div id="coin-selected" style="display:none">
+        <div class="fgrp" style="display:flex;align-items:center;gap:10px;background:var(--bg3);padding:10px 14px;border-radius:8px;margin-bottom:16px">
+          <img id="cs-img" src="" style="width:28px;height:28px;border-radius:50%">
+          <div><div style="font-weight:700" id="cs-name">—</div><div style="font-size:12px;color:var(--muted2)" id="cs-price">—</div></div>
+        </div>
+        <div class="frow">
+          <div class="fgrp"><label>Quantidade</label><input class="finput" type="number" step="any" id="ativo-qty" placeholder="0.5"></div>
+          <div class="fgrp"><label>Preço Médio (compra)</label><input class="finput" type="number" step="any" id="ativo-pm" placeholder="50000"></div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeAtivoModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="salvarAtivo()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="mundodefi-core.js"></script>
+<script>
+var chEvol=null, chDist=null, selectedCoin=null, searchTimer=null;
+var palette=['#4B96FF','#00D2AA','#F5C542','#9D71FF','#FF5468','#00D2FF','#10D98A','#FF9F43'];
+
+function toast(m,t){ var e=document.getElementById('toast'); e.textContent=m; e.className='toast show '+(t||''); setTimeout(function(){e.className='toast '+(t||'');},2600); }
+
+function render(){
+  var st=MDFI.st();
+  document.getElementById('k-patrimonio').textContent=MDFI.fmt(MDFI.hPatrimonio());
+  document.getElementById('k-investido').textContent=MDFI.fmt(MDFI.hCusto());
+  var lucro=MDFI.hLucro();
+  var le=document.getElementById('k-lucro'); le.textContent=MDFI.fmtS(lucro); le.className='kpi-value '+(lucro>=0?'v-green':'v-red');
+  var rent=MDFI.hRentabilidade();
+  var lb=document.getElementById('k-lucro-badge'); lb.textContent=MDFI.fmtPct(rent); lb.className='kpi-badge '+(rent>=0?'up':'dn');
+  document.getElementById('k-rent').textContent=MDFI.fmtPct(rent);
+  document.getElementById('k-qtd').textContent=st.hold.ativos.length;
+  renderTabela(); renderEvol(); renderDist();
+  MDFI.updateNavTotal();
+}
+
+function renderTabela(){
+  var st=MDFI.st(); var total=MDFI.hPatrimonio();
+  var tb=document.getElementById('ativos-tbody');
+  if(!st.hold.ativos.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhum ativo. Clique em <b>+ Adicionar Ativo</b> para começar.</td></tr>'; return; }
+  tb.innerHTML=st.hold.ativos.slice().sort(function(a,b){return MDFI.hValorAtivo(b)-MDFI.hValorAtivo(a);}).map(function(a,i){
+    var val=MDFI.hValorAtivo(a), lucro=MDFI.hLucroAtivo(a);
+    var rent=MDFI.hCustoAtivo(a)>0?(lucro/MDFI.hCustoAtivo(a)*100):0;
+    var part=total>0?(val/total*100):0;
+    var cor=palette[i%palette.length];
+    return '<tr>'+
+      '<td><div class="cell-asset"><div class="cell-ico" style="background:'+cor+'">'+(a.img?'<img src="'+a.img+'">':a.ticker.slice(0,2))+'</div>'+
+        '<div><div class="cell-name">'+a.name+'</div><div class="cell-sub">'+a.ticker+'</div></div></div></td>'+
+      '<td class="mono">'+(a.qty||0).toLocaleString('pt-BR',{maximumFractionDigits:8})+'</td>'+
+      '<td class="mono">'+MDFI.fmt(a.precoMedio)+'</td>'+
+      '<td class="mono">'+MDFI.fmt(a.precoAtual)+'</td>'+
+      '<td class="mono" style="font-weight:700">'+MDFI.fmt(val)+'</td>'+
+      '<td class="mono '+(lucro>=0?'t-up':'t-dn')+'">'+MDFI.fmtS(lucro)+'<div class="cell-sub '+(rent>=0?'t-up':'t-dn')+'">'+MDFI.fmtPct(rent)+'</div></td>'+
+      '<td><div class="mono">'+part.toFixed(1)+'%</div><div class="pbar"><div class="pbar-fill" style="width:'+Math.min(100,part)+'%;background:'+cor+'"></div></div></td>'+
+      '<td><div class="row-actions"><button class="icon-btn" onclick="editAtivo(\''+a.id+'\')">✏️</button><button class="icon-btn del" onclick="delAtivo(\''+a.id+'\')">🗑</button></div></td>'+
+    '</tr>';
+  }).join('');
+  document.getElementById('tbl-update').textContent='Atualizado '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+}
+
+function renderEvol(){
+  var total=MDFI.hPatrimonio(); var labels=[],data=[]; var now=new Date();
+  for(var i=5;i>=0;i--){ var d=new Date(now.getFullYear(),now.getMonth()-i,1); labels.push(d.toLocaleDateString('pt-BR',{month:'short'})); data.push(+(total*(1-(i/6)*0.3)).toFixed(2)); }
+  if(chEvol) chEvol.destroy();
+  chEvol=new Chart(document.getElementById('chart-evol'),{type:'line',data:{labels:labels,datasets:[{label:'HOLD',data:data,borderColor:'#4B96FF',backgroundColor:'rgba(75,150,255,.12)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#4B96FF'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+}
+
+function renderDist(){
+  var st=MDFI.st(); var total=MDFI.hPatrimonio();
+  var items=st.hold.ativos.map(function(a,i){return {nome:a.ticker,valor:MDFI.hValorAtivo(a),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
+  if(chDist) chDist.destroy();
+  if(!items.length){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem ativos</div>'; return; }
+  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:items.map(function(x){return x.nome;}),datasets:[{data:items.map(function(x){return +x.valor.toFixed(2);}),backgroundColor:items.map(function(x){return x.cor;}),borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+MDFI.fmt(c.parsed);}}}}}});
+  document.getElementById('dist-legend').innerHTML=items.map(function(x){var p=total>0?(x.valor/total*100).toFixed(0):0;return '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:'+x.cor+'"></span>'+x.nome+'</div><span class="dleg-pct">'+p+'%</span></div>';}).join('');
+}
+
+/* ─── BUSCA COINGECKO ─── */
+function onSearchInput(){
+  clearTimeout(searchTimer);
+  var q=document.getElementById('coin-search').value.trim();
+  var box=document.getElementById('coin-results');
+  if(q.length<2){ box.classList.remove('show'); return; }
+  searchTimer=setTimeout(function(){
+    MDFI.searchCoin(q).then(function(coins){
+      if(!coins.length){ box.innerHTML='<div class="search-item">Nada encontrado</div>'; box.classList.add('show'); return; }
+      box.innerHTML=coins.map(function(c){return '<div class="search-item" onclick="selectCoin(\''+c.id+'\',\''+c.symbol.toUpperCase()+'\',\''+c.name.replace(/'/g,"")+'\',\''+(c.thumb||'')+'\')"><img src="'+(c.thumb||'')+'"><div><div style="font-weight:600">'+c.name+'</div><div style="font-size:11px;color:var(--muted2)">'+c.symbol.toUpperCase()+'</div></div></div>';}).join('');
+      box.classList.add('show');
+    });
+  },350);
+}
+function selectCoin(id,sym,name,img){
+  selectedCoin={coinId:id,ticker:sym,name:name,img:img};
+  document.getElementById('coin-search').value=name;
+  document.getElementById('coin-results').classList.remove('show');
+  document.getElementById('cs-img').src=img;
+  document.getElementById('cs-name').textContent=name+' ('+sym+')';
+  document.getElementById('coin-selected').style.display='block';
+  MDFI.fetchPrices([id]).then(function(p){
+    if(p[id]){ document.getElementById('cs-price').textContent='Preço atual: '+MDFI.fmt(p[id].price); selectedCoin.precoAtual=p[id].price; if(!document.getElementById('ativo-pm').value) document.getElementById('ativo-pm').value=p[id].price.toFixed(2); }
+  });
+}
+
+/* ─── CRUD ─── */
+function openAtivoModal(){ resetModal(); document.getElementById('ativo-modal-title').textContent='Adicionar Ativo'; document.getElementById('ativo-modal').classList.add('open'); }
+function closeAtivoModal(){ document.getElementById('ativo-modal').classList.remove('open'); }
+function resetModal(){ document.getElementById('ativo-id').value=''; document.getElementById('coin-search').value=''; document.getElementById('ativo-qty').value=''; document.getElementById('ativo-pm').value=''; document.getElementById('coin-selected').style.display='none'; selectedCoin=null; }
+
+function editAtivo(id){
+  var a=MDFI.st().hold.ativos.find(function(x){return x.id===id;}); if(!a)return;
+  resetModal();
+  document.getElementById('ativo-modal-title').textContent='Editar Ativo';
+  document.getElementById('ativo-id').value=id;
+  selectedCoin={coinId:a.coinId,ticker:a.ticker,name:a.name,img:a.img,precoAtual:a.precoAtual};
+  document.getElementById('coin-search').value=a.name;
+  document.getElementById('cs-img').src=a.img||'';
+  document.getElementById('cs-name').textContent=a.name+' ('+a.ticker+')';
+  document.getElementById('cs-price').textContent='Preço atual: '+MDFI.fmt(a.precoAtual);
+  document.getElementById('coin-selected').style.display='block';
+  document.getElementById('ativo-qty').value=a.qty;
+  document.getElementById('ativo-pm').value=a.precoMedio;
+  document.getElementById('ativo-modal').classList.add('open');
+}
+
+function salvarAtivo(){
+  if(!selectedCoin){ toast('Selecione uma criptomoeda','err'); return; }
+  var qty=parseFloat(document.getElementById('ativo-qty').value);
+  var pm=parseFloat(document.getElementById('ativo-pm').value);
+  if(!qty||qty<=0){ toast('Quantidade inválida','err'); return; }
+  if(!pm||pm<=0){ toast('Preço médio inválido','err'); return; }
+  var st=MDFI.st(); var id=document.getElementById('ativo-id').value;
+  if(id){
+    var a=st.hold.ativos.find(function(x){return x.id===id;});
+    if(a){ a.qty=qty; a.precoMedio=pm; a.coinId=selectedCoin.coinId; a.ticker=selectedCoin.ticker; a.name=selectedCoin.name; a.img=selectedCoin.img; if(selectedCoin.precoAtual)a.precoAtual=selectedCoin.precoAtual; }
+    toast('Ativo atualizado','ok');
+  } else {
+    st.hold.ativos.push({id:MDFI.uid(),coinId:selectedCoin.coinId,ticker:selectedCoin.ticker,name:selectedCoin.name,img:selectedCoin.img,qty:qty,precoMedio:pm,precoAtual:selectedCoin.precoAtual||pm});
+    toast('Ativo adicionado','ok');
+  }
+  MDFI.save(); closeAtivoModal(); render();
+}
+
+function delAtivo(id){
+  if(!confirm('Excluir este ativo?'))return;
+  var st=MDFI.st(); st.hold.ativos=st.hold.ativos.filter(function(x){return x.id!==id;});
+  MDFI.save(); render(); toast('Ativo removido','ok');
+}
+
+function atualizarPrecos(){ toast('Atualizando...'); MDFI.refreshHoldPrices(function(){ render(); toast('Preços atualizados','ok'); }); }
+
+/* ─── AUTH hook ─── */
+window.openAuthModal=function(){ window.location.href='dashboard.html'; };
+
+/* ─── INIT ─── */
+MDFI.loadLocal();
+MDFI.mountNav('hold');
+render();
+MDFI.initFirebase(function(user){ MDFI.updateNavAuth(user); render(); if(MDFI.st().hold.ativos.length) MDFI.refreshHoldPrices(render); });
+document.addEventListener('click',function(e){ if(!e.target.closest('#coin-search')&&!e.target.closest('#coin-results')) document.getElementById('coin-results').classList.remove('show'); });
+</script>
+</body>
+</html>
