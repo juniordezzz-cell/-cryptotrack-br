@@ -124,16 +124,16 @@ function render(){
   var rent=MDFI.hRentabilidade();
   var lb=document.getElementById('k-lucro-badge'); lb.textContent=MDFI.fmtPct(rent); lb.className='kpi-badge '+(rent>=0?'up':'dn');
   document.getElementById('k-rent').textContent=MDFI.fmtPct(rent);
-  document.getElementById('k-qtd').textContent=st.hold.ativos.length;
+  document.getElementById('k-qtd').textContent=MDFI.hAtivos().length;
   renderTabela(); renderEvol(); renderDist();
   MDFI.updateNavTotal();
 }
 
 function renderTabela(){
-  var st=MDFI.st(); var total=MDFI.hPatrimonio();
+  var ativos=MDFI.hAtivos(); var total=MDFI.hPatrimonio();
   var tb=document.getElementById('ativos-tbody');
-  if(!st.hold.ativos.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhum ativo. Clique em <b>+ Adicionar Ativo</b> para começar.</td></tr>'; return; }
-  tb.innerHTML=st.hold.ativos.slice().sort(function(a,b){return MDFI.hValorAtivo(b)-MDFI.hValorAtivo(a);}).map(function(a,i){
+  if(!ativos.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhum ativo. Clique em <b>+ Adicionar Ativo</b> para começar.</td></tr>'; return; }
+  tb.innerHTML=ativos.slice().sort(function(a,b){return MDFI.hValorAtivo(b)-MDFI.hValorAtivo(a);}).map(function(a,i){
     var val=MDFI.hValorAtivo(a), lucro=MDFI.hLucroAtivo(a);
     var rent=MDFI.hCustoAtivo(a)>0?(lucro/MDFI.hCustoAtivo(a)*100):0;
     var part=total>0?(val/total*100):0;
@@ -161,8 +161,8 @@ function renderEvol(){
 }
 
 function renderDist(){
-  var st=MDFI.st(); var total=MDFI.hPatrimonio();
-  var items=st.hold.ativos.map(function(a,i){return {nome:a.ticker,valor:MDFI.hValorAtivo(a),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
+  var ativos=MDFI.hAtivos(); var total=MDFI.hPatrimonio();
+  var items=MDFI.hAtivos().map(function(a,i){return {nome:a.ticker,valor:MDFI.hValorAtivo(a),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
   if(chDist) chDist.destroy();
   if(!items.length){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem ativos</div>'; return; }
   chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:items.map(function(x){return x.nome;}),datasets:[{data:items.map(function(x){return +x.valor.toFixed(2);}),backgroundColor:items.map(function(x){return x.cor;}),borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+MDFI.fmt(c.parsed);}}}}}});
@@ -201,7 +201,7 @@ function closeAtivoModal(){ document.getElementById('ativo-modal').classList.rem
 function resetModal(){ document.getElementById('ativo-id').value=''; document.getElementById('coin-search').value=''; document.getElementById('ativo-qty').value=''; document.getElementById('ativo-pm').value=''; document.getElementById('coin-selected').style.display='none'; selectedCoin=null; }
 
 function editAtivo(id){
-  var a=MDFI.st().hold.ativos.find(function(x){return x.id===id;}); if(!a)return;
+  var a=MDFI.hAtivos().find(function(x){return x.id===id;}); if(!a)return;
   resetModal();
   document.getElementById('ativo-modal-title').textContent='Editar Ativo';
   document.getElementById('ativo-id').value=id;
@@ -222,13 +222,13 @@ function salvarAtivo(){
   var pm=parseFloat(document.getElementById('ativo-pm').value);
   if(!qty||qty<=0){ toast('Quantidade inválida','err'); return; }
   if(!pm||pm<=0){ toast('Preço médio inválido','err'); return; }
-  var st=MDFI.st(); var id=document.getElementById('ativo-id').value;
+  var ativos=MDFI.hAtivos(); var id=document.getElementById('ativo-id').value;
   if(id){
-    var a=st.hold.ativos.find(function(x){return x.id===id;});
+    var a=ativos.find(function(x){return x.id===id;});
     if(a){ a.qty=qty; a.precoMedio=pm; a.coinId=selectedCoin.coinId; a.ticker=selectedCoin.ticker; a.name=selectedCoin.name; a.img=selectedCoin.img; if(selectedCoin.precoAtual)a.precoAtual=selectedCoin.precoAtual; }
     toast('Ativo atualizado','ok');
   } else {
-    st.hold.ativos.push({id:MDFI.uid(),coinId:selectedCoin.coinId,ticker:selectedCoin.ticker,name:selectedCoin.name,img:selectedCoin.img,qty:qty,precoMedio:pm,precoAtual:selectedCoin.precoAtual||pm});
+    ativos.push({id:MDFI.uid(),coinId:selectedCoin.coinId,ticker:selectedCoin.ticker,name:selectedCoin.name,img:selectedCoin.img,qty:qty,precoMedio:pm,precoAtual:selectedCoin.precoAtual||pm});
     toast('Ativo adicionado','ok');
   }
   MDFI.save(); closeAtivoModal(); render();
@@ -236,7 +236,7 @@ function salvarAtivo(){
 
 function delAtivo(id){
   if(!confirm('Excluir este ativo?'))return;
-  var st=MDFI.st(); st.hold.ativos=st.hold.ativos.filter(function(x){return x.id!==id;});
+  var w=MDFI.carteiraAtiva(); w.hold.ativos=w.hold.ativos.filter(function(x){return x.id!==id;});
   MDFI.save(); render(); toast('Ativo removido','ok');
 }
 
@@ -244,6 +244,9 @@ function atualizarPrecos(){ toast('Atualizando...'); MDFI.refreshHoldPrices(func
 
 /* ─── AUTH hook ─── */
 window.openAuthModal=function(){ window.location.href='dashboard.html'; };
+
+/* ─── troca de carteira ─── */
+window.onWalletChange=function(){ render(); if(MDFI.hAtivos().length) MDFI.refreshHoldPrices(render); };
 
 /* ─── INIT ─── */
 MDFI.loadLocal();
