@@ -127,10 +127,10 @@ function render(){
 }
 
 function renderTabela(){
-  var st=MDFI.st();
+  var posicoes=MDFI.dPosicoes();
   var tb=document.getElementById('pos-tbody');
-  if(!st.defi.posicoes.length){ tb.innerHTML='<tr class="empty-row"><td colspan="7">Nenhuma posição. Clique em <b>+ Adicionar Posição</b>.</td></tr>'; return; }
-  tb.innerHTML=st.defi.posicoes.map(function(p){
+  if(!posicoes.length){ tb.innerHTML='<tr class="empty-row"><td colspan="7">Nenhuma posição. Clique em <b>+ Adicionar Posição</b>.</td></tr>'; return; }
+  tb.innerHTML=posicoes.map(function(p){
     return '<tr>'+
       '<td><div class="cell-name">'+p.protocolo+'</div></td>'+
       '<td><span class="badge '+(tipoBadge[p.tipo]||'badge-pool')+'">'+(tipoLabel[p.tipo]||p.tipo)+'</span></td>'+
@@ -151,8 +151,7 @@ function renderEvol(){
 }
 
 function renderDist(){
-  var st=MDFI.st();
-  var items=st.defi.posicoes.map(function(p,i){return {nome:p.protocolo,valor:(p.capital||0)+(p.lucroAcum||0),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
+  var items=MDFI.dPosicoes().map(function(p,i){return {nome:p.protocolo,valor:(p.capital||0)+(p.lucroAcum||0),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
   var total=items.reduce(function(s,x){return s+x.valor;},0);
   if(chDist) chDist.destroy();
   if(!items.length){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem posições</div>'; return; }
@@ -166,7 +165,7 @@ function closePosModal(){ document.getElementById('pos-modal').classList.remove(
 function resetModal(){ document.getElementById('pos-id').value=''; document.getElementById('pos-protocolo').value=''; document.getElementById('pos-tipo').value='pool'; document.getElementById('pos-status').value='ativa'; document.getElementById('pos-capital').value=''; document.getElementById('pos-apr').value=''; document.getElementById('pos-lucro').value=''; }
 
 function editPos(id){
-  var p=MDFI.st().defi.posicoes.find(function(x){return x.id===id;}); if(!p)return;
+  var p=MDFI.dPosicoes().find(function(x){return x.id===id;}); if(!p)return;
   document.getElementById('pos-modal-title').textContent='Editar Posição';
   document.getElementById('pos-id').value=id;
   document.getElementById('pos-protocolo').value=p.protocolo;
@@ -185,20 +184,22 @@ function salvarPos(){
   var lucro=parseFloat(document.getElementById('pos-lucro').value)||0;
   if(!prot){ toast('Informe o protocolo','err'); return; }
   if(!cap||cap<=0){ toast('Capital inválido','err'); return; }
-  var st=MDFI.st(); var id=document.getElementById('pos-id').value;
+  var posicoes=MDFI.dPosicoes(); var id=document.getElementById('pos-id').value;
   var dados={protocolo:prot,tipo:document.getElementById('pos-tipo').value,status:document.getElementById('pos-status').value,capital:cap,apr:apr,lucroAcum:lucro};
-  if(id){ var p=st.defi.posicoes.find(function(x){return x.id===id;}); if(p)Object.assign(p,dados); toast('Posição atualizada','ok'); }
-  else { dados.id=MDFI.uid(); st.defi.posicoes.push(dados); toast('Posição adicionada','ok'); }
+  if(id){ var p=posicoes.find(function(x){return x.id===id;}); if(p)Object.assign(p,dados); toast('Posição atualizada','ok'); }
+  else { dados.id=MDFI.uid(); posicoes.push(dados); toast('Posição adicionada','ok'); }
   MDFI.save(); closePosModal(); render();
 }
 
 function delPos(id){
   if(!confirm('Excluir esta posição?'))return;
-  var st=MDFI.st(); st.defi.posicoes=st.defi.posicoes.filter(function(x){return x.id!==id;});
+  var w=MDFI.carteiraAtiva(); w.defi.posicoes=w.defi.posicoes.filter(function(x){return x.id!==id;});
   MDFI.save(); render(); toast('Posição removida','ok');
 }
 
 window.openAuthModal=function(){ window.location.href='dashboard.html'; };
+
+window.onWalletChange=function(){ render(); };
 
 MDFI.loadLocal();
 MDFI.mountNav('defi');
