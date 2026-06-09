@@ -146,10 +146,10 @@ function render(){
 }
 
 function renderTabela(){
-  var st=MDFI.st();
+  var ops0=MDFI.tOps();
   var tb=document.getElementById('ops-tbody');
-  if(!st.trade.operacoes.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhuma operação. Clique em <b>+ Registrar Operação</b>.</td></tr>'; return; }
-  var ops=st.trade.operacoes.slice().sort(function(a,b){return new Date(b.data)-new Date(a.data);});
+  if(!ops0.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhuma operação. Clique em <b>+ Registrar Operação</b>.</td></tr>'; return; }
+  var ops=ops0.slice().sort(function(a,b){return new Date(b.data)-new Date(a.data);});
   tb.innerHTML=ops.map(function(o){
     var res=o.resultado||0;
     return '<tr>'+
@@ -167,8 +167,8 @@ function renderTabela(){
 
 function renderBanca(){
   var st=MDFI.st();
-  var ops=st.trade.operacoes.slice().sort(function(a,b){return new Date(a.data)-new Date(b.data);});
-  var saldo=st.trade.bancaInicial||0; var labels=['Início'],data=[saldo];
+  var ops=ops0.slice().sort(function(a,b){return new Date(a.data)-new Date(b.data);});
+  var saldo=MDFI.tBancaIni(); var labels=['Início'],data=[saldo];
   ops.forEach(function(o){ saldo+=(o.resultado||0); labels.push(o.data?new Date(o.data).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):''); data.push(+saldo.toFixed(2)); });
   if(chBanca) chBanca.destroy();
   chBanca=new Chart(document.getElementById('chart-banca'),{type:'line',data:{labels:labels,datasets:[{label:'Banca',data:data,borderColor:'#F5C542',backgroundColor:'rgba(245,197,66,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:labels.length<15?3:0,pointBackgroundColor:'#F5C542'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
@@ -186,8 +186,8 @@ function renderDist(){
 }
 
 function renderPeriodo(){
-  var st=MDFI.st(); var byMonth={};
-  st.trade.operacoes.forEach(function(o){ if(!o.data)return; var d=new Date(o.data); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); byMonth[k]=(byMonth[k]||0)+(o.resultado||0); });
+  var byMonth={};
+  MDFI.tOps().forEach(function(o){ if(!o.data)return; var d=new Date(o.data); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); byMonth[k]=(byMonth[k]||0)+(o.resultado||0); });
   var keys=Object.keys(byMonth).sort();
   var labels=keys.map(function(k){var p=k.split('-');return new Date(p[0],p[1]-1,1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});});
   var data=keys.map(function(k){return +byMonth[k].toFixed(2);});
@@ -201,7 +201,7 @@ function closeOpModal(){ document.getElementById('op-modal').classList.remove('o
 function resetOp(){ ['op-id','op-ativo','op-resultado','op-entrada','op-saida','op-obs'].forEach(function(id){document.getElementById(id).value='';}); document.getElementById('op-tipo').value='long'; }
 
 function editOp(id){
-  var o=MDFI.st().trade.operacoes.find(function(x){return x.id===id;}); if(!o)return;
+  var o=MDFI.tOps().find(function(x){return x.id===id;}); if(!o)return;
   document.getElementById('op-modal-title').textContent='Editar Operação';
   document.getElementById('op-id').value=id;
   document.getElementById('op-data').value=o.data||'';
@@ -219,25 +219,27 @@ function salvarOp(){
   var resStr=document.getElementById('op-resultado').value;
   if(!ativo){ toast('Informe o ativo','err'); return; }
   if(resStr===''){ toast('Informe o resultado','err'); return; }
-  var st=MDFI.st(); var id=document.getElementById('op-id').value;
+  var ops=MDFI.tOps(); var id=document.getElementById('op-id').value;
   var dados={data:document.getElementById('op-data').value,ativo:ativo,tipo:document.getElementById('op-tipo').value,resultado:parseFloat(resStr),entrada:parseFloat(document.getElementById('op-entrada').value)||0,saida:parseFloat(document.getElementById('op-saida').value)||0,obs:document.getElementById('op-obs').value.trim()};
-  if(id){ var o=st.trade.operacoes.find(function(x){return x.id===id;}); if(o)Object.assign(o,dados); toast('Operação atualizada','ok'); }
-  else { dados.id=MDFI.uid(); st.trade.operacoes.push(dados); toast('Operação registrada','ok'); }
+  if(id){ var o=ops.find(function(x){return x.id===id;}); if(o)Object.assign(o,dados); toast('Operação atualizada','ok'); }
+  else { dados.id=MDFI.uid(); ops.push(dados); toast('Operação registrada','ok'); }
   MDFI.save(); closeOpModal(); render();
 }
 
 function delOp(id){
   if(!confirm('Excluir esta operação?'))return;
-  var st=MDFI.st(); st.trade.operacoes=st.trade.operacoes.filter(function(x){return x.id!==id;});
+  var w=MDFI.carteiraAtiva(); w.trade.operacoes=w.trade.operacoes.filter(function(x){return x.id!==id;});
   MDFI.save(); render(); toast('Operação removida','ok');
 }
 
 /* ─── Banca ─── */
-function openBancaModal(){ document.getElementById('banca-input').value=MDFI.st().trade.bancaInicial||''; document.getElementById('banca-modal').classList.add('open'); }
+function openBancaModal(){ document.getElementById('banca-input').value=MDFI.tBancaIni()||''; document.getElementById('banca-modal').classList.add('open'); }
 function closeBancaModal(){ document.getElementById('banca-modal').classList.remove('open'); }
-function salvarBanca(){ var v=parseFloat(document.getElementById('banca-input').value)||0; MDFI.st().trade.bancaInicial=v; MDFI.save(); closeBancaModal(); render(); toast('Banca atualizada','ok'); }
+function salvarBanca(){ var v=parseFloat(document.getElementById('banca-input').value)||0; MDFI.carteiraAtiva().trade.bancaInicial=v; MDFI.save(); closeBancaModal(); render(); toast('Banca atualizada','ok'); }
 
 window.openAuthModal=function(){ window.location.href='dashboard.html'; };
+
+window.onWalletChange=function(){ render(); };
 
 MDFI.loadLocal();
 MDFI.mountNav('trade');
