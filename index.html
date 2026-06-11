@@ -3,8 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>MundoDeFi — O Investidor10 do Mercado Cripto | Cotação, DeFi, Rankings, Portfólio</title>
-<meta name="description" content="Pesquise qualquer criptomoeda. Cotação, fundamentos, métricas on-chain, pools de liquidez, yield farming, rankings, calculadoras e portfólio — tudo em português.">
+<title>MundoDeFi — Ferramentas DeFi e Portfólio Cripto Grátis</title>
+<meta name="description" content="Calculadoras DeFi, simuladores de pools e staking, pesquisa de criptomoedas e portfólio gratuito — tudo em português, grátis para sempre.">
+<meta property="og:title" content="MundoDeFi — Ferramentas DeFi e Portfólio Cripto Grátis">
+<meta property="og:description" content="Calculadoras DeFi, simuladores de pools, pesquisa de ativos e portfólio gratuito em português.">
+<meta property="og:url" content="https://mundodefi.com.br/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
 <meta name="keywords" content="criptomoedas, defi, yield farming, pools de liquidez, bitcoin, ethereum, cotação cripto, portfólio crypto">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -408,6 +413,16 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   .pro-features{grid-template-columns:1fr}
   .defi-table-wrap{overflow-x:auto}
 }
+
+/* estudos em construção */
+.estudos-soon{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:2.2rem;display:grid;grid-template-columns:1.2fr 1fr;gap:2rem;align-items:center}
+.estudos-soon-title{font-family:var(--display);font-size:1.35rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.6rem}
+.estudos-soon-sub{font-size:13.5px;color:var(--muted2);line-height:1.7;margin-bottom:1.2rem}
+.estudos-soon-cta{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;border-radius:99px;background:var(--bg3);border:1px solid var(--border2);font-size:13px;font-weight:700;color:var(--text);text-decoration:none;transition:all .15s}
+.estudos-soon-cta:hover{border-color:var(--neon)}
+.estudos-soon-list{display:flex;flex-direction:column;gap:9px}
+.estudos-soon-item{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rl);font-size:13px}
+@media(max-width:760px){.estudos-soon{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -416,43 +431,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 <nav>
   <div class="nav-wrap">
     <!-- Logo -->
-    <a href="#" class="nav-logo">
+    <a href="#topo" class="nav-logo">
       <div class="nav-logo-mark">₿</div>
       <div class="nav-logo-text">Mundo<em>DeFi</em></div>
     </a>
 
     <!-- Mega Menu -->
     <div class="nav-menu">
-
-      <!-- Mercado -->
-      <div class="nav-item">
-        <button class="nav-link">Mercado <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega-menu" style="min-width:780px;left:-200px;transform:none">
-          <div class="mega-col">
-            <div class="mega-col-title">Por Categoria</div>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(247,147,26,.15)">₿</div><div class="mega-link-text"><div class="mega-link-name">Criptomoedas <span class="mega-badge mega-badge-hot">Top</span></div><div class="mega-link-desc">BTC, ETH, SOL e mais 10.000+</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(38,161,123,.15)">🔒</div><div class="mega-link-text"><div class="mega-link-name">Stablecoins</div><div class="mega-link-desc">USDT, USDC, DAI, FRAX</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(201,151,0,.15)">🐸</div><div class="mega-link-text"><div class="mega-link-name">Memecoins <span class="mega-badge mega-badge-hot">Hot</span></div><div class="mega-link-desc">DOGE, PEPE, WIF, BONK</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.15)">🤖</div><div class="mega-link-text"><div class="mega-link-name">IA & AI Agents <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">FET, TAO, VIRTUAL, AI16Z</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.12)">🌐</div><div class="mega-link-text"><div class="mega-link-name">RWA — Ativos Reais</div><div class="mega-link-desc">ONDO, USUAL, tokenizados</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-col-title">Infraestrutura</div>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.12)">⚡</div><div class="mega-link-text"><div class="mega-link-name">DeFi Protocols</div><div class="mega-link-desc">AAVE, UNI, CRV, PENDLE</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(98,126,234,.15)">🔷</div><div class="mega-link-text"><div class="mega-link-name">Layer 1</div><div class="mega-link-desc">ETH, SOL, AVAX, ADA</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,4,32,.12)">⛽</div><div class="mega-link-text"><div class="mega-link-name">Layer 2</div><div class="mega-link-desc">ARB, OP, MATIC, BASE</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.12)">🎮</div><div class="mega-link-text"><div class="mega-link-name">Gaming & NFTs</div><div class="mega-link-desc">AXS, SAND, MANA, IMX</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(71,77,255,.12)">📡</div><div class="mega-link-text"><div class="mega-link-name">DePIN</div><div class="mega-link-desc">HNT, RNDR, FIL, IO</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-col-title">Dados & Análise</div>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.12)">🏆</div><div class="mega-link-text"><div class="mega-link-name">Rankings Globais</div><div class="mega-link-desc">Por market cap, volume, APY</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🔗</div><div class="mega-link-text"><div class="mega-link-name">Métricas On-Chain <span class="mega-badge mega-badge-pro">PRO</span></div><div class="mega-link-desc">Wallets, fluxo de exchange</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">😱</div><div class="mega-link-text"><div class="mega-link-name">Fear & Greed Index</div><div class="mega-link-desc">Índice de sentimento global</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.1)">📊</div><div class="mega-link-text"><div class="mega-link-name">Dominância BTC</div><div class="mega-link-desc">Ciclos e dominância cripto</div></div></a>
-          </div>
-        </div>
-      </div>
 
       <!-- Rankings -->
       <div class="nav-item">
@@ -475,60 +460,17 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
             <a href="ferramentas.html#pool" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">💧</div><div class="mega-link-text"><div class="mega-link-name">Pool de Liquidez <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">Impermanent loss e retorno</div></div></a>
             <a href="ferramentas.html#yield" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🌾</div><div class="mega-link-text"><div class="mega-link-name">Yield Farming</div><div class="mega-link-desc">Simule rendimentos de farm</div></div></a>
             <a href="ferramentas.html#staking" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.12)">🔒</div><div class="mega-link-text"><div class="mega-link-name">Simulador Staking</div><div class="mega-link-desc">ETH, SOL, MATIC e mais</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.1)">🏖️</div><div class="mega-link-text"><div class="mega-link-name">Aposent. Cripto <span class="mega-badge mega-badge-pro">PRO</span></div><div class="mega-link-desc">Meta de independência financeira</div></div></a>
           </div>
           <div class="mega-col">
-            <div class="mega-col-title">Conversores</div>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">💱</div><div class="mega-link-text"><div class="mega-link-name">Crypto × Real</div><div class="mega-link-desc">Conversão em tempo real BRL</div></div></a>
-            <a href="#" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.1)">💵</div><div class="mega-link-text"><div class="mega-link-name">Crypto × Dólar</div><div class="mega-link-desc">USD com cotação ao vivo</div></div></a>
-            <div class="mega-col-title" style="margin-top:1rem">Portfólio</div>
+            <div class="mega-col-title">Portfólio</div>
             <a href="dashboard.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.1)">📊</div><div class="mega-link-text"><div class="mega-link-name">Meu Portfólio</div><div class="mega-link-desc">HOLD, DeFi, Trade</div></div></a>
           </div>
         </div>
       </div>
 
-      <!-- Estudos -->
-      <div class="nav-item">
-        <button class="nav-link">Estudos <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega-menu" style="min-width:640px;left:-80px;transform:none">
-          <div class="mega-col">
-            <div class="mega-col-title">Por Nível</div>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🌱</div><div class="mega-link-text"><div class="mega-link-name">Iniciante</div><div class="mega-link-desc">O que é cripto, carteiras, DeFi</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.1)">📘</div><div class="mega-link-text"><div class="mega-link-name">Intermediário</div><div class="mega-link-desc">Trading, análise, on-chain</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">🔬</div><div class="mega-link-text"><div class="mega-link-name">Avançado</div><div class="mega-link-desc">Estratégias complexas, alavancagem</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">📖</div><div class="mega-link-text"><div class="mega-link-name">Glossário Cripto</div><div class="mega-link-desc">Dicionário DeFi completo</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-col-title">Por Tema</div>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">💧</div><div class="mega-link-text"><div class="mega-link-name">Pools de Liquidez <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">AMM, IL, estratégias LP</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.1)">🌾</div><div class="mega-link-text"><div class="mega-link-name">Yield Farming</div><div class="mega-link-desc">Farms, recompensas, riscos</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">⚡</div><div class="mega-link-text"><div class="mega-link-name">Gestão de Risco</div><div class="mega-link-desc">Stop loss, sizing, hedging</div></div></a>
-            <a href="planos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🧠</div><div class="mega-link-text"><div class="mega-link-name">Ciclos de Mercado</div><div class="mega-link-desc">Bull, bear, narrativas</div></div></a>
-          </div>
-        </div>
-      </div>
-
-      <!-- DeFi -->
-      <div class="nav-item">
-        <button class="nav-link">DeFi <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega-menu" style="min-width:560px;left:-60px;transform:none">
-          <div class="mega-col">
-            <div class="mega-col-title">Hub de Liquidez</div>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">💧</div><div class="mega-link-text"><div class="mega-link-name">Pools <span class="mega-badge mega-badge-hot">Live</span></div><div class="mega-link-desc">Uniswap, Curve, Balancer</div></div></a>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🌾</div><div class="mega-link-text"><div class="mega-link-name">Farms & Yield</div><div class="mega-link-desc">PancakeSwap, Convex, Beefy</div></div></a>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.12)">🏦</div><div class="mega-link-text"><div class="mega-link-name">Lending</div><div class="mega-link-desc">AAVE, Compound, Morpho</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-col-title">Staking & Mais</div>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(98,126,234,.15)">🔒</div><div class="mega-link-text"><div class="mega-link-name">Staking</div><div class="mega-link-desc">ETH, SOL, MATIC líquido</div></div></a>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">⚙️</div><div class="mega-link-text"><div class="mega-link-name">Restaking <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">EigenLayer, Renzo, Symbiotic</div></div></a>
-            <a href="#defi" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🎁</div><div class="mega-link-text"><div class="mega-link-name">Airdrops & Launches</div><div class="mega-link-desc">Radar de oportunidades</div></div></a>
-          </div>
-        </div>
-      </div>
+      <a href="estudos.html" class="nav-link">Estudos</a>
 
       <a href="dashboard.html" class="nav-link">Portfólio</a>
-      <a href="noticias.html" class="nav-link">Notícias</a>
     </div>
 
     <!-- Right: search + buttons -->
@@ -584,9 +526,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="hero-badge-dot"></span>O Investidor10 do Mercado Cripto</div>
-    <h1 class="hero-title">Pesquise qualquer ativo<br>do <span class="g">mundo cripto</span></h1>
-    <p class="hero-sub">Métricas on-chain · Rankings · Calculadoras · Ferramentas · Portfólio · DeFi — tudo em uma plataforma em português</p>
+    <div class="hero-badge"><span class="hero-badge-dot"></span>Ferramentas DeFi 100% gratuitas</div>
+    <h1 class="hero-title">Domine o mundo cripto com<br><span class="g">ferramentas gratuitas</span></h1>
+    <p class="hero-sub">Calculadoras DeFi, simuladores de pools e staking, pesquisa de ativos e portfólio — grátis, em português, sem pegadinha.</p>
     <div class="hero-search-wrap">
       <div class="hero-search">
         <input type="text" id="hero-input" placeholder="Pesquise por BTC, ETH, SOL, PEPE, AAVE..." oninput="heroSearch(this.value)" onkeydown="heroKeyDown(event)" autocomplete="off"/>
@@ -602,7 +544,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <span class="hero-tag" onclick="heroTagSearch('pepe')">PEPE</span>
       <span class="hero-tag" onclick="heroTagSearch('aave')">AAVE</span>
       <span class="hero-tag" onclick="heroTagSearch('hyperliquid')">HYPE</span>
-      <a href="pesquisa-avancada.html" style="font-size:11px;color:var(--muted2);text-decoration:none;padding:4px 8px;transition:color .15s" onmouseover="this.style.color='var(--neon)'" onmouseout="this.style.color='var(--muted2)'">Pesquisa Avançada →</a>
     </div>
     <div class="hero-features">
       <span class="hero-feat"><span class="hero-feat-dot"></span>Cotação ao vivo</span>
@@ -617,7 +558,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <span class="hero-feat-sep">·</span>
       <span class="hero-feat"><span class="hero-feat-dot"></span>Portfólio</span>
       <span class="hero-feat-sep">·</span>
-      <span class="hero-feat"><span class="hero-feat-dot"></span>Calculadoras SEO</span>
+      <span class="hero-feat"><span class="hero-feat-dot"></span>Calculadoras</span>
     </div>
   </div>
 </section>
@@ -642,10 +583,8 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   <div class="sec-nav-inner">
     <a href="#mercado-overview" class="snav active" onclick="setSnav(this)">Mercado</a>
     <a href="#rankings" class="snav" onclick="setSnav(this)">Rankings</a>
-    <a href="#defi" class="snav" onclick="setSnav(this)">Hub DeFi 🔥</a>
-    <a href="#narrativas" class="snav" onclick="setSnav(this)">Narrativas</a>
     <a href="#ferramentas" class="snav" onclick="setSnav(this)">Ferramentas</a>
-    <a href="#estudos" class="snav" onclick="goPlanos();return false;">Estudos 👑</a>
+    <a href="#estudos" class="snav" onclick="setSnav(this)">Estudos</a>
     <a href="#noticias" class="snav" onclick="setSnav(this)">Notícias</a>
     <a href="dashboard.html" class="snav">Portfólio</a>
   </div>
@@ -658,7 +597,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="sec-title-icon" style="background:rgba(240,165,0,.12);border:1px solid rgba(240,165,0,.2)">📊</div>
       Visão do Mercado
     </div>
-    <a href="mercado.html" class="sec-more">Ver todos →</a>
   </div>
   <div class="market-cards-grid" id="market-cards-grid">
     <a href="token.html?id=bitcoin" class="market-card" id="mc-btc"><div class="mc-top"><div class="mc-ico" style="background:rgba(247,147,26,.15);color:#f7931a">₿</div><div class="mc-chg nt" id="mc-btc-c">—</div></div><div class="mc-name">Bitcoin</div><div class="mc-price" id="mc-btc-p">—</div><div class="mc-meta"><div class="mc-meta-row"><span>Market Cap</span><span class="mc-meta-val" id="mc-btc-mc">—</span></div><div class="mc-meta-row"><span>Vol 24h</span><span class="mc-meta-val" id="mc-btc-v">—</span></div></div></a>
@@ -688,67 +626,6 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <div class="rank-card"><div class="rank-card-hdr"><span class="rank-card-icon">🚀</span><div class="rank-card-title" id="rank-t1">Maiores Altas — 24h</div></div><div id="rank-col-1"><div class="rank-loading">Carregando...</div></div></div>
     <div class="rank-card"><div class="rank-card-hdr"><span class="rank-card-icon">💎</span><div class="rank-card-title" id="rank-t2">Maior Market Cap</div></div><div id="rank-col-2"><div class="rank-loading">Carregando...</div></div></div>
     <div class="rank-card"><div class="rank-card-hdr"><span class="rank-card-icon">⚡</span><div class="rank-card-title" id="rank-t3">Maior Volume 24h</div></div><div id="rank-col-3"><div class="rank-loading">Carregando...</div></div></div>
-  </div>
-</section>
-
-<!-- ═══ DEFI HUB ═══ -->
-<section class="section border-top" id="defi">
-  <div class="sec-header">
-    <div class="sec-title">
-      <div class="sec-title-icon" style="background:rgba(0,229,255,.1);border:1px solid rgba(0,229,255,.2)">💧</div>
-      Hub de Liquidez DeFi
-    </div>
-    <a href="https://defillama.com/pools" target="_blank" rel="noopener" class="sec-more">Ver todas as pools →</a>
-  </div>
-  <div class="defi-filters">
-    <button class="defi-filter active" onclick="setDefiFilter('all',this)">Todas as Chains</button>
-    <button class="defi-filter" onclick="setDefiFilter('eth',this)">⟠ Ethereum</button>
-    <button class="defi-filter" onclick="setDefiFilter('sol',this)">◎ Solana</button>
-    <button class="defi-filter" onclick="setDefiFilter('arb',this)">🔵 Arbitrum</button>
-    <button class="defi-filter" onclick="setDefiFilter('base',this)">🔷 Base</button>
-    <button class="defi-filter" onclick="setDefiFilter('bnb',this)">🟡 BNB Chain</button>
-    <button class="defi-filter" onclick="setDefiFilter('pol',this)">🟣 Polygon</button>
-  </div>
-  <div class="defi-table-wrap">
-    <table class="defi-table">
-      <thead>
-        <tr>
-          <th class="defi-th">#</th>
-          <th class="defi-th">Pool</th>
-          <th class="defi-th">Plataforma</th>
-          <th class="defi-th right">TVL</th>
-          <th class="defi-th right">APR</th>
-          <th class="defi-th right">APY</th>
-          <th class="defi-th">Blockchain</th>
-          <th class="defi-th">Risco</th>
-          <th class="defi-th right">Vol 24h</th>
-        </tr>
-      </thead>
-      <tbody id="defi-table-body">
-        <!-- Renderizado por JS -->
-      </tbody>
-    </table>
-  </div>
-  <div id="defi-loading" style="text-align:center;padding:2rem;font-size:12px;color:var(--muted)">Carregando pools via DeFiLlama...</div>
-  <div style="text-align:center;margin-top:1rem">
-    <a href="https://defillama.com/pools" target="_blank" rel="noopener" style="font-size:12px;color:var(--neon);text-decoration:none;border:1px solid rgba(0,229,255,.2);padding:7px 20px;border-radius:99px;display:inline-flex;align-items:center;gap:5px;transition:all .15s" onmouseover="this.style.background='var(--neon3)'" onmouseout="this.style.background='transparent'">Ver 500+ pools de liquidez via DeFiLlama →</a>
-  </div>
-</section>
-
-<!-- ═══ NARRATIVAS ═══ -->
-<section class="section border-top" id="narrativas">
-  <div class="sec-header">
-    <div class="sec-title">
-      <div class="sec-title-icon" style="background:rgba(168,85,247,.1);border:1px solid rgba(168,85,247,.2)">🔥</div>
-      Narrativas do Momento
-    </div>
-    <a href="https://www.coingecko.com/pt/categories" target="_blank" rel="noopener" class="sec-more">Ver todas →</a>
-  </div>
-  <div class="narratives-grid">
-    <a href="https://www.coinbase.com/pt-br/learn/crypto-basics/what-are-ai-crypto-tokens" target="_blank" rel="noopener" class="narrative-card"><div class="narr-header"><span class="narr-ico">🤖</span><span class="narr-trend hot">🔥 HOT</span></div><div class="narr-name">IA & AI Agents</div><div class="narr-desc">Tokens com infraestrutura para agentes autônomos on-chain ganham tração explosiva</div><div class="narr-tokens"><span class="narr-token">TAO</span><span class="narr-token">VIRTUAL</span><span class="narr-token">AI16Z</span><span class="narr-token">FET</span></div></a>
-    <a href="https://academy.binance.com/pt/articles/real-world-asset-rwa-tokenization" target="_blank" rel="noopener" class="narrative-card"><div class="narr-header"><span class="narr-ico">🏛️</span><span class="narr-trend up">↑ Alta</span></div><div class="narr-name">RWA — Ativos Reais</div><div class="narr-desc">Tokenização de títulos do tesouro e imóveis atraindo capital institucional</div><div class="narr-tokens"><span class="narr-token">ONDO</span><span class="narr-token">USUAL</span><span class="narr-token">PENDLE</span></div></a>
-    <a href="https://academy.binance.com/pt/articles/what-is-restaking" target="_blank" rel="noopener" class="narrative-card"><div class="narr-header"><span class="narr-ico">⚙️</span><span class="narr-trend hot">🔥 HOT</span></div><div class="narr-name">Restaking</div><div class="narr-desc">Multiplicar rendimentos do ETH via EigenLayer e protocolos de restaking líquido</div><div class="narr-tokens"><span class="narr-token">EIGEN</span><span class="narr-token">REZ</span><span class="narr-token">MANTA</span></div></a>
-    <a href="https://academy.binance.com/pt/articles/what-is-depin-decentralized-physical-infrastructure" target="_blank" rel="noopener" class="narrative-card"><div class="narr-header"><span class="narr-ico">📡</span><span class="narr-trend nt">→ Estável</span></div><div class="narr-name">DePIN</div><div class="narr-desc">Redes descentralizadas de infraestrutura física conectadas à blockchain</div><div class="narr-tokens"><span class="narr-token">HNT</span><span class="narr-token">RNDR</span><span class="narr-token">IO</span><span class="narr-token">FIL</span></div></a>
   </div>
 </section>
 
@@ -977,75 +854,26 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   </div>
 </section>
 
-<!-- ═══ CENTRO DE ESTUDOS ═══ -->
+<!-- ═══ CENTRO DE ESTUDOS (em construção) ═══ -->
 <section class="section border-top" id="estudos">
   <div class="sec-header">
     <div class="sec-title">
       <div class="sec-title-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2)">📚</div>
       Centro de Estudos
-      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:rgba(240,165,0,.15);color:var(--gold);margin-left:4px">👑 PRO</span>
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:rgba(77,159,255,.15);color:var(--blue);margin-left:4px">Em construção</span>
     </div>
-    <a href="planos.html" class="sec-more" style="color:var(--gold);border-color:rgba(240,165,0,.3)">Assinar para acessar →</a>
   </div>
-  <div class="estudos-cats">
-    <button class="estudos-cat active" onclick="goPlanos()">Todos</button>
-    <button class="estudos-cat" onclick="goPlanos()">🌱 Iniciante</button>
-    <button class="estudos-cat" onclick="goPlanos()">⚡ DeFi</button>
-    <button class="estudos-cat" onclick="goPlanos()">💧 Pools</button>
-    <button class="estudos-cat" onclick="goPlanos()">📊 Trading</button>
-    <button class="estudos-cat" onclick="goPlanos()">🛡️ Gestão de Capital</button>
-    <button class="estudos-cat" onclick="goPlanos()">🔄 Ciclos</button>
-  </div>
-  <!-- Premium gate overlay wrapper -->
-  <div style="position:relative">
-    <div class="estudos-grid" style="filter:blur(3px);pointer-events:none;user-select:none;opacity:.55">
-      <div class="estudo-main">
-        <div class="estudo-main-img">💧</div>
-        <div class="estudo-main-body">
-          <div class="estudo-cat">DeFi · Iniciante</div>
-          <div class="estudo-title">Guia Completo: Como Ganhar Dinheiro com Pools de Liquidez em 2025</div>
-          <div class="estudo-meta">12 min de leitura · Publicado há 2 dias</div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="estudo-card">
-          <div class="estudo-card-cat" style="color:var(--green)">🌾 Yield Farming</div>
-          <div class="estudo-card-title">As 5 Melhores Estratégias de Yield Farming para Maximizar seu APY</div>
-          <div class="estudo-card-meta">8 min · Intermediário</div>
-        </div>
-        <div class="estudo-card">
-          <div class="estudo-card-cat" style="color:var(--red)">⚠️ Risco</div>
-          <div class="estudo-card-title">Impermanent Loss: O que é e Como Proteger Seu Capital em Pools DeFi</div>
-          <div class="estudo-card-meta">10 min · Intermediário</div>
-        </div>
-        <div class="estudo-card">
-          <div class="estudo-card-cat" style="color:var(--gold)">🔄 Ciclos</div>
-          <div class="estudo-card-title">Pós-Halving Bitcoin: Histórico de Ciclos e o que Esperar em 2025</div>
-          <div class="estudo-card-meta">7 min · Intermediário</div>
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:12px">
-        <div class="estudo-card">
-          <div class="estudo-card-cat" style="color:var(--blue)">🌱 Iniciante</div>
-          <div class="estudo-card-title">Carteiras Cripto: Self-Custody vs Exchange — Qual a Diferença?</div>
-          <div class="estudo-card-meta">6 min · Iniciante</div>
-        </div>
-        <div class="estudo-card">
-          <div class="estudo-card-cat" style="color:var(--purple)">🛡️ Gestão</div>
-          <div class="estudo-card-title">Gestão de Risco em DeFi: Como Proteger seu Patrimônio On-Chain</div>
-          <div class="estudo-card-meta">9 min · Avançado</div>
-        </div>
-        <div class="estudo-card" style="background:var(--bg3);border-color:var(--border2);text-align:center;justify-content:center;align-items:center;flex-direction:row;gap:6px">
-          <span style="font-size:13px;font-weight:600;color:var(--muted2)">48 artigos disponíveis</span>
-        </div>
-      </div>
+  <div class="estudos-soon">
+    <div>
+      <div class="estudos-soon-title">Guias e estratégias DeFi em português — <span style="color:var(--neon)">chegando em breve</span></div>
+      <p class="estudos-soon-sub">Estamos preparando um centro de estudos completo: do primeiro passo em cripto às estratégias avançadas de pools de liquidez e gestão de risco. Conteúdo aberto para todos, com aprofundamentos exclusivos nos planos pagos.</p>
+      <a href="https://instagram.com/mundodefi" target="_blank" rel="noopener" class="estudos-soon-cta">📸 Enquanto isso, siga @mundodefi no Instagram →</a>
     </div>
-    <!-- Lock overlay -->
-    <div onclick="goPlanos()" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:16px;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(5,6,12,.85) 40%,rgba(5,6,12,.6) 100%)">
-      <div style="font-size:3rem">🔒</div>
-      <div style="font-family:var(--display);font-size:1.4rem;font-weight:800;letter-spacing:-.02em;text-align:center">Conteúdo Exclusivo PRO</div>
-      <div style="font-size:13px;color:var(--muted2);text-align:center;max-width:320px;line-height:1.6">48 aulas, guias e estratégias de DeFi disponíveis apenas para assinantes.</div>
-      <a href="planos.html" style="display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:99px;background:linear-gradient(135deg,var(--gold),#c87a00);font-family:var(--display);font-size:13px;font-weight:700;color:#000;text-decoration:none;box-shadow:0 0 30px rgba(240,165,0,.3)">👑 Ver Planos PRO</a>
+    <div class="estudos-soon-list">
+      <div class="estudos-soon-item"><span>🌱</span> Cripto e DeFi para iniciantes</div>
+      <div class="estudos-soon-item"><span>💧</span> Pools de liquidez e impermanent loss</div>
+      <div class="estudos-soon-item"><span>🛡️</span> Gestão de risco e de banca</div>
+      <div class="estudos-soon-item"><span>🔄</span> Ciclos de mercado e narrativas</div>
     </div>
   </div>
 </section>
@@ -1069,21 +897,21 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
   <div class="pro-section-inner">
     <div class="pro-badge">👑 MundoDeFi PRO</div>
     <h2 class="pro-title">Leve seu portfólio ao <span>próximo nível</span></h2>
-    <p class="pro-sub">Acesso a todas as ferramentas avançadas, rastreamento em tempo real de portfólio, pools e rendimentos DeFi, alertas inteligentes e análise por IA — tudo por menos do que um café por dia.</p>
+    <p class="pro-sub">Seu patrimônio cripto inteiro — HOLD, DeFi e Trade — organizado num lugar só, com sincronização na nuvem e exportação para o IR. Por menos de R$ 0,33 por dia.</p>
     <div class="pro-features">
-      <div class="pro-feat"><div class="pro-feat-ico">📊</div><div class="pro-feat-name">Dashboard Avançado</div><div class="pro-feat-desc">Visão completa do seu patrimônio cripto com gráficos e métricas avançadas</div></div>
-      <div class="pro-feat"><div class="pro-feat-ico">💧</div><div class="pro-feat-name">Controle de Pools</div><div class="pro-feat-desc">Rastreie posições DeFi, IL em tempo real e rendimentos acumulados</div></div>
-      <div class="pro-feat"><div class="pro-feat-ico">🔔</div><div class="pro-feat-name">Alertas Inteligentes</div><div class="pro-feat-desc">Alertas de preço, APY, saúde de posição e oportunidades DeFi</div></div>
-      <div class="pro-feat"><div class="pro-feat-ico">🤖</div><div class="pro-feat-name">IA para Análise</div><div class="pro-feat-desc">Análise de ativos, otimização de portfólio e insights on-chain com IA</div></div>
-      <div class="pro-feat"><div class="pro-feat-ico">📈</div><div class="pro-feat-name">On-Chain Premium</div><div class="pro-feat-desc">Dados de wallets, fluxo de exchanges e métricas de holders em tempo real</div></div>
-      <div class="pro-feat"><div class="pro-feat-ico">📄</div><div class="pro-feat-name">Relatórios & Export</div><div class="pro-feat-desc">Relatórios mensais, histórico completo e exportação para IR</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">📊</div><div class="pro-feat-name">Dashboard Completo</div><div class="pro-feat-desc">HOLD, DeFi e Trade ilimitados num painel só, com gráficos e metas</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">💧</div><div class="pro-feat-name">Controle de Pools</div><div class="pro-feat-desc">Rastreie posições DeFi, impermanent loss e rendimentos acumulados</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">⚡</div><div class="pro-feat-name">Diário de Trade</div><div class="pro-feat-desc">Gestão de banca, win rate e histórico completo de operações</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">☁️</div><div class="pro-feat-name">Nuvem Sincronizada</div><div class="pro-feat-desc">Seus dados salvos com segurança e acessíveis de qualquer dispositivo</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">📄</div><div class="pro-feat-name">Histórico & Export IR</div><div class="pro-feat-desc">Histórico completo de transações e exportação para a declaração</div></div>
+      <div class="pro-feat"><div class="pro-feat-ico">👑</div><div class="pro-feat-name">Mentoria Individual</div><div class="pro-feat-desc">No Premium: 1 encontro por mês comigo, adaptado ao seu nível — vagas limitadas</div></div>
     </div>
     <div class="pro-price-area">
-      <div class="pro-price">R$ 9,99</div>
-      <div class="pro-period">/mês · cancele quando quiser · sem fidelidade</div>
+      <div class="pro-price">R$ 9,90</div>
+      <div class="pro-period">/mês · cancele quando quiser · Premium com mentoria por R$ 29,90</div>
     </div>
     <div class="pro-ctas">
-      <a href="planos.html" class="pro-cta-primary">👑 Assinar MundoDeFi PRO</a>
+      <a href="planos.html" class="pro-cta-primary">👑 Conhecer os planos</a>
       <a href="cadastro.html" class="pro-cta-secondary">Criar conta gratuita →</a>
     </div>
   </div>
@@ -1093,30 +921,19 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
-      <a href="#" class="nav-logo" style="text-decoration:none;margin-bottom:.8rem;display:inline-flex">
+      <a href="#topo" class="nav-logo" style="text-decoration:none;margin-bottom:.8rem;display:inline-flex">
         <div class="nav-logo-mark">₿</div>
         <div class="nav-logo-text">Mundo<em>DeFi</em></div>
       </a>
       <p class="footer-desc">A plataforma cripto construída para o investidor brasileiro. Simples, poderosa e 100% em português.</p>
       <div class="footer-socials">
-        <a href="#" class="footer-social" title="Twitter">𝕏</a>
-        <a href="#" class="footer-social" title="Telegram">✈</a>
-        <a href="#" class="footer-social" title="YouTube">▶</a>
-        <a href="#" class="footer-social" title="Instagram">📸</a>
+        <a href="https://instagram.com/mundodefi" target="_blank" rel="noopener" class="footer-social" title="Instagram">📸</a>
       </div>
-    </div>
-    <div>
-      <div class="footer-col-title">Mercado</div>
-      <a href="#" class="footer-link">Criptomoedas</a>
-      <a href="#" class="footer-link">Stablecoins</a>
-      <a href="#" class="footer-link">Memecoins</a>
-      <a href="#" class="footer-link">IA Tokens</a>
-      <a href="#" class="footer-link">RWA</a>
     </div>
     <div>
       <div class="footer-col-title">Ferramentas</div>
       <a href="calculadoras.html" class="footer-link">Juros Compostos</a>
-      <a href="calculadoras.html" class="footer-link">Calculadora DCA</a>
+      <a href="calculadoras.html" class="footer-link">Lucro Cripto</a>
       <a href="ferramentas.html#pool" class="footer-link">Pool de Liquidez</a>
       <a href="ferramentas.html#yield" class="footer-link">Yield Farming</a>
       <a href="ferramentas.html#liquidacao" class="footer-link">Calc. Liquidação</a>
@@ -1124,7 +941,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <div>
       <div class="footer-col-title">Estudos</div>
       <a href="estudos.html" class="footer-link">Centro de Estudos</a>
-      <a href="glossario.html" class="footer-link">Glossário DeFi</a>
+      <a href="estudos.html" class="footer-link">Glossário DeFi</a>
       <a href="estudos.html#defi" class="footer-link">Estratégias DeFi</a>
       <a href="estudos.html#pools" class="footer-link">Pools de Liquidez</a>
       <a href="estudos.html#iniciante" class="footer-link">Para Iniciantes</a>
@@ -1132,14 +949,13 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <div>
       <div class="footer-col-title">Plataforma</div>
       <a href="dashboard.html" class="footer-link">Portfólio</a>
-      <a href="defi.html" class="footer-link">Hub DeFi</a>
-      <a href="planos.html" class="footer-link">Planos PRO</a>
+      <a href="defi.html" class="footer-link">Painel DeFi</a>
+      <a href="planos.html" class="footer-link">Planos</a>
       <a href="cadastro.html" class="footer-link">Criar conta grátis</a>
-      <a href="sobre.html" class="footer-link">Sobre nós</a>
     </div>
   </div>
   <div class="footer-bottom">
-    <span class="footer-copy">© 2025 MundoDeFi · Feito com 🧡 por Jefferson Founder 🇧🇷</span>
+    <span class="footer-copy">© 2026 MundoDeFi · Feito com 🧡 por Jefferson 🇧🇷</span>
     <span class="footer-copy">Dados: CoinGecko API · Não é consultoria financeira</span>
   </div>
 </footer>
@@ -1415,7 +1231,7 @@ function fetchNews(){
   fetch('https://api.rss2json.com/v1/api.json?rss_url='+encodeURIComponent('https://br.cointelegraph.com/rss'))
     .then(function(r){return r.json();})
     .then(function(d){
-      var items=(d.items||[]).slice(0,6);
+      var items=(d.items||[]).slice(0,3);
       if(!items.length)throw new Error();
       g.innerHTML=items.map(function(it){
         var dt=new Date(it.pubDate).toLocaleDateString('pt-BR');
@@ -1434,7 +1250,7 @@ function fetchNews(){
         {c:'Solana',t:'Ecossistema Solana bate recorde de transações diárias impulsionado por memecoins',u:'https://br.cointelegraph.com/tags/solana'},
         {c:'DeFi',t:'Yield Farming: Oportunidades de Alto APY em Pools de Liquidez Esta Semana',u:'https://br.cointelegraph.com/tags/defi'},
       ];
-      g.innerHTML=fb.map(function(it){
+      g.innerHTML=fb.slice(0,3).map(function(it){
         return '<a class="news-card" href="'+it.u+'" target="_blank" rel="noopener"><div class="news-cat-tag">'+it.c+'</div><div class="news-title">'+it.t+'</div><div class="news-meta">Hoje · CoinTelegraph BR</div></a>';
       }).join('');
     });
@@ -1563,124 +1379,10 @@ document.querySelectorAll('.snav[href^="#"]').forEach(function(a){
   });
 });
 
-/* ══ ESTUDOS → PLANOS (tudo premium) ══ */
-function goPlanos(){window.location.href='planos.html';}
-
-/* ══ DEFI HUB — DeFiLlama + filtro real ══ */
-var _defiAllPools=[];
-var _defiFilter='all';
-
-var CHAIN_MAP={
-  'Ethereum':{label:'⟠ Ethereum',key:'eth'},
-  'BSC':{label:'🟡 BNB Chain',key:'bnb'},
-  'Solana':{label:'◎ Solana',key:'sol'},
-  'Arbitrum':{label:'🔵 Arbitrum',key:'arb'},
-  'Base':{label:'🔷 Base',key:'base'},
-  'Polygon':{label:'🟣 Polygon',key:'pol'},
-  'Optimism':{label:'🔴 Optimism',key:'opt'},
-  'Avalanche':{label:'🔺 Avalanche',key:'avax'}
-};
-
-function chainKeyToFilter(chain){var c=CHAIN_MAP[chain];return c?c.key:'other';}
-function chainLabel(chain){var c=CHAIN_MAP[chain];return c?c.label:chain||'—';}
-function riskLevel(apy){
-  if(!apy)return{cls:'risk-low',label:'Baixo'};
-  if(apy>100)return{cls:'risk-high',label:'Alto'};
-  if(apy>30)return{cls:'risk-med',label:'Médio'};
-  return{cls:'risk-low',label:'Baixo'};
-}
-
-var FALLBACK_POOLS=[
-  {symbol:'ETH/USDC',project:'Uniswap V3',chain:'Ethereum',tvlUsd:3240000000,apy:20.1,apyBase:18.4,volumeUsd1d:890000000},
-  {symbol:'WBTC/ETH',project:'Curve Finance',chain:'Ethereum',tvlUsd:980000000,apy:8.5,apyBase:8.2,volumeUsd1d:210000000},
-  {symbol:'ETH/USDT',project:'Uniswap V3',chain:'Ethereum',tvlUsd:760000000,apy:15.2,apyBase:14.1,volumeUsd1d:340000000},
-  {symbol:'stETH/ETH',project:'Curve Finance',chain:'Ethereum',tvlUsd:640000000,apy:4.8,apyBase:4.6,volumeUsd1d:95000000},
-  {symbol:'PEPE/ETH',project:'Uniswap V3',chain:'Ethereum',tvlUsd:340000000,apy:241,apyBase:128.4,volumeUsd1d:95000000},
-  {symbol:'SOL/USDC',project:'Raydium CLMM',chain:'Solana',tvlUsd:1890000000,apy:38.5,apyBase:32.7,volumeUsd1d:420000000},
-  {symbol:'SOL/USDT',project:'Orca Whirlpool',chain:'Solana',tvlUsd:420000000,apy:22.4,apyBase:18.9,volumeUsd1d:180000000},
-  {symbol:'JUP/USDC',project:'Raydium CLMM',chain:'Solana',tvlUsd:210000000,apy:65.2,apyBase:48.1,volumeUsd1d:95000000},
-  {symbol:'ARB/USDC',project:'Uniswap V3',chain:'Arbitrum',tvlUsd:670000000,apy:56.8,apyBase:45.3,volumeUsd1d:180000000},
-  {symbol:'ETH/USDC',project:'Camelot DEX',chain:'Arbitrum',tvlUsd:380000000,apy:24.6,apyBase:19.2,volumeUsd1d:140000000},
-  {symbol:'ETH/USDC',project:'Uniswap V3',chain:'Base',tvlUsd:560000000,apy:19.8,apyBase:16.4,volumeUsd1d:210000000},
-  {symbol:'WETH/USDC',project:'Aerodrome',chain:'Base',tvlUsd:340000000,apy:42.1,apyBase:34.6,volumeUsd1d:120000000},
-  {symbol:'BNB/BUSD',project:'PancakeSwap V3',chain:'BSC',tvlUsd:890000000,apy:28.4,apyBase:22.1,volumeUsd1d:320000000},
-  {symbol:'CAKE/BNB',project:'PancakeSwap V3',chain:'BSC',tvlUsd:230000000,apy:74.2,apyBase:56.8,volumeUsd1d:88000000},
-  {symbol:'MATIC/USDC',project:'QuickSwap V3',chain:'Polygon',tvlUsd:310000000,apy:34.7,apyBase:28.2,volumeUsd1d:110000000}
-];
-
-function fetchDefiPools(){
-  var loader=document.getElementById('defi-loading');
-  fetch('https://yields.llama.fi/pools')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(!d||!d.data)throw new Error();
-      var pools=d.data.filter(function(p){
-        return p.tvlUsd>5e6&&p.apy!==null&&CHAIN_MAP[p.chain];
-      }).sort(function(a,b){return b.tvlUsd-a.tvlUsd;}).slice(0,150);
-      _defiAllPools=pools;
-      if(loader)loader.style.display='none';
-      renderDefiTable();
-    })
-    .catch(function(){
-      _defiAllPools=FALLBACK_POOLS;
-      if(loader)loader.style.display='none';
-      renderDefiTable();
-    });
-}
-
-function setDefiFilter(filter,btn){
-  _defiFilter=filter;
-  document.querySelectorAll('.defi-filter').forEach(function(b){b.classList.remove('active');});
-  btn.classList.add('active');
-  renderDefiTable();
-}
-
-function renderDefiTable(){
-  var tbody=document.getElementById('defi-table-body');
-  if(!tbody)return;
-  var pools=_defiAllPools.filter(function(p){
-    if(_defiFilter==='all')return true;
-    return chainKeyToFilter(p.chain)===_defiFilter;
-  }).slice(0,12);
-
-  if(!pools.length){
-    tbody.innerHTML='<tr><td colspan="9" style="padding:2rem;text-align:center;color:var(--muted);font-size:12px">Nenhuma pool encontrada para este filtro.</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML=pools.map(function(p,i){
-    var sym=p.symbol||'—';
-    var parts=sym.split(/[-\/]/);
-    var a=parts[0]||'?',b=parts[1]||'?';
-    var proj=p.project||'—';
-    var chain=p.chain||'—';
-    var apr=p.apyBase!=null?p.apyBase.toFixed(1)+'%':'—';
-    var apy=p.apy!=null?p.apy.toFixed(1)+'%':'—';
-    var risk=riskLevel(p.apy);
-    var apyNum=p.apy||0;
-    var apyColor=apyNum>100?'var(--gold)':'var(--green)';
-    var projUrl='https://defillama.com/protocol/'+proj.toLowerCase().replace(/[\s_]+/g,'-');
-    return '<tr class="defi-tr" onclick="window.open(\''+projUrl+'\',\'_blank\')" style="cursor:pointer">'
-      +'<td class="defi-td" style="color:var(--muted2);font-family:var(--mono);font-size:11px">'+(i+1)+'</td>'
-      +'<td class="defi-td"><div class="pool-info"><div class="pool-icons">'
-      +'<div class="pool-ico-a" style="background:rgba(100,120,255,.2);color:#a0aacc">'+a.slice(0,2)+'</div>'
-      +'<div class="pool-ico-b" style="background:rgba(38,161,123,.2);color:#5ab994">'+b.slice(0,2)+'</div>'
-      +'</div><div><div class="pool-name">'+sym+'</div></div></div></td>'
-      +'<td class="defi-td" style="font-size:11px;color:var(--muted3)">'+proj+'</td>'
-      +'<td class="defi-td right"><span class="tvl-val">'+fmtB(p.tvlUsd)+'</span></td>'
-      +'<td class="defi-td right"><span class="apy-val" style="color:'+apyColor+'">'+apr+'</span></td>'
-      +'<td class="defi-td right"><span class="apy-val" style="color:'+apyColor+'">'+apy+'</span></td>'
-      +'<td class="defi-td"><span class="chain-badge">'+chainLabel(chain)+'</span></td>'
-      +'<td class="defi-td"><span class="risk-dot '+risk.cls+'"></span><span style="font-size:11px;color:var(--muted3)">'+risk.label+'</span></td>'
-      +'<td class="defi-td right"><span class="tvl-val">'+fmtB(p.volumeUsd1d)+'</span></td>'
-      +'</tr>';
-  }).join('');
-}
 
 /* ══ INIT ══ */
 fetchPrices();
 fetchNews();
-fetchDefiPools();
 setInterval(fetchPrices,120000);
 </script>
 </body>
