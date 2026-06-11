@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /hold.html
+Disallow: /defi.html
+Disallow: /trade.html
+
+Sitemap: https://mundodefi.com.br/sitemap.xml
