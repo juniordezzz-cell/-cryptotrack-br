@@ -54,7 +54,8 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 
 /* MEGA MENU */
 .mega-menu{position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:1.5rem;display:none;z-index:400;box-shadow:var(--shadow-lg);min-width:700px}
-.nav-item:hover .mega-menu{display:flex;gap:2rem}
+.nav-item:hover .mega-menu,.nav-item.open .mega-menu{display:flex;gap:2rem}
+.mega-menu::before{content:'';position:absolute;top:-14px;left:0;right:0;height:14px}
 .mega-col{flex:1;min-width:0}
 .mega-col-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);padding-bottom:.6rem;margin-bottom:.6rem;border-bottom:1px solid var(--border)}
 .mega-link{display:flex;align-items:flex-start;gap:10px;padding:.5rem .6rem;border-radius:var(--r);text-decoration:none;color:var(--text);transition:background .1s;cursor:pointer}
@@ -120,7 +121,7 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 /* ═══════════════════════════════════════
    HERO
 ═══════════════════════════════════════ */
-.hero{position:relative;padding:5rem 1.5rem 4rem;overflow:hidden;text-align:center}
+.hero{position:relative;padding:3.2rem 1.5rem 3rem;overflow:hidden;text-align:center}
 .hero-bg{position:absolute;inset:0;background:
   radial-gradient(ellipse 80% 70% at 50% 0%,rgba(0,229,255,0.06) 0%,transparent 60%),
   radial-gradient(ellipse 60% 50% at 20% 100%,rgba(240,165,0,0.05) 0%,transparent 60%),
@@ -131,9 +132,9 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--neon3);border:1px solid rgba(0,229,255,.2);border-radius:99px;padding:4px 14px;font-size:11px;font-weight:600;color:var(--neon);letter-spacing:.04em;text-transform:uppercase;margin-bottom:1.4rem;opacity:0;animation:fadeUp .6s .05s forwards}
 .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.hero-title{font-family:var(--display);font-size:clamp(2.6rem,6vw,5rem);font-weight:800;line-height:1.15;letter-spacing:-.04em;margin-bottom:.8rem;opacity:0;animation:fadeUp .6s .1s forwards}
+.hero-title{font-family:var(--display);font-size:clamp(2.1rem,4.4vw,3.4rem);font-weight:800;line-height:1.12;letter-spacing:-.04em;margin-bottom:.8rem;opacity:0;animation:fadeUp .6s .1s forwards}
 .hero-title .g{color:var(--gold)}.hero-title .n{color:var(--neon)}
-.hero-sub{font-size:16px;color:var(--muted2);font-weight:300;margin-bottom:2rem;opacity:0;animation:fadeUp .6s .18s forwards;line-height:1.65;max-width:600px;margin-left:auto;margin-right:auto}
+.hero-sub{font-size:15px;color:var(--muted2);font-weight:300;margin-bottom:1.6rem;opacity:0;animation:fadeUp .6s .18s forwards;line-height:1.65;max-width:600px;margin-left:auto;margin-right:auto}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 /* Hero Search */
@@ -340,6 +341,16 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 .pro-feat-name{font-size:12.5px;font-weight:700}
 .pro-feat-desc{font-size:11px;color:var(--muted2);line-height:1.4;font-weight:300}
 .pro-price-area{margin-bottom:1.5rem}
+.pro-duo{display:grid;grid-template-columns:repeat(2,minmax(0,320px));gap:16px;justify-content:center;margin-bottom:1.1rem}
+.pro-duo-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rxl);padding:1.5rem;text-align:left;position:relative;display:flex;flex-direction:column;gap:.55rem}
+.pro-duo-premium{border-color:rgba(240,165,0,.45);box-shadow:0 0 40px rgba(240,165,0,.1)}
+.pro-duo-tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:4px 12px;border-radius:99px;background:linear-gradient(120deg,var(--gold),#ffd95e);color:#1a1200;white-space:nowrap}
+.pro-duo-name{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.14em}
+.pro-duo-price{font-family:var(--mono);font-size:2rem;font-weight:700;letter-spacing:-.03em;line-height:1}
+.pro-duo-price span{font-size:12px;color:var(--muted2);font-weight:400;margin-left:4px}
+.pro-duo-desc{font-size:12.5px;color:var(--muted2);line-height:1.55;flex:1}
+.pro-duo-foot{font-size:12px;color:var(--muted2)}
+@media(max-width:680px){.pro-duo{grid-template-columns:1fr}}
 .pro-price{font-family:var(--mono);font-size:3rem;font-weight:700;color:var(--gold);letter-spacing:-.03em;line-height:1}
 .pro-period{font-size:12px;color:var(--muted2);margin-top:.2rem}
 .pro-ctas{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
@@ -906,14 +917,22 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="pro-feat"><div class="pro-feat-ico">📄</div><div class="pro-feat-name">Histórico & Export IR</div><div class="pro-feat-desc">Histórico completo de transações e exportação para a declaração</div></div>
       <div class="pro-feat"><div class="pro-feat-ico">👑</div><div class="pro-feat-name">Mentoria Individual</div><div class="pro-feat-desc">No Premium: 1 encontro por mês comigo, adaptado ao seu nível — vagas limitadas</div></div>
     </div>
-    <div class="pro-price-area">
-      <div class="pro-price">R$ 9,90</div>
-      <div class="pro-period">/mês · cancele quando quiser · Premium com mentoria por R$ 29,90</div>
+    <div class="pro-duo">
+      <div class="pro-duo-card">
+        <div class="pro-duo-name" style="color:var(--gold)">⚡ PRO</div>
+        <div class="pro-duo-price">R$ 9,90<span>/mês</span></div>
+        <div class="pro-duo-desc">Portfólio completo e ilimitado: HOLD, DeFi e Trade com export para o IR.</div>
+        <a href="planos.html" class="pro-cta-primary" style="width:100%;justify-content:center">Assinar PRO</a>
+      </div>
+      <div class="pro-duo-card pro-duo-premium">
+        <div class="pro-duo-tag">👑 Mentoria individual</div>
+        <div class="pro-duo-name" style="color:#ffd95e">PREMIUM</div>
+        <div class="pro-duo-price">R$ 29,90<span>/mês</span></div>
+        <div class="pro-duo-desc">Tudo do PRO + estratégias avançadas + 1 encontro individual por mês — vagas limitadas.</div>
+        <a href="planos.html" class="pro-cta-primary" style="width:100%;justify-content:center;background:linear-gradient(135deg,#f5b614,#ffd95e)">Garantir minha vaga</a>
+      </div>
     </div>
-    <div class="pro-ctas">
-      <a href="planos.html" class="pro-cta-primary">👑 Conhecer os planos</a>
-      <a href="cadastro.html" class="pro-cta-secondary">Criar conta gratuita →</a>
-    </div>
+    <div class="pro-duo-foot">Cancele quando quiser · garantia de 7 dias · <a href="cadastro.html" style="color:var(--neon);text-decoration:none;font-weight:600">ou crie sua conta gratuita →</a></div>
   </div>
 </div>
 
@@ -1365,6 +1384,20 @@ window.navSearchKeyDown=function(e){
 };
 document.addEventListener('click',function(e){
   if(!e.target.closest('.nav-right'))document.getElementById('nav-search-overlay').classList.remove('open');
+});
+
+/* ══ MEGA-MENU: abrir/fechar por clique ══ */
+document.querySelectorAll('.nav-item>button.nav-link').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    var item=btn.closest('.nav-item');
+    var aberto=item.classList.contains('open');
+    document.querySelectorAll('.nav-item.open').forEach(function(i){i.classList.remove('open');});
+    if(!aberto)item.classList.add('open');
+  });
+});
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.nav-item'))document.querySelectorAll('.nav-item.open').forEach(function(i){i.classList.remove('open');});
 });
 
 /* ══ SECTION NAV ══ */
