@@ -40,14 +40,15 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 
 /* Logo */
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
-.nav-logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--gold),#d48400);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:16px;font-weight:800;color:#000;position:relative;box-shadow:var(--glow-gold)}
-.nav-logo-text{font-family:var(--display);font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.nav-logo-mark{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--gold),#d48400);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:21px;font-weight:800;color:#000;position:relative;box-shadow:0 0 18px rgba(240,165,0,.5),0 0 40px rgba(240,165,0,.18);animation:markPulse 3s ease-in-out infinite}
+@keyframes markPulse{0%,100%{box-shadow:0 0 18px rgba(240,165,0,.5),0 0 40px rgba(240,165,0,.18)}50%{box-shadow:0 0 26px rgba(240,165,0,.75),0 0 60px rgba(240,165,0,.3)}}
+.nav-logo-text{font-family:var(--display);font-size:26px;font-weight:800;letter-spacing:-.03em;line-height:1;text-shadow:0 0 24px rgba(0,229,255,.25)}
 .nav-logo-text em{font-style:normal;color:var(--neon)}
 
 /* Main menu */
 .nav-menu{display:flex;align-items:center;gap:2px;position:absolute;left:50%;transform:translateX(-50%)}
 .nav-item{position:relative}
-.nav-link{padding:8px 14px;border-radius:var(--r);font-size:14px;font-weight:500;color:var(--muted2);text-decoration:none;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;background:transparent;border:none;font-family:var(--font)}
+.nav-link{padding:11px 20px;border-radius:var(--r);font-size:16px;font-weight:600;color:var(--muted2);text-decoration:none;transition:all .15s;display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer;background:transparent;border:none;font-family:var(--font)}
 .nav-link:hover,.nav-link.active{color:var(--text);background:var(--bg3)}
 .nav-link svg{width:10px;height:10px;fill:currentColor;opacity:.5;transition:transform .2s}
 .nav-item:hover .nav-link svg{transform:rotate(180deg);opacity:1}
@@ -121,14 +122,18 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 /* ═══════════════════════════════════════
    HERO
 ═══════════════════════════════════════ */
-.hero{position:relative;padding:3.2rem 1.5rem 3rem;overflow:hidden;text-align:center}
+.hero{position:relative;padding:3.2rem 1.5rem 3rem;text-align:center}
 .hero-bg{position:absolute;inset:0;background:
   radial-gradient(ellipse 80% 70% at 50% 0%,rgba(0,229,255,0.06) 0%,transparent 60%),
   radial-gradient(ellipse 60% 50% at 20% 100%,rgba(240,165,0,0.05) 0%,transparent 60%),
   radial-gradient(ellipse 60% 50% at 80% 100%,rgba(168,85,247,0.04) 0%,transparent 60%),
   linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%)}
-.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 100%)}
-.hero-content{position:relative;z-index:1;max-width:820px;margin:0 auto}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,229,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.04) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(ellipse 80% 70% at 50% 50%,black 30%,transparent 100%)}
+#matrixCanvas{position:absolute;inset:0;width:100%;height:100%;opacity:.5;pointer-events:none;mask-image:radial-gradient(ellipse 90% 80% at 50% 40%,black 20%,transparent 95%)}
+.scanline{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,229,255,.35) 30%,rgba(0,229,255,.55) 50%,rgba(0,229,255,.35) 70%,transparent);box-shadow:0 0 24px rgba(0,229,255,.4);animation:scan 7s linear infinite;pointer-events:none}
+@keyframes scan{0%{top:-2px;opacity:0}8%{opacity:1}92%{opacity:1}100%{top:100%;opacity:0}}
+@media(prefers-reduced-motion:reduce){.scanline{display:none}.nav-logo-mark{animation:none}}
+.hero-content{position:relative;z-index:250;max-width:820px;margin:0 auto}
 .hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--neon3);border:1px solid rgba(0,229,255,.2);border-radius:99px;padding:4px 14px;font-size:11px;font-weight:600;color:var(--neon);letter-spacing:.04em;text-transform:uppercase;margin-bottom:1.4rem;opacity:0;animation:fadeUp .6s .05s forwards}
 .hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--neon);box-shadow:0 0 6px var(--neon);animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
@@ -138,13 +143,13 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 
 /* Hero Search */
-.hero-search-wrap{opacity:0;animation:fadeUp .6s .24s forwards;position:relative;z-index:10;max-width:700px;margin:0 auto 1.4rem}
+.hero-search-wrap{opacity:0;animation:fadeUp .6s .24s forwards;position:relative;z-index:600;max-width:700px;margin:0 auto 1.4rem}
 .hero-search{display:flex;align-items:center;background:#fff;border-radius:99px;overflow:visible;box-shadow:0 0 0 1px rgba(240,165,0,.3),var(--glow-gold),0 8px 40px rgba(0,0,0,.5);position:relative}
 .hero-search input{flex:1;border:none;outline:none;padding:17px 28px;font-size:16px;font-family:var(--font);color:#111;background:transparent;border-radius:99px 0 0 99px;min-width:0}
 .hero-search input::placeholder{color:#999}
 .hero-search-btn{background:linear-gradient(135deg,var(--gold),#c87a00);border:none;padding:14px 32px;cursor:pointer;font-family:var(--display);font-size:13px;font-weight:700;color:#000;letter-spacing:.06em;text-transform:uppercase;transition:all .15s;white-space:nowrap;border-radius:0 99px 99px 0;flex-shrink:0}
 .hero-search-btn:hover{filter:brightness(1.1)}
-.search-dd{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);overflow:hidden;display:none;box-shadow:var(--shadow-lg);max-height:380px;overflow-y:auto}
+.search-dd{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);display:none;box-shadow:var(--shadow-lg);max-height:380px;overflow-y:auto;z-index:500}
 .search-dd.open{display:block}
 .search-dd::-webkit-scrollbar{width:3px}
 .search-dd::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -177,18 +182,18 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,12,0.96);backdrop-filt
 .market-bar-inner::-webkit-scrollbar{display:none}
 .mb-item{display:flex;flex-direction:column;align-items:center;padding:0 2rem;border-right:1px solid var(--border);flex-shrink:0;min-width:120px;text-align:center}
 .mb-item:last-child{border-right:none}
-.mb-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:4px}
-.mb-val{font-family:var(--mono);font-size:14px;font-weight:600;color:var(--text)}
-.mb-chg{font-family:var(--mono);font-size:10px;margin-top:2px;font-weight:600}
+.mb-lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted2);margin-bottom:5px}
+.mb-val{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--text);text-shadow:0 0 16px rgba(0,229,255,.15)}
+.mb-chg{font-family:var(--mono);font-size:12.5px;margin-top:3px;font-weight:700}
 .mb-chg.up{color:var(--green)}.mb-chg.dn{color:var(--red)}.mb-chg.nt{color:var(--muted2)}
 
 /* ═══════════════════════════════════════
    SECTION NAV (sticky under main nav)
 ═══════════════════════════════════════ */
-.sec-nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:66px;z-index:200}
+.sec-nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:76px;z-index:200}
 .sec-nav-inner{max-width:1440px;margin:0 auto;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;padding:0 2rem}
 .sec-nav-inner::-webkit-scrollbar{display:none}
-.snav{padding:0 1.2rem;height:46px;display:flex;align-items:center;font-size:13.5px;font-weight:500;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none}
+.snav{padding:0 1.4rem;height:54px;display:flex;align-items:center;font-size:15.5px;font-weight:600;color:var(--muted2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;text-decoration:none}
 .snav:hover{color:var(--text)}
 .snav.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:600}
 
@@ -451,9 +456,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <div class="nav-menu">
 
       <!-- Rankings -->
-      <div class="nav-item">
-        <a href="#rankings" class="nav-link">Rankings</a>
-      </div>
+      <a href="dashboard.html" class="nav-link">Portfólio</a>
 
       <!-- Ferramentas -->
       <div class="nav-item">
@@ -461,27 +464,32 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
         <div class="mega-menu" style="min-width:700px;left:-160px;transform:none">
           <div class="mega-col">
             <div class="mega-col-title">Calculadoras</div>
-            <a href="calculadoras.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.12)">📈</div><div class="mega-link-text"><div class="mega-link-name">Juros Compostos</div><div class="mega-link-desc">Simule crescimento com aportes</div></div></a>
-            <a href="calculadoras.html#tab-lucro" onclick="setTimeout(function(){document.querySelector('[onclick*=lucro]')&&document.querySelector('[onclick*=lucro]').click()},200)" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🪙</div><div class="mega-link-text"><div class="mega-link-name">Lucro Cripto</div><div class="mega-link-desc">Calcule lucro com taxas e IR</div></div></a>
-            <a href="ferramentas.html#liquidacao" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">⚠️</div><div class="mega-link-text"><div class="mega-link-name">Calc. Liquidação</div><div class="mega-link-desc">Preço de liquidação de futuros</div></div></a>
-            <a href="ferramentas.html#aprapy" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">💹</div><div class="mega-link-text"><div class="mega-link-name">APR → APY</div><div class="mega-link-desc">Converta rendimentos anuais</div></div></a>
+            <a href="juros-compostos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.12)">📈</div><div class="mega-link-text"><div class="mega-link-name">Juros Compostos</div><div class="mega-link-desc">Simule crescimento com aportes</div></div></a>
+            <a href="lucro-cripto.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🪙</div><div class="mega-link-text"><div class="mega-link-name">Lucro Cripto</div><div class="mega-link-desc">Calcule lucro com taxas e IR</div></div></a>
+            <a href="liquidacao.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">⚠️</div><div class="mega-link-text"><div class="mega-link-name">Calc. Liquidação</div><div class="mega-link-desc">Preço de liquidação de futuros</div></div></a>
+            <a href="apr-apy.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.1)">💹</div><div class="mega-link-text"><div class="mega-link-name">APR → APY</div><div class="mega-link-desc">Converta rendimentos anuais</div></div></a>
           </div>
           <div class="mega-col">
             <div class="mega-col-title">Simuladores DeFi</div>
-            <a href="ferramentas.html#pool" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">💧</div><div class="mega-link-text"><div class="mega-link-name">Pool de Liquidez <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">Impermanent loss e retorno</div></div></a>
-            <a href="ferramentas.html#yield" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🌾</div><div class="mega-link-text"><div class="mega-link-name">Yield Farming</div><div class="mega-link-desc">Simule rendimentos de farm</div></div></a>
-            <a href="ferramentas.html#staking" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.12)">🔒</div><div class="mega-link-text"><div class="mega-link-name">Simulador Staking</div><div class="mega-link-desc">ETH, SOL, MATIC e mais</div></div></a>
+            <a href="pool-liquidez.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">💧</div><div class="mega-link-text"><div class="mega-link-name">Pool de Liquidez <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">Impermanent loss e retorno</div></div></a>
+            <a href="yield-farming.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🌾</div><div class="mega-link-text"><div class="mega-link-name">Yield Farming</div><div class="mega-link-desc">Simule rendimentos de farm</div></div></a>
+            <a href="staking.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.12)">🔒</div><div class="mega-link-text"><div class="mega-link-name">Simulador Staking</div><div class="mega-link-desc">ETH, SOL, MATIC e mais</div></div></a>
+            <a href="dca.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(77,159,255,.1)">🔄</div><div class="mega-link-text"><div class="mega-link-name">Calculadora DCA</div><div class="mega-link-desc">Aportes periódicos</div></div></a>
           </div>
           <div class="mega-col">
-            <div class="mega-col-title">Portfólio</div>
+            <div class="mega-col-title">Mais</div>
+            <a href="conversor.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">💱</div><div class="mega-link-text"><div class="mega-link-name">Conversor Cripto</div><div class="mega-link-desc">BRL, USD e EUR ao vivo</div></div></a>
             <a href="dashboard.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(240,165,0,.1)">📊</div><div class="mega-link-text"><div class="mega-link-name">Meu Portfólio</div><div class="mega-link-desc">HOLD, DeFi, Trade</div></div></a>
+            <a href="ferramentas.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">🛠️</div><div class="mega-link-text"><div class="mega-link-name">Ver todas →</div><div class="mega-link-desc">Hub com as 9 ferramentas</div></div></a>
           </div>
         </div>
       </div>
 
-      <a href="estudos.html" class="nav-link">Estudos</a>
+      <div class="nav-item">
+        <a href="#rankings" class="nav-link">Rankings</a>
+      </div>
 
-      <a href="dashboard.html" class="nav-link">Portfólio</a>
+      <a href="#estudos" class="nav-link">Estudos <span style="font-size:12px">🔒</span></a>
     </div>
 
     <!-- Right: search + buttons -->
@@ -536,8 +544,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
 <section class="hero" id="topo">
   <div class="hero-bg"></div>
   <div class="hero-grid"></div>
+  <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+  <div class="scanline" aria-hidden="true"></div>
   <div class="hero-content">
-    <div class="hero-badge"><span class="hero-badge-dot"></span>Ferramentas DeFi 100% gratuitas</div>
+    <div class="hero-badge mono" style="letter-spacing:.06em">&gt; FERRAMENTAS_DEFI: <span style="color:var(--green)">100%_GRATUITAS</span> <span class="cursor-blink">▌</span></div>
+<style>.cursor-blink{animation:blink 1.1s steps(1) infinite}@keyframes blink{50%{opacity:0}}.mono{font-family:var(--mono)}</style>
     <h1 class="hero-title">Domine o mundo cripto com<br><span class="g">ferramentas gratuitas</span></h1>
     <p class="hero-sub">Calculadoras DeFi, simuladores de pools e staking, pesquisa de ativos e portfólio — grátis, em português, sem pegadinha.</p>
     <div class="hero-search-wrap">
@@ -595,7 +606,7 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <a href="#mercado-overview" class="snav active" onclick="setSnav(this)">Mercado</a>
     <a href="#rankings" class="snav" onclick="setSnav(this)">Rankings</a>
     <a href="#ferramentas" class="snav" onclick="setSnav(this)">Ferramentas</a>
-    <a href="#estudos" class="snav" onclick="setSnav(this)">Estudos</a>
+    <a href="#estudos" class="snav" onclick="setSnav(this)">Estudos 🔒</a>
     <a href="#noticias" class="snav" onclick="setSnav(this)">Notícias</a>
     <a href="dashboard.html" class="snav">Portfólio</a>
   </div>
@@ -871,20 +882,23 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
     <div class="sec-title">
       <div class="sec-title-icon" style="background:rgba(77,159,255,.1);border:1px solid rgba(77,159,255,.2)">📚</div>
       Centro de Estudos
-      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:rgba(77,159,255,.15);color:var(--blue);margin-left:4px">Em construção</span>
+      <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:4px;background:rgba(240,165,0,.15);color:var(--gold);margin-left:4px">👑 Premium</span>
     </div>
   </div>
   <div class="estudos-soon">
     <div>
-      <div class="estudos-soon-title">Guias e estratégias DeFi em português — <span style="color:var(--neon)">chegando em breve</span></div>
-      <p class="estudos-soon-sub">Estamos preparando um centro de estudos completo: do primeiro passo em cripto às estratégias avançadas de pools de liquidez e gestão de risco. Conteúdo aberto para todos, com aprofundamentos exclusivos nos planos pagos.</p>
-      <a href="https://instagram.com/mundodefi" target="_blank" rel="noopener" class="estudos-soon-cta">📸 Enquanto isso, siga @mundodefi no Instagram →</a>
+      <div class="estudos-soon-title">🔒 Estratégias e estudos do operador — <span style="color:var(--gold)">exclusivo Premium</span></div>
+      <p class="estudos-soon-sub">As teses operacionais do MundoDeFi documentadas: pools de liquidez, gestão de banca, confluência de sinais e ciclos de mercado. Conhecimento de quem opera com capital próprio, reservado para membros <b style="color:var(--gold)">Premium</b> — em produção, chegando em breve.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <a href="planos.html" class="estudos-soon-cta" style="background:linear-gradient(135deg,var(--gold),#d48400);color:#0d0d0d;border-color:var(--gold);font-weight:700">👑 Desbloquear com Premium — R$ 29,90/mês</a>
+        <a href="https://instagram.com/mundodefi" target="_blank" rel="noopener" class="estudos-soon-cta">📸 Conteúdo aberto no @mundodefi</a>
+      </div>
     </div>
     <div class="estudos-soon-list">
-      <div class="estudos-soon-item"><span>🌱</span> Cripto e DeFi para iniciantes</div>
-      <div class="estudos-soon-item"><span>💧</span> Pools de liquidez e impermanent loss</div>
-      <div class="estudos-soon-item"><span>🛡️</span> Gestão de risco e de banca</div>
-      <div class="estudos-soon-item"><span>🔄</span> Ciclos de mercado e narrativas</div>
+      <div class="estudos-soon-item" style="opacity:.75"><span>🔒</span> DeFi Avançado — teses de pools de liquidez</div>
+      <div class="estudos-soon-item" style="opacity:.75"><span>🔒</span> Trade Avançado — confluência e gestão de banca</div>
+      <div class="estudos-soon-item" style="opacity:.75"><span>🔒</span> Smart money — rastreamento de carteiras</div>
+      <div class="estudos-soon-item" style="opacity:.75"><span>🔒</span> Relatórios mensais de mercado</div>
     </div>
   </div>
 </section>
@@ -1385,6 +1399,36 @@ window.navSearchKeyDown=function(e){
 document.addEventListener('click',function(e){
   if(!e.target.closest('.nav-right'))document.getElementById('nav-search-overlay').classList.remove('open');
 });
+
+/* ══ MATRIX RAIN (leve) ══ */
+(function(){
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  var cv=document.getElementById('matrixCanvas');if(!cv)return;
+  var ctx=cv.getContext('2d');
+  var hero=cv.parentElement;
+  var W,H,cols,drops,font=15;
+  var chars='01₿ΞĐ◈⟠アイウエオカキク◬⊿01';
+  function size(){W=cv.width=hero.offsetWidth;H=cv.height=hero.offsetHeight;cols=Math.floor(W/26);drops=[];for(var i=0;i<cols;i++)drops.push(Math.random()*-H/font);}
+  size();window.addEventListener('resize',size);
+  var last=0;
+  function rain(ts){
+    if(ts-last>66){
+      last=ts;
+      ctx.fillStyle='rgba(5,6,12,0.12)';ctx.fillRect(0,0,W,H);
+      ctx.font=font+'px JetBrains Mono,monospace';
+      for(var i=0;i<cols;i++){
+        var ch=chars[Math.floor(Math.random()*chars.length)];
+        var x=i*26, y=drops[i]*font;
+        ctx.fillStyle=Math.random()>0.92?'rgba(0,229,255,.7)':(Math.random()>0.5?'rgba(240,165,0,.28)':'rgba(0,229,255,.22)');
+        ctx.fillText(ch,x,y);
+        if(y>H&&Math.random()>0.975)drops[i]=0;
+        drops[i]++;
+      }
+    }
+    requestAnimationFrame(rain);
+  }
+  requestAnimationFrame(rain);
+})();
 
 /* ══ MEGA-MENU: abrir/fechar por clique ══ */
 document.querySelectorAll('.nav-item>button.nav-link').forEach(function(btn){
