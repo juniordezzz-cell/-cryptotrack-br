@@ -1,5 +1,5 @@
 CONTEXTO DO PROJETO — Mundo DeFi
-> Última atualização: 11/06/2026
+> Última atualização: 13/06/2026
 Quem sou eu
 Jefferson (juniordezzz) — founder solo. Construindo em público.
 Ecossistema digital de cripto, DeFi, conteúdo e tecnologia voltado para o brasileiro comum.
@@ -55,7 +55,8 @@ Arquivo	O que é	Plano
 `defi.html`	Posições DeFi / pools	PRO
 `trade.html`	Operações de trade, banca, win rate	PRO
 `mundodefi-core.js`	JS compartilhado	—
-`mundodefi.css`	CSS compartilhado	—
+`mundodefi.css`	CSS compartilhado (importa os tokens)	—
+`mundodefi-tokens.css`	Paleta de cores — FONTE ÚNICA do site	—
 `CNAME`	Domínio customizado do GitHub Pages — não mexer	—
 `robots.txt`	Bloqueia indexação de dashboard/hold/defi/trade	—
 `sitemap.xml`	6 URLs públicas — adicionar bloco `<url>` a cada página nova	—
@@ -93,13 +94,34 @@ Google Fonts: Space Grotesk (UI) + JetBrains Mono (números/moedas)
 Deploy: GitHub Pages com domínio customizado (commits na `main` publicam em 1–5 min)
 Identidade visual (Mundo DeFi)
 ```css
-fundo: #0a0a0a (dark) · primária: #9945ff (roxo neon) · secundária: #14f195 (verde Solana)
+fundo: #070A12 (dark) · PRO/primária: #9945FF (roxo Solana) · PREMIUM: #F5B614 (dourado)
+verde Solana: #14F195 · ciano: #00E5FF · vermelho: #FF4D6A · azul: #4D9FFF
 ```
+
+🎨 SISTEMA DE CORES — FONTE ÚNICA (padronizado em 13/06/2026)
+TODAS as cores da marca vivem em UM arquivo: `mundodefi-tokens.css` (só `:root`, zero
+classes → nunca colide com layout). Editar esse arquivo muda a cor de TODO o site.
+Regra semântica fixa:
+  • PRO     = roxo  `--purple` / `--pro`     (#9945FF · cor da Solana)
+  • PREMIUM = dourado `--gold` / `--premium` (#F5B614 · amarelo-dourado, NÃO laranja Bitcoin)
+Logo "MundoDeFi": gradiente roxo→ciano em todas as páginas (caixa do ícone segue dourada).
+Como padronizar uma página nova (receita):
+  1. `<link rel="stylesheet" href="mundodefi-tokens.css">` antes do `<style>`.
+  2. Remover do `:root` da página as cores sólidas (`--purple/--gold/--green/--cyan/--neon/
+     --red/--blue`) — elas passam a herdar dos tokens. Manter só os tons suaves locais
+     (`-soft`, `-line`, `2`, `3`, glows).
+  3. Garantir PRO roxo e PREMIUM dourado nos botões/badges.
+⚠️ Subir o `mundodefi-tokens.css` junto no deploy — as páginas dependem dele pra ter cor.
+Já no padrão: index, planos, juros-compostos, apr-apy, cadastro, calculadoras, mundodefi.css.
+Falta migrar: ferramentas, estudos, dashboard, hold, defi, trade, token, lucro-cripto,
+liquidacao, pool-liquidez, yield-farming, dca, conversor, etc.
 Herança CryptoTrack (vale para dashboard/hold/defi/trade)
 As páginas de portfólio vieram do CryptoTrack BR (cryptotrack-br.netlify.app) e mantêm
 suas convenções:
-Variáveis CSS: `--gold: #f5a623` (destaques) · `--green: #15c784` · `--red: #ea3943` ·
-`--blue: #4b96ff` (HOLD) · `--defi: #00d2aa` · `--purple: #9d71ff` · fundos em camadas
+Variáveis CSS (os valores de COR agora vêm dos tokens — `mundodefi.css` importa
+`mundodefi-tokens.css`; abaixo ficam só os nomes/uso, não os hex antigos):
+`--gold` (destaques/PREMIUM) · `--green` · `--red` · `--blue` (HOLD) · `--defi` ·
+`--purple` (PRO) · fundos em camadas
 `--bg`...`--bg5` · raios `--r: 8px / --rl: 14px / --rxl: 20px` · `--sidebar: 240px`
 Classes: `.mc`/`.mv` (metric cards) · `.btn-gold/-green/-red/-ghost/-sm` ·
 `.card`/`.card-hdr`/`.card-title` · `.page.active` (SPA) · `.sb-item` (sidebar) ·

@@ -12,13 +12,13 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="mundodefi-tokens.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:#080b14;--surface:#0d1120;--surface2:#111827;--surface3:#1a2235;
   --border:#1e2d45;--border2:#243350;
-  --gold:#f5a623;--gold2:#e8943a;--cyan:#22d3ee;
-  --green:#10b981;--red:#ef4444;--purple:#8b5cf6;--blue:#4b96ff;
+  --gold2:#d4920f;
   --text:#e2e8f0;--text-muted:#64748b;--text-dim:#94a3b8;
   --font:'Sora',sans-serif;--display:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
 }
@@ -30,8 +30,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);position:rel
 nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(8,11,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
 .nav-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:800;color:#000}
-.nav-logo-txt{font-family:var(--display);font-size:14px;font-weight:800;letter-spacing:-.02em}
-.nav-logo-txt span{color:var(--gold)}
+.nav-logo-txt{font-family:var(--display);font-size:14px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-logo-txt span{}
 .nav-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);padding:3px 10px;border-radius:99px}
 .nav-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:color .15s;padding:6px 12px;border-radius:6px;border:1px solid var(--border)}
 .nav-back:hover{color:var(--text);border-color:var(--border2)}
@@ -255,7 +255,7 @@ select option{background:var(--surface2);color:var(--text)}
     </div>
     <div class="cta-card">
       <h3>Gostou? Leve seus cálculos para o <span>próximo nível</span></h3>
-      <p>Com uma conta gratuita você monta seu portfólio. No <strong style="color:var(--gold)">PRO (R$ 9,90/mês)</strong> acompanha HOLD, DeFi e Trade ilimitados com exportação para o IR. E no <strong style="color:var(--gold)">Premium (R$ 29,90/mês)</strong> tem estratégias avançadas + mentoria individual — vagas limitadas.</p>
+      <p>Com uma conta gratuita você monta seu portfólio. No <strong style="color:var(--purple)">PRO (R$ 9,90/mês)</strong> acompanha HOLD, DeFi e Trade ilimitados com exportação para o IR. E no <strong style="color:var(--gold)">Premium (R$ 29,90/mês)</strong> tem estratégias avançadas + mentoria individual — vagas limitadas.</p>
       <div class="cta-btns">
         <a class="cta-btn-gold" href="planos.html">👑 Conhecer PRO e Premium</a>
         <a class="cta-btn-ghost" href="cadastro.html">Criar conta grátis →</a>

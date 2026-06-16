@@ -111,7 +111,7 @@
 <script src="mundodefi-core.js"></script>
 <script>
 var chEvol=null, chDist=null, selectedCoin=null, searchTimer=null;
-var palette=['#4B96FF','#00D2AA','#F5C542','#9D71FF','#FF5468','#00D2FF','#10D98A','#FF9F43'];
+var palette=['#4D9FFF','#00D2AA','#F5B614','#9945FF','#FF4D6A','#00E5FF','#14F195','#FF9F43'];
 
 function toast(m,t){ var e=document.getElementById('toast'); e.textContent=m; e.className='toast show '+(t||''); setTimeout(function(){e.className='toast '+(t||'');},2600); }
 
@@ -157,7 +157,7 @@ function renderEvol(){
   var total=MDFI.hPatrimonio(); var labels=[],data=[]; var now=new Date();
   for(var i=5;i>=0;i--){ var d=new Date(now.getFullYear(),now.getMonth()-i,1); labels.push(d.toLocaleDateString('pt-BR',{month:'short'})); data.push(+(total*(1-(i/6)*0.3)).toFixed(2)); }
   if(chEvol) chEvol.destroy();
-  chEvol=new Chart(document.getElementById('chart-evol'),{type:'line',data:{labels:labels,datasets:[{label:'HOLD',data:data,borderColor:'#4B96FF',backgroundColor:'rgba(75,150,255,.12)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#4B96FF'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+  chEvol=new Chart(document.getElementById('chart-evol'),{type:'line',data:{labels:labels,datasets:[{label:'HOLD',data:data,borderColor:'#4D9FFF',backgroundColor:'rgba(77,159,255,.12)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#4D9FFF'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(128,128,128,.06)'}}}}});
 }
 
 function renderDist(){

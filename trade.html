@@ -171,18 +171,18 @@ function renderBanca(){
   var saldo=MDFI.tBancaIni(); var labels=['Início'],data=[saldo];
   ops.forEach(function(o){ saldo+=(o.resultado||0); labels.push(o.data?new Date(o.data).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):''); data.push(+saldo.toFixed(2)); });
   if(chBanca) chBanca.destroy();
-  chBanca=new Chart(document.getElementById('chart-banca'),{type:'line',data:{labels:labels,datasets:[{label:'Banca',data:data,borderColor:'#F5C542',backgroundColor:'rgba(245,197,66,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:labels.length<15?3:0,pointBackgroundColor:'#F5C542'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+  chBanca=new Chart(document.getElementById('chart-banca'),{type:'line',data:{labels:labels,datasets:[{label:'Banca',data:data,borderColor:'#F5B614',backgroundColor:'rgba(245,182,20,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:labels.length<15?3:0,pointBackgroundColor:'#F5B614'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
 }
 
 function renderDist(){
   var wins=MDFI.tWins(), losses=MDFI.tLosses();
   if(chDist) chDist.destroy();
   if(!wins&&!losses){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem operações</div>'; return; }
-  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:['Wins','Losses'],datasets:[{data:[wins,losses],backgroundColor:['#10D98A','#FF5468'],borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.parsed;}}}}}});
+  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:['Wins','Losses'],datasets:[{data:[wins,losses],backgroundColor:['#14F195','#FF4D6A'],borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.parsed;}}}}}});
   var tot=wins+losses;
   document.getElementById('dist-legend').innerHTML=
-    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#10D98A"></span>Wins</div><span class="dleg-pct">'+(tot?(wins/tot*100).toFixed(0):0)+'%</span></div>'+
-    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#FF5468"></span>Losses</div><span class="dleg-pct">'+(tot?(losses/tot*100).toFixed(0):0)+'%</span></div>';
+    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#14F195"></span>Wins</div><span class="dleg-pct">'+(tot?(wins/tot*100).toFixed(0):0)+'%</span></div>'+
+    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#FF4D6A"></span>Losses</div><span class="dleg-pct">'+(tot?(losses/tot*100).toFixed(0):0)+'%</span></div>';
 }
 
 function renderPeriodo(){
@@ -192,7 +192,7 @@ function renderPeriodo(){
   var labels=keys.map(function(k){var p=k.split('-');return new Date(p[0],p[1]-1,1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});});
   var data=keys.map(function(k){return +byMonth[k].toFixed(2);});
   if(chPeriodo) chPeriodo.destroy();
-  chPeriodo=new Chart(document.getElementById('chart-periodo'),{type:'bar',data:{labels:labels.length?labels:['—'],datasets:[{label:'Lucro',data:data.length?data:[0],backgroundColor:data.map(function(v){return v>=0?'rgba(16,217,138,.6)':'rgba(255,84,104,.6)';}),borderColor:data.map(function(v){return v>=0?'#10D98A':'#FF5468';}),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmtS(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+  chPeriodo=new Chart(document.getElementById('chart-periodo'),{type:'bar',data:{labels:labels.length?labels:['—'],datasets:[{label:'Lucro',data:data.length?data:[0],backgroundColor:data.map(function(v){return v>=0?'rgba(20,241,149,.6)':'rgba(255,77,106,.6)';}),borderColor:data.map(function(v){return v>=0?'#14F195':'#FF4D6A';}),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmtS(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
 }
 
 /* ─── CRUD operação ─── */

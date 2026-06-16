@@ -224,7 +224,7 @@ function renderEvol(){
   if(chEvol) chEvol.destroy();
   chEvol=new Chart(document.getElementById('chart-evol'),{
     type:'bar',
-    data:{labels:ed.labels,datasets:[{label:'Patrimônio',data:ed.data,backgroundColor:'rgba(0,210,255,.5)',borderColor:'#00D2FF',borderWidth:1,borderRadius:4}]},
+    data:{labels:ed.labels,datasets:[{label:'Patrimônio',data:ed.data,backgroundColor:'rgba(0,229,255,.5)',borderColor:'#00E5FF',borderWidth:1,borderRadius:4}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},
       scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(128,128,128,.06)'}}}}
   });
@@ -232,9 +232,9 @@ function renderEvol(){
 
 function renderDist(){
   var segs=[
-    {nome:'HOLD',valor:MDFI.hPatrimonio(),cor:'#4B96FF'},
+    {nome:'HOLD',valor:MDFI.hPatrimonio(),cor:'#4D9FFF'},
     {nome:'DeFi',valor:MDFI.dPatrimonio(),cor:'#00D2AA'},
-    {nome:'Trade',valor:MDFI.tBancaAtual(),cor:'#F5C542'}
+    {nome:'Trade',valor:MDFI.tBancaAtual(),cor:'#F5B614'}
   ];
   var total=segs.reduce(function(s,x){return s+x.valor;},0);
   if(chDist) chDist.destroy();

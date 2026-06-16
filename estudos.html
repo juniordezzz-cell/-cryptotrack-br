@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Estudos — CryptoTrack BR</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mundodefi-tokens.css">
 <style>
 :root{
   --bg:#07080c;--bg2:#0d0f14;--bg3:#13161d;--bg4:#1a1d26;
   --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);
-  --gold:#f5a623;--gold2:rgba(245,166,35,0.12);--gold3:rgba(245,166,35,0.06);
-  --green:#15c784;--green2:rgba(21,199,132,0.12);
-  --blue:#4b96ff;--blue2:rgba(75,150,255,0.12);
-  --defi:#00d2aa;--defi2:rgba(0,210,170,0.12);
-  --purple:#9d71ff;--purple2:rgba(157,113,255,0.12);
-  --red:#ea3943;
+  --gold2:rgba(245,166,35,0.12);--gold3:rgba(245,166,35,0.06);
+  --green2:rgba(21,199,132,0.12);
+  --blue2:rgba(75,150,255,0.12);
+  --defi2:rgba(0,210,170,0.12);
+  --purple2:rgba(157,113,255,0.12);
   --text:#eeeef5;--muted:#4a4d5e;--muted2:#8889a0;
   --r:8px;--rl:14px;--rxl:20px;
   --font:'Space Grotesk',sans-serif;
@@ -32,8 +32,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:60px;background:rgba(7,8,12,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-logo-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--gold),#ff6b35);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#000}
-.nav-logo-text{font-size:13px;font-weight:800;letter-spacing:-.01em}
-.nav-logo-text span{color:var(--gold)}
+.nav-logo-text{font-size:13px;font-weight:800;letter-spacing:-.01em;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-logo-text span{}
 .nav-right{display:flex;align-items:center;gap:12px}
 .nav-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);background:var(--gold2);border:1px solid rgba(245,166,35,0.2);padding:4px 10px;border-radius:99px}
 .nav-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--muted2);text-decoration:none;transition:color .15s;padding:6px 12px;border-radius:var(--r);border:1px solid var(--border)}
@@ -172,10 +172,10 @@ nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-co
 .divider::before{content:'';position:absolute;left:50%;transform:translateX(-50%);top:-1px;width:60px;height:2px;background:var(--gold)}
 
 /* ── PRO BANNER ── */
-.pro-banner{background:linear-gradient(135deg,rgba(245,166,35,0.08),rgba(168,85,247,0.08));border:1px solid rgba(245,166,35,0.2);border-radius:var(--rl);padding:1.4rem 1.6rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.pro-banner{background:linear-gradient(135deg,rgba(153,69,255,0.10),rgba(0,229,255,0.06));border:1px solid rgba(153,69,255,0.25);border-radius:var(--rl);padding:1.4rem 1.6rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
 .pro-banner-text strong{font-size:14px;font-weight:700;display:block;margin-bottom:3px}
 .pro-banner-text span{font-size:12px;color:var(--muted2)}
-.pro-btn{background:linear-gradient(135deg,var(--gold),#ff6b35);color:#000;border:none;border-radius:var(--r);padding:10px 22px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s}
+.pro-btn{background:linear-gradient(135deg,var(--purple),#7b2ff7);color:#fff;border:none;border-radius:var(--r);padding:10px 22px;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;transition:opacity .2s}
 .pro-btn:hover{opacity:.9}
 
 /* ── RESPONSIVE ── */

@@ -8,14 +8,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+<link rel="stylesheet" href="mundodefi-tokens.css">
 <style>
 :root{
   --bg:#05060b;--bg2:#0a0b12;--bg3:#0f1018;--bg4:#141520;
   --border:rgba(255,255,255,.05);--border2:rgba(255,255,255,.09);--border3:rgba(255,255,255,.14);
-  --gold:#f5a623;--gold2:rgba(245,166,35,.1);--gold3:rgba(245,166,35,.05);--gold4:rgba(245,166,35,.22);
-  --green:#00e5a0;--green2:rgba(0,229,160,.1);--green3:#00c488;
-  --red:#ff3d5a;--red2:rgba(255,61,90,.1);
-  --blue:#3d8bff;--blue2:rgba(61,139,255,.1);--purple:#9b59f5;--cyan:#00d4ff;
+  --gold2:rgba(245,166,35,.1);--gold3:rgba(245,166,35,.05);--gold4:rgba(245,166,35,.22);
+  --green2:rgba(0,229,160,.1);--green3:#00c488;
+  --red2:rgba(255,61,90,.1);
+  --blue2:rgba(61,139,255,.1);
   --text:#f0f0fa;--muted:#3a3c52;--muted2:#7a7c96;
   --font:'Space Grotesk',sans-serif;--display:'Bebas Neue',sans-serif;--mono:'JetBrains Mono',monospace;
   --r:8px;--rl:12px;--nav-h:54px;
@@ -31,8 +32,8 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,11,.96);backdrop-filte
 .nav-inner{display:flex;align-items:center;gap:12px;padding:0 1.5rem;height:var(--nav-h);max-width:1600px;margin:0 auto}
 .nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;flex-shrink:0}
 .nav-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#e08800);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:14px;color:#000;letter-spacing:.05em}
-.nav-logo-text{font-family:var(--display);font-size:20px;letter-spacing:.06em;line-height:1}
-.nav-logo-text span{color:var(--gold)}
+.nav-logo-text{font-family:var(--display);font-size:20px;letter-spacing:.06em;line-height:1;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-logo-text span{}
 .nav-links{display:flex;align-items:center;gap:2px;flex:1;justify-content:center}
 .nav-link{padding:6px 12px;border-radius:6px;font-size:12.5px;font-weight:500;color:var(--muted2);text-decoration:none;transition:all .15s;white-space:nowrap}
 .nav-link:hover{color:var(--text);background:var(--bg3)}
@@ -550,7 +551,7 @@ function drawChart(klines){
     return d.toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});
   });
   var isUp=vals[vals.length-1]>=vals[0];
-  var lc=isUp?'#00e5a0':'#ff3d5a';
+  var lc=isUp?'#14F195':'#FF4D6A';
   var ctx=canvas.getContext('2d');
   var grad=ctx.createLinearGradient(0,0,0,200);
   grad.addColorStop(0,isUp?'rgba(0,229,160,.14)':'rgba(255,61,90,.14)');
@@ -651,7 +652,7 @@ function renderNavDD(coins){
 // ═══════════════════════════════════
 // FEAR & GREED
 // ═══════════════════════════════════
-function fgColor(v){return v<=25?'#ff3d5a':v<=45?'#ff8c42':v<=55?'#f5a623':v<=75?'#00d4ff':'#00e5a0';}
+function fgColor(v){return v<=25?'#FF4D6A':v<=45?'#ff8c42':v<=55?'#F5B614':v<=75?'#00E5FF':'#14F195';}
 function fgLabel(v){return v<=25?'Medo':v<=45?'Medo':v<=55?'Neutro':v<=75?'Ganância':'Ganância Ext.';}
 function drawFG(val,cid){
   var canvas=document.getElementById(cid);if(!canvas)return;
@@ -660,7 +661,7 @@ function drawFG(val,cid){
   ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI,false);
   ctx.strokeStyle='rgba(255,255,255,.06)';ctx.lineWidth=12;ctx.lineCap='round';ctx.stroke();
   var g=ctx.createLinearGradient(cx-r,cy,cx+r,cy);
-  g.addColorStop(0,'#ff3d5a');g.addColorStop(.5,'#f5a623');g.addColorStop(1,'#00e5a0');
+  g.addColorStop(0,'#FF4D6A');g.addColorStop(.5,'#F5B614');g.addColorStop(1,'#14F195');
   ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+(val/100)*Math.PI,false);
   ctx.strokeStyle=g;ctx.lineWidth=12;ctx.lineCap='round';ctx.stroke();
   var na=Math.PI+(val/100)*Math.PI;

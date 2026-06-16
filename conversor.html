@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mundodefi-tokens.css">
 <style>
 :root{
   --bg:#0a0a0a;
@@ -23,9 +24,9 @@
   --border:#26262e;
   --text:#f2f2f5;
   --muted:#9b9ba6;
-  --roxo:#9945ff;
-  --verde:#14f195;
-  --vermelho:#ff5470;
+  --roxo:var(--purple);
+  --verde:var(--green);
+  --vermelho:var(--red);
   --radius:14px;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -54,8 +55,8 @@ header{
   border-bottom:1px solid var(--border);
 }
 .nav{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-size:1.15rem;font-weight:700;color:var(--text)}
-.logo em{font-style:normal;color:var(--roxo)}
+.logo{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo em{font-style:normal}
 .nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}

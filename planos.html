@@ -12,14 +12,15 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mundodefi-tokens.css">
 <style>
 :root{
   --bg:#06040c;--bg2:#0c0916;--bg3:#130e20;--bg4:#1a142b;
   --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
   --text:#efedf7;--muted:#4d4961;--muted2:#8f8aa8;
-  --purple:#9945ff;--purple-soft:rgba(153,69,255,.14);--purple-line:rgba(153,69,255,.38);
-  --green:#14f195;--green-soft:rgba(20,241,149,.11);--green-line:rgba(20,241,149,.32);
-  --gold:#f5b614;--gold-soft:rgba(245,182,20,.12);--gold-line:rgba(245,182,20,.38);
+  --purple-soft:rgba(153,69,255,.14);--purple-line:rgba(153,69,255,.38);
+  --green-soft:rgba(20,241,149,.11);--green-line:rgba(20,241,149,.32);
+  --gold-soft:rgba(245,182,20,.12);--gold-line:rgba(245,182,20,.38);
   --r:10px;--rl:16px;--rxl:24px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -68,8 +69,8 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 
 /* ============ TOPO ============ */
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 0;margin-bottom:2.5rem}
-.logo{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;color:var(--text);text-decoration:none}
-.logo b{color:var(--purple)}
+.logo{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;text-decoration:none;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo b{font-weight:800}
 .back-link{font-size:13px;font-weight:600;color:var(--muted2);text-decoration:none;padding:8px 16px;border:1px solid var(--border2);border-radius:99px;background:rgba(255,255,255,.02);transition:.2s}
 .back-link:hover{color:var(--text);border-color:var(--purple-line)}
 
