@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Comparador de Ativos — Cripto vs Mercado Tradicional | MundoDeFi</title>
+<meta name="description" content="Compare Bitcoin, Ethereum, ações, Ouro, S&P 500, CDI e mais lado a lado. Veja cotação, rendimento em Real ou Dólar e quanto você teria investindo em cada ativo.">
+<link rel="canonical" href="https://mundodefi.com.br/comparador-de-ativos.html">
+<meta property="og:title" content="Comparador de Ativos — Cripto vs Mercado Tradicional | MundoDeFi">
+<meta property="og:description" content="Compare cripto e mercado tradicional lado a lado: cotação, rendimento e quanto você teria investido em cada ativo, em Real ou Dólar.">
+<meta property="og:url" content="https://mundodefi.com.br/comparador-de-ativos.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<link rel="stylesheet" href="mundodefi-tokens.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+/* tokens (espelham mundodefi-tokens.css para a página renderizar sozinha) */
+:root{
+  --bg:#080b14;--surface:#0d1120;--surface2:#111827;--surface3:#1a2235;
+  --border:#1e2d45;--border2:#243350;
+  --gold:#f5a623;--gold2:#d4920f;--cyan:#22d3ee;--purple:#8b5cf6;
+  --green:#10b981;--red:#ef4444;--blue:#4b9cff;
+  --text:#e2e8f0;--text-muted:#64748b;--text-dim:#94a3b8;
+  --font:'Sora',sans-serif;--display:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+}
+html,body{width:100%;min-height:100vh;overflow-x:hidden}
+body{font-family:var(--font);background:var(--bg);color:var(--text);position:relative}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(8,11,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-logo{display:flex;align-items:center;gap:9px;text-decoration:none}
+.nav-logo-mark{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--gold),#ff8c00);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:13px;font-weight:800;color:#000}
+.nav-logo-txt{font-family:var(--display);font-size:14px;font-weight:800;letter-spacing:-.02em;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);background:rgba(245,166,35,.1);border:1px solid rgba(245,166,35,.2);padding:3px 10px;border-radius:99px}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--text-muted);text-decoration:none;transition:color .15s;padding:6px 12px;border-radius:6px;border:1px solid var(--border)}
+.nav-back:hover{color:var(--text);border-color:var(--border2)}
+
+/* ── PAGE ── */
+.page{position:relative;z-index:1;min-height:calc(100vh - 56px);padding:2rem 1rem 5rem}
+.container{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:1.25rem}
+.page-header{text-align:center;margin-bottom:.5rem}
+.page-header h1{font-family:var(--display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;letter-spacing:-.03em;color:var(--gold);text-shadow:0 0 40px rgba(245,166,35,.3);margin-bottom:.4rem}
+.page-header p{font-size:.875rem;color:var(--text-muted)}
+
+/* ── TICKER ── */
+.ticker-bar{display:flex;align-items:center;justify-content:center;gap:1.5rem;margin-bottom:.4rem;flex-wrap:wrap}
+.ticker-item{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:50px;padding:7px 18px;backdrop-filter:blur(10px);transition:border-color .3s}
+.ticker-item:hover{border-color:var(--border2)}
+.ticker-flag{font-size:1.1rem}
+.ticker-info{display:flex;flex-direction:column}
+.ticker-label{font-size:.6rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em}
+.ticker-val{font-family:var(--mono);font-size:.88rem;font-weight:500}
+.ticker-chg{font-size:.68rem;font-family:var(--mono)}
+.ticker-chg.up{color:var(--green)}.ticker-chg.down{color:var(--red)}
+.last-updated{text-align:center;font-size:.62rem;color:var(--text-muted);margin-bottom:1rem}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+
+/* ── SEARCH (topo dos gráficos) ── */
+.search-card{background:rgba(13,17,32,.7);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.5rem;backdrop-filter:blur(20px);box-shadow:0 4px 24px rgba(0,0,0,.4)}
+.search-wrap{position:relative}
+.search-box{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:12px;height:58px;padding:0 18px;transition:border-color .2s,box-shadow .2s}
+.search-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,.12)}
+.search-box .s-ico{font-size:1.2rem;color:var(--gold)}
+.search-box input{flex:1;border:none;outline:none;background:transparent;color:var(--text);font-size:1rem;font-family:var(--font)}
+.search-box input::placeholder{color:var(--text-muted)}
+.search-hint{font-size:.7rem;color:var(--text-muted);margin-top:.6rem;text-align:center}
+.search-hint b{color:var(--text-dim);cursor:pointer}
+.search-hint b:hover{color:var(--gold)}
+.search-dd{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;z-index:60;display:none;box-shadow:0 16px 50px rgba(0,0,0,.6);max-height:320px;overflow-y:auto}
+.search-dd.open{display:block}
+.sd-group{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:.7rem 1rem .3rem}
+.sd-item{display:flex;align-items:center;gap:11px;padding:.65rem 1rem;cursor:pointer;transition:background .1s}
+.sd-item:hover,.sd-item.sel{background:rgba(255,255,255,.05)}
+.sd-ico{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0;overflow:hidden}
+.sd-ico img{width:100%;height:100%;object-fit:cover}
+.sd-name{font-size:.82rem;font-weight:600}
+.sd-sym{font-size:.68rem;color:var(--text-muted)}
+.sd-tag{margin-left:auto;font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.05);color:var(--text-dim)}
+.sd-tag.cripto{background:rgba(34,211,238,.12);color:var(--cyan)}
+.sd-tag.trad{background:rgba(245,166,35,.12);color:var(--gold)}
+.sd-loading,.sd-empty{padding:.9rem 1rem;font-size:.78rem;color:var(--text-muted);text-align:center}
+
+/* ── CONTROLES GLOBAIS ── */
+.global-ctrl{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:1rem}
+.cur-btn{display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:50px;padding:7px 18px;font-family:var(--font);font-size:.78rem;font-weight:600;color:var(--text-dim);cursor:pointer;transition:all .25s}
+.cur-btn:hover{border-color:var(--border2);color:var(--text)}
+.cur-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(245,166,35,.08);box-shadow:0 0 18px rgba(245,166,35,.15)}
+
+/* ── CHIPS CONCORRENTES ── */
+.peers-card{display:flex;flex-direction:column;gap:.7rem}
+.peers-title{font-size:.7rem;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.1em}
+.peers-row{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 12px 7px 9px;border-radius:99px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.76rem;font-weight:600;transition:all .2s}
+.chip .dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.chip.primary{border-color:var(--gold);background:rgba(245,166,35,.08)}
+.chip .x{cursor:pointer;color:var(--text-muted);font-size:.9rem;line-height:1;padding-left:3px}
+.chip .x:hover{color:var(--red)}
+.chip-add{cursor:pointer;border-style:dashed;color:var(--text-dim)}
+.chip-add:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── CARD ── */
+.card{background:rgba(13,17,32,.7);border:1px solid var(--border);border-radius:16px;padding:1.6rem;backdrop-filter:blur(20px);box-shadow:0 4px 24px rgba(0,0,0,.4);transition:border-color .3s}
+.card:hover{border-color:var(--border2)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:1.2rem}
+.card-title{font-family:var(--display);font-size:1.05rem;font-weight:700;letter-spacing:-.01em;display:flex;align-items:center;gap:10px}
+.card-sub{font-size:.74rem;color:var(--text-muted);margin-top:3px}
+
+/* ── PERIOD CTRL ── */
+.period-ctrl{display:flex;gap:4px;flex-wrap:wrap}
+.period-btn{padding:6px 13px;border-radius:99px;font-size:.72rem;font-weight:600;border:1px solid var(--border2);background:transparent;color:var(--text-dim);cursor:pointer;font-family:var(--font);transition:all .15s}
+.period-btn:hover{color:var(--text);border-color:var(--gold)}
+.period-btn.active{background:var(--gold);color:#000;border-color:var(--gold)}
+
+/* ── PRIMARY HERO (cotação ativo principal) ── */
+.primary-top{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:1rem}
+.primary-name{font-family:var(--display);font-size:1.15rem;font-weight:700}
+.primary-price{font-family:var(--mono);font-size:1.7rem;font-weight:600;color:var(--text)}
+.primary-chg{font-family:var(--mono);font-size:.85rem;font-weight:600}
+.primary-chg.up{color:var(--green)}.primary-chg.down{color:var(--red)}
+.chart-wrap{position:relative;width:100%;height:340px}
+.chart-wrap.tall{height:380px}
+.invest-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:1.2rem}
+@media(max-width:560px){.invest-row{grid-template-columns:1fr}}
+.invest-box{border:1px solid var(--border);border-radius:12px;padding:14px 16px;background:rgba(255,255,255,.02)}
+.invest-box .lab{font-size:.66rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px}
+.invest-box .val{font-family:var(--mono);font-size:.95rem;color:var(--text)}
+.invest-box .val b{color:var(--gold)}
+.invest-inline-input{width:120px;background:rgba(255,255,255,.04);border:1px solid var(--border2);border-radius:7px;color:var(--text);font-family:var(--mono);font-size:.85rem;padding:5px 9px;outline:none}
+.invest-inline-input:focus{border-color:var(--gold)}
+
+/* ── RETORNO TABLE ── */
+.section-label{font-size:.7rem;font-weight:600;color:var(--gold);margin:1.4rem 0 .8rem;text-transform:uppercase;letter-spacing:.1em;display:flex;align-items:center;gap:8px}
+.ret-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media(max-width:560px){.ret-grid{grid-template-columns:repeat(2,1fr)}}
+.ret-box{border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;background:rgba(255,255,255,.02)}
+.ret-box .rl{font-size:.62rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.ret-box .rv{font-family:var(--mono);font-size:.95rem;font-weight:700}
+.ret-box .rv.up{color:var(--green)}.ret-box .rv.down{color:var(--red)}
+
+/* ── COMPARISON: AMOUNT INPUT ── */
+.amount-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:1rem}
+.amount-wrap{display:flex;align-items:center;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:10px;height:44px;overflow:hidden}
+.amount-wrap .prefix{padding:0 12px;font-family:var(--mono);font-weight:700;color:var(--gold);background:rgba(245,166,35,.05);height:100%;display:flex;align-items:center;border-right:1px solid var(--border)}
+.amount-wrap input{border:none;outline:none;background:transparent;color:var(--text);font-family:var(--mono);font-size:.9rem;padding:0 14px;width:140px}
+.amount-presets{display:flex;gap:6px;flex-wrap:wrap}
+.preset-btn{padding:7px 13px;border-radius:8px;font-size:.72rem;font-weight:600;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text-dim);cursor:pointer;font-family:var(--mono);transition:all .15s}
+.preset-btn:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── COMPARISON RESULT LIST ── */
+.cmp-list{display:flex;flex-direction:column;gap:1px;margin-top:1.3rem;border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.cmp-row{display:flex;align-items:center;gap:12px;padding:11px 14px;background:rgba(255,255,255,.015)}
+.cmp-row:hover{background:rgba(255,255,255,.03)}
+.cmp-badge{font-size:.66rem;font-weight:700;color:#000;padding:3px 9px;border-radius:6px;min-width:54px;text-align:center}
+.cmp-text{font-size:.8rem;color:var(--text-dim)}
+.cmp-text b{color:var(--text);font-family:var(--mono)}
+.cmp-text .pos{color:var(--green)}.cmp-text .neg{color:var(--red)}
+
+/* ── NOTICE / ERRO ── */
+.notice{font-size:.74rem;border-radius:10px;padding:11px 14px;line-height:1.55}
+.notice.warn{background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.28);color:var(--text-dim)}
+.notice.warn b{color:var(--gold)}
+.notice.info{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.22);color:var(--text-dim)}
+.muted-line{font-size:.66rem;color:var(--text-muted);margin-top:.7rem;line-height:1.6}
+
+/* ── LOADING ── */
+.loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--text-muted);font-size:.8rem;gap:9px}
+.spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SEO / FAQ ── */
+.seo-card h2{font-family:var(--display);font-size:1.05rem;color:var(--text);margin-bottom:.7rem;letter-spacing:-.01em}
+.seo-card p{font-size:.82rem;color:var(--text-dim);line-height:1.75;margin-bottom:.8rem}
+.seo-card p:last-child{margin-bottom:0}
+.seo-card strong{color:var(--gold);font-weight:600}
+.faq-item{border-bottom:1px solid var(--border);padding:1rem 0}
+.faq-item:last-child{border-bottom:none;padding-bottom:0}
+.faq-item:first-child{padding-top:0}
+.faq-q{font-family:var(--display);font-size:.9rem;font-weight:700;margin-bottom:.4rem;color:var(--text)}
+.faq-a{font-size:.8rem;color:var(--text-dim);line-height:1.7}
+
+/* ── TOOLS / CTA / FOOTER ── */
+.tools-links{display:flex;flex-wrap:wrap;gap:8px}
+.tool-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:99px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.74rem;font-weight:600;color:var(--text-dim);text-decoration:none;transition:all .2s}
+.tool-pill:hover{border-color:var(--gold);color:var(--gold)}
+.cta-card{background:linear-gradient(135deg,rgba(245,166,35,.08),rgba(139,92,246,.05)),rgba(13,17,32,.7);border:1px solid rgba(245,166,35,.35);border-radius:16px;padding:1.9rem;text-align:center;backdrop-filter:blur(20px);box-shadow:0 0 50px rgba(245,166,35,.08)}
+.cta-card h3{font-family:var(--display);font-size:1.25rem;letter-spacing:-.02em;margin-bottom:.5rem}
+.cta-card h3 span{color:var(--gold)}
+.cta-card p{font-size:.8rem;color:var(--text-dim);line-height:1.65;margin-bottom:1.2rem;max-width:540px;margin-left:auto;margin-right:auto}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:.9rem}
+.cta-btn-gold{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d0d0d;border-radius:10px;padding:12px 28px;font-size:.85rem;font-weight:700;text-decoration:none;box-shadow:0 4px 20px rgba(245,166,35,.3);transition:opacity .2s}
+.cta-btn-gold:hover{opacity:.9}
+.cta-btn-ghost{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);color:var(--text);border:1px solid var(--border2);border-radius:10px;padding:12px 28px;font-size:.85rem;font-weight:600;text-decoration:none;transition:border-color .2s}
+.cta-btn-ghost:hover{border-color:var(--gold)}
+.cta-foot{font-size:.68rem;color:var(--text-muted)}
+.site-footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:1.6rem 1rem;text-align:center}
+.site-footer .f-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:.7rem}
+.site-footer .f-links a{font-size:.74rem;color:var(--text-dim);text-decoration:none}
+.site-footer .f-links a:hover{color:var(--gold)}
+.site-footer .f-copy{font-size:.66rem;color:var(--text-muted);line-height:1.7}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<nav>
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-mark">M</div>
+    <div class="nav-logo-txt">Mundo<span>DeFi</span></div>
+  </a>
+  <span class="nav-badge">⚖️ Comparador de Ativos</span>
+  <div class="nav-right">
+    <a href="ferramentas.html" class="nav-back">🛠️ Todas as ferramentas</a>
+  </div>
+</nav>
+
+<div class="page">
+  <div class="page-header">
+    <h1>Comparador de Ativos</h1>
+    <p>Cripto × mercado tradicional: cotação, rendimento e quanto você teria investido em cada um</p>
+  </div>
+
+  <div class="container">
+
+    <!-- TICKER -->
+    <div class="ticker-bar">
+      <div class="ticker-item"><span class="ticker-flag">🇺🇸</span><div class="ticker-info"><span class="ticker-label">Dólar USD</span><span class="ticker-val" id="tk-usd">carregando...</span></div><span class="ticker-chg" id="tk-usd-c"></span></div>
+      <div class="ticker-item"><span class="ticker-flag">₿</span><div class="ticker-info"><span class="ticker-label">Bitcoin BTC</span><span class="ticker-val" id="tk-btc">carregando...</span></div><span class="ticker-chg" id="tk-btc-c"></span></div>
+      <div class="ticker-item"><span class="ticker-flag">Ξ</span><div class="ticker-info"><span class="ticker-label">Ethereum ETH</span><span class="ticker-val" id="tk-eth">carregando...</span></div><span class="ticker-chg" id="tk-eth-c"></span></div>
+    </div>
+    <div class="last-updated">Cotações em tempo real · <span id="tk-time">—</span></div>
+
+    <!-- SEARCH -->
+    <div class="search-card">
+      <div class="search-wrap">
+        <div class="search-box">
+          <span class="s-ico">🔍</span>
+          <input type="text" id="search-input" autocomplete="off" placeholder="Pesquise um ativo: Bitcoin, Ethereum, Solana, Aave, Nvidia, Microsoft…"/>
+        </div>
+        <div class="search-dd" id="search-dd"></div>
+      </div>
+      <div class="search-hint">
+        Exemplos:
+        <b onclick="caQuickPick('bitcoin')">Bitcoin</b> ·
+        <b onclick="caQuickPick('ethereum')">Ethereum</b> ·
+        <b onclick="caQuickPick('solana')">Solana</b> ·
+        <b onclick="caQuickPick('aave')">Aave</b> ·
+        <b onclick="caQuickPick('nvidia')">Nvidia</b>
+      </div>
+
+      <div class="global-ctrl">
+        <span style="font-size:.72rem;color:var(--text-muted);font-weight:600">Moeda:</span>
+        <button class="cur-btn active" data-cur="brl" onclick="caSetCurrency('brl')"><span>🇧🇷</span> Real (R$)</button>
+        <button class="cur-btn" data-cur="usd" onclick="caSetCurrency('usd')"><span>🇺🇸</span> Dólar (US$)</button>
+      </div>
+    </div>
+
+    <!-- CONCORRENTES -->
+    <div class="card peers-card">
+      <span class="peers-title">Comparando</span>
+      <div class="peers-row" id="peers-row"></div>
+      <span class="card-sub" id="peers-note">Pesquise um ativo acima e a página sugere os concorrentes automaticamente — sempre cruzando cripto com mercado tradicional + CDI.</span>
+    </div>
+
+    <!-- TWELVE DATA NOTICE (some/aparece conforme a chave) -->
+    <div id="td-notice"></div>
+
+    <!-- ── SEÇÃO 1: COTAÇÃO DO ATIVO PRINCIPAL ── -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">📈 Cotação — <span id="s1-asset">Bitcoin</span></div>
+          <div class="card-sub">Histórico de preço do ativo principal</div>
+        </div>
+        <div class="period-ctrl" id="s1-period">
+          <button class="period-btn" data-d="7" data-k="7D">7D</button>
+          <button class="period-btn" data-d="30" data-k="30D">30D</button>
+          <button class="period-btn" data-d="180" data-k="6M">6M</button>
+          <button class="period-btn" data-d="ytd" data-k="YTD">YTD</button>
+          <button class="period-btn active" data-d="365" data-k="1A">1A</button>
+          <button class="period-btn" data-d="1825" data-k="5A">5A</button>
+          <button class="period-btn" data-d="3650" data-k="10A">10A</button>
+        </div>
+      </div>
+      <div class="primary-top">
+        <span class="primary-price" id="s1-price">—</span>
+        <span class="primary-chg" id="s1-chg"></span>
+      </div>
+      <div class="chart-wrap tall"><canvas id="s1-chart"></canvas></div>
+
+      <div class="invest-row">
+        <div class="invest-box">
+          <div class="lab">Quanto você compra</div>
+          <div class="val">Com <span id="s1-buy-prefix">R$</span> <input class="invest-inline-input" type="number" id="s1-buy-amount" value="1000" min="1" step="100"/> você teria <b id="s1-buy-units">—</b></div>
+        </div>
+        <div class="invest-box">
+          <div class="lab">Se você tivesse investido</div>
+          <div class="val"><span id="s1-inv-prefix">R$</span> <span id="s1-inv-amount">1.000</span> há <span id="s1-inv-period">1 ano</span>, hoje você teria <b id="s1-inv-result">—</b></div>
+        </div>
+      </div>
+
+      <div class="section-label">📊 Retorno do investimento</div>
+      <div class="ret-grid" id="s1-ret"></div>
+      <div class="muted-line">* Variação de preço no período. Não inclui taxas, custódia ou impostos. Conteúdo educacional — não é recomendação de investimento.</div>
+    </div>
+
+    <!-- ── SEÇÃO 2: COMPARAÇÃO EM DINHEIRO ── -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">💰 Quanto você teria investindo</div>
+          <div class="card-sub">Valor acumulado de cada ativo ao longo do tempo</div>
+        </div>
+        <div class="period-ctrl" id="s2-period">
+          <button class="period-btn active" data-d="365" data-k="1A">1 ano</button>
+          <button class="period-btn" data-d="1825" data-k="5A">5 anos</button>
+          <button class="period-btn" data-d="3650" data-k="10A">10 anos</button>
+        </div>
+      </div>
+      <div class="amount-row">
+        <span style="font-size:.72rem;color:var(--text-muted);font-weight:600">Investindo:</span>
+        <div class="amount-wrap"><span class="prefix" id="s2-prefix">R$</span><input type="number" id="s2-amount" value="1000" min="1" step="100"/></div>
+        <div class="amount-presets" id="s2-presets"></div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="s2-chart"></canvas></div>
+      <div class="cmp-list" id="s2-list"></div>
+      <div class="muted-line">No modo Dólar, ativos em real (CDI, IPCA, IBOV, Ouro) são convertidos pelo câmbio USD/BRL atual — aproximação. Ativos mais novos podem ter menos histórico que o período escolhido.</div>
+    </div>
+
+    <!-- ── SEÇÃO 3: COMPARAÇÃO EM % ── -->
+    <div class="card">
+      <div class="card-head">
+        <div>
+          <div class="card-title">📉 Comparação de rentabilidade (%)</div>
+          <div class="card-sub">Variação percentual no período, base 0% no início</div>
+        </div>
+        <div class="period-ctrl" id="s3-period">
+          <button class="period-btn active" data-d="365" data-k="1A">1 ano</button>
+          <button class="period-btn" data-d="1825" data-k="5A">5 anos</button>
+          <button class="period-btn" data-d="3650" data-k="10A">10 anos</button>
+        </div>
+      </div>
+      <div class="chart-wrap tall"><canvas id="s3-chart"></canvas></div>
+      <div class="cmp-list" id="s3-list"></div>
+    </div>
+
+    <!-- SEO -->
+    <div class="card seo-card">
+      <h2>Por que comparar cripto com o mercado tradicional?</h2>
+      <p>Comparar <strong>Bitcoin, Ethereum e outras criptomoedas</strong> com ativos tradicionais como <strong>Ouro, S&amp;P 500, ações e CDI</strong> é a forma mais honesta de entender risco e retorno. O ouro é a reserva de valor clássica; o S&amp;P 500 representa as maiores empresas dos EUA; o CDI é a referência da renda fixa no Brasil. Ver tudo no mesmo gráfico mostra onde a cripto realmente fez diferença — e onde não fez.</p>
+      <p>Este comparador busca o ativo que você pesquisar e sugere automaticamente os <strong>concorrentes mais relevantes</strong>, sempre cruzando os dois mundos: pesquise um protocolo de empréstimo DeFi e ele aparece ao lado de bancos; pesquise uma blockchain e ela aparece ao lado de ações de tecnologia. Você compara em <strong>Real ou Dólar</strong>, em valor (quanto teria) ou em percentual.</p>
+    </div>
+
+    <!-- FAQ -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:1rem">❓ Perguntas frequentes</div>
+      <div class="faq-item"><div class="faq-q">De onde vêm os dados?</div><div class="faq-a">Preços de criptomoedas vêm da CoinGecko; ações, índices e ouro de um provedor de mercado tradicional; CDI e IPCA do Banco Central do Brasil. Tudo em tempo quase real, sem dados inventados.</div></div>
+      <div class="faq-item"><div class="faq-q">Como o comparador escolhe os concorrentes?</div><div class="faq-a">Usamos um mapa curado que associa cada ativo aos seus pares mais próximos no mundo cripto e no mercado tradicional, mais o CDI como referência de renda fixa. Você pode adicionar ou remover qualquer ativo manualmente.</div></div>
+      <div class="faq-item"><div class="faq-q">Posso comparar em reais e em dólares?</div><div class="faq-a">Sim. Use o seletor de moeda no topo. Ativos cotados em dólar são convertidos para real quando necessário, e vice-versa.</div></div>
+      <div class="faq-item"><div class="faq-q">Rentabilidade passada garante retorno futuro?</div><div class="faq-a">Não. Os gráficos mostram apenas o histórico. Cripto é um ativo de alta volatilidade. Este conteúdo é educacional e não constitui recomendação de investimento.</div></div>
+    </div>
+
+    <!-- OUTRAS FERRAMENTAS -->
+    <div class="card">
+      <div class="card-title" style="margin-bottom:1rem">🧰 Outras ferramentas gratuitas</div>
+      <div class="tools-links">
+        <a class="tool-pill" href="juros-compostos.html">📈 Juros Compostos</a>
+        <a class="tool-pill" href="lucro-cripto.html">🪙 Lucro Cripto</a>
+        <a class="tool-pill" href="dca.html">🔄 Calculadora DCA</a>
+        <a class="tool-pill" href="pool-liquidez.html">💧 Pool de Liquidez</a>
+        <a class="tool-pill" href="staking.html">🔒 Staking</a>
+        <a class="tool-pill" href="yield-farming.html">🌾 Yield Farming</a>
+        <a class="tool-pill" href="conversor.html">💱 Conversor Cripto</a>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-card">
+      <h3>Acompanhe tudo isso no seu <span>portfólio</span></h3>
+      <p>Com uma conta gratuita você monta seu portfólio. No <strong style="color:var(--purple)">PRO (R$ 9,90/mês)</strong> acompanha HOLD, DeFi e Trade ilimitados com alertas e exportação para o IR. No <strong style="color:var(--gold)">Premium (R$ 29,90/mês)</strong> tem estratégias avançadas + mentoria — vagas limitadas.</p>
+      <div class="cta-btns">
+        <a class="cta-btn-gold" href="planos.html">👑 Conhecer PRO e Premium</a>
+        <a class="cta-btn-ghost" href="cadastro.html">Criar conta grátis →</a>
+      </div>
+      <div class="cta-foot">Sem cartão para começar · cancele quando quiser · garantia de 7 dias nos planos pagos</div>
+    </div>
+
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="f-links">
+    <a href="index.html">Início</a><a href="ferramentas.html">Ferramentas</a><a href="estudos.html">Estudos</a><a href="planos.html">Planos</a><a href="cadastro.html">Criar conta</a>
+  </div>
+  <div class="f-copy">© 2026 MundoDeFi · Conteúdo educacional — não é recomendação de investimento<br>Dados via CoinGecko, Banco Central do Brasil e Twelve Data</div>
+</footer>
+
+<!-- SCHEMA FAQ -->
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"De onde vêm os dados do comparador de ativos?","acceptedAnswer":{"@type":"Answer","text":"Preços de criptomoedas vêm da CoinGecko; ações, índices e ouro de um provedor de mercado tradicional; CDI e IPCA do Banco Central do Brasil."}},
+{"@type":"Question","name":"Como o comparador escolhe os concorrentes de cada ativo?","acceptedAnswer":{"@type":"Answer","text":"Um mapa curado associa cada ativo aos seus pares no mundo cripto e no mercado tradicional, mais o CDI como referência de renda fixa. É possível adicionar ou remover ativos manualmente."}},
+{"@type":"Question","name":"Posso comparar ativos em reais e em dólares?","acceptedAnswer":{"@type":"Answer","text":"Sim. Há um seletor de moeda no topo e ativos em dólar são convertidos para real quando necessário."}}
+]}
+</script>
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   COMPARADOR DE ATIVOS · MundoDeFi · Fase 1
+   Cripto: CoinGecko | Tradicional: Twelve Data | CDI/IPCA: BACEN
+   ════════════════════════════════════════════════════════════ */
+
+/* ┌────────────────────────────────────────────────────────┐
+   │ 1) CHAVE TWELVE DATA — cole a sua aqui (grátis)          │
+   │    https://twelvedata.com/ → conta grátis → API Key      │
+   └────────────────────────────────────────────────────────┘ */
+const TWELVEDATA_KEY = "COLE_SUA_CHAVE_TWELVEDATA_AQUI";
+
+/* ┌────────────────────────────────────────────────────────┐
+   │ 2) REGISTRO DE ATIVOS — edite/expanda livremente         │
+   │    type: 'crypto' (CoinGecko) | 'td' (Twelve Data) |     │
+   │          'bacen' (Banco Central)                          │
+   │    Cores das linhas bem distintas (BTC dourado,          │
+   │    Ouro bronze/cobre — propositalmente diferente)        │
+   └────────────────────────────────────────────────────────┘ */
+const ASSETS = {
+  // ── CRIPTO ──
+  bitcoin:     {name:"Bitcoin",   sym:"BTC",   type:"crypto", cg:"bitcoin",     color:"#F5A623", grp:"reserva"},
+  ethereum:    {name:"Ethereum",  sym:"ETH",   type:"crypto", cg:"ethereum",    color:"#6F8BFF", grp:"l1"},
+  solana:      {name:"Solana",    sym:"SOL",   type:"crypto", cg:"solana",      color:"#9D71FF", grp:"l1"},
+  binancecoin: {name:"BNB",       sym:"BNB",   type:"crypto", cg:"binancecoin", color:"#C6E84A", grp:"l1"},
+  ripple:      {name:"XRP",       sym:"XRP",   type:"crypto", cg:"ripple",      color:"#22D3EE", grp:"pagamentos"},
+  aave:        {name:"Aave",      sym:"AAVE",  type:"crypto", cg:"aave",        color:"#B6509E", grp:"lending"},
+  morpho:      {name:"Morpho",    sym:"MORPHO",type:"crypto", cg:"morpho",      color:"#2D6BFF", grp:"lending"},
+  "compound-governance-token": {name:"Compound", sym:"COMP", type:"crypto", cg:"compound-governance-token", color:"#00D395", grp:"lending"},
+  kamino:      {name:"Kamino",    sym:"KMNO",  type:"crypto", cg:"kamino",      color:"#7CF2C0", grp:"lending"},
+  uniswap:     {name:"Uniswap",   sym:"UNI",   type:"crypto", cg:"uniswap",     color:"#FF5CAA", grp:"dex"},
+  // ── TRADICIONAL (Twelve Data) ── ajuste os símbolos após testar com a chave
+  gold:        {name:"Ouro",      sym:"XAU",   type:"td", td:"XAU/USD", color:"#B87333", grp:"commodity", brlBase:false},
+  sp500:       {name:"S&P 500",   sym:"SPX",   type:"td", td:"SPX",     color:"#8FA1C7", grp:"indice",    brlBase:false},
+  ibov:        {name:"Ibovespa",  sym:"IBOV",  type:"td", td:"IBOV",    color:"#3FB07A", grp:"indice",    brlBase:true},
+  nvidia:      {name:"Nvidia",    sym:"NVDA",  type:"td", td:"NVDA",    color:"#76B900", grp:"acao_tech", brlBase:false},
+  microsoft:   {name:"Microsoft", sym:"MSFT",  type:"td", td:"MSFT",    color:"#4AA3DF", grp:"acao_tech", brlBase:false},
+  apple:       {name:"Apple",     sym:"AAPL",  type:"td", td:"AAPL",    color:"#B0B0B0", grp:"acao_tech", brlBase:false},
+  jpmorgan:    {name:"JPMorgan",  sym:"JPM",   type:"td", td:"JPM",     color:"#5B7BD5", grp:"acao_banco",brlBase:false},
+  // ── RENDA FIXA (BACEN SGS) ── CDI=12, IPCA=433
+  cdi:         {name:"CDI",       sym:"CDI",   type:"bacen", sgs:12,  color:"#64748B", grp:"renda_fixa", brlBase:true},
+  ipca:        {name:"IPCA",      sym:"IPCA",  type:"bacen", sgs:433, color:"#E2674A", grp:"renda_fixa", brlBase:true},
+};
+
+/* ┌────────────────────────────────────────────────────────┐
+   │ 3) MAPA DE CONCORRENTES — curado, edite à vontade        │
+   │    "cdi" é sempre adicionado automaticamente             │
+   └────────────────────────────────────────────────────────┘ */
+const PEERS = {
+  bitcoin:     {cripto:["ethereum"],                 trad:["gold","sp500"]},
+  ethereum:    {cripto:["solana","binancecoin"],     trad:["nvidia","microsoft"]},
+  solana:      {cripto:["ethereum","binancecoin"],   trad:["nvidia","sp500"]},
+  binancecoin: {cripto:["ethereum","solana"],        trad:["sp500"]},
+  ripple:      {cripto:["ethereum"],                 trad:["jpmorgan"]},
+  aave:        {cripto:["morpho","compound-governance-token","kamino"], trad:["jpmorgan"]},
+  morpho:      {cripto:["aave","compound-governance-token","kamino"],   trad:["jpmorgan"]},
+  "compound-governance-token": {cripto:["aave","morpho","kamino"], trad:["jpmorgan"]},
+  kamino:      {cripto:["aave","morpho"],            trad:["jpmorgan"]},
+  uniswap:     {cripto:["ethereum"],                 trad:["sp500"]},
+  gold:        {cripto:["bitcoin"],                  trad:["sp500"]},
+  sp500:       {cripto:["bitcoin"],                  trad:["gold"]},
+  ibov:        {cripto:["bitcoin"],                  trad:["sp500"]},
+  nvidia:      {cripto:["ethereum","solana"],        trad:["microsoft","sp500"]},
+  microsoft:   {cripto:["ethereum"],                 trad:["nvidia","apple","sp500"]},
+  apple:       {cripto:["ethereum"],                 trad:["microsoft","sp500"]},
+  jpmorgan:    {cripto:["aave","bitcoin"],           trad:["sp500"]},
+};
+
+/* ════════════════ ESTADO ════════════════ */
+const STATE = {
+  currency: "brl",          // brl | usd
+  primary: "bitcoin",
+  set: ["bitcoin","gold","cdi","sp500"],
+  s1days: 365, s1key:"1A",
+  s2days: 365, s2key:"1A",
+  s3days: 365, s3key:"1A",
+  amountBuy: 1000,
+  amountCmp: 1000,
+};
+const SYM = {brl:"R$", usd:"US$"};
+const LOC = {brl:"pt-BR", usd:"en-US"};
+const cache = {};        // `${key}|${days}|${cur}` -> series
+let fxRate = 5.4;        // USD->BRL fallback até carregar
+const chartInst = {s1:null,s2:null,s3:null};
+const tdEnabled = () => TWELVEDATA_KEY && TWELVEDATA_KEY.indexOf("COLE_SUA") === -1;
+
+/* ════════════════ FORMATAÇÃO ════════════════ */
+function fmtMoney(v, cur){ return new Intl.NumberFormat(LOC[cur||STATE.currency],{style:"currency",currency:(cur||STATE.currency).toUpperCase(),maximumFractionDigits:2}).format(v); }
+function fmtNum(v,d){ return new Intl.NumberFormat("pt-BR",{maximumFractionDigits:d==null?2:d}).format(v); }
+function fmtPct(v){ return (v>=0?"+":"")+v.toFixed(2)+"%"; }
+
+/* ════════════════ CÂMBIO USD->BRL ════════════════ */
+async function loadFx(){
+  try{
+    const r=await fetch("https://api.exchangerate-api.com/v4/latest/USD");
+    const d=await r.json();
+    if(d&&d.rates&&d.rates.BRL) fxRate=d.rates.BRL;
+  }catch(e){}
+}
+
+/* ════════════════ PERÍODO -> DIAS ════════════════ */
+function resolveDays(d){
+  if(d==="ytd"){ const now=new Date(); const jan1=new Date(now.getFullYear(),0,1); return Math.max(7,Math.round((now-jan1)/864e5)); }
+  return parseInt(d,10);
+}
+
+/* ════════════════ FETCH POR FONTE ════════════════
+   Retorna série normalizada: [{t:ms, v:preço_na_moeda_escolhida}]   */
+async function fetchSeries(key, days, cur){
+  const ck=`${key}|${days}|${cur}`;
+  if(cache[ck]) return cache[ck];
+  const a=ASSETS[key];
+  if(!a) throw new Error("ativo desconhecido: "+key);
+  let series;
+  if(a.type==="crypto")      series=await fetchCrypto(a, days, cur);
+  else if(a.type==="td")     series=await fetchTD(a, days, cur);
+  else if(a.type==="bacen")  series=await fetchBacen(a, days, cur);
+  else throw new Error("tipo desconhecido");
+  cache[ck]=series;
+  return series;
+}
+
+// ── CRIPTO (CoinGecko) ──
+async function fetchCrypto(a, days, cur){
+  const vs = cur==="brl" ? "brl" : "usd";
+  const u=`https://api.coingecko.com/api/v3/coins/${a.cg}/market_chart?vs_currency=${vs}&days=${days}`;
+  const r=await fetch(u);
+  if(!r.ok) throw new Error("CoinGecko "+r.status);
+  const d=await r.json();
+  if(!d.prices||!d.prices.length) throw new Error("sem dados CoinGecko");
+  return d.prices.map(p=>({t:p[0], v:p[1]}));
+}
+
+// ── TRADICIONAL (Twelve Data) ──
+async function fetchTD(a, days, cur){
+  if(!tdEnabled()) throw new Error("NO_TD_KEY");
+  const out=Math.min(days+5, 5000);
+  const u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(a.td)}&interval=1day&outputsize=${out}&apikey=${TWELVEDATA_KEY}`;
+  const r=await fetch(u);
+  const d=await r.json();
+  if(d.status==="error" || !d.values) throw new Error(d.message||"Twelve Data");
+  let arr=d.values.map(x=>({t:new Date(x.datetime).getTime(), v:parseFloat(x.close)})).filter(p=>isFinite(p.v)).reverse();
+  // conversão de moeda
+  const nativeBrl = !!a.brlBase;      // ativo já cotado em BRL?
+  if(cur==="brl" && !nativeBrl) arr=arr.map(p=>({t:p.t, v:p.v*fxRate}));
+  if(cur==="usd" &&  nativeBrl) arr=arr.map(p=>({t:p.t, v:p.v/fxRate}));
+  return arr;
+}
+
+// ── RENDA FIXA (BACEN SGS) ── índice acumulado base = 1
+async function fetchBacen(a, days, cur){
+  const end=new Date(), start=new Date(Date.now()-days*864e5);
+  const fmt=dt=>`${String(dt.getDate()).padStart(2,"0")}/${String(dt.getMonth()+1).padStart(2,"0")}/${dt.getFullYear()}`;
+  const u=`https://api.bcb.gov.br/dados/serie/bcdata.sgs.${a.sgs}/dados?formato=json&dataInicial=${fmt(start)}&dataFinal=${fmt(end)}`;
+  const r=await fetch(u);
+  if(!r.ok) throw new Error("BACEN "+r.status);
+  const d=await r.json();
+  if(!Array.isArray(d)||!d.length) throw new Error("sem dados BACEN");
+  let acc=1; const out=[];
+  for(const row of d){
+    const [dd,mm,yy]=row.data.split("/");
+    const t=new Date(+yy,+mm-1,+dd).getTime();
+    const rate=parseFloat(String(row.valor).replace(",","."))/100;
+    acc*=(1+rate);
+    out.push({t, v:acc});
+  }
+  // CDI/IPCA são em BRL; se moeda=usd dividimos pelo câmbio (aproximação)
+  if(cur==="usd") return out.map(p=>({t:p.t, v:p.v/fxRate}));
+  return out;
+}
+
+/* ════════════════ RESAMPLE / ALINHAMENTO ════════════════ */
+function resample(series, targets){
+  if(!series||!series.length) return targets.map(()=>null);
+  const s=series.slice().sort((x,y)=>x.t-y.t);
+  const out=[]; let i=0; let last=null;
+  for(const t of targets){
+    while(i<s.length && s[i].t<=t){ last=s[i].v; i++; }
+    out.push(last);   // forward-fill (null antes do 1º ponto = ativo mais novo)
+  }
+  return out;
+}
+function buildTargets(days, n){
+  const end=Date.now(), start=end-days*864e5, step=(end-start)/(n-1);
+  const arr=[]; for(let k=0;k<n;k++) arr.push(Math.round(start+step*k));
+  return arr;
+}
+function labelFor(ts, days){
+  const d=new Date(ts);
+  if(days<=30) return `${String(d.getDate()).padStart(2,"0")}/${String(d.getMonth()+1).padStart(2,"0")}`;
+  return `${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getFullYear()).slice(2)}`;
+}
+
+/* ════════════════ CHART HELPERS ════════════════ */
+function baseChartOpts(extra){
+  return Object.assign({
+    responsive:true, maintainAspectRatio:false,
+    interaction:{mode:"index",intersect:false},
+    plugins:{
+      legend:{display:true,position:"top",labels:{color:"#94a3b8",usePointStyle:true,pointStyle:"line",boxWidth:24,font:{size:11,family:"Sora"}}},
+      tooltip:{backgroundColor:"rgba(13,17,32,.96)",borderColor:"rgba(255,255,255,.1)",borderWidth:1,titleColor:"#94a3b8",bodyColor:"#e2e8f0",padding:11,usePointStyle:true}
+    },
+    scales:{
+      x:{ticks:{color:"#475569",font:{size:10},maxTicksLimit:10,autoSkip:true},grid:{color:"rgba(255,255,255,.04)"}},
+      y:{ticks:{color:"#475569",font:{size:10}},grid:{color:"rgba(255,255,255,.04)"}}
+    }
+  }, extra||{});
+}
+
+/* ════════════════ SEÇÃO 1 — COTAÇÃO ════════════════ */
+async function renderS1(){
+  const a=ASSETS[STATE.primary];
+  document.getElementById("s1-asset").textContent=a.name;
+  const cv=document.getElementById("s1-chart");
+  showChartLoading("s1");
+  let series;
+  try{ series=await fetchSeries(STATE.primary, STATE.s1days, STATE.currency); }
+  catch(e){ return chartError("s1", e); }
+
+  const labels=series.map(p=>labelFor(p.t, STATE.s1days));
+  const data=series.map(p=>p.v);
+  const first=data.find(v=>v!=null), last=data[data.length-1];
+  const chgPct=first?((last/first-1)*100):0;
+
+  document.getElementById("s1-price").textContent=fmtMoney(last);
+  const chgEl=document.getElementById("s1-chg");
+  chgEl.textContent=`${fmtPct(chgPct)} (${STATE.s1key})`;
+  chgEl.className="primary-chg "+(chgPct>=0?"up":"down");
+
+  if(chartInst.s1) chartInst.s1.destroy();
+  chartInst.s1=new Chart(cv,{type:"line",
+    data:{labels,datasets:[{label:a.name,data,borderColor:a.color,backgroundColor:hexA(a.color,.10),pointRadius:0,borderWidth:2.2,tension:.18,fill:true}]},
+    options:baseChartOpts({plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>` ${fmtMoney(c.parsed.y)}`}}},scales:{y:{ticks:{color:"#475569",font:{size:10},callback:v=>compact(v)}}}})
+  });
+
+  updateBuyBlock(last);
+  updateInvestBlock(first,last);
+  renderRetorno();
+}
+
+function updateBuyBlock(price){
+  document.getElementById("s1-buy-prefix").textContent=SYM[STATE.currency];
+  const amt=STATE.amountBuy||0;
+  const units=price?amt/price:0;
+  const a=ASSETS[STATE.primary];
+  let txt;
+  if(a.grp==="renda_fixa"||a.grp==="indice") txt=`${fmtNum(units,2)} × o índice`;
+  else txt=`${fmtNum(units, units<1?6:3)} ${a.sym}`;
+  document.getElementById("s1-buy-units").textContent=txt;
+}
+function updateInvestBlock(first,last){
+  document.getElementById("s1-inv-prefix").textContent=SYM[STATE.currency];
+  document.getElementById("s1-inv-amount").textContent=fmtNum(STATE.amountBuy,0);
+  document.getElementById("s1-inv-period").textContent=periodLong(STATE.s1key);
+  const res=(first&&last)?STATE.amountBuy*(last/first):0;
+  const el=document.getElementById("s1-inv-result");
+  el.textContent=fmtMoney(res);
+  el.style.color=(res>=STATE.amountBuy)?"var(--green)":"var(--red)";
+}
+function periodLong(k){return {"7D":"7 dias","30D":"30 dias","6M":"6 meses","YTD":"o início do ano","1A":"1 ano","5A":"5 anos","10A":"10 anos"}[k]||k;}
+
+async function renderRetorno(){
+  const box=document.getElementById("s1-ret");
+  const periods=[["1 mês",30],["3 meses",90],["1 ano",365],["2 anos",730],["5 anos",1825]];
+  box.innerHTML=periods.map(p=>`<div class="ret-box"><div class="rl">${p[0]}</div><div class="rv" id="ret-${p[1]}">…</div></div>`).join("");
+  let big;
+  try{ big=await fetchSeries(STATE.primary, 1825, STATE.currency); }catch(e){ big=null; }
+  for(const [lab,dd] of periods){
+    const cell=document.getElementById("ret-"+dd);
+    if(!big||!big.length){ cell.textContent="—"; continue; }
+    const cut=Date.now()-dd*864e5;
+    const past=big.filter(p=>p.t<=cut).pop();
+    const now=big[big.length-1];
+    if(!past){ cell.textContent="—"; continue; }
+    const pct=(now.v/past.v-1)*100;
+    cell.textContent=fmtPct(pct);
+    cell.className="rv "+(pct>=0?"up":"down");
+  }
+}
+
+/* ════════════════ SEÇÕES 2 e 3 — COMPARAÇÃO ════════════════ */
+async function renderCompare(){
+  const days=STATE.s2days;        // s2 e s3 compartilham período por simplicidade
+  const targets=buildTargets(days, 64);
+  const labels=targets.map(t=>labelFor(t, days));
+  showChartLoading("s2"); showChartLoading("s3");
+
+  const datasetsMoney=[], datasetsPct=[], rows=[];
+  const missing=[];
+
+  for(const key of STATE.set){
+    const a=ASSETS[key]; if(!a) continue;
+    let series=null;
+    try{ series=await fetchSeries(key, days, STATE.currency); }
+    catch(e){ if(String(e.message).indexOf("NO_TD_KEY")>=0||a.type==="td") missing.push(a.name); continue; }
+    const rs=resample(series, targets);
+    const base=rs.find(v=>v!=null);
+    if(!base) continue;
+    const money=rs.map(v=>v==null?null:STATE.amountCmp*(v/base));
+    const pct=rs.map(v=>v==null?null:(v/base-1)*100);
+    const isPrim=key===STATE.primary;
+    datasetsMoney.push(lineDS(a,money,isPrim));
+    datasetsPct.push(lineDS(a,pct,isPrim));
+    const lastMoney=[...money].reverse().find(v=>v!=null);
+    const lastPct=[...pct].reverse().find(v=>v!=null);
+    rows.push({a,lastMoney,lastPct});
+    if(a.type==="td") await sleep(180);   // respeita limite de 8 req/min do plano free
+  }
+
+  // gráfico dinheiro
+  if(chartInst.s2) chartInst.s2.destroy();
+  chartInst.s2=new Chart(document.getElementById("s2-chart"),{type:"line",
+    data:{labels,datasets:datasetsMoney},
+    options:baseChartOpts({spanGaps:true,plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtMoney(c.parsed.y)}`}}},scales:{y:{ticks:{color:"#475569",font:{size:10},callback:v=>compact(v)}}}})
+  });
+  // gráfico %
+  if(chartInst.s3) chartInst.s3.destroy();
+  chartInst.s3=new Chart(document.getElementById("s3-chart"),{type:"line",
+    data:{labels,datasets:datasetsPct},
+    options:baseChartOpts({spanGaps:true,plugins:{tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${fmtPct(c.parsed.y)}`}}},scales:{y:{ticks:{color:"#475569",font:{size:10},callback:v=>v.toFixed(0)+"%"}}}})
+  });
+
+  // listas
+  rows.sort((x,y)=>(y.lastMoney||0)-(x.lastMoney||0));
+  document.getElementById("s2-list").innerHTML=rows.map(r=>{
+    const cls=r.lastMoney>=STATE.amountCmp?"pos":"neg";
+    return `<div class="cmp-row"><span class="cmp-badge" style="background:${r.a.color}">${r.a.sym}</span><span class="cmp-text">${fmtMoney(STATE.amountCmp)} em ${r.a.name} hoje seriam <b class="${cls}">${fmtMoney(r.lastMoney||0)}</b></span></div>`;
+  }).join("");
+  const rowsPct=[...rows].sort((x,y)=>(y.lastPct||-1e9)-(x.lastPct||-1e9));
+  document.getElementById("s3-list").innerHTML=rowsPct.map(r=>{
+    const cls=(r.lastPct||0)>=0?"pos":"neg";
+    return `<div class="cmp-row"><span class="cmp-badge" style="background:${r.a.color}">${r.a.sym}</span><span class="cmp-text">${r.a.name}: <b class="${cls}">${fmtPct(r.lastPct||0)}</b> no período</span></div>`;
+  }).join("");
+
+  renderTdNotice(missing);
+}
+
+function lineDS(a,data,isPrim){
+  return {label:a.name,data,borderColor:a.color,backgroundColor:hexA(a.color,.05),
+    pointRadius:0,borderWidth:isPrim?3:2,tension:.18,fill:false,
+    borderDash:(a.type==="bacen")?[6,4]:[]};
+}
+
+/* ════════════════ BUSCA ════════════════ */
+let searchTimer=null;
+function onSearchInput(e){
+  const q=e.target.value.trim();
+  clearTimeout(searchTimer);
+  const dd=document.getElementById("search-dd");
+  if(q.length<2){ dd.classList.remove("open"); dd.innerHTML=""; return; }
+  dd.classList.add("open");
+  dd.innerHTML=`<div class="sd-loading">Buscando…</div>`;
+  searchTimer=setTimeout(()=>doSearch(q),320);
+}
+async function doSearch(q){
+  const dd=document.getElementById("search-dd");
+  // tradicional: filtra o registro local
+  const ql=q.toLowerCase();
+  const trad=Object.keys(ASSETS).filter(k=>ASSETS[k].type!=="crypto" && (ASSETS[k].name.toLowerCase().includes(ql)||ASSETS[k].sym.toLowerCase().includes(ql)));
+  // cripto: CoinGecko search
+  let coins=[];
+  try{
+    const r=await fetch("https://api.coingecko.com/api/v3/search?query="+encodeURIComponent(q));
+    const d=await r.json();
+    coins=(d.coins||[]).slice(0,8);
+  }catch(e){}
+  let html="";
+  if(trad.length){
+    html+=`<div class="sd-group">Mercado tradicional</div>`;
+    html+=trad.map(k=>{const a=ASSETS[k];return sdItem(k,a.name,a.sym,a.color,null,"trad");}).join("");
+  }
+  if(coins.length){
+    html+=`<div class="sd-group">Criptomoedas</div>`;
+    html+=coins.map(c=>sdItem("cg:"+c.id,c.name,(c.symbol||"").toUpperCase(),"#F5A623",c.thumb,"cripto",c.name,c.symbol)).join("");
+  }
+  if(!html) html=`<div class="sd-empty">Nada encontrado para "${q}".</div>`;
+  dd.innerHTML=html;
+}
+function sdItem(key,name,sym,color,img,tag){
+  const ico=img?`<img src="${img}" alt="">`:sym.slice(0,3);
+  return `<div class="sd-item" onclick='caPick(${JSON.stringify(key)}, ${JSON.stringify(name)}, ${JSON.stringify(sym)})'>
+    <span class="sd-ico" style="background:${color}">${ico}</span>
+    <div><div class="sd-name">${name}</div><div class="sd-sym">${sym}</div></div>
+    <span class="sd-tag ${tag}">${tag}</span></div>`;
+}
+function caPick(key,name,sym){
+  document.getElementById("search-dd").classList.remove("open");
+  document.getElementById("search-input").value="";
+  // cripto vinda do CoinGecko (não cadastrada) → cadastra dinamicamente
+  if(key.indexOf("cg:")===0){
+    const id=key.slice(3);
+    if(!ASSETS[id]) ASSETS[id]={name,sym,type:"crypto",cg:id,color:pickColor(),grp:"cripto"};
+    key=id;
+  }
+  setPrimary(key);
+}
+function caQuickPick(key){ setPrimary(key); }
+
+/* ════════════════ MONTAGEM DO SET DE COMPARAÇÃO ════════════════ */
+function buildSet(primary){
+  const p=PEERS[primary];
+  let set=[primary];
+  if(p){
+    (p.cripto||[]).forEach(k=>{ if(ASSETS[k]) set.push(k); });
+    (p.trad||[]).forEach(k=>{ if(ASSETS[k]) set.push(k); });
+  }else{
+    // fallback (Fase 2: usar categorias da CoinGecko)
+    if(primary!=="bitcoin" && ASSETS.bitcoin) set.push("bitcoin");
+    if(ASSETS.sp500) set.push("sp500");
+  }
+  if(ASSETS.cdi && set.indexOf("cdi")<0) set.push("cdi");   // CDI sempre
+  return [...new Set(set)].slice(0,7);
+}
+function setPrimary(key){
+  if(!ASSETS[key]) return;
+  STATE.primary=key;
+  STATE.set=buildSet(key);
+  renderPeers();
+  renderS1();
+  renderCompare();
+}
+
+/* ════════════════ CHIPS ════════════════ */
+function renderPeers(){
+  const row=document.getElementById("peers-row");
+  row.innerHTML=STATE.set.map(k=>{
+    const a=ASSETS[k]; const prim=k===STATE.primary;
+    return `<span class="chip ${prim?"primary":""}"><span class="dot" style="background:${a.color}"></span>${a.name}${prim?" ⭐":""}${prim?"":`<span class="x" onclick="removeAsset('${k}')">✕</span>`}</span>`;
+  }).join("") + `<span class="chip chip-add" onclick="document.getElementById('search-input').focus()">+ adicionar</span>`;
+  const note=document.getElementById("peers-note");
+  const a=ASSETS[STATE.primary];
+  note.textContent=`Ativo principal: ${a.name}. Concorrentes sugeridos automaticamente (cripto + tradicional) — você pode remover ou adicionar pela busca.`;
+}
+function removeAsset(k){
+  if(k===STATE.primary) return;
+  STATE.set=STATE.set.filter(x=>x!==k);
+  renderPeers(); renderCompare();
+}
+
+/* ════════════════ CONTROLES ════════════════ */
+function caSetCurrency(cur){
+  STATE.currency=cur;
+  document.querySelectorAll(".cur-btn").forEach(b=>b.classList.toggle("active",b.dataset.cur===cur));
+  document.getElementById("s2-prefix").textContent=SYM[cur];
+  buildPresets();
+  renderS1(); renderCompare();
+}
+function buildPresets(){
+  const vals = STATE.currency==="brl" ? [1000,5000,10000] : [1000,5000,10000];
+  document.getElementById("s2-presets").innerHTML=vals.map(v=>`<button class="preset-btn" onclick="setCmpAmount(${v})">${SYM[STATE.currency]} ${fmtNum(v,0)}</button>`).join("");
+}
+function setCmpAmount(v){ STATE.amountCmp=v; document.getElementById("s2-amount").value=v; renderCompare(); }
+
+function bindPeriod(id, apply){
+  document.querySelectorAll(`#${id} .period-btn`).forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      document.querySelectorAll(`#${id} .period-btn`).forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      apply(btn.dataset.d, btn.dataset.k);
+    });
+  });
+}
+
+/* ════════════════ NOTICES / UTILS ════════════════ */
+function renderTdNotice(missing){
+  const el=document.getElementById("td-notice");
+  if(!tdEnabled()){
+    el.innerHTML=`<div class="notice warn">⚙️ <b>Dados do mercado tradicional ainda não ativados.</b> Cole sua chave gratuita da Twelve Data na constante <b>TWELVEDATA_KEY</b> no topo do script para liberar ações, S&amp;P 500, Ouro e IBOV. Cripto, CDI e IPCA já funcionam.</div>`;
+    return;
+  }
+  if(missing&&missing.length){
+    el.innerHTML=`<div class="notice info">ℹ️ Não foi possível carregar agora: ${[...new Set(missing)].join(", ")}. Pode ser limite de requisições da Twelve Data (plano free: 8/min) ou símbolo a ajustar no registro. Tente de novo em instantes.</div>`;
+  }else el.innerHTML="";
+}
+function showChartLoading(id){
+  const c=document.getElementById(id+"-chart");
+  if(chartInst[id]){ /* mantém até novo render */ }
+}
+function chartError(id, e){
+  if(chartInst[id]){ chartInst[id].destroy(); chartInst[id]=null; }
+  console.warn(id, e);
+}
+function compact(v){ if(Math.abs(v)>=1e6)return(v/1e6).toFixed(1)+"M"; if(Math.abs(v)>=1e3)return(v/1e3).toFixed(0)+"k"; return (+v).toFixed(0); }
+function hexA(hex,a){ const h=hex.replace("#",""); const r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16); return `rgba(${r},${g},${b},${a})`; }
+const PALETTE=["#F5A623","#6F8BFF","#9D71FF","#22D3EE","#FF5CAA","#10B981","#E2674A","#4AA3DF","#C6E84A","#B6509E"];
+let palI=0; function pickColor(){ return PALETTE[(palI++)%PALETTE.length]; }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ════════════════ TICKER ════════════════ */
+async function loadTicker(){
+  try{
+    const r=await fetch("https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true");
+    const d=await r.json();
+    setTick("btc", d.bitcoin); setTick("eth", d.ethereum);
+  }catch(e){}
+  document.getElementById("tk-usd").textContent="R$ "+fxRate.toFixed(2).replace(".",",");
+  document.getElementById("tk-time").textContent=new Date().toLocaleTimeString("pt-BR");
+}
+function setTick(id,o){ if(!o)return;
+  document.getElementById("tk-"+id).textContent="US$ "+o.usd.toLocaleString("en-US");
+  const c=o.usd_24h_change||0, el=document.getElementById("tk-"+id+"-c");
+  el.textContent=(c>=0?"▲ +":"▼ ")+c.toFixed(2)+"%"; el.className="ticker-chg "+(c>=0?"up":"down");
+}
+
+/* ════════════════ BACKGROUND CANVAS (estrelas/meteoros) ════════════════ */
+(function(){
+  var canvas=document.getElementById("bgCanvas"), ctx=canvas.getContext("2d");
+  var W,H,stars=[],meteors=[];
+  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+  function initStars(){stars=[];for(var i=0;i<180;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.3,o:Math.random()*0.7+0.1,speed:Math.random()*0.3+0.05,twinkle:Math.random()*Math.PI*2});}
+  function spawnMeteor(){if(meteors.length<3&&Math.random()<0.013)meteors.push({x:Math.random()*W*1.5,y:-20,vx:-2-Math.random()*3,vy:1.5+Math.random()*2,len:80+Math.random()*120,life:0});}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    var g=ctx.createRadialGradient(W*.5,H*.4,.1,W*.5,H*.4,H*.9);
+    g.addColorStop(0,"rgba(15,20,40,1)");g.addColorStop(.5,"rgba(8,11,20,1)");g.addColorStop(1,"rgba(5,7,14,1)");
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    var n=ctx.createRadialGradient(W*.3,H*.3,0,W*.3,H*.3,W*.4);n.addColorStop(0,"rgba(139,92,246,0.04)");n.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=n;ctx.fillRect(0,0,W,H);
+    var n2=ctx.createRadialGradient(W*.75,H*.6,0,W*.75,H*.6,W*.35);n2.addColorStop(0,"rgba(245,166,35,0.03)");n2.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=n2;ctx.fillRect(0,0,W,H);
+    stars.forEach(function(s){s.twinkle+=0.02;var osc=Math.sin(s.twinkle)*0.3+0.7;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,"+(s.o*osc)+")";ctx.fill();s.y+=s.speed*0.1;if(s.y>H){s.y=0;s.x=Math.random()*W;}});
+    spawnMeteor();
+    meteors=meteors.filter(function(m){m.x+=m.vx;m.y+=m.vy;m.life++;var fade=Math.max(0,1-m.life/60);var hyp=Math.hypot(m.vx,m.vy);var mg=ctx.createLinearGradient(m.x,m.y,m.x-m.vx/hyp*m.len,m.y-m.vy/hyp*m.len);mg.addColorStop(0,"rgba(255,240,200,"+(fade*0.9)+")");mg.addColorStop(1,"rgba(255,240,200,0)");ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(m.x-m.vx/hyp*m.len,m.y-m.vy/hyp*m.len);ctx.strokeStyle=mg;ctx.lineWidth=1.5;ctx.stroke();return m.life<70&&m.x>-50&&m.y<H+50;});
+    requestAnimationFrame(draw);
+  }
+  resize();initStars();draw();
+  window.addEventListener("resize",function(){resize();initStars();});
+})();
+
+/* ════════════════ INIT ════════════════ */
+async function init(){
+  document.getElementById("search-input").addEventListener("input",onSearchInput);
+  document.addEventListener("click",e=>{ if(!e.target.closest(".search-wrap")) document.getElementById("search-dd").classList.remove("open"); });
+
+  // input "quanto você compra"
+  document.getElementById("s1-buy-amount").addEventListener("input",e=>{ STATE.amountBuy=parseFloat(e.target.value)||0; renderS1(); });
+  // input valor da comparação
+  document.getElementById("s2-amount").addEventListener("input",e=>{ STATE.amountCmp=parseFloat(e.target.value)||0; renderCompare(); });
+
+  bindPeriod("s1-period",(d,k)=>{ STATE.s1days=resolveDays(d); STATE.s1key=k; renderS1(); });
+  bindPeriod("s2-period",(d,k)=>{ STATE.s2days=resolveDays(d); STATE.s2key=k; STATE.s3days=STATE.s2days; renderCompare(); });
+  bindPeriod("s3-period",(d,k)=>{ STATE.s3days=resolveDays(d); STATE.s3key=k; STATE.s2days=STATE.s3days; syncPeriodButtons(); renderCompare(); });
+
+  buildPresets();
+  await loadFx();
+  loadTicker(); setInterval(loadTicker,60000);
+
+  renderPeers();
+  renderS1();
+  renderCompare();
+  renderTdNotice([]);
+}
+function syncPeriodButtons(){
+  // mantém s2 e s3 com o mesmo período visual
+  [["s2-period",STATE.s2days],["s3-period",STATE.s3days]].forEach(([id,days])=>{
+    document.querySelectorAll(`#${id} .period-btn`).forEach(b=>b.classList.toggle("active", resolveDays(b.dataset.d)===days));
+  });
+}
+init();
+</script>
+</body>
+</html>
