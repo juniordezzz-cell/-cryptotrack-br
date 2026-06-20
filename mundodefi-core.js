@@ -1,349 +1,283 @@
-/* ════════════════════════════════════════════════════════════════════
-   MUNDODEFI · CORE COMPARTILHADO  (v2 — múltiplas carteiras)
-   ════════════════════════════════════════════════════════════════════ */
+/* ════════════════════════════════════════════════════════════
+   MUNDODEFI · ESTILO COMPARTILHADO
+   Dark premium · Azul neon · Dourado · Profissional
+   ════════════════════════════════════════════════════════════ */
+@import url('mundodefi-tokens.css');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
 
-var firebaseConfig = {
-  apiKey: "AIzaSyCvHDXyRfaozjHKL0S9zvs9C00NS6Bd8cs",
-  authDomain: "cryptotrack-br.firebaseapp.com",
-  projectId: "cryptotrack-br",
-  storageBucket: "cryptotrack-br.firebasestorage.app",
-  messagingSenderId: "641396446846",
-  appId: "1:641396446846:web:279a8b79d2e94f3f30ea2f",
-  measurementId: "G-998VR1EZZ0"
-};
+:root {
+  --bg0:#070A12; --bg1:#0B0F1A; --bg2:#111624;
+  --bg3:#161D2E; --bg4:#1E2740; --border:#1C2540; --border2:#2A3759;
+  --text:#EAEEF7; --muted:#4D5A78; --muted2:#8492B0;
+  --neon2:#0EA5E9; --gold2:#D4A017;
+  --green2:rgba(20,241,149,.13);
+  --red2:rgba(255,84,104,.13);
+  --defi:#00D2AA;
+  --r:8px; --rl:12px;
+  --font:'Inter',sans-serif; --display:'Space Grotesk',sans-serif; --mono:'JetBrains Mono',monospace;
+}
 
-var MDFI = (function () {
-  'use strict';
+* { margin:0; padding:0; box-sizing:border-box; }
+html { font-size:14px; }
+body {
+  font-family:var(--font); background:var(--bg0); color:var(--text);
+  line-height:1.5; min-height:100vh; -webkit-font-smoothing:antialiased;
+}
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none; z-index:0;
+  background:
+    radial-gradient(ellipse 600px 400px at 15% -5%, rgba(0,210,255,.05), transparent),
+    radial-gradient(ellipse 500px 400px at 90% 0%, rgba(245,197,66,.04), transparent);
+}
+::-webkit-scrollbar { width:8px; height:8px; }
+::-webkit-scrollbar-track { background:var(--bg1); }
+::-webkit-scrollbar-thumb { background:var(--border2); border-radius:4px; }
+::-webkit-scrollbar-thumb:hover { background:var(--muted); }
+a { color:inherit; text-decoration:none; }
 
-  var fbApp = null, fbAuth = null, fbDB = null, currentUser = null;
-  var saveTimer = null;
-  var STORAGE_KEY = 'mundodefi_state';
+/* ─── TOPBAR / NAV ─── */
+.topbar {
+  position:sticky; top:0; z-index:100; height:62px;
+  background:rgba(11,15,26,.92); backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border); display:flex; align-items:center;
+  padding:0 24px; gap:24px;
+}
+.brand { font-family:var(--display); font-size:20px; font-weight:700; letter-spacing:-.02em; flex-shrink:0; background:linear-gradient(135deg,var(--purple),var(--neon)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+.brand-mundo { }
+.brand-defi { }
+.topnav { display:flex; align-items:center; gap:4px; flex:1; }
+.nav-item {
+  display:flex; align-items:center; gap:7px; padding:9px 18px; border-radius:var(--r);
+  font-size:14px; font-weight:600; color:var(--muted2); transition:all .15s; white-space:nowrap;
+}
+.nav-item:hover { color:var(--text); background:rgba(255,255,255,.04); }
+.nav-item.active { color:var(--text); background:linear-gradient(135deg,rgba(0,210,255,.14),rgba(0,210,255,.05)); box-shadow:inset 0 0 0 1px rgba(0,210,255,.25); }
+.nav-item.active .nav-ico { filter:drop-shadow(0 0 6px rgba(0,210,255,.5)); }
+.nav-ico { font-size:15px; }
+.topbar-right { display:flex; align-items:center; gap:14px; flex-shrink:0; }
+.tb-total { font-family:var(--mono); font-size:15px; font-weight:700; color:var(--gold); }
+.tb-btn {
+  padding:8px 18px; border-radius:var(--r); font-size:13px; font-weight:700; cursor:pointer;
+  font-family:var(--font); border:1px solid var(--gold); background:var(--gold); color:#000; transition:all .15s;
+}
+.tb-btn:hover { opacity:.9; box-shadow:0 4px 16px rgba(245,197,66,.25); }
+.tb-btn.logged { background:transparent; color:var(--text); border-color:var(--border2); }
 
-  var PLAN_LIMITS = { free: 1, pro: 3, premium: Infinity };
-  var PLAN_LABELS = { free: 'Gratuito', pro: 'PRO', premium: 'Premium' };
+/* ─── LAYOUT ─── */
+.page-wrap { position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:28px 24px 60px; }
+.page-head { display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:16px; }
+.page-title { font-family:var(--display); font-size:26px; font-weight:700; letter-spacing:-.02em; }
+.page-sub { font-size:14px; color:var(--muted2); margin-top:4px; }
+.page-head-actions { display:flex; gap:10px; flex-wrap:wrap; }
 
-  function emptyWallet(nome) {
-    return {
-      id: 'w' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
-      nome: nome || 'Carteira Principal',
-      hold:  { ativos: [] },
-      defi:  { posicoes: [] },
-      trade: { operacoes: [], bancaInicial: 0 }
-    };
-  }
+/* ─── BOTÕES ─── */
+.btn {
+  padding:10px 20px; border-radius:var(--r); font-size:13px; font-weight:600; cursor:pointer;
+  font-family:var(--font); transition:all .15s; border:1px solid transparent; display:inline-flex;
+  align-items:center; gap:7px; white-space:nowrap;
+}
+.btn:active { transform:scale(.98); }
+.btn-sm { padding:7px 14px; font-size:12px; }
+.btn-lg { padding:13px 26px; font-size:15px; }
+.btn-gold { background:var(--gold); color:#000; }
+.btn-gold:hover { opacity:.9; box-shadow:0 4px 16px rgba(245,197,66,.25); }
+.btn-neon { background:linear-gradient(135deg,var(--neon2),var(--neon)); color:#001018; }
+.btn-neon:hover { box-shadow:0 4px 18px rgba(0,210,255,.3); }
+.btn-ghost { background:transparent; color:var(--muted2); border-color:var(--border2); }
+.btn-ghost:hover { color:var(--text); border-color:var(--muted); }
+.btn-red { background:var(--red2); color:var(--red); border-color:rgba(255,84,104,.3); }
+.btn-red:hover { background:rgba(255,84,104,.22); }
+.btn-green { background:var(--green2); color:var(--green); border-color:rgba(16,217,138,.3); }
 
-  function defaultState() {
-    var w = emptyWallet('Carteira Principal');
-    return {
-      v: 2, plano: 'free', carteiraAtiva: w.id, carteiras: [w],
-      config: { meta: 50000, pHold: 40, pDefi: 30, pTrade: 20, pCaixa: 10, moeda: 'usd' }
-    };
-  }
+/* ─── CARDS (KPIs) ─── */
+.kpi-grid { display:grid; gap:14px; margin-bottom:28px; }
+.kpi-grid.c4 { grid-template-columns:repeat(4,1fr); }
+.kpi-grid.c3 { grid-template-columns:repeat(3,1fr); }
+.kpi-grid.c6 { grid-template-columns:repeat(6,1fr); }
+.kpi {
+  background:var(--bg2); border:1px solid var(--border); border-radius:var(--rl); padding:18px 20px;
+  position:relative; overflow:hidden; transition:all .18s;
+}
+.kpi::after { content:''; position:absolute; bottom:0; left:0; right:0; height:2px; background:var(--kpi-accent,var(--neon)); opacity:.85; }
+.kpi:hover { border-color:var(--border2); transform:translateY(-2px); box-shadow:0 8px 30px rgba(0,0,0,.3); }
+.kpi-label { font-size:11px; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:.07em; margin-bottom:10px; display:flex; align-items:center; gap:6px; }
+.kpi-value { font-family:var(--display); font-size:1.7rem; font-weight:700; letter-spacing:-.03em; line-height:1.1; }
+.kpi-sub { font-size:12px; color:var(--muted2); margin-top:8px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.kpi-badge { font-family:var(--mono); font-size:11px; font-weight:700; padding:2px 8px; border-radius:5px; }
+.kpi-badge.up { background:var(--green2); color:var(--green); }
+.kpi-badge.dn { background:var(--red2); color:var(--red); }
+.kpi-badge.neu { background:var(--bg4); color:var(--muted2); }
+.v-gold { color:var(--gold); } .v-green { color:var(--green); } .v-red { color:var(--red); }
+.v-neon { color:var(--neon); } .v-blue { color:var(--blue); } .v-defi { color:var(--defi); }
 
-  var st = defaultState();
+/* ─── PANEL / CARD GENÉRICO ─── */
+.panel { background:var(--bg2); border:1px solid var(--border); border-radius:var(--rl); margin-bottom:20px; overflow:hidden; }
+.panel-head { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid var(--border); gap:12px; flex-wrap:wrap; }
+.panel-title { font-family:var(--display); font-size:15px; font-weight:700; display:flex; align-items:center; gap:8px; }
+.panel-body { padding:20px; }
 
-  function migrate(parsed) {
-    if (parsed && !parsed.carteiras && (parsed.hold || parsed.defi || parsed.trade)) {
-      var w = emptyWallet('Carteira Principal');
-      w.hold = parsed.hold || w.hold;
-      w.defi = parsed.defi || w.defi;
-      w.trade = parsed.trade || w.trade;
-      return { v: 2, plano: parsed.plano || 'free', carteiraAtiva: w.id, carteiras: [w],
-               config: Object.assign(defaultState().config, parsed.config || {}) };
-    }
-    return null;
-  }
+/* ─── GRÁFICOS ─── */
+.charts-row { display:grid; grid-template-columns:1.6fr 1fr; gap:16px; margin-bottom:20px; }
+.chart-box { background:var(--bg2); border:1px solid var(--border); border-radius:var(--rl); padding:18px 20px; }
+.chart-box-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; gap:12px; flex-wrap:wrap; }
+.chart-box-title { font-family:var(--display); font-size:15px; font-weight:700; }
+.chart-ctrl { display:flex; gap:4px; }
+.chart-ctrl-btn { padding:5px 12px; border-radius:99px; font-size:12px; font-weight:600; border:1px solid var(--border2); background:transparent; color:var(--muted2); cursor:pointer; font-family:var(--font); transition:all .15s; }
+.chart-ctrl-btn.active, .chart-ctrl-btn:hover { background:var(--neon); color:#001018; border-color:var(--neon); }
+.chart-area { position:relative; }
+.donut-legend { display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+.dleg { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13px; }
+.dleg-left { display:flex; align-items:center; gap:8px; }
+.dleg-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.dleg-pct { font-family:var(--mono); font-weight:700; }
 
-  function normalize(parsed) {
-    var mig = migrate(parsed);
-    if (mig) return mig;
-    var base = defaultState();
-    var s = Object.assign(base, parsed || {});
-    s.config = Object.assign(base.config, (parsed && parsed.config) || {});
-    if (!s.carteiras || !s.carteiras.length) s.carteiras = [emptyWallet('Carteira Principal')];
-    s.carteiras = s.carteiras.map(function (w) {
-      w.hold = w.hold || { ativos: [] };
-      w.defi = w.defi || { posicoes: [] };
-      w.trade = w.trade || { operacoes: [], bancaInicial: 0 };
-      if (!w.hold.ativos) w.hold.ativos = [];
-      if (!w.defi.posicoes) w.defi.posicoes = [];
-      if (!w.trade.operacoes) w.trade.operacoes = [];
-      if (typeof w.trade.bancaInicial !== 'number') w.trade.bancaInicial = 0;
-      return w;
-    });
-    if (!s.carteiras.find(function (w) { return w.id === s.carteiraAtiva; })) s.carteiraAtiva = s.carteiras[0].id;
-    if (!s.plano) s.plano = 'free';
-    return s;
-  }
+/* ─── TABELAS ─── */
+.tbl-wrap { overflow-x:auto; }
+table.data { width:100%; border-collapse:collapse; font-size:13px; }
+table.data thead th {
+  background:var(--bg3); padding:11px 16px; text-align:left; font-size:11px; font-weight:700;
+  text-transform:uppercase; letter-spacing:.06em; color:var(--muted2); white-space:nowrap;
+  border-bottom:1px solid var(--border2); position:sticky; top:0;
+}
+table.data tbody td { padding:13px 16px; border-bottom:1px solid var(--border); vertical-align:middle; }
+table.data tbody tr:last-child td { border-bottom:none; }
+table.data tbody tr:hover td { background:rgba(255,255,255,.02); }
+.cell-asset { display:flex; align-items:center; gap:10px; }
+.cell-ico { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0; overflow:hidden; }
+.cell-ico img { width:100%; height:100%; object-fit:cover; }
+.cell-name { font-size:13px; font-weight:600; }
+.cell-sub { font-size:11px; color:var(--muted2); margin-top:1px; }
+.mono { font-family:var(--mono); }
+.t-up { color:var(--green); font-weight:700; }
+.t-dn { color:var(--red); font-weight:700; }
+.pbar { height:4px; background:var(--bg4); border-radius:2px; overflow:hidden; margin-top:5px; min-width:60px; }
+.pbar-fill { height:100%; border-radius:2px; }
+.badge { font-size:11px; font-weight:700; padding:3px 9px; border-radius:5px; display:inline-block; }
+.badge-ativa { background:var(--green2); color:var(--green); }
+.badge-encerrada { background:var(--bg4); color:var(--muted2); }
+.badge-pool { background:rgba(0,210,170,.13); color:var(--defi); }
+.badge-staking { background:rgba(157,113,255,.13); color:var(--purple); }
+.badge-lending { background:rgba(75,150,255,.13); color:var(--blue); }
+.badge-long { background:var(--green2); color:var(--green); }
+.badge-short { background:var(--red2); color:var(--red); }
+.row-actions { display:flex; gap:6px; }
+.icon-btn { width:30px; height:30px; border-radius:6px; border:1px solid var(--border2); background:transparent; color:var(--muted2); cursor:pointer; font-size:13px; display:inline-flex; align-items:center; justify-content:center; transition:all .15s; }
+.icon-btn:hover { color:var(--text); border-color:var(--muted); }
+.icon-btn.del:hover { color:var(--red); border-color:var(--red); }
+.empty-row td { text-align:center; color:var(--muted2); padding:40px 16px; font-size:13px; }
 
-  function wallet() {
-    var w = st.carteiras.find(function (x) { return x.id === st.carteiraAtiva; });
-    if (!w) { w = st.carteiras[0]; st.carteiraAtiva = w.id; }
-    return w;
-  }
+/* ─── INSIGHTS (dashboard) ─── */
+.insights-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+.insight {
+  background:var(--bg2); border:1px solid var(--border); border-radius:var(--rl); padding:18px;
+  transition:all .18s; position:relative; overflow:hidden;
+}
+.insight:hover { border-color:var(--border2); transform:translateY(-2px); }
+.insight-ico { font-size:22px; margin-bottom:10px; }
+.insight-label { font-size:11px; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; }
+.insight-name { font-family:var(--display); font-size:17px; font-weight:700; }
+.insight-val { font-family:var(--mono); font-size:13px; font-weight:700; margin-top:4px; }
 
-  /* PERSISTÊNCIA */
-  function loadLocal() {
-    try { var raw = localStorage.getItem(STORAGE_KEY); if (raw) st = normalize(JSON.parse(raw)); }
-    catch (e) { console.warn('loadLocal', e); st = defaultState(); }
-    return st;
-  }
-  function saveLocal() { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(st)); } catch (e) {} }
-  function save() { saveLocal(); if (currentUser && fbDB) { clearTimeout(saveTimer); saveTimer = setTimeout(saveFS, 800); } }
-  function saveFS() {
-    if (!currentUser || !fbDB) return;
-    fbDB.collection('portfolios').doc(currentUser.uid)
-      .set({ state: st, plano: st.plano, updatedAt: new Date().toISOString() }, { merge: true })
-      .catch(function (e) { console.warn('saveFS', e); });
-  }
-  function loadFS(cb) {
-    if (!currentUser || !fbDB) { if (cb) cb(); return; }
-    fbDB.collection('portfolios').doc(currentUser.uid).get()
-      .then(function (doc) {
-        if (doc.exists) {
-          var data = doc.data();
-          if (data.state) st = normalize(data.state);
-          if (data.plano) st.plano = data.plano;
-          saveLocal();
-        } else { saveFS(); }
-        if (cb) cb();
-      })
-      .catch(function (e) { console.warn('loadFS', e); if (cb) cb(); });
-  }
+/* ─── FORMS / MODAIS ─── */
+.modal-overlay { position:fixed; inset:0; background:rgba(4,6,12,.78); backdrop-filter:blur(6px); z-index:1000; display:none; align-items:center; justify-content:center; padding:20px; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--bg1); border:1px solid var(--border2); border-radius:16px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; box-shadow:0 30px 80px rgba(0,0,0,.6); }
+.modal-head { display:flex; align-items:center; justify-content:space-between; padding:20px 24px; border-bottom:1px solid var(--border); }
+.modal-title { font-family:var(--display); font-size:18px; font-weight:700; }
+.modal-close { width:32px; height:32px; border-radius:8px; border:1px solid var(--border2); background:transparent; color:var(--muted2); cursor:pointer; font-size:16px; }
+.modal-close:hover { color:var(--red); border-color:var(--red); }
+.modal-body { padding:24px; }
+.modal-foot { display:flex; gap:10px; justify-content:flex-end; padding:16px 24px; border-top:1px solid var(--border); }
+.fgrp { margin-bottom:16px; }
+.fgrp label { display:block; font-size:12px; font-weight:600; color:var(--muted2); margin-bottom:6px; }
+.finput, .fselect {
+  width:100%; padding:11px 14px; background:var(--bg3); border:1px solid var(--border2); border-radius:var(--r);
+  color:var(--text); font-size:14px; font-family:var(--font); transition:border-color .15s;
+}
+.finput:focus, .fselect:focus { outline:none; border-color:var(--neon); }
+.fselect { cursor:pointer; }
+.frow { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.search-results { border:1px solid var(--border2); border-radius:var(--r); margin-top:6px; max-height:200px; overflow-y:auto; display:none; }
+.search-results.show { display:block; }
+.search-item { display:flex; align-items:center; gap:10px; padding:10px 14px; cursor:pointer; transition:background .15s; }
+.search-item:hover { background:var(--bg3); }
+.search-item img { width:24px; height:24px; border-radius:50%; }
 
-  /* FIREBASE + AUTH */
-  function initFirebase(onAuthChange) {
-    if (typeof firebase === 'undefined') { if (onAuthChange) onAuthChange(null); return; }
-    try {
-      fbApp = firebase.initializeApp(firebaseConfig);
-      fbAuth = firebase.auth(); fbDB = firebase.firestore();
-      fbAuth.onAuthStateChanged(function (user) {
-        currentUser = user;
-        if (user) loadFS(function () { if (onAuthChange) onAuthChange(user); });
-        else { st.plano = 'free'; if (onAuthChange) onAuthChange(null); }
-      });
-    } catch (e) { console.warn('initFirebase', e); if (onAuthChange) onAuthChange(null); }
-  }
-  function login(e, p) { return fbAuth.signInWithEmailAndPassword(e, p); }
-  function register(e, p) { return fbAuth.createUserWithEmailAndPassword(e, p); }
-  function loginGoogle() { return fbAuth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-  function logout() { return fbAuth.signOut(); }
-  function getUser() { return currentUser; }
+/* ─── TOAST ─── */
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(100px); background:var(--bg3); border:1px solid var(--border2); border-radius:10px; padding:13px 22px; font-size:13px; font-weight:600; z-index:2000; transition:transform .3s; box-shadow:0 10px 40px rgba(0,0,0,.5); }
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast.ok { border-color:rgba(16,217,138,.4); color:var(--green); }
+.toast.err { border-color:rgba(255,84,104,.4); color:var(--red); }
 
-  /* CARTEIRAS */
-  function getPlano() { return st.plano || 'free'; }
-  function planoLabel() { return PLAN_LABELS[getPlano()] || 'Gratuito'; }
-  function limiteCarteiras() { return PLAN_LIMITS[getPlano()] != null ? PLAN_LIMITS[getPlano()] : 1; }
-  function podeAddCarteira() { return st.carteiras.length < limiteCarteiras(); }
-  function listarCarteiras() { return st.carteiras; }
-  function carteiraAtivaId() { return st.carteiraAtiva; }
-  function carteiraAtiva() { return wallet(); }
-  function criarCarteira(nome) {
-    if (!podeAddCarteira()) return { ok: false, motivo: 'limite', limite: limiteCarteiras(), plano: getPlano() };
-    var w = emptyWallet(nome || ('Carteira ' + (st.carteiras.length + 1)));
-    st.carteiras.push(w); st.carteiraAtiva = w.id; save();
-    return { ok: true, carteira: w };
-  }
-  function trocarCarteira(id) { if (st.carteiras.find(function (w) { return w.id === id; })) { st.carteiraAtiva = id; save(); return true; } return false; }
-  function renomearCarteira(id, nome) { var w = st.carteiras.find(function (x) { return x.id === id; }); if (w) { w.nome = nome; save(); return true; } return false; }
-  function excluirCarteira(id) {
-    if (st.carteiras.length <= 1) return { ok: false, motivo: 'ultima' };
-    st.carteiras = st.carteiras.filter(function (w) { return w.id !== id; });
-    if (st.carteiraAtiva === id) st.carteiraAtiva = st.carteiras[0].id;
-    save(); return { ok: true };
-  }
+/* ─── LOGIN BANNER ─── */
+.guest-banner { background:linear-gradient(135deg,rgba(0,210,255,.06),rgba(245,197,66,.04)); border:1px solid rgba(0,210,255,.18); border-radius:var(--rl); padding:13px 18px; display:flex; align-items:center; gap:12px; margin-bottom:22px; font-size:13px; }
+.guest-banner b { color:var(--neon); }
 
-  /* COINGECKO */
-  var CG = 'https://api.coingecko.com/api/v3';
-  var priceCache = {};
-  function searchCoin(q) { return fetch(CG + '/search?query=' + encodeURIComponent(q)).then(function (r) { return r.json(); }).then(function (d) { return (d.coins || []).slice(0, 8); }); }
-  function fetchPrices(ids, vs) {
-    vs = vs || st.config.moeda || 'usd';
-    if (!ids.length) return Promise.resolve({});
-    return fetch(CG + '/simple/price?ids=' + encodeURIComponent(ids.join(',')) + '&vs_currencies=' + vs + '&include_24hr_change=true')
-      .then(function (r) { return r.json(); })
-      .then(function (d) { Object.keys(d).forEach(function (id) { priceCache[id] = { price: d[id][vs], change24h: d[id][vs + '_24h_change'] || 0 }; }); return priceCache; })
-      .catch(function (e) { console.warn('fetchPrices', e); return {}; });
-  }
-  function refreshHoldPrices(cb) {
-    var ativos = wallet().hold.ativos;
-    var ids = ativos.map(function (a) { return a.coinId; }).filter(Boolean);
-    if (!ids.length) { if (cb) cb(); return; }
-    fetchPrices(ids).then(function (prices) {
-      ativos.forEach(function (a) { if (prices[a.coinId]) { a.precoAtual = prices[a.coinId].price; a.change24h = prices[a.coinId].change24h; } });
-      save(); if (cb) cb();
-    });
-  }
+/* ─── RESPONSIVO ─── */
+@media (max-width:980px) {
+  .kpi-grid.c4, .kpi-grid.c6 { grid-template-columns:repeat(2,1fr); }
+  .kpi-grid.c3 { grid-template-columns:1fr; }
+  .charts-row { grid-template-columns:1fr; }
+  .insights-grid { grid-template-columns:repeat(2,1fr); }
+  .topnav { gap:0; }
+  .nav-item { padding:9px 12px; font-size:13px; }
+  .nav-item .nav-ico { display:none; }
+}
+@media (max-width:640px) {
+  .topbar { padding:0 14px; gap:10px; height:56px; }
+  .brand { font-size:17px; }
+  .topnav { display:none; }
+  .topbar.show-nav { flex-wrap:wrap; height:auto; padding:10px 14px; }
+  .topbar.show-nav .topnav { display:flex; width:100%; order:3; overflow-x:auto; }
+  .kpi-grid.c4, .kpi-grid.c6, .insights-grid { grid-template-columns:1fr 1fr; }
+  .page-wrap { padding:20px 14px 40px; }
+  .page-title { font-size:22px; }
+  .frow { grid-template-columns:1fr; }
+  .tb-total { display:none; }
+}
+/* menu mobile hamburger */
+.nav-toggle { display:none; }
+@media (max-width:640px) {
+  .nav-toggle { display:inline-flex; margin-left:auto; width:38px; height:38px; border-radius:8px; border:1px solid var(--border2); background:transparent; color:var(--text); font-size:18px; align-items:center; justify-content:center; cursor:pointer; }
+}
 
-  /* HOLD */
-  function hAtivos() { return wallet().hold.ativos; }
-  function hValorAtivo(a) { return (a.qty || 0) * (a.precoAtual || 0); }
-  function hCustoAtivo(a) { return (a.qty || 0) * (a.precoMedio || 0); }
-  function hLucroAtivo(a) { return hValorAtivo(a) - hCustoAtivo(a); }
-  function hPatrimonio() { return hAtivos().reduce(function (s, a) { return s + hValorAtivo(a); }, 0); }
-  function hCusto() { return hAtivos().reduce(function (s, a) { return s + hCustoAtivo(a); }, 0); }
-  function hLucro() { return hPatrimonio() - hCusto(); }
-  function hRentabilidade() { var c = hCusto(); return c > 0 ? (hLucro() / c * 100) : 0; }
-
-  /* DEFI */
-  function dPosicoes() { return wallet().defi.posicoes; }
-  function dPatrimonio() { return dPosicoes().reduce(function (s, p) { return s + (p.capital || 0) + (p.lucroAcum || 0); }, 0); }
-  function dCapital() { return dPosicoes().reduce(function (s, p) { return s + (p.capital || 0); }, 0); }
-  function dLucro() { return dPosicoes().reduce(function (s, p) { return s + (p.lucroAcum || 0); }, 0); }
-  function dAPRMedio() {
-    var a = dPosicoes().filter(function (p) { return p.status === 'ativa'; });
-    var t = a.reduce(function (s, p) { return s + (p.capital || 0); }, 0);
-    if (t === 0) return 0;
-    return a.reduce(function (s, p) { return s + (p.apr || 0) * (p.capital || 0); }, 0) / t;
-  }
-  function dRendaMensal() { return dPosicoes().filter(function (p) { return p.status === 'ativa'; }).reduce(function (s, p) { return s + (p.capital || 0) * (p.apr || 0) / 100 / 12; }, 0); }
-
-  /* TRADE */
-  function tOps() { return wallet().trade.operacoes; }
-  function tBancaIni() { return wallet().trade.bancaInicial || 0; }
-  function tLucro() { return tOps().reduce(function (s, o) { return s + (o.resultado || 0); }, 0); }
-  function tBancaAtual() { return tBancaIni() + tLucro(); }
-  function tTotalOps() { return tOps().length; }
-  function tWins() { return tOps().filter(function (o) { return (o.resultado || 0) > 0; }).length; }
-  function tLosses() { return tOps().filter(function (o) { return (o.resultado || 0) < 0; }).length; }
-  function tWinRate() { var n = tTotalOps(); return n > 0 ? (tWins() / n * 100) : 0; }
-
-  /* CONSOLIDADO */
-  function patrimonioTotal() { return hPatrimonio() + dPatrimonio() + tBancaAtual(); }
-  function lucroTotal() { return hLucro() + dLucro() + tLucro(); }
-  function capitalInvestido() { return hCusto() + dCapital() + tBancaIni(); }
-  function rendaPassivaMensal() { return dRendaMensal(); }
-  function rentabilidadeTotal() { var i = capitalInvestido(); return i > 0 ? (lucroTotal() / i * 100) : 0; }
-  function insights() {
-    var melhorAtivo = null, piorAtivo = null;
-    hAtivos().forEach(function (a) {
-      var r = hCustoAtivo(a) > 0 ? hLucroAtivo(a) / hCustoAtivo(a) * 100 : 0;
-      if (!melhorAtivo || r > melhorAtivo.rent) melhorAtivo = { nome: a.ticker, rent: r, lucro: hLucroAtivo(a) };
-      if (!piorAtivo || r < piorAtivo.rent) piorAtivo = { nome: a.ticker, rent: r, lucro: hLucroAtivo(a) };
-    });
-    var melhorEstrategia = null;
-    dPosicoes().forEach(function (p) { if (!melhorEstrategia || (p.apr || 0) > melhorEstrategia.apr) melhorEstrategia = { nome: p.protocolo, tipo: p.tipo, apr: p.apr || 0 }; });
-    var todos = [];
-    hAtivos().forEach(function (a) { todos.push({ nome: a.ticker + ' (HOLD)', v: hLucroAtivo(a) }); });
-    dPosicoes().forEach(function (p) { todos.push({ nome: p.protocolo + ' (DeFi)', v: p.lucroAcum || 0 }); });
-    tOps().forEach(function (o) { todos.push({ nome: o.ativo + ' (Trade)', v: o.resultado || 0 }); });
-    var maiorLucro = null, maiorPerda = null;
-    todos.forEach(function (t) { if (!maiorLucro || t.v > maiorLucro.v) maiorLucro = t; if (!maiorPerda || t.v < maiorPerda.v) maiorPerda = t; });
-    return { melhorAtivo: melhorAtivo, piorAtivo: piorAtivo, melhorEstrategia: melhorEstrategia, maiorLucro: maiorLucro, maiorPerda: maiorPerda };
-  }
-
-  /* FORMAT */
-  function moedaSimbolo() { return st.config.moeda === 'brl' ? 'R$' : '$'; }
-  function fmt(v) { v = v || 0; return moedaSimbolo() + ' ' + v.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-  function fmtS(v) { v = v || 0; return (v >= 0 ? '+' : '−') + ' ' + moedaSimbolo() + ' ' + Math.abs(v).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
-  function fmtPct(v) { v = v || 0; return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; }
-  function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
-
-  /* NAV */
-  function renderNav(active) {
-    var items = [
-      { id: 'dashboard', label: 'Dashboard', icon: '📊', href: 'dashboard.html' },
-      { id: 'hold', label: 'HOLD', icon: '💎', href: 'hold.html' },
-      { id: 'defi', label: 'DeFi', icon: '🌊', href: 'defi.html' },
-      { id: 'trade', label: 'Trade', icon: '⚡', href: 'trade.html' }
-    ];
-    var nav = items.map(function (it) {
-      return '<a href="' + it.href + '" class="nav-item' + (it.id === active ? ' active' : '') + '"><span class="nav-ico">' + it.icon + '</span>' + it.label + '</a>';
-    }).join('');
-    return '<header class="topbar">' +
-      '<a href="index.html" class="brand" title="Voltar ao site"><span class="brand-back">‹</span> <span class="brand-mundo">Mundo</span><span class="brand-defi">DeFi</span></a>' +
-      '<div class="wallet-selector" id="wallet-selector" onclick="MDFI.toggleWalletMenu(event)">' +
-        '<span class="ws-ico">👛</span><span class="ws-name" id="ws-name">' + (wallet() ? wallet().nome : 'Carteira') + '</span><span class="ws-arrow">▾</span>' +
-        '<div class="wallet-dropdown" id="wallet-dropdown"></div>' +
-      '</div>' +
-      '<nav class="topnav">' + nav + '</nav>' +
-      '<div class="topbar-right"><span class="tb-total" id="nav-total">' + fmt(patrimonioTotal()) + '</span>' +
-      '<button class="tb-btn" id="nav-auth" onclick="MDFI.openAuthFromNav()">Entrar</button></div>' +
-    '</header>';
-  }
-  function mountNav(active) { var m = document.getElementById('nav-mount'); if (m) m.innerHTML = renderNav(active); renderWalletDropdown(); }
-  function renderWalletDropdown() {
-    var dd = document.getElementById('wallet-dropdown'); if (!dd) return;
-    var lim = limiteCarteiras(); var limTxt = lim === Infinity ? '∞' : lim;
-    var html = '<div class="wd-head">Suas carteiras <span class="wd-count">' + st.carteiras.length + '/' + limTxt + '</span></div>';
-    html += st.carteiras.map(function (w) {
-      var ativa = w.id === st.carteiraAtiva;
-      return '<div class="wd-item' + (ativa ? ' active' : '') + '" onclick="MDFI.selecionarCarteira(\'' + w.id + '\',event)">' +
-        '<span class="wd-dot"></span><span class="wd-name">' + w.nome + '</span>' + (ativa ? '<span class="wd-check">✓</span>' : '') +
-        '<span class="wd-actions"><button class="wd-mini" title="Renomear" onclick="MDFI.promptRenomear(\'' + w.id + '\',event)">✏️</button>' +
-        (st.carteiras.length > 1 ? '<button class="wd-mini del" title="Excluir" onclick="MDFI.promptExcluir(\'' + w.id + '\',event)">🗑</button>' : '') + '</span></div>';
-    }).join('');
-    if (podeAddCarteira()) html += '<div class="wd-add" onclick="MDFI.promptCriar(event)">＋ Nova carteira</div>';
-    else html += '<div class="wd-upgrade" onclick="window.location.href=\'planos.html\'">🔒 Limite do plano ' + planoLabel() + ' atingido<br><b>Fazer upgrade →</b></div>';
-    html += '<div class="wd-plan">Plano atual: <b>' + planoLabel() + '</b></div>';
-    dd.innerHTML = html;
-  }
-  function toggleWalletMenu(ev) { if (ev) ev.stopPropagation(); var dd = document.getElementById('wallet-dropdown'); if (dd) dd.classList.toggle('open'); }
-  function closeWalletMenu() { var dd = document.getElementById('wallet-dropdown'); if (dd) dd.classList.remove('open'); }
-  function selecionarCarteira(id, ev) {
-    if (ev) ev.stopPropagation(); trocarCarteira(id); closeWalletMenu();
-    var nm = document.getElementById('ws-name'); if (nm) nm.textContent = wallet().nome;
-    if (typeof window.onWalletChange === 'function') window.onWalletChange();
-  }
-  function promptCriar(ev) {
-    if (ev) ev.stopPropagation();
-    var nome = prompt('Nome da nova carteira:', 'Carteira ' + (st.carteiras.length + 1));
-    if (nome == null) return;
-    var r = criarCarteira(nome.trim() || ('Carteira ' + (st.carteiras.length + 1)));
-    if (!r.ok && r.motivo === 'limite') {
-      if (confirm('Seu plano ' + planoLabel() + ' permite ' + r.limite + ' carteira(s).\nDeseja ver os planos PRO/Premium?')) window.location.href = 'planos.html';
-      return;
-    }
-    renderWalletDropdown();
-    var nm = document.getElementById('ws-name'); if (nm) nm.textContent = wallet().nome;
-    if (typeof window.onWalletChange === 'function') window.onWalletChange();
-  }
-  function promptRenomear(id, ev) {
-    if (ev) ev.stopPropagation();
-    var w = st.carteiras.find(function (x) { return x.id === id; });
-    var nome = prompt('Novo nome:', w ? w.nome : ''); if (nome == null || !nome.trim()) return;
-    renomearCarteira(id, nome.trim()); renderWalletDropdown();
-    var nm = document.getElementById('ws-name'); if (nm) nm.textContent = wallet().nome;
-  }
-  function promptExcluir(id, ev) {
-    if (ev) ev.stopPropagation();
-    var w = st.carteiras.find(function (x) { return x.id === id; });
-    if (!confirm('Excluir a carteira "' + (w ? w.nome : '') + '"? Todos os dados dela serão perdidos.')) return;
-    var r = excluirCarteira(id);
-    if (!r.ok && r.motivo === 'ultima') { alert('Você precisa ter ao menos uma carteira.'); return; }
-    renderWalletDropdown();
-    var nm = document.getElementById('ws-name'); if (nm) nm.textContent = wallet().nome;
-    if (typeof window.onWalletChange === 'function') window.onWalletChange();
-  }
-  function updateNavTotal() { var el = document.getElementById('nav-total'); if (el) el.textContent = fmt(patrimonioTotal()); }
-  function updateNavAuth(user) {
-    var btn = document.getElementById('nav-auth'); if (!btn) return;
-    if (user) { var n = user.displayName || user.email || 'U'; btn.textContent = n.slice(0, 14); btn.classList.add('logged'); btn.onclick = function () { if (confirm('Sair da conta?')) logout(); }; }
-    else { btn.textContent = 'Entrar'; btn.classList.remove('logged'); btn.onclick = function () { openAuthFromNav(); }; }
-    renderWalletDropdown();
-  }
-  function openAuthFromNav() { if (typeof window.openAuthModal === 'function') window.openAuthModal(); else window.location.href = 'dashboard.html'; }
-
-  return {
-    st: function () { return st; }, defaultState: defaultState,
-    loadLocal: loadLocal, save: save, saveLocal: saveLocal,
-    initFirebase: initFirebase, loadFS: loadFS,
-    login: login, register: register, loginGoogle: loginGoogle, logout: logout, getUser: getUser,
-    getPlano: getPlano, planoLabel: planoLabel, limiteCarteiras: limiteCarteiras, podeAddCarteira: podeAddCarteira,
-    listarCarteiras: listarCarteiras, carteiraAtivaId: carteiraAtivaId, carteiraAtiva: carteiraAtiva,
-    criarCarteira: criarCarteira, trocarCarteira: trocarCarteira, renomearCarteira: renomearCarteira, excluirCarteira: excluirCarteira,
-    toggleWalletMenu: toggleWalletMenu, closeWalletMenu: closeWalletMenu, selecionarCarteira: selecionarCarteira,
-    promptCriar: promptCriar, promptRenomear: promptRenomear, promptExcluir: promptExcluir, renderWalletDropdown: renderWalletDropdown,
-    searchCoin: searchCoin, fetchPrices: fetchPrices, refreshHoldPrices: refreshHoldPrices,
-    hAtivos: hAtivos, hValorAtivo: hValorAtivo, hCustoAtivo: hCustoAtivo, hLucroAtivo: hLucroAtivo,
-    hPatrimonio: hPatrimonio, hCusto: hCusto, hLucro: hLucro, hRentabilidade: hRentabilidade,
-    dPosicoes: dPosicoes, dPatrimonio: dPatrimonio, dCapital: dCapital, dLucro: dLucro, dAPRMedio: dAPRMedio, dRendaMensal: dRendaMensal,
-    tOps: tOps, tBancaIni: tBancaIni, tLucro: tLucro, tBancaAtual: tBancaAtual, tTotalOps: tTotalOps, tWins: tWins, tLosses: tLosses, tWinRate: tWinRate,
-    patrimonioTotal: patrimonioTotal, lucroTotal: lucroTotal, capitalInvestido: capitalInvestido,
-    rendaPassivaMensal: rendaPassivaMensal, rentabilidadeTotal: rentabilidadeTotal, insights: insights,
-    fmt: fmt, fmtS: fmtS, fmtPct: fmtPct, uid: uid, moedaSimbolo: moedaSimbolo,
-    mountNav: mountNav, updateNavTotal: updateNavTotal, updateNavAuth: updateNavAuth, openAuthFromNav: openAuthFromNav
-  };
-})();
-
-document.addEventListener('click', function (e) { if (!e.target.closest('#wallet-selector')) MDFI.closeWalletMenu(); });
+/* ════════ SELETOR DE CARTEIRAS (v2) ════════ */
+.brand-back { color:var(--muted2); font-size:22px; font-weight:400; transition:color .15s; }
+.brand:hover .brand-back { color:var(--neon); }
+.wallet-selector {
+  position:relative; display:flex; align-items:center; gap:8px; padding:8px 14px;
+  background:var(--bg3); border:1px solid var(--border2); border-radius:var(--r);
+  cursor:pointer; transition:border-color .15s; flex-shrink:0; user-select:none;
+}
+.wallet-selector:hover { border-color:var(--gold); }
+.ws-ico { font-size:15px; }
+.ws-name { font-size:13px; font-weight:600; max-width:160px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ws-arrow { font-size:10px; color:var(--muted2); }
+.wallet-dropdown {
+  position:absolute; top:calc(100% + 8px); left:0; min-width:280px;
+  background:var(--bg1); border:1px solid var(--border2); border-radius:var(--rl);
+  box-shadow:0 20px 60px rgba(0,0,0,.55); padding:8px; display:none; z-index:200;
+}
+.wallet-dropdown.open { display:block; animation:wdIn .15s ease; }
+@keyframes wdIn { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
+.wd-head { display:flex; align-items:center; justify-content:space-between; font-size:11px; font-weight:700; color:var(--muted2); text-transform:uppercase; letter-spacing:.06em; padding:8px 10px 6px; }
+.wd-count { font-family:var(--mono); background:var(--bg4); padding:2px 8px; border-radius:99px; color:var(--text); }
+.wd-item { display:flex; align-items:center; gap:10px; padding:10px 10px; border-radius:var(--r); cursor:pointer; transition:background .12s; }
+.wd-item:hover { background:var(--bg3); }
+.wd-item.active { background:rgba(0,210,255,.08); }
+.wd-dot { width:8px; height:8px; border-radius:50%; background:var(--muted); flex-shrink:0; }
+.wd-item.active .wd-dot { background:var(--neon); box-shadow:0 0 8px var(--neon); }
+.wd-name { flex:1; font-size:13px; font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.wd-check { color:var(--neon); font-weight:700; }
+.wd-actions { display:flex; gap:3px; opacity:0; transition:opacity .12s; }
+.wd-item:hover .wd-actions { opacity:1; }
+.wd-mini { width:26px; height:26px; border-radius:6px; border:1px solid var(--border2); background:transparent; color:var(--muted2); cursor:pointer; font-size:12px; }
+.wd-mini:hover { color:var(--text); border-color:var(--muted); }
+.wd-mini.del:hover { color:var(--red); border-color:var(--red); }
+.wd-add { margin-top:6px; padding:11px; text-align:center; border:1px dashed var(--border2); border-radius:var(--r); color:var(--neon); font-size:13px; font-weight:600; cursor:pointer; transition:all .15s; }
+.wd-add:hover { background:rgba(0,210,255,.06); border-color:var(--neon); }
+.wd-upgrade { margin-top:6px; padding:12px; text-align:center; background:linear-gradient(135deg,rgba(245,197,66,.08),rgba(157,113,255,.06)); border:1px solid rgba(245,197,66,.25); border-radius:var(--r); color:var(--muted2); font-size:12px; cursor:pointer; line-height:1.5; }
+.wd-upgrade b { color:var(--gold); }
+.wd-plan { margin-top:8px; padding:8px 10px 4px; font-size:11px; color:var(--muted2); border-top:1px solid var(--border); }
+.wd-plan b { color:var(--gold); }
+@media (max-width:640px){ .ws-name{max-width:90px;} .wallet-dropdown{min-width:240px;} }

@@ -3,276 +3,248 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Criar conta — MundoDeFi</title>
-<meta name="description" content="Crie sua conta gratuita no MundoDeFi: ferramentas DeFi, estudos e portfólio cripto em português.">
-<meta name="robots" content="noindex">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="mundodefi-tokens.css">
-<style>
-:root{
-  --bg:#06040c;--bg2:#0c0916;--bg3:#130e20;--bg4:#1a142b;
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-  --text:#efedf7;--muted:#4d4961;--muted2:#8f8aa8;
-  --purple-soft:rgba(153,69,255,.14);--purple-line:rgba(153,69,255,.38);
-  --green-soft:rgba(20,241,149,.11);--green-line:rgba(20,241,149,.32);
-  --red-soft:rgba(255,92,122,.12);
-  --r:10px;--rl:16px;--rxl:24px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden}
-
-/* fundo espacial */
-.space{position:fixed;inset:0;pointer-events:none;z-index:0}
-.space::before{content:'';position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 85% 60% at 50% -10%, rgba(153,69,255,.15), transparent 60%),
-    radial-gradient(ellipse 50% 45% at 90% 90%, rgba(20,241,149,.05), transparent 65%)}
-.stars{position:absolute;width:2px;height:2px;border-radius:50%;background:transparent;box-shadow:
-  8vw 12vh #ffffff55, 22vw 32vh #ffffff33, 35vw 8vh #ffffff44, 48vw 24vh #ffffff33,
-  61vw 14vh #ffffff44, 74vw 38vh #ffffff33, 87vw 9vh #ffffff55, 94vw 28vh #ffffff33,
-  14vw 52vh #ffffff33, 29vw 66vh #ffffff33, 43vw 58vh #ffffff44, 56vw 72vh #ffffff33,
-  69vw 60vh #ffffff33, 82vw 70vh #ffffff44, 5vw 78vh #ffffff33, 38vw 84vh #ffffff33;
-  animation:twinkle 4.5s ease-in-out infinite alternate}
-@keyframes twinkle{from{opacity:.45}to{opacity:1}}
-@media(prefers-reduced-motion:reduce){.stars{animation:none}}
-
-.wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 1.5rem 3rem}
-
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:1.2rem 0;margin-bottom:2rem}
-.logo{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;text-decoration:none;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.logo b{font-weight:800}
-.back-link{font-size:13px;font-weight:600;color:var(--muted2);text-decoration:none;padding:8px 16px;border:1px solid var(--border2);border-radius:99px;background:rgba(255,255,255,.02);transition:.2s}
-.back-link:hover{color:var(--text);border-color:var(--purple-line)}
-
-/* layout 2 colunas */
-.auth-grid{display:grid;grid-template-columns:1fr 420px;gap:3rem;align-items:center;min-height:65vh}
-
-/* pitch */
-.pitch h1{font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.04em;line-height:1.12;margin-bottom:1rem}
-.pitch h1 span{background:linear-gradient(120deg,var(--purple) 10%,#c084fc 50%,var(--green) 95%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.pitch>p{font-size:14.5px;color:var(--muted2);line-height:1.65;margin-bottom:1.8rem;max-width:420px}
-.perk{display:flex;align-items:flex-start;gap:12px;margin-bottom:1rem}
-.perk-ic{width:34px;height:34px;border-radius:10px;background:var(--purple-soft);border:1px solid var(--purple-line);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-.perk b{font-size:13.5px;display:block;margin-bottom:1px}
-.perk span{font-size:12.5px;color:var(--muted2);line-height:1.5}
-
-/* card do formulário */
-.auth-card{background:linear-gradient(180deg,rgba(255,255,255,.03),rgba(255,255,255,0) 35%),var(--bg2);border:1px solid var(--purple-line);border-radius:var(--rxl);padding:2rem;box-shadow:0 0 60px rgba(153,69,255,.12);position:relative}
-.auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,transparent,var(--purple),transparent)}
-
-.auth-tabs{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:1.6rem}
-.auth-tab{flex:1;padding:9px;border:none;border-radius:9px;background:transparent;color:var(--muted2);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:.2s}
-.auth-tab.active{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(153,69,255,.35)}
-
-.fgrp{margin-bottom:1rem}
-.flabel{display:block;font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:6px;letter-spacing:.02em}
-.finput{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;transition:border-color .2s;outline:none}
-.finput:focus{border-color:var(--purple)}
-.finput::placeholder{color:var(--muted)}
-.fhint{font-size:11px;color:var(--muted);margin-top:5px}
-
-.auth-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(120deg,var(--purple),#7b2ff7);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 8px 28px rgba(153,69,255,.3);margin-top:.4rem}
-.auth-btn:hover{transform:scale(1.015);box-shadow:0 10px 34px rgba(153,69,255,.45)}
-.auth-btn:disabled{opacity:.55;cursor:wait;transform:none}
-
-.or-line{display:flex;align-items:center;gap:12px;margin:1rem 0;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}
-.or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--border)}
-.auth-btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border:1px solid var(--border2);border-radius:12px;background:var(--bg3);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s}
-.auth-btn-google:hover{border-color:var(--purple-line);background:var(--bg4)}
-
-.auth-msg{display:none;font-size:12.5px;line-height:1.5;border-radius:10px;padding:10px 13px;margin-bottom:1rem}
-.auth-msg.err{display:block;background:var(--red-soft);border:1px solid rgba(255,92,122,.3);color:var(--red)}
-.auth-msg.ok{display:block;background:var(--green-soft);border:1px solid var(--green-line);color:var(--green)}
-
-.auth-foot{text-align:center;font-size:12px;color:var(--muted2);margin-top:1.2rem;line-height:1.7}
-.auth-foot a{color:#c9a3ff;text-decoration:none;font-weight:600;cursor:pointer}
-.forgot{display:block;text-align:right;font-size:11.5px;color:var(--muted2);text-decoration:none;margin-top:6px;cursor:pointer}
-.forgot:hover{color:#c9a3ff}
-
-.page-footer{text-align:center;padding:1.8rem 0 .5rem;border-top:1px solid var(--border);color:var(--muted2);font-size:12px;margin-top:3rem}
-.page-footer a{color:#c9a3ff;text-decoration:none}
-
-@media(max-width:860px){
-  .auth-grid{grid-template-columns:1fr;gap:2rem;min-height:0}
-  .auth-card{order:-1}
-  .pitch>p{max-width:none}
-}
-</style>
+<title>Trade · MundoDeFi</title>
+<link rel="stylesheet" href="/mundodefi.css">
 </head>
 <body>
+<div id="nav-mount"></div>
 
-<div class="space"><div class="stars"></div></div>
-
-<div class="wrap">
-
-  <div class="topbar">
-    <a class="logo" href="index.html">₿ Mundo<b>DeFi</b></a>
-    <a class="back-link" href="index.html">← Voltar ao site</a>
-  </div>
-
-  <div class="auth-grid">
-
-    <!-- PITCH -->
-    <div class="pitch">
-      <h1>Crie sua conta.<br><span>É grátis para sempre.</span></h1>
-      <p>Sem cartão de crédito, sem teste que expira. Sua conta gratuita libera de verdade:</p>
-      <div class="perk">
-        <div class="perk-ic">🛠️</div>
-        <div><b>Todas as ferramentas DeFi</b><span>Impermanent loss, yield farming, staking, liquidação, juros compostos — sem limite de uso.</span></div>
-      </div>
-      <div class="perk">
-        <div class="perk-ic">📊</div>
-        <div><b>Seu primeiro portfólio</b><span>Carteira HOLD com até 10 ativos, salva na nuvem e acessível de qualquer dispositivo.</span></div>
-      </div>
-      <div class="perk">
-        <div class="perk-ic">📚</div>
-        <div><b>Estudos abertos</b><span>Artigos de iniciante a intermediário + glossário DeFi completo em português.</span></div>
-      </div>
+<div class="page-wrap">
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">⚡ Trade</h1>
+      <p class="page-sub">Registro e análise de operações</p>
     </div>
-
-    <!-- FORM -->
-    <div class="auth-card">
-      <div class="auth-tabs">
-        <button class="auth-tab active" id="tab-signup" onclick="setMode('signup')">Criar conta</button>
-        <button class="auth-tab" id="tab-login" onclick="setMode('login')">Entrar</button>
-      </div>
-
-      <div class="auth-msg" id="auth-msg"></div>
-
-      <div class="fgrp" id="grp-nome">
-        <label class="flabel" for="f-nome">Seu nome</label>
-        <input class="finput" id="f-nome" type="text" placeholder="Como quer ser chamado" autocomplete="name">
-      </div>
-      <div class="fgrp">
-        <label class="flabel" for="f-email">E-mail</label>
-        <input class="finput" id="f-email" type="email" placeholder="voce@email.com" autocomplete="email">
-      </div>
-      <div class="fgrp">
-        <label class="flabel" for="f-senha">Senha</label>
-        <input class="finput" id="f-senha" type="password" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
-        <a class="forgot" id="forgot-link" style="display:none" onclick="resetSenha()">Esqueci minha senha</a>
-        <div class="fhint" id="senha-hint">Use pelo menos 6 caracteres.</div>
-      </div>
-
-      <button class="auth-btn" id="btn-go" onclick="go()">Criar conta grátis →</button>
-
-      <div class="or-line"><span>ou</span></div>
-      <button class="auth-btn-google" onclick="goGoogle()">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="#EA4335" d="M12 5.04c1.62 0 3.06.56 4.2 1.66l3.12-3.12C17.4 1.8 14.9.75 12 .75 7.6.75 3.8 3.27 1.95 6.96l3.66 2.84C6.5 7.13 9.02 5.04 12 5.04z"/><path fill="#4285F4" d="M23.25 12.27c0-.93-.08-1.6-.26-2.3H12v4.35h6.44c-.13 1.08-.83 2.7-2.39 3.8l3.57 2.77c2.14-1.97 3.63-4.88 3.63-8.62z"/><path fill="#FBBC05" d="M5.62 14.2A6.9 6.9 0 0 1 5.25 12c0-.77.13-1.51.35-2.2L1.95 6.96A11.22 11.22 0 0 0 .75 12c0 1.81.43 3.52 1.2 5.04l3.67-2.84z"/><path fill="#34A853" d="M12 23.25c3.04 0 5.59-1 7.45-2.72l-3.57-2.77c-.96.67-2.25 1.13-3.88 1.13-2.98 0-5.5-2.09-6.39-4.73l-3.66 2.84c1.85 3.69 5.65 6.25 10.05 6.25z"/></svg>
-        Continuar com Google
-      </button>
-
-      <div class="auth-foot" id="foot-signup">
-        Ao criar a conta você concorda que o MundoDeFi é uma plataforma<br>educacional e não oferece consultoria financeira.
-      </div>
+    <div class="page-head-actions">
+      <button class="btn btn-ghost btn-sm" onclick="openBancaModal()">⚙ Banca inicial</button>
+      <button class="btn btn-gold" onclick="openOpModal()">+ Registrar Operação</button>
     </div>
-
   </div>
 
-  <div class="page-footer">
-    © 2026 MundoDeFi · <a href="index.html">Início</a> · <a href="planos.html">Planos</a> · <a href="ferramentas.html">Ferramentas</a>
+  <div class="kpi-grid c6">
+    <div class="kpi" style="--kpi-accent:var(--gold)">
+      <div class="kpi-label">🏦 Banca Atual</div>
+      <div class="kpi-value v-gold" id="k-banca">—</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--green)">
+      <div class="kpi-label">💰 Lucro Total</div>
+      <div class="kpi-value" id="k-lucro">—</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--neon)">
+      <div class="kpi-label">🎯 Win Rate</div>
+      <div class="kpi-value v-neon" id="k-wr">—</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--blue)">
+      <div class="kpi-label">📋 Operações</div>
+      <div class="kpi-value v-blue" id="k-ops">—</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--green)">
+      <div class="kpi-label">✅ Wins</div>
+      <div class="kpi-value v-green" id="k-wins">—</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--red)">
+      <div class="kpi-label">❌ Losses</div>
+      <div class="kpi-value v-red" id="k-losses">—</div>
+    </div>
   </div>
 
+  <div class="charts-row">
+    <div class="chart-box">
+      <div class="chart-box-head"><span class="chart-box-title">Evolução da Banca</span></div>
+      <div class="chart-area" style="height:240px"><canvas id="chart-banca"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-box-head"><span class="chart-box-title">Distribuição de Resultados</span></div>
+      <div class="chart-area" style="height:180px;display:flex;align-items:center;justify-content:center"><canvas id="chart-dist" width="180" height="180"></canvas></div>
+      <div class="donut-legend" id="dist-legend"></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">Lucro por Período (mensal)</span></div>
+    <div class="panel-body"><div class="chart-area" style="height:200px"><canvas id="chart-periodo"></canvas></div></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">Histórico de Operações</span></div>
+    <div class="tbl-wrap">
+      <table class="data">
+        <thead><tr>
+          <th>Data</th><th>Ativo</th><th>Tipo</th><th>Entrada</th><th>Saída</th>
+          <th>Lucro/Prejuízo</th><th>Observação</th><th>Ações</th>
+        </tr></thead>
+        <tbody id="ops-tbody"></tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<!-- Firebase + core do site (mesma config central usada pelo dashboard) -->
+<!-- Modal Operação -->
+<div class="modal-overlay" id="op-modal">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="op-modal-title">Registrar Operação</span><button class="modal-close" onclick="closeOpModal()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="op-id">
+      <div class="frow">
+        <div class="fgrp"><label>Data</label><input class="finput" type="date" id="op-data"></div>
+        <div class="fgrp"><label>Ativo</label><input class="finput" type="text" id="op-ativo" placeholder="BTC/USDT"></div>
+      </div>
+      <div class="frow">
+        <div class="fgrp"><label>Tipo</label><select class="fselect" id="op-tipo"><option value="long">Long</option><option value="short">Short</option></select></div>
+        <div class="fgrp"><label>Resultado (USD)</label><input class="finput" type="number" step="any" id="op-resultado" placeholder="150 ou -80"></div>
+      </div>
+      <div class="frow">
+        <div class="fgrp"><label>Preço Entrada (opcional)</label><input class="finput" type="number" step="any" id="op-entrada" placeholder="0"></div>
+        <div class="fgrp"><label>Preço Saída (opcional)</label><input class="finput" type="number" step="any" id="op-saida" placeholder="0"></div>
+      </div>
+      <div class="fgrp"><label>Observação</label><input class="finput" type="text" id="op-obs" placeholder="Setup, motivo..."></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeOpModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="salvarOp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Banca -->
+<div class="modal-overlay" id="banca-modal">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-head"><span class="modal-title">Banca Inicial</span><button class="modal-close" onclick="closeBancaModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrp"><label>Valor da banca inicial (USD)</label><input class="finput" type="number" step="any" id="banca-input" placeholder="1000"></div>
+      <p style="font-size:12px;color:var(--muted2)">A banca atual = banca inicial + soma dos resultados.</p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeBancaModal()">Cancelar</button>
+      <button class="btn btn-gold" onclick="salvarBanca()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="mundodefi-core.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/mundodefi-core.js"></script>
 <script>
-// Inicializa pelo core central — sem duplicar config.
-// Se já está logado (ou acabou de logar), vai direto pro painel.
-var _indo = false;
+var chBanca=null, chDist=null, chPeriodo=null;
+
+function toast(m,t){ var e=document.getElementById('toast'); e.textContent=m; e.className='toast show '+(t||''); setTimeout(function(){e.className='toast '+(t||'');},2600); }
+
+function render(){
+  document.getElementById('k-banca').textContent=MDFI.fmt(MDFI.tBancaAtual());
+  var lucro=MDFI.tLucro();
+  var le=document.getElementById('k-lucro'); le.textContent=MDFI.fmtS(lucro); le.className='kpi-value '+(lucro>=0?'v-green':'v-red');
+  document.getElementById('k-wr').textContent=MDFI.tWinRate().toFixed(1)+'%';
+  document.getElementById('k-ops').textContent=MDFI.tTotalOps();
+  document.getElementById('k-wins').textContent=MDFI.tWins();
+  document.getElementById('k-losses').textContent=MDFI.tLosses();
+  renderTabela(); renderBanca(); renderDist(); renderPeriodo();
+  MDFI.updateNavTotal();
+}
+
+function renderTabela(){
+  var ops0=MDFI.tOps();
+  var tb=document.getElementById('ops-tbody');
+  if(!ops0.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhuma operação. Clique em <b>+ Registrar Operação</b>.</td></tr>'; return; }
+  var ops=ops0.slice().sort(function(a,b){return new Date(b.data)-new Date(a.data);});
+  tb.innerHTML=ops.map(function(o){
+    var res=o.resultado||0;
+    return '<tr>'+
+      '<td class="mono">'+(o.data?new Date(o.data).toLocaleDateString('pt-BR'):'—')+'</td>'+
+      '<td><div class="cell-name">'+(o.ativo||'—')+'</div></td>'+
+      '<td><span class="badge '+(o.tipo==='short'?'badge-short':'badge-long')+'">'+(o.tipo==='short'?'Short':'Long')+'</span></td>'+
+      '<td class="mono">'+(o.entrada?MDFI.fmt(o.entrada):'—')+'</td>'+
+      '<td class="mono">'+(o.saida?MDFI.fmt(o.saida):'—')+'</td>'+
+      '<td class="mono '+(res>=0?'t-up':'t-dn')+'" style="font-weight:700">'+MDFI.fmtS(res)+'</td>'+
+      '<td style="color:var(--muted2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(o.obs||'—')+'</td>'+
+      '<td><div class="row-actions"><button class="icon-btn" onclick="editOp(\''+o.id+'\')">✏️</button><button class="icon-btn del" onclick="delOp(\''+o.id+'\')">🗑</button></div></td>'+
+    '</tr>';
+  }).join('');
+}
+
+function renderBanca(){
+  var st=MDFI.st();
+  var ops=ops0.slice().sort(function(a,b){return new Date(a.data)-new Date(b.data);});
+  var saldo=MDFI.tBancaIni(); var labels=['Início'],data=[saldo];
+  ops.forEach(function(o){ saldo+=(o.resultado||0); labels.push(o.data?new Date(o.data).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):''); data.push(+saldo.toFixed(2)); });
+  if(chBanca) chBanca.destroy();
+  chBanca=new Chart(document.getElementById('chart-banca'),{type:'line',data:{labels:labels,datasets:[{label:'Banca',data:data,borderColor:'#F5B614',backgroundColor:'rgba(245,182,20,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:labels.length<15?3:0,pointBackgroundColor:'#F5B614'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+}
+
+function renderDist(){
+  var wins=MDFI.tWins(), losses=MDFI.tLosses();
+  if(chDist) chDist.destroy();
+  if(!wins&&!losses){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem operações</div>'; return; }
+  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:['Wins','Losses'],datasets:[{data:[wins,losses],backgroundColor:['#14F195','#FF4D6A'],borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.parsed;}}}}}});
+  var tot=wins+losses;
+  document.getElementById('dist-legend').innerHTML=
+    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#14F195"></span>Wins</div><span class="dleg-pct">'+(tot?(wins/tot*100).toFixed(0):0)+'%</span></div>'+
+    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#FF4D6A"></span>Losses</div><span class="dleg-pct">'+(tot?(losses/tot*100).toFixed(0):0)+'%</span></div>';
+}
+
+function renderPeriodo(){
+  var byMonth={};
+  MDFI.tOps().forEach(function(o){ if(!o.data)return; var d=new Date(o.data); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); byMonth[k]=(byMonth[k]||0)+(o.resultado||0); });
+  var keys=Object.keys(byMonth).sort();
+  var labels=keys.map(function(k){var p=k.split('-');return new Date(p[0],p[1]-1,1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});});
+  var data=keys.map(function(k){return +byMonth[k].toFixed(2);});
+  if(chPeriodo) chPeriodo.destroy();
+  chPeriodo=new Chart(document.getElementById('chart-periodo'),{type:'bar',data:{labels:labels.length?labels:['—'],datasets:[{label:'Lucro',data:data.length?data:[0],backgroundColor:data.map(function(v){return v>=0?'rgba(20,241,149,.6)':'rgba(255,77,106,.6)';}),borderColor:data.map(function(v){return v>=0?'#14F195':'#FF4D6A';}),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmtS(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
+}
+
+/* ─── CRUD operação ─── */
+function openOpModal(){ resetOp(); document.getElementById('op-modal-title').textContent='Registrar Operação'; document.getElementById('op-data').value=new Date().toISOString().slice(0,10); document.getElementById('op-modal').classList.add('open'); }
+function closeOpModal(){ document.getElementById('op-modal').classList.remove('open'); }
+function resetOp(){ ['op-id','op-ativo','op-resultado','op-entrada','op-saida','op-obs'].forEach(function(id){document.getElementById(id).value='';}); document.getElementById('op-tipo').value='long'; }
+
+function editOp(id){
+  var o=MDFI.tOps().find(function(x){return x.id===id;}); if(!o)return;
+  document.getElementById('op-modal-title').textContent='Editar Operação';
+  document.getElementById('op-id').value=id;
+  document.getElementById('op-data').value=o.data||'';
+  document.getElementById('op-ativo').value=o.ativo||'';
+  document.getElementById('op-tipo').value=o.tipo||'long';
+  document.getElementById('op-resultado').value=o.resultado||'';
+  document.getElementById('op-entrada').value=o.entrada||'';
+  document.getElementById('op-saida').value=o.saida||'';
+  document.getElementById('op-obs').value=o.obs||'';
+  document.getElementById('op-modal').classList.add('open');
+}
+
+function salvarOp(){
+  var ativo=document.getElementById('op-ativo').value.trim();
+  var resStr=document.getElementById('op-resultado').value;
+  if(!ativo){ toast('Informe o ativo','err'); return; }
+  if(resStr===''){ toast('Informe o resultado','err'); return; }
+  var ops=MDFI.tOps(); var id=document.getElementById('op-id').value;
+  var dados={data:document.getElementById('op-data').value,ativo:ativo,tipo:document.getElementById('op-tipo').value,resultado:parseFloat(resStr),entrada:parseFloat(document.getElementById('op-entrada').value)||0,saida:parseFloat(document.getElementById('op-saida').value)||0,obs:document.getElementById('op-obs').value.trim()};
+  if(id){ var o=ops.find(function(x){return x.id===id;}); if(o)Object.assign(o,dados); toast('Operação atualizada','ok'); }
+  else { dados.id=MDFI.uid(); ops.push(dados); toast('Operação registrada','ok'); }
+  MDFI.save(); closeOpModal(); render();
+}
+
+function delOp(id){
+  if(!confirm('Excluir esta operação?'))return;
+  var w=MDFI.carteiraAtiva(); w.trade.operacoes=w.trade.operacoes.filter(function(x){return x.id!==id;});
+  MDFI.save(); render(); toast('Operação removida','ok');
+}
+
+/* ─── Banca ─── */
+function openBancaModal(){ document.getElementById('banca-input').value=MDFI.tBancaIni()||''; document.getElementById('banca-modal').classList.add('open'); }
+function closeBancaModal(){ document.getElementById('banca-modal').classList.remove('open'); }
+function salvarBanca(){ var v=parseFloat(document.getElementById('banca-input').value)||0; MDFI.carteiraAtiva().trade.bancaInicial=v; MDFI.save(); closeBancaModal(); render(); toast('Banca atualizada','ok'); }
+
+window.openAuthModal=function(){ window.location.href='/portfolio/dashboard.html'; };
+
+window.onWalletChange=function(){ render(); };
+
 MDFI.loadLocal();
-MDFI.initFirebase(function(user){
-  if(user && !_indo){ _indo = true; window.location.href = 'dashboard.html'; }
-});
-
-var mode = 'signup';
-
-function setMode(m){
-  mode = m;
-  document.getElementById('tab-signup').classList.toggle('active', m==='signup');
-  document.getElementById('tab-login').classList.toggle('active', m==='login');
-  document.getElementById('grp-nome').style.display = m==='signup' ? 'block' : 'none';
-  document.getElementById('senha-hint').style.display = m==='signup' ? 'block' : 'none';
-  document.getElementById('forgot-link').style.display = m==='login' ? 'block' : 'none';
-  document.getElementById('foot-signup').style.display = m==='signup' ? 'block' : 'none';
-  document.getElementById('btn-go').textContent = m==='signup' ? 'Criar conta grátis →' : 'Entrar →';
-  document.getElementById('f-senha').autocomplete = m==='signup' ? 'new-password' : 'current-password';
-  msg('', '');
-}
-
-function msg(texto, tipo){
-  var el = document.getElementById('auth-msg');
-  el.textContent = texto;
-  el.className = 'auth-msg' + (tipo ? ' ' + tipo : '');
-}
-
-function traduzErro(code, fallback){
-  var t = {
-    'auth/email-already-in-use': 'Esse e-mail já tem conta. Clique em "Entrar" para fazer login.',
-    'auth/invalid-email': 'E-mail inválido. Confere se digitou certo.',
-    'auth/weak-password': 'Senha fraca demais — use pelo menos 6 caracteres.',
-    'auth/user-not-found': 'Não achamos conta com esse e-mail. Crie uma conta grátis.',
-    'auth/wrong-password': 'Senha incorreta. Tenta de novo ou use "Esqueci minha senha".',
-    'auth/invalid-credential': 'E-mail ou senha incorretos.',
-    'auth/too-many-requests': 'Muitas tentativas. Espera alguns minutos e tenta de novo.',
-    'auth/network-request-failed': 'Falha de conexão. Confere sua internet.',
-    'auth/popup-closed-by-user': 'A janela do Google foi fechada antes de concluir. Tenta de novo.',
-    'auth/popup-blocked': 'O navegador bloqueou o popup do Google. Libera popups para o site e tenta de novo.'
-  };
-  return t[code] || fallback || 'Algo deu errado. Tenta de novo.';
-}
-
-function go(){
-  var email = document.getElementById('f-email').value.trim();
-  var senha = document.getElementById('f-senha').value;
-  var nome  = document.getElementById('f-nome').value.trim();
-
-  if(!email || !senha){ msg('Preencha e-mail e senha.', 'err'); return; }
-  if(mode === 'signup' && senha.length < 6){ msg('A senha precisa ter pelo menos 6 caracteres.', 'err'); return; }
-
-  var btn = document.getElementById('btn-go');
-  btn.disabled = true;
-  msg('', '');
-
-  if(mode === 'signup'){
-    MDFI.register(email, senha)
-      .then(function(){
-        var u = firebase.auth().currentUser;
-        var p = (nome && u) ? u.updateProfile({ displayName: nome }) : Promise.resolve();
-        return p.then(function(){ msg('Conta criada! Entrando...', 'ok'); });
-        // o initFirebase detecta o login e redireciona pro dashboard
-      })
-      .catch(function(e){ msg(traduzErro(e.code, e.message), 'err'); btn.disabled = false; });
-  } else {
-    MDFI.login(email, senha)
-      .then(function(){ msg('Bem-vindo de volta! Entrando...', 'ok'); })
-      .catch(function(e){ msg(traduzErro(e.code, e.message), 'err'); btn.disabled = false; });
-  }
-}
-
-function goGoogle(){
-  msg('', '');
-  MDFI.loginGoogle()
-    .then(function(){ msg('Bem-vindo! Entrando...', 'ok'); })
-    .catch(function(e){ msg(traduzErro(e.code, e.message), 'err'); });
-}
-
-function resetSenha(){
-  var email = document.getElementById('f-email').value.trim();
-  if(!email){ msg('Digite seu e-mail no campo acima e clique de novo em "Esqueci minha senha".', 'err'); return; }
-  firebase.auth().sendPasswordResetEmail(email)
-    .then(function(){ msg('Enviamos um link de redefinição para ' + email + '. Confere a caixa de entrada (e o spam).', 'ok'); })
-    .catch(function(e){ msg(traduzErro(e.code, e.message), 'err'); });
-}
-
-// Enter envia o formulário
-document.addEventListener('keydown', function(e){
-  if(e.key === 'Enter') go();
-});
+MDFI.mountNav('trade');
+render();
+MDFI.initFirebase(function(user){ MDFI.updateNavAuth(user); render(); });
 </script>
 </body>
 </html>
