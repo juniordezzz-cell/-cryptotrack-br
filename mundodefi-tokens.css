@@ -1,0 +1,23 @@
+/* ════════════════════════════════════════════════════════════
+   MUNDODEFI · TOKENS DE COR — FONTE ÚNICA DA PALETA
+   Edite SÓ este arquivo para mudar as cores de TODO o site.
+   Toda página linka este arquivo; o mundodefi.css também o importa.
+   ─────────────────────────────────────────────────────────────
+   PRO     = roxo Solana  (--purple / --pro)
+   PREMIUM = dourado      (--gold   / --premium)
+   ════════════════════════════════════════════════════════════ */
+:root{
+  /* núcleo da marca */
+  --purple:#9945FF;   /* PRO · roxo Solana            */
+  --gold:#F5B614;     /* PREMIUM · amarelo-dourado    */
+  --green:#14F195;    /* Solana verde                 */
+  --cyan:#00E5FF;     /* ciano                        */
+  --neon:#00E5FF;     /* alias de --cyan              */
+  --red:#FF4D6A;      /* perdas / alertas             */
+  --blue:#4D9FFF;     /* neutro / informativo         */
+  --defi:#00D2AA;     /* acento DeFi (teal)           */
+
+  /* semânticos de assinatura (use estes em botões/badges) */
+  --pro:#9945FF;
+  --premium:#F5B614;
+}

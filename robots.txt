@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /portfolio/
+
+Sitemap: https://mundodefi.com.br/sitemap.xml

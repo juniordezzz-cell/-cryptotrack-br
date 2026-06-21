@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard · MundoDeFi</title>
+<link rel="stylesheet" href="/mundodefi.css">
+</head>
+<body>
+<div id="nav-mount"></div>
+
+<div class="page-wrap">
+  <div class="guest-banner" id="guest-banner">
+    <span>👋</span>
+    <div>Você está no modo local. <b>Entre na sua conta</b> para sincronizar seus dados na nuvem.</div>
+    <button class="btn btn-gold btn-sm" style="margin-left:auto" onclick="openAuthModal()">Entrar</button>
+  </div>
+
+  <div class="page-head">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="page-sub">Visão geral consolidada do seu patrimônio cripto</p>
+    </div>
+    <div class="page-head-actions">
+      <button class="btn btn-ghost btn-sm" onclick="atualizarTudo()">↺ Atualizar preços</button>
+    </div>
+  </div>
+
+  <!-- KPIs principais -->
+  <div class="kpi-grid c4">
+    <div class="kpi" style="--kpi-accent:var(--gold)">
+      <div class="kpi-label">🏦 Patrimônio Total</div>
+      <div class="kpi-value v-gold" id="k-patrimonio">—</div>
+      <div class="kpi-sub"><span class="kpi-badge neu" id="k-meta-badge">—</span> da meta</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--green)">
+      <div class="kpi-label">💰 Lucro Total</div>
+      <div class="kpi-value" id="k-lucro">—</div>
+      <div class="kpi-sub"><span class="kpi-badge neu" id="k-lucro-badge">—</span> sobre investido</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--neon)">
+      <div class="kpi-label">📅 Resultado Mensal</div>
+      <div class="kpi-value v-neon" id="k-mensal">—</div>
+      <div class="kpi-sub">Trade + rendimentos no mês</div>
+    </div>
+    <div class="kpi" style="--kpi-accent:var(--defi)">
+      <div class="kpi-label">🌊 Renda Passiva</div>
+      <div class="kpi-value v-defi" id="k-renda">—</div>
+      <div class="kpi-sub">Estimativa mensal · DeFi</div>
+    </div>
+  </div>
+
+  <!-- KPIs por módulo -->
+  <div class="kpi-grid c3">
+    <a href="/portfolio/hold.html" class="kpi" style="--kpi-accent:var(--blue);cursor:pointer">
+      <div class="kpi-label">💎 Capital em HOLD</div>
+      <div class="kpi-value v-blue" id="k-hold">—</div>
+      <div class="kpi-sub" id="k-hold-sub">— ativos</div>
+    </a>
+    <a href="/portfolio/defi.html" class="kpi" style="--kpi-accent:var(--defi);cursor:pointer">
+      <div class="kpi-label">🌊 Capital em DeFi</div>
+      <div class="kpi-value v-defi" id="k-defi">—</div>
+      <div class="kpi-sub" id="k-defi-sub">— posições</div>
+    </a>
+    <a href="/portfolio/trade.html" class="kpi" style="--kpi-accent:var(--gold);cursor:pointer">
+      <div class="kpi-label">⚡ Capital em Trade</div>
+      <div class="kpi-value v-gold" id="k-trade">—</div>
+      <div class="kpi-sub" id="k-trade-sub">— operações</div>
+    </a>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="charts-row">
+    <div class="chart-box">
+      <div class="chart-box-head">
+        <span class="chart-box-title">Evolução Patrimonial</span>
+        <div class="chart-ctrl">
+          <button class="chart-ctrl-btn" data-per="3" onclick="setEvolPer(this,3)">3M</button>
+          <button class="chart-ctrl-btn active" data-per="6" onclick="setEvolPer(this,6)">6M</button>
+          <button class="chart-ctrl-btn" data-per="12" onclick="setEvolPer(this,12)">12M</button>
+        </div>
+      </div>
+      <div class="chart-area" style="height:260px"><canvas id="chart-evol"></canvas></div>
+    </div>
+    <div class="chart-box">
+      <div class="chart-box-head"><span class="chart-box-title">Distribuição da Carteira</span></div>
+      <div class="chart-area" style="height:180px;display:flex;align-items:center;justify-content:center">
+        <canvas id="chart-dist" width="180" height="180"></canvas>
+      </div>
+      <div class="donut-legend" id="dist-legend"></div>
+    </div>
+  </div>
+
+  <!-- Visão Geral / Insights -->
+  <div class="panel">
+    <div class="panel-head"><span class="panel-title">🔎 Visão Geral</span></div>
+    <div class="panel-body">
+      <div class="insights-grid">
+        <div class="insight">
+          <div class="insight-ico">🏆</div>
+          <div class="insight-label">Melhor Ativo</div>
+          <div class="insight-name" id="i-melhor-ativo">—</div>
+          <div class="insight-val v-green" id="i-melhor-ativo-val">—</div>
+        </div>
+        <div class="insight">
+          <div class="insight-ico">🌟</div>
+          <div class="insight-label">Melhor Estratégia</div>
+          <div class="insight-name" id="i-melhor-estrat">—</div>
+          <div class="insight-val v-defi" id="i-melhor-estrat-val">—</div>
+        </div>
+        <div class="insight">
+          <div class="insight-ico">📈</div>
+          <div class="insight-label">Maior Lucro</div>
+          <div class="insight-name" id="i-maior-lucro">—</div>
+          <div class="insight-val v-green" id="i-maior-lucro-val">—</div>
+        </div>
+        <div class="insight">
+          <div class="insight-ico">📉</div>
+          <div class="insight-label">Maior Perda</div>
+          <div class="insight-name" id="i-maior-perda">—</div>
+          <div class="insight-val v-red" id="i-maior-perda-val">—</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Login -->
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <div class="modal-head"><span class="modal-title" id="auth-title">Entrar</span><button class="modal-close" onclick="closeAuthModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="fgrp"><label>Email</label><input class="finput" type="email" id="auth-email" placeholder="seu@email.com"></div>
+      <div class="fgrp"><label>Senha</label><input class="finput" type="password" id="auth-pass" placeholder="••••••••"></div>
+      <button class="btn btn-gold btn-lg" style="width:100%;justify-content:center" id="auth-submit" onclick="doAuth()">Entrar</button>
+      <button class="btn btn-ghost" style="width:100%;justify-content:center;margin-top:10px" onclick="doGoogle()">Entrar com Google</button>
+      <div style="text-align:center;margin-top:14px;font-size:13px;color:var(--muted2)">
+        <span id="auth-switch-txt">Não tem conta?</span>
+        <a href="#" onclick="toggleAuthMode();return false" style="color:var(--neon);font-weight:600" id="auth-switch-link">Cadastre-se</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="/mundodefi-core.js"></script>
+<script>
+/* ─────────── DASHBOARD ─────────── */
+var chEvol=null, chDist=null, evolMonths=6;
+
+function toast(msg, type){ var t=document.getElementById('toast'); t.textContent=msg; t.className='toast show '+(type||''); setTimeout(function(){t.className='toast '+(type||'');},2600); }
+
+function render(){
+  var st=MDFI.st();
+  // KPIs principais
+  document.getElementById('k-patrimonio').textContent=MDFI.fmt(MDFI.patrimonioTotal());
+  var metaPct=st.config.meta>0?(MDFI.patrimonioTotal()/st.config.meta*100):0;
+  var mb=document.getElementById('k-meta-badge'); mb.textContent=metaPct.toFixed(0)+'%'; mb.className='kpi-badge '+(metaPct>=100?'up':'neu');
+
+  var lucro=MDFI.lucroTotal();
+  var le=document.getElementById('k-lucro'); le.textContent=MDFI.fmtS(lucro); le.className='kpi-value '+(lucro>=0?'v-green':'v-red');
+  var rentP=MDFI.rentabilidadeTotal();
+  var lb=document.getElementById('k-lucro-badge'); lb.textContent=MDFI.fmtPct(rentP); lb.className='kpi-badge '+(rentP>=0?'up':'dn');
+
+  document.getElementById('k-mensal').textContent=MDFI.fmtS(resultadoMensal());
+  document.getElementById('k-renda').textContent=MDFI.fmt(MDFI.rendaPassivaMensal());
+
+  // KPIs módulos
+  document.getElementById('k-hold').textContent=MDFI.fmt(MDFI.hPatrimonio());
+  document.getElementById('k-hold-sub').textContent=MDFI.hAtivos().length+' ativos';
+  document.getElementById('k-defi').textContent=MDFI.fmt(MDFI.dPatrimonio());
+  document.getElementById('k-defi-sub').textContent=MDFI.dPosicoes().length+' posições';
+  document.getElementById('k-trade').textContent=MDFI.fmt(MDFI.tBancaAtual());
+  document.getElementById('k-trade-sub').textContent=MDFI.tTotalOps()+' operações';
+
+  renderInsights();
+  renderEvol();
+  renderDist();
+  MDFI.updateNavTotal();
+}
+
+function resultadoMensal(){
+  var st=MDFI.st(); var now=new Date(); var ym=now.getFullYear()+'-'+(now.getMonth()+1);
+  var tradeM=MDFI.tOps().filter(function(o){ if(!o.data)return false; var d=new Date(o.data); return d.getFullYear()+'-'+(d.getMonth()+1)===ym; }).reduce(function(s,o){return s+(o.resultado||0);},0);
+  return tradeM + MDFI.rendaPassivaMensal();
+}
+
+function renderInsights(){
+  var ins=MDFI.insights();
+  function setI(idName, idVal, obj, valFn){
+    var n=document.getElementById(idName), v=document.getElementById(idVal);
+    if(obj){ n.textContent=obj.nome||'—'; v.textContent=valFn(obj); } else { n.textContent='—'; v.textContent='Sem dados'; }
+  }
+  setI('i-melhor-ativo','i-melhor-ativo-val', ins.melhorAtivo, function(o){return MDFI.fmtPct(o.rent);});
+  setI('i-melhor-estrat','i-melhor-estrat-val', ins.melhorEstrategia, function(o){return o.apr.toFixed(1)+'% APR';});
+  setI('i-maior-lucro','i-maior-lucro-val', ins.maiorLucro, function(o){return MDFI.fmtS(o.v);});
+  setI('i-maior-perda','i-maior-perda-val', ins.maiorPerda, function(o){return MDFI.fmtS(o.v);});
+}
+
+function setEvolPer(btn,m){ document.querySelectorAll('[data-per]').forEach(function(b){b.classList.remove('active');}); btn.classList.add('active'); evolMonths=m; renderEvol(); }
+
+function buildEvolData(months){
+  // Série sintética baseada no patrimônio atual (sem histórico real ainda → cresce linearmente até hoje)
+  var total=MDFI.patrimonioTotal();
+  var labels=[], data=[];
+  var now=new Date();
+  for(var i=months-1;i>=0;i--){
+    var d=new Date(now.getFullYear(), now.getMonth()-i, 1);
+    labels.push(d.toLocaleDateString('pt-BR',{month:'short'}));
+    var factor=1 - (i/months)*0.35; // simula crescimento até o valor atual
+    data.push(+(total*factor).toFixed(2));
+  }
+  return {labels:labels, data:data};
+}
+
+function renderEvol(){
+  var ed=buildEvolData(evolMonths);
+  if(chEvol) chEvol.destroy();
+  chEvol=new Chart(document.getElementById('chart-evol'),{
+    type:'bar',
+    data:{labels:ed.labels,datasets:[{label:'Patrimônio',data:ed.data,backgroundColor:'rgba(0,229,255,.5)',borderColor:'#00E5FF',borderWidth:1,borderRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},
+      scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+(v/1000).toFixed(0)+'k';}},grid:{color:'rgba(128,128,128,.06)'}}}}
+  });
+}
+
+function renderDist(){
+  var segs=[
+    {nome:'HOLD',valor:MDFI.hPatrimonio(),cor:'#4D9FFF'},
+    {nome:'DeFi',valor:MDFI.dPatrimonio(),cor:'#00D2AA'},
+    {nome:'Trade',valor:MDFI.tBancaAtual(),cor:'#F5B614'}
+  ];
+  var total=segs.reduce(function(s,x){return s+x.valor;},0);
+  if(chDist) chDist.destroy();
+  chDist=new Chart(document.getElementById('chart-dist'),{
+    type:'doughnut',
+    data:{labels:segs.map(function(s){return s.nome;}),datasets:[{data:segs.map(function(s){return +s.valor.toFixed(2);}),backgroundColor:segs.map(function(s){return s.cor;}),borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},
+    options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+MDFI.fmt(c.parsed);}}}}}
+  });
+  document.getElementById('dist-legend').innerHTML=segs.map(function(s){
+    var pct=total>0?(s.valor/total*100).toFixed(0):0;
+    return '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:'+s.cor+'"></span>'+s.nome+'</div><span class="dleg-pct">'+pct+'%</span></div>';
+  }).join('');
+}
+
+function atualizarTudo(){ toast('Atualizando preços...'); MDFI.refreshHoldPrices(function(){ render(); toast('Preços atualizados','ok'); }); }
+
+/* ─── AUTH ─── */
+var authMode='login';
+function openAuthModal(){ document.getElementById('auth-modal').classList.add('open'); }
+function closeAuthModal(){ document.getElementById('auth-modal').classList.remove('open'); }
+function toggleAuthMode(){
+  authMode=authMode==='login'?'register':'login';
+  document.getElementById('auth-title').textContent=authMode==='login'?'Entrar':'Criar Conta';
+  document.getElementById('auth-submit').textContent=authMode==='login'?'Entrar':'Cadastrar';
+  document.getElementById('auth-switch-txt').textContent=authMode==='login'?'Não tem conta?':'Já tem conta?';
+  document.getElementById('auth-switch-link').textContent=authMode==='login'?'Cadastre-se':'Entrar';
+}
+function doAuth(){
+  var email=document.getElementById('auth-email').value.trim();
+  var pass=document.getElementById('auth-pass').value;
+  if(!email||!pass){ toast('Preencha email e senha','err'); return; }
+  var fn=authMode==='login'?MDFI.login:MDFI.register;
+  fn(email,pass).then(function(){ closeAuthModal(); toast('Bem-vindo!','ok'); }).catch(function(e){ toast(e.message,'err'); });
+}
+function doGoogle(){ MDFI.loginGoogle().then(function(){ closeAuthModal(); toast('Bem-vindo!','ok'); }).catch(function(e){ toast(e.message,'err'); }); }
+
+/* ─── troca de carteira ─── */
+window.onWalletChange=function(){ render(); if(MDFI.hAtivos().length) MDFI.refreshHoldPrices(render); };
+
+/* ─── INIT ─── */
+MDFI.loadLocal();
+MDFI.mountNav('dashboard');
+render();
+MDFI.initFirebase(function(user){
+  MDFI.updateNavAuth(user);
+  document.getElementById('guest-banner').style.display=user?'none':'flex';
+  render();
+  if(MDFI.st().hold.ativos.length) MDFI.refreshHoldPrices(render);
+});
+</script>
+</body>
+</html>
