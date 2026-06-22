@@ -60,7 +60,7 @@ nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:cente
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 /* ── SEARCH (topo dos gráficos) ── */
-.search-card{background:rgba(13,17,32,.7);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.5rem;backdrop-filter:blur(20px);box-shadow:0 4px 24px rgba(0,0,0,.4)}
+.search-card{position:relative;z-index:100;background:rgba(13,17,32,.7);border:1px solid var(--border);border-radius:16px;padding:1.4rem 1.5rem;backdrop-filter:blur(20px);box-shadow:0 4px 24px rgba(0,0,0,.4)}
 .search-wrap{position:relative}
 .search-box{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.03);border:1px solid var(--border2);border-radius:12px;height:58px;padding:0 18px;transition:border-color .2s,box-shadow .2s}
 .search-box:focus-within{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,166,35,.12)}
@@ -70,7 +70,7 @@ nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:cente
 .search-hint{font-size:.7rem;color:var(--text-muted);margin-top:.6rem;text-align:center}
 .search-hint b{color:var(--text-dim);cursor:pointer}
 .search-hint b:hover{color:var(--gold)}
-.search-dd{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;z-index:60;display:none;box-shadow:0 16px 50px rgba(0,0,0,.6);max-height:320px;overflow-y:auto}
+.search-dd{position:absolute;top:calc(100% + 8px);left:0;right:0;background:var(--surface2);border:1px solid var(--border2);border-radius:12px;overflow:hidden;z-index:60;display:none;box-shadow:0 16px 50px rgba(0,0,0,.6);max-height:320px;overflow-y:auto;z-index:200}
 .search-dd.open{display:block}
 .sd-group{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);padding:.7rem 1rem .3rem}
 .sd-item{display:flex;align-items:center;gap:11px;padding:.65rem 1rem;cursor:pointer;transition:background .1s}
@@ -528,11 +528,31 @@ async function withRetry(fn, tries){
 }
 
 /* ════════════════ FETCH CANÔNICO (uma vez, maior período) ════════════════ */
-async function rawCrypto(a){
-  const u=`https://api.coingecko.com/api/v3/coins/${a.cg}/market_chart?vs_currency=usd&days=3650`;
+/* Cripto: Binance (histórico longo, grátis, sem chave) + fallback CoinGecko (máx 365d) */
+async function binanceKlines(sym, interval, limit){
+  const u=`https://api.binance.com/api/v3/klines?symbol=${sym}USDT&interval=${interval}&limit=${limit}`;
+  const r=await fetch(u); if(!r.ok) throw new Error("bnb"+r.status);
+  const d=await r.json(); if(!Array.isArray(d)||!d.length) throw new Error("bnb-vazio");
+  return d.map(k=>({t:k[0], v:parseFloat(k[4])})).filter(p=>isFinite(p.v));
+}
+async function cgFallback(a){
+  const u=`https://api.coingecko.com/api/v3/coins/${a.cg}/market_chart?vs_currency=usd&days=365`;
   const r=await fetch(u); if(!r.ok) throw new Error("cg"+r.status);
   const d=await r.json(); if(!d.prices||!d.prices.length) throw new Error("cg-vazio");
-  return d.prices.map(p=>({t:p[0], v:p[1]}));           // US$
+  return d.prices.map(p=>({t:p[0], v:p[1]}));
+}
+async function rawCrypto(a){
+  const sym=(a.bn||a.sym||"").toUpperCase();
+  let weekly=[], daily=[];
+  if(sym){
+    try{ weekly=await binanceKlines(sym,"1w",750); }catch(e){}   // ~14 anos semanal
+    try{ daily =await binanceKlines(sym,"1d",1000); }catch(e){}  // ~2,7 anos diário (detalhe recente)
+  }
+  if(weekly.length || daily.length){
+    const dStart = daily.length ? daily[0].t : Infinity;
+    return weekly.filter(p=>p.t<dStart).concat(daily).sort((x,y)=>x.t-y.t);  // US$ (≈USDT)
+  }
+  return await cgFallback(a);                                    // Binance não tem o par → CoinGecko (1 ano)
 }
 async function rawTD(a){
   if(!tdEnabled()) throw new Error("NO_TD_KEY");
