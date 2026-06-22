@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conversor Cripto — Real, Dólar e Euro para 500 criptomoedas."> | MundoDeFi</title>
-<meta name="description" content="Converta Real (BRL), Dólar (USD) e Euro (EUR) para as 500 maiores criptomoedas com cotação ao vivo, gráfico, estatísticas e tabelas de conversão. Grátis e em português.">
-<meta name="keywords" content="conversor cripto, brl para sol, brl para btc, real para bitcoin, dolar para bitcoin, euro para cripto, cotação cripto brl, calculadora cripto">
-<meta property="og:title" content="Conversor Cripto — BRL, USD e EUR para 500 tokens | MundoDeFi">
+<title>Conversor Fiat → Cripto — Real, Dólar e Euro para 500 criptomoedas | MundoDeFi</title>
+<meta name="description" content="Conversor Fiat → Cripto: converta Real (BRL), Dólar (USD) e Euro (EUR) para as 500 maiores criptomoedas com cotação ao vivo, gráfico e tabelas. Grátis e em português.">
+<meta name="keywords" content="conversor fiat cripto, real para cripto, dolar para cripto, brl para sol, brl para btc, real para bitcoin, dolar para bitcoin, euro para cripto, cotação cripto brl">
+<meta property="og:title" content="Conversor Fiat → Cripto — BRL, USD e EUR para 500 tokens | MundoDeFi">
 <meta property="og:description" content="Cotação ao vivo, gráfico e tabelas de conversão de Real, Dólar e Euro para as 500 maiores criptos.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/conversor.html">
@@ -360,7 +360,7 @@ footer a:hover{color:var(--text)}
 
   <!-- ===== HERO + TAXA AO VIVO ===== -->
   <div class="hero">
-    <span class="eyebrow">Conversor ao vivo · 500 criptomoedas</span>
+    <span class="eyebrow">Conversor Fiat → Cripto · cotação ao vivo · 500 moedas</span>
     <h1>Converter <span class="par" id="h1-fiat">Real (BRL)</span> em <span class="par" id="h1-moeda">Solana (SOL)</span></h1>
     <p class="taxa-viva">1 <span id="taxa-sym">SOL</span> vale agora <strong id="taxa-valor">—</strong>
       <span class="variacao" id="taxa-var"></span></p>
@@ -634,6 +634,35 @@ footer a:hover{color:var(--text)}
 
 const API = 'https://api.coingecko.com/api/v3';
 
+/* ----------------------------------------------------------
+   CHAVE DEMO DA COINGECKO (opcional, mas recomendada)
+   Pegue grátis em https://www.coingecko.com/en/developers/dashboard
+   e cole entre as aspas abaixo. Vazio = usa o acesso público
+   (funciona, mas com limite menor).
+   ---------------------------------------------------------- */
+const COINGECKO_KEY = '';
+
+// fetch com cabeçalho da chave (se houver) + retry com espera crescente
+async function cgFetch(url, tentativas = 3) {
+  const opts = COINGECKO_KEY ? { headers: { 'x-cg-demo-api-key': COINGECKO_KEY } } : {};
+  let ultimoErro;
+  for (let i = 0; i < tentativas; i++) {
+    try {
+      const r = await fetch(url, opts);
+      if (r.status === 429 || r.status >= 500) {       // limite ou erro do servidor: espera e tenta de novo
+        ultimoErro = new Error('http ' + r.status);
+        await new Promise(res => setTimeout(res, 900 * (i + 1) + Math.random() * 400));
+        continue;
+      }
+      return r;
+    } catch (e) {
+      ultimoErro = e;
+      await new Promise(res => setTimeout(res, 900 * (i + 1)));
+    }
+  }
+  throw ultimoErro || new Error('falha de rede');
+}
+
 const FIATS = {
   brl: { code:'BRL', simbolo:'R$', nome:'Real (BRL)',  artigo:'Real brasileiro' },
   usd: { code:'USD', simbolo:'$',  nome:'Dólar (USD)', artigo:'Dólar americano' },
@@ -641,6 +670,7 @@ const FIATS = {
 };
 
 const POPULARES = ['bitcoin','ethereum','solana','ripple','dogecoin','aave'];
+const POPULARES_SYM = { bitcoin:'BTC', ethereum:'ETH', solana:'SOL', ripple:'XRP', dogecoin:'DOGE', aave:'AAVE' };
 const QUANTIDADES = [1, 5, 10, 50, 100, 500, 1000];
 
 // ---------- estado ----------
@@ -671,16 +701,47 @@ const lerInput = el => {
 };
 const esc = s => s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
-// ---------- top 500 ----------
+// ---------- top 500 (carregada sob demanda + cache) ----------
+const CACHE_LISTA = 'mdfi_top500_v1';
+const CACHE_HORAS = 12;
+let listaPromise = null;
+
+// só carrega a lista quando realmente precisa (foco na busca)
+function garantirLista() {
+  if (LISTA.length) return Promise.resolve();
+  if (!listaPromise) {
+    listaPromise = carregarTop500()
+      .then(() => { montarChips(); })
+      .catch(e => { listaPromise = null; throw e; });
+  }
+  return listaPromise;
+}
+
 async function carregarTop500() {
+  // 1) tenta o cache do navegador
+  try {
+    const raw = localStorage.getItem(CACHE_LISTA);
+    if (raw) {
+      const { t, lista } = JSON.parse(raw);
+      if (Date.now() - t < CACHE_HORAS * 3600e3 && Array.isArray(lista) && lista.length) {
+        LISTA = lista;
+        return;
+      }
+    }
+  } catch (e) { /* cache inválido: ignora */ }
+
+  // 2) busca na CoinGecko (2 chamadas, só desta vez)
   const paginas = await Promise.all([1, 2].map(p =>
-    fetch(`${API}/coins/markets?vs_currency=brl&order=market_cap_desc&per_page=250&page=${p}&sparkline=false`)
+    cgFetch(`${API}/coins/markets?vs_currency=brl&order=market_cap_desc&per_page=250&page=${p}&sparkline=false`)
       .then(r => { if (!r.ok) throw new Error('top500 ' + r.status); return r.json(); })
   ));
   LISTA = paginas.flat().map((c, i) => ({
     id: c.id, sym: (c.symbol || '').toUpperCase(),
     nome: c.name || c.id, img: c.image || '', rank: c.market_cap_rank || (i + 1),
   }));
+
+  // 3) guarda em cache pra não buscar de novo nas próximas visitas
+  try { localStorage.setItem(CACHE_LISTA, JSON.stringify({ t: Date.now(), lista: LISTA })); } catch (e) {}
 }
 
 // ---------- busca / autocomplete ----------
@@ -722,7 +783,14 @@ function abrirDropdown(filtro = '') {
 }
 function fecharDropdown() { dropdown.classList.remove('aberto'); focoDropdown = -1; }
 
-inputBusca.addEventListener('focus', () => { inputBusca.select(); abrirDropdown(inputBusca.value === moedaAtual.sym ? '' : inputBusca.value); });
+inputBusca.addEventListener('focus', () => {
+  inputBusca.select();
+  const filtro = () => inputBusca.value === moedaAtual.sym ? '' : inputBusca.value;
+  abrirDropdown(filtro());                       // mostra "carregando…" ou populares na hora
+  garantirLista()
+    .then(() => { if (document.activeElement === inputBusca) abrirDropdown(filtro()); })
+    .catch(() => {});
+});
 inputBusca.addEventListener('input', () => abrirDropdown(inputBusca.value));
 inputBusca.addEventListener('blur', () => setTimeout(() => { fecharDropdown(); inputBusca.value = moedaAtual.sym; }, 120));
 inputBusca.addEventListener('keydown', e => {
@@ -782,10 +850,11 @@ function montarChips() {
   // fiats diferentes pro token atual
   Object.keys(FIATS).filter(f => f !== fiatAtual).forEach(f =>
     pares.push({ fiat: f, id: moedaAtual.id, sym: moedaAtual.sym }));
-  // tokens populares no fiat atual
+  // tokens populares no fiat atual (usa o símbolo da lista, ou o fixo se ela ainda não carregou)
   POPULARES.filter(id => id !== moedaAtual.id).forEach(id => {
     const c = LISTA.find(m => m.id === id);
-    if (c) pares.push({ fiat: fiatAtual, id: c.id, sym: c.sym });
+    const sym = c ? c.sym : POPULARES_SYM[id];
+    if (sym) pares.push({ fiat: fiatAtual, id, sym });
   });
   wrap.innerHTML = pares.map(p =>
     `<a href="?fiat=${p.fiat}&cripto=${p.id}">${FIATS[p.fiat].code} → ${esc(p.sym)}</a>`
@@ -795,17 +864,24 @@ function montarChips() {
 // ---------- dados de mercado ----------
 async function carregarDados() {
   // 1 chamada: preço do token nas três moedas (alimenta o conversor e a linha tri-fiat)
-  const rSimple = await fetch(`${API}/simple/price?ids=${moedaAtual.id}&vs_currencies=brl,usd,eur`);
+  const rSimple = await cgFetch(`${API}/simple/price?ids=${moedaAtual.id}&vs_currencies=brl,usd,eur`);
   if (!rSimple.ok) throw new Error('simple ' + rSimple.status);
   const dSimple = (await rSimple.json())[moedaAtual.id];
   if (!dSimple) throw new Error('sem preço');
   precosFiat = { brl: dSimple.brl, usd: dSimple.usd, eur: dSimple.eur };
 
   // 1 chamada: estatísticas completas no fiat selecionado
-  const rMkt = await fetch(`${API}/coins/markets?vs_currency=${fiatAtual}&ids=${moedaAtual.id}&price_change_percentage=24h`);
+  const rMkt = await cgFetch(`${API}/coins/markets?vs_currency=${fiatAtual}&ids=${moedaAtual.id}&price_change_percentage=24h`);
   if (!rMkt.ok) throw new Error('markets ' + rMkt.status);
   const [d] = await rMkt.json();
   if (!d) throw new Error('sem dados');
+
+  // hidrata identidade do token a partir desta mesma resposta (sem chamada extra)
+  moedaAtual.sym  = (d.symbol || moedaAtual.sym).toUpperCase();
+  moedaAtual.nome = d.name || moedaAtual.nome;
+  moedaAtual.img  = d.image || moedaAtual.img;
+  atualizarRotulos();
+  montarChips();
 
   const preco = precosFiat[fiatAtual];
 
@@ -898,7 +974,7 @@ document.getElementById('select-fiat').addEventListener('change', e => {
 async function carregarGrafico() {
   const wrap = document.getElementById('grafico-wrap');
   wrap.innerHTML = '<p class="grafico-vazio">Carregando gráfico…</p>';
-  const r = await fetch(`${API}/coins/${moedaAtual.id}/market_chart?vs_currency=${fiatAtual}&days=${diasGrafico}`);
+  const r = await cgFetch(`${API}/coins/${moedaAtual.id}/market_chart?vs_currency=${fiatAtual}&days=${diasGrafico}`);
   if (!r.ok) throw new Error('chart ' + r.status);
   const d = await r.json();
   const pontos = d.prices;
@@ -960,14 +1036,9 @@ function mostrarErro(e) {
 async function iniciar() {
   document.getElementById('erro-api').style.display = 'none';
   try {
-    if (!LISTA.length) {
-      await carregarTop500();
-      // garante que a moeda da URL exista na lista carregada
-      const daUrl = LISTA.find(c => c.id === moedaAtual.id);
-      if (daUrl) moedaAtual = daUrl;
-      atualizarRotulos();
-      montarChips();
-    }
+    // Apenas 3 chamadas no início: preço + estatísticas + gráfico.
+    // A lista dos 500 tokens carrega sob demanda (ao focar na busca),
+    // evitando o bloqueio por excesso de requisições da CoinGecko grátis.
     await carregarDados();
     await carregarGrafico();
   } catch (e) {
@@ -987,6 +1058,7 @@ setInterval(() => { if (LISTA.length) carregarDados().catch(() => {}); }, 60000)
   const id = params.get('cripto');
   if (id) moedaAtual = { id, sym: id.toUpperCase().slice(0, 6), nome: id, img: '' };
   atualizarRotulos();
+  montarChips();
   document.getElementById('input-fiat').value = '100';
   iniciar();
 })();
