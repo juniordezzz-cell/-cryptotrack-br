@@ -1,0 +1,410 @@
+/* =====================================================================
+   mundodefi-ferramentas.css
+   ---------------------------------------------------------------------
+   ARQUIVO ÚNICO que comanda o VISUAL de TODAS as ferramentas do site.
+   Mexeu aqui  ->  muda o layout de todas as páginas de uma vez só.
+
+   Como usar em cada ferramenta:
+     <link rel="stylesheet" href="/mundodefi-tokens.css">       (cores)
+     <link rel="stylesheet" href="/mundodefi-ferramentas.css">  (este)
+   ...e apague o <style> gigante de dentro da página.
+
+   As CORES da marca continuam vindo do mundodefi-tokens.css (fonte única).
+   Aqui só mora LAYOUT. O valor depois da vírgula em var(--x, #...) é só
+   uma reserva caso o tokens não carregue (ex.: pré-visualização).
+   ===================================================================== */
+
+/* ── 0. TOKENS LOCAIS / RESERVA ─────────────────────────────────────── */
+:root{
+  /* cores da marca (preferem o tokens; o hex é só reserva) */
+  --roxo:     var(--purple, #9945ff);
+  --verde:    var(--green,  #14f195);
+  --ciano:    var(--cyan,   #00e5ff);
+  --vermelho: var(--red,    #ff5470);
+  --dourado:  var(--gold,   #f5b614);
+
+  /* superfícies e texto — dark premium */
+  --bg:#0a0a0a;
+  --bg2:#111114;
+  --card:#15151a;
+  --border:#26262e;
+  --text:#f2f2f5;
+  --muted:#9b9ba6;
+
+  --radius:14px;
+  --mono:'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* ── 1. BASE ────────────────────────────────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  /* brilhos estáticos sutis — elegância sem movimento */
+  background-image:
+    radial-gradient(900px 420px at 85% -5%, rgba(153,69,255,.10), transparent 60%),
+    radial-gradient(700px 380px at 0% 30%, rgba(20,241,149,.05), transparent 60%);
+  background-repeat:no-repeat;
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--verde);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1020px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}
+
+/* ── 2. CABEÇALHO ───────────────────────────────────────────────────── */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,10,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-size:1.15rem;font-weight:700;
+  background:linear-gradient(135deg,var(--roxo),var(--ciano));
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo em{font-style:normal}
+.nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
+.nav-links a{color:var(--muted)}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.btn-pro{
+  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
+  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
+}
+.btn-pro:hover{opacity:.9;text-decoration:none}
+
+/* ── 3. HERO ────────────────────────────────────────────────────────── */
+.hero{padding:46px 0 8px;text-align:center}
+.eyebrow{
+  display:inline-block;font-size:.75rem;letter-spacing:.14em;
+  color:var(--verde);text-transform:uppercase;font-weight:600;
+  border:1px solid rgba(20,241,149,.3);border-radius:999px;
+  padding:4px 14px;margin-bottom:16px;
+}
+h1{font-size:clamp(1.55rem,4.4vw,2.45rem);font-weight:700;line-height:1.2;margin-bottom:10px}
+h1 .par{color:var(--roxo)}
+.hero-sub{font-size:1.02rem;color:var(--muted);max-width:640px;margin:0 auto}
+.hero-sub b{color:var(--text);font-weight:600}
+
+/* ── 4. SEÇÕES (título padrão) ──────────────────────────────────────── */
+section{padding:46px 0 0}
+h2{font-size:1.35rem;font-weight:700;margin-bottom:6px}
+h2 .ico{margin-right:8px}
+.sub{color:var(--muted);font-size:.92rem;margin-bottom:20px}
+
+/* ── 5. CARD GENÉRICO (a "caixa" padrão de toda ferramenta) ─────────── */
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:22px;margin-top:18px;
+}
+.card.glow{box-shadow:0 0 80px rgba(153,69,255,.12)}
+.card-title{font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:16px}
+
+/* ── 6. FORMULÁRIO (entradas das calculadoras) ──────────────────────── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:560px){.grid2,.grid3{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px;margin-bottom:14px}
+.field>label{font-size:.78rem;color:var(--muted);font-weight:600;letter-spacing:.02em}
+.input-wrap{
+  display:flex;align-items:center;height:46px;
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  overflow:hidden;transition:border-color .15s;
+}
+.input-wrap:focus-within{border-color:var(--roxo)}
+.input-wrap .prefix{
+  padding:0 12px;color:var(--muted);font-size:.85rem;font-weight:600;
+  border-right:1px solid var(--border);height:100%;display:flex;align-items:center;
+}
+.input-wrap input,.input-wrap select{
+  flex:1;width:100%;height:100%;border:none;background:transparent;
+  color:var(--text);font-family:inherit;font-size:.95rem;padding:0 14px;outline:none;
+}
+.input-wrap select{cursor:pointer}
+select option{background:var(--card);color:var(--text)}
+/* seletor de moeda/período standalone (estilo conversor) */
+select{
+  background:var(--card);border:1px solid var(--border);color:var(--text);
+  font-family:inherit;font-weight:600;font-size:.95rem;border-radius:10px;
+  padding:8px 10px;cursor:pointer;outline:none;
+}
+select:focus{border-color:var(--roxo)}
+/* sliders */
+.range-wrap{display:flex;align-items:center;gap:12px}
+.range-wrap input[type=range]{flex:1;accent-color:var(--roxo);cursor:pointer}
+.range-val{font-family:var(--mono);font-size:.85rem;color:var(--roxo);min-width:44px;text-align:right}
+/* toggle de duas opções (token/dólar, apr/apy...) */
+.toggle{display:inline-flex;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
+.toggle button{
+  background:none;border:none;color:var(--muted);font-family:inherit;font-weight:600;
+  font-size:.8rem;padding:7px 16px;border-radius:8px;cursor:pointer;transition:.15s;
+}
+.toggle button.ativo{background:rgba(153,69,255,.18);color:var(--text)}
+
+/* ── 7. BOTÕES ──────────────────────────────────────────────────────── */
+.actions{display:flex;align-items:center;justify-content:space-between;
+  margin-top:6px;flex-wrap:wrap;gap:12px}
+.btn-calc{
+  background:linear-gradient(135deg,#0fae6f,var(--verde));
+  color:#062a1c;border:none;border-radius:10px;
+  padding:12px 34px;font-size:.9rem;font-weight:700;font-family:inherit;
+  cursor:pointer;letter-spacing:.01em;transition:opacity .2s,transform .1s;
+  box-shadow:0 4px 22px rgba(20,241,149,.22);
+}
+.btn-calc:hover{opacity:.92}
+.btn-calc:active{transform:scale(.98)}
+.secondary-actions{display:flex;gap:16px;flex-wrap:wrap}
+.btn-link{
+  background:none;border:none;color:var(--muted);font-size:.8rem;font-family:inherit;
+  cursor:pointer;text-decoration:underline;text-underline-offset:3px;transition:color .2s;
+}
+.btn-link:hover{color:var(--verde)}
+
+/* ── 8. RESULTADOS (calculadoras) ───────────────────────────────────── */
+.results-grid{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:10px;margin-bottom:24px}
+@media(max-width:560px){.results-grid{grid-template-columns:1fr}}
+.res-box{
+  border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;
+  background:rgba(255,255,255,.02);transition:border-color .3s;
+}
+.res-box:hover{border-color:var(--muted)}
+.res-box.destaque{background:rgba(153,69,255,.08);border-color:rgba(153,69,255,.4);box-shadow:0 0 30px rgba(153,69,255,.12)}
+.res-box.green{background:rgba(20,241,149,.08);border-color:rgba(20,241,149,.35)}
+.res-box.red{background:rgba(255,84,112,.08);border-color:rgba(255,84,112,.35)}
+.res-box.cyan{background:rgba(0,229,255,.07);border-color:rgba(0,229,255,.3)}
+.res-label{font-size:.66rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.res-val{font-size:1.08rem;font-weight:700;font-family:var(--mono);color:var(--text);word-break:break-word}
+.res-box.destaque .res-val{color:var(--roxo)}
+.res-box.green .res-val{color:var(--verde)}
+.res-box.red .res-val{color:var(--vermelho)}
+.res-box.cyan .res-val{color:var(--ciano)}
+.res-val.green{color:var(--verde)!important}
+.res-val.red{color:var(--vermelho)!important}
+.fee-notice{font-size:.72rem;color:var(--muted);margin-top:14px;padding:.55rem .8rem;
+  background:rgba(255,255,255,.02);border-radius:6px;border-left:2px solid var(--border)}
+.risk-badge{display:inline-block;font-size:.7rem;font-weight:700;padding:4px 14px;border-radius:99px}
+.risk-low{background:rgba(20,241,149,.12);color:var(--verde);border:1px solid rgba(20,241,149,.3)}
+.risk-med{background:rgba(245,182,20,.12);color:var(--dourado);border:1px solid rgba(245,182,20,.3)}
+.risk-high{background:rgba(255,84,112,.12);color:var(--vermelho);border:1px solid rgba(255,84,112,.3)}
+
+/* ── 9. GRÁFICO ─────────────────────────────────────────────────────── */
+.section-label{font-size:.68rem;font-weight:600;color:var(--verde);text-align:center;
+  margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+.legend{display:flex;gap:20px;justify-content:center;margin-bottom:14px;flex-wrap:wrap}
+.legend-item{display:flex;align-items:center;gap:7px;font-size:.75rem;color:var(--muted)}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.chart-wrap{position:relative;width:100%;height:280px;margin-bottom:1.5rem}
+.grafico-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px}
+.grafico-topo{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.periodos{display:flex;gap:6px}
+.periodos button{
+  background:var(--bg2);border:1px solid var(--border);color:var(--muted);
+  font-family:inherit;font-weight:600;font-size:.8rem;border-radius:8px;padding:6px 14px;cursor:pointer;
+}
+.periodos button.ativo{background:rgba(153,69,255,.15);border-color:var(--roxo);color:var(--text)}
+#grafico,.grafico-card svg{width:100%;height:auto;display:block}
+.grafico-vazio{color:var(--muted);text-align:center;padding:48px 0;font-size:.9rem}
+.variacao{font-weight:600;font-size:.95rem}
+.up{color:var(--verde)}
+.down{color:var(--vermelho)}
+
+/* ── 10. ESTATÍSTICAS ───────────────────────────────────────────────── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px}
+.stat .label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
+.stat .valor{font-size:1.12rem;font-weight:700;word-break:break-word}
+
+/* ── 11. TABELAS ────────────────────────────────────────────────────── */
+.tabelas{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:680px){.tabelas{grid-template-columns:1fr}}
+.tabela-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.tabela-card h3{font-size:.95rem;padding:14px 18px;border-bottom:1px solid var(--border);background:var(--bg2)}
+.tabela-card table{width:100%;border-collapse:collapse;font-size:.92rem}
+.tabela-card td{padding:10px 18px;border-bottom:1px solid var(--border)}
+.tabela-card tr:last-child td{border-bottom:none}
+.tabela-card td:last-child{text-align:right;font-weight:600;color:var(--verde)}
+/* tabela longa rolável (calculadoras) */
+.table-scroll{overflow-y:auto;max-height:280px;border:1px solid var(--border);border-radius:10px}
+.table-scroll::-webkit-scrollbar{width:5px}
+.table-scroll::-webkit-scrollbar-thumb{background:var(--border);border-radius:5px}
+.table-scroll table{width:100%;border-collapse:collapse;font-size:.78rem}
+.table-scroll thead th{
+  background:rgba(255,255,255,.03);padding:10px 12px;text-align:center;font-weight:600;
+  font-size:.66rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);
+  border-bottom:1px solid var(--border);position:sticky;top:0;z-index:1;
+}
+.table-scroll tbody td{padding:8px 12px;text-align:center;border-bottom:1px solid rgba(38,38,46,.6);
+  color:var(--muted);font-family:var(--mono);font-size:.75rem}
+.table-scroll tbody tr:last-child td{border-bottom:none}
+.table-scroll tbody tr:hover td{background:rgba(255,255,255,.02);color:var(--text)}
+
+/* ── 12. CHIPS / PARES ──────────────────────────────────────────────── */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chips a{background:var(--card);border:1px solid var(--border);color:var(--text);
+  font-size:.85rem;font-weight:600;padding:8px 16px;border-radius:999px}
+.chips a:hover{border-color:var(--roxo);text-decoration:none}
+
+/* ── 13. CONVERSOR (painéis estilo tradutor) ────────────────────────── */
+.conversor-card{margin:30px auto 0;max-width:860px;background:var(--card);
+  border:1px solid var(--border);border-radius:var(--radius);padding:26px 24px;
+  box-shadow:0 0 80px rgba(153,69,255,.12)}
+.tradutor{display:flex;align-items:stretch;gap:14px}
+.tradutor.invertido .painel-fiat{order:3}
+.tradutor.invertido .meio{order:2}
+.tradutor.invertido .painel-cripto{order:1}
+.painel{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;transition:border-color .15s}
+.painel:focus-within{border-color:var(--roxo)}
+.painel-topo{display:flex;align-items:center;gap:10px;min-height:38px}
+.painel label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
+.painel input.valor{width:100%;background:transparent;border:none;outline:none;color:var(--text);
+  font-family:inherit;font-size:1.5rem;font-weight:600}
+.painel input.valor::placeholder{color:var(--muted);opacity:.45}
+.meio{display:flex;align-items:center;justify-content:center}
+.swap-btn{width:46px;height:46px;border-radius:50%;background:var(--bg2);border:1px solid var(--border);
+  color:var(--verde);font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:transform .25s,border-color .15s,box-shadow .15s}
+.swap-btn:hover{border-color:var(--verde);transform:rotate(180deg);box-shadow:0 0 18px rgba(20,241,149,.25)}
+@media(max-width:720px){
+  .tradutor{flex-direction:column}
+  .tradutor.invertido .painel-fiat{order:3}
+  .tradutor.invertido .painel-cripto{order:1}
+  .swap-btn{transform:rotate(90deg)}
+  .swap-btn:hover{transform:rotate(270deg)}
+}
+.busca-wrap{position:relative;flex:1;min-width:0}
+.busca-token{width:100%;display:flex;align-items:center;gap:8px;background:var(--card);
+  border:1px solid var(--border);border-radius:10px;padding:7px 10px;cursor:text}
+.busca-token img{width:22px;height:22px;border-radius:50%}
+.busca-token input{flex:1;min-width:0;background:transparent;border:none;outline:none;
+  color:var(--text);font-family:inherit;font-weight:600;font-size:.95rem}
+.busca-token input::placeholder{color:var(--muted);opacity:.6}
+.dropdown{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:30;background:var(--card);
+  border:1px solid var(--border);border-radius:12px;max-height:300px;overflow-y:auto;
+  box-shadow:0 14px 40px rgba(0,0,0,.55);display:none}
+.dropdown.aberto{display:block}
+.dropdown .item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:.92rem}
+.dropdown .item:hover,.dropdown .item.foco{background:rgba(153,69,255,.12)}
+.dropdown .item img{width:24px;height:24px;border-radius:50%}
+.dropdown .item .sym{font-weight:700}
+.dropdown .item .nome{color:var(--muted);font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dropdown .item .rank{margin-left:auto;font-size:.75rem;color:var(--muted)}
+.dropdown .vazio{padding:14px;color:var(--muted);font-size:.88rem;text-align:center}
+.conversor-rodape{margin-top:14px;font-size:.8rem;color:var(--muted);
+  display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px}
+/* hero do conversor (linha "1 X vale agora" + tri-fiat + atualizado) */
+.taxa-viva{font-size:1.05rem;color:var(--muted);margin-bottom:6px}
+.taxa-viva strong{color:var(--text);font-size:1.2rem}
+.tri-fiat{font-size:.95rem;color:var(--muted);margin-bottom:4px}
+.tri-fiat b{color:var(--text);font-weight:600}
+.tri-fiat .sep{color:var(--roxo);margin:0 6px}
+.atualizado{font-size:.78rem;color:var(--muted);opacity:.7}
+/* linha "Mais buscados" dentro do dropdown de busca */
+.populares{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--muted)}
+.populares span{cursor:pointer;color:var(--verde);font-weight:600;margin-right:10px}
+.populares span:hover{text-decoration:underline}
+
+/* ── 14. FAQ ────────────────────────────────────────────────────────── */
+details{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  margin-bottom:10px;padding:0 18px}
+summary{cursor:pointer;font-weight:600;font-size:.97rem;padding:15px 0;list-style:none;
+  position:relative;padding-right:26px}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:2px;color:var(--roxo);font-size:1.2rem;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--muted);font-size:.92rem;padding-bottom:16px}
+details p strong{color:var(--text)}
+
+/* ── 15. CARD DE TEXTO SEO ──────────────────────────────────────────── */
+.seo-card h2{font-size:1.05rem;color:var(--text);margin-bottom:.7rem;letter-spacing:-.01em}
+.seo-card p{font-size:.9rem;color:var(--muted);line-height:1.75;margin-bottom:.8rem}
+.seo-card p:last-child{margin-bottom:0}
+.seo-card strong{color:var(--verde);font-weight:600}
+
+/* ── 16. OUTRAS FERRAMENTAS (grid + pílulas) ────────────────────────── */
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.tool-card{position:relative;overflow:hidden;--tc:var(--roxo);
+  background:var(--card);border:1px solid var(--border);border-radius:16px;
+  display:flex;flex-direction:column;color:var(--text);text-decoration:none;
+  transition:transform .22s,border-color .22s,box-shadow .22s}
+.tool-card::after{content:"";position:absolute;top:0;left:0;right:0;height:2px;z-index:2;
+  background:var(--tc);transform:scaleX(0);transform-origin:left;transition:transform .25s}
+.tool-card:hover{border-color:rgba(255,255,255,.14);transform:translateY(-4px);box-shadow:0 14px 40px rgba(0,0,0,.45);text-decoration:none}
+.tool-card:hover::after{transform:scaleX(1)}
+.tool-preview{height:150px;overflow:hidden;border-bottom:1px solid var(--border);background:#07080d;flex-shrink:0}
+.tool-preview svg{width:100%;height:100%;display:block}
+.tool-body{padding:14px 16px 16px;flex:1;display:flex;flex-direction:column;gap:7px}
+.tool-hdr{display:flex;align-items:center;gap:9px}
+.tool-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.tool-name{font-size:.95rem;font-weight:700;letter-spacing:-.01em}
+.tool-desc{font-size:.82rem;color:var(--muted);line-height:1.55;flex:1}
+.tool-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}
+.tool-badge{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:3px 9px;border-radius:99px}
+.tool-arrow{font-size:1rem;color:var(--muted);transition:color .15s,transform .15s}
+.tool-card:hover .tool-arrow{color:var(--tc);transform:translateX(3px)}
+.tools-links{display:flex;flex-wrap:wrap;gap:8px}
+.tool-pill{display:inline-flex;align-items:center;gap:7px;padding:8px 16px;border-radius:99px;
+  background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.74rem;font-weight:600;
+  color:var(--muted);text-decoration:none;transition:all .2s}
+.tool-pill:hover{border-color:var(--roxo);color:var(--text);text-decoration:none}
+
+/* ── 17. CTA / PLANOS ───────────────────────────────────────────────── */
+.cta-card{background:linear-gradient(135deg,rgba(153,69,255,.1),rgba(20,241,149,.05));
+  border:1px solid rgba(153,69,255,.3);border-radius:var(--radius);padding:28px 24px;margin-top:18px;text-align:center}
+.cta-card h3{font-size:1.2rem;font-weight:700;margin-bottom:8px}
+.cta-card h3 span{color:var(--roxo)}
+.cta-card p{color:var(--muted);font-size:.9rem;max-width:620px;margin:0 auto 18px}
+.cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.cta-btn-gold{background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305;
+  font-weight:700;padding:11px 24px;border-radius:10px}
+.cta-btn-gold:hover{opacity:.92;text-decoration:none}
+.cta-btn-ghost{border:1px solid var(--border);color:var(--text);font-weight:600;padding:11px 24px;border-radius:10px}
+.cta-btn-ghost:hover{border-color:var(--roxo);text-decoration:none}
+.cta-foot{font-size:.76rem;color:var(--muted);margin-top:14px;opacity:.8}
+/* Bloco PRO / Premium — injetado pelo mundodefi-ferramentas.js no fim de
+   toda ferramenta. Regra de cor fixa da marca: PRO = roxo · PREMIUM = dourado */
+.planos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+@media(max-width:680px){.planos{grid-template-columns:1fr}}
+.plano{position:relative;background:var(--card);border:1px solid var(--border);
+  border-radius:18px;padding:26px 24px;display:flex;flex-direction:column;gap:14px}
+.plano.premium{border-color:rgba(245,182,20,.45);box-shadow:0 0 50px rgba(245,182,20,.10)}
+.plano .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305;
+  font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+  padding:5px 16px;border-radius:999px;white-space:nowrap}
+.plano .tag{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.plano.pro .tag{color:var(--roxo)}
+.plano.premium .tag{color:var(--dourado)}
+.plano .preco{font-size:2rem;font-weight:700}
+.plano .preco small{font-size:.9rem;color:var(--muted);font-weight:500}
+.plano .desc{color:var(--muted);font-size:.9rem;line-height:1.5}
+.plano ul{list-style:none;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:7px}
+.plano ul li::before{content:"✓ ";color:var(--verde);font-weight:700}
+.plano .btn{margin-top:auto;text-align:center;font-weight:700;padding:13px 0;border-radius:999px;color:#fff;font-size:.92rem}
+.plano.pro .btn{background:linear-gradient(135deg,var(--roxo),#6c2bd9)}
+.plano.premium .btn{background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305}
+.plano .btn:hover{opacity:.92;text-decoration:none}
+.planos-foot{text-align:center;color:var(--muted);font-size:.82rem;margin-top:16px}
+.planos-foot a{color:var(--ciano);font-weight:600}
+
+/* ── 18. AVISO + RODAPÉ ─────────────────────────────────────────────── */
+.aviso{margin-top:44px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);padding-top:18px;opacity:.8}
+footer{margin-top:30px;border-top:1px solid var(--border);padding:24px 0 34px;text-align:center;font-size:.82rem;color:var(--muted)}
+footer a{color:var(--muted)}
+footer a:hover{color:var(--text)}
+
+/* ── 19. ERRO DE API ────────────────────────────────────────────────── */
+.erro-api{display:none;margin:18px auto 0;max-width:560px;text-align:center;
+  background:rgba(255,84,112,.08);border:1px solid rgba(255,84,112,.35);
+  border-radius:12px;padding:14px;font-size:.88rem;color:var(--text)}
+.erro-api button{margin-left:10px;background:var(--vermelho);border:none;color:#fff;
+  font-family:inherit;font-weight:600;border-radius:8px;padding:5px 14px;cursor:pointer}
+
+/* ── 20. MOVIMENTO REDUZIDO (acessibilidade) ────────────────────────── */
+@media(prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+  html{scroll-behavior:auto}
+}

@@ -14,355 +14,22 @@
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/conversor.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/mundodefi-tokens.css">
-<style>
-:root{
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --border:#26262e;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
-  --roxo:var(--purple);
-  --verde:var(--green);
-  --vermelho:var(--red);
-  --radius:14px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  /* brilhos estáticos sutis — elegância sem movimento */
-  background-image:
-    radial-gradient(900px 420px at 85% -5%, rgba(153,69,255,.10), transparent 60%),
-    radial-gradient(700px 380px at 0% 30%, rgba(20,241,149,.05), transparent 60%);
-  background-repeat:no-repeat;
-  color:var(--text);
-  font-family:'Space Grotesk',system-ui,sans-serif;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:var(--verde);text-decoration:none}
-a:hover{text-decoration:underline}
-.container{max-width:1020px;margin:0 auto;padding:0 20px}
-
-/* ===== Header ===== */
-header{
-  position:sticky;top:0;z-index:50;
-  background:rgba(10,10,10,.85);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
-.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.logo em{font-style:normal}
-.nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
-.nav-links a{color:var(--muted)}
-.nav-links a:hover{color:var(--text);text-decoration:none}
-.btn-pro{
-  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
-  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
-}
-.btn-pro:hover{opacity:.9;text-decoration:none}
-
-/* ===== Hero ===== */
-.hero{padding:46px 0 8px;text-align:center}
-.eyebrow{
-  display:inline-block;font-size:.75rem;letter-spacing:.14em;
-  color:var(--verde);text-transform:uppercase;font-weight:600;
-  border:1px solid rgba(20,241,149,.3);border-radius:999px;
-  padding:4px 14px;margin-bottom:16px;
-}
-h1{font-size:clamp(1.55rem,4.4vw,2.45rem);font-weight:700;line-height:1.2;margin-bottom:10px}
-h1 .par{color:var(--roxo)}
-.taxa-viva{font-size:1.05rem;color:var(--muted);margin-bottom:6px}
-.taxa-viva strong{color:var(--text);font-size:1.2rem}
-.tri-fiat{font-size:.95rem;color:var(--muted);margin-bottom:4px}
-.tri-fiat b{color:var(--text);font-weight:600}
-.tri-fiat .sep{color:var(--roxo);margin:0 6px}
-.variacao{font-weight:600;font-size:.95rem}
-.up{color:var(--verde)}
-.down{color:var(--vermelho)}
-.atualizado{font-size:.78rem;color:var(--muted);opacity:.7}
-
-/* ===== Card conversor (estilo tradutor) ===== */
-.conversor-card{
-  margin:30px auto 0;max-width:860px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:26px 24px;
-  box-shadow:0 0 80px rgba(153,69,255,.12);
-}
-.tradutor{
-  display:flex;align-items:stretch;gap:14px;
-}
-.tradutor.invertido .painel-fiat{order:3}
-.tradutor.invertido .meio{order:2}
-.tradutor.invertido .painel-cripto{order:1}
-.painel{
-  flex:1;min-width:0;
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px 16px;
-  display:flex;flex-direction:column;gap:10px;
-  transition:border-color .15s;
-}
-.painel:focus-within{border-color:var(--roxo)}
-.painel-topo{display:flex;align-items:center;gap:10px;min-height:38px}
-.painel label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.painel input.valor{
-  width:100%;
-  background:transparent;border:none;outline:none;
-  color:var(--text);
-  font-family:inherit;font-size:1.5rem;font-weight:600;
-}
-.painel input.valor::placeholder{color:var(--muted);opacity:.45}
-select{
-  background:var(--card);
-  border:1px solid var(--border);
-  color:var(--text);
-  font-family:inherit;font-weight:600;font-size:.95rem;
-  border-radius:10px;padding:8px 10px;
-  cursor:pointer;outline:none;
-}
-select:focus{border-color:var(--roxo)}
-.meio{display:flex;align-items:center;justify-content:center}
-.swap-btn{
-  width:46px;height:46px;border-radius:50%;
-  background:var(--bg2);border:1px solid var(--border);
-  color:var(--verde);font-size:1.2rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .25s,border-color .15s,box-shadow .15s;
-}
-.swap-btn:hover{border-color:var(--verde);transform:rotate(180deg);box-shadow:0 0 18px rgba(20,241,149,.25)}
-@media(max-width:720px){
-  .tradutor{flex-direction:column}
-  .tradutor.invertido .painel-fiat{order:3}
-  .tradutor.invertido .painel-cripto{order:1}
-  .swap-btn{transform:rotate(90deg)}
-  .swap-btn:hover{transform:rotate(270deg)}
-}
-
-/* ----- busca de token (autocomplete) ----- */
-.busca-wrap{position:relative;flex:1;min-width:0}
-.busca-token{
-  width:100%;
-  display:flex;align-items:center;gap:8px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:10px;padding:7px 10px;
-  cursor:text;
-}
-.busca-token img{width:22px;height:22px;border-radius:50%}
-.busca-token input{
-  flex:1;min-width:0;
-  background:transparent;border:none;outline:none;
-  color:var(--text);font-family:inherit;font-weight:600;font-size:.95rem;
-}
-.busca-token input::placeholder{color:var(--muted);opacity:.6}
-.dropdown{
-  position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:30;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:12px;
-  max-height:300px;overflow-y:auto;
-  box-shadow:0 14px 40px rgba(0,0,0,.55);
-  display:none;
-}
-.dropdown.aberto{display:block}
-.dropdown .item{
-  display:flex;align-items:center;gap:10px;
-  padding:10px 14px;cursor:pointer;font-size:.92rem;
-}
-.dropdown .item:hover,.dropdown .item.foco{background:rgba(153,69,255,.12)}
-.dropdown .item img{width:24px;height:24px;border-radius:50%}
-.dropdown .item .sym{font-weight:700}
-.dropdown .item .nome{color:var(--muted);font-size:.85rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.dropdown .item .rank{margin-left:auto;font-size:.75rem;color:var(--muted)}
-.dropdown .vazio{padding:14px;color:var(--muted);font-size:.88rem;text-align:center}
-.populares{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--muted)}
-.populares span{cursor:pointer;color:var(--verde);font-weight:600;margin-right:10px}
-.populares span:hover{text-decoration:underline}
-
-.conversor-rodape{
-  margin-top:14px;font-size:.8rem;color:var(--muted);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
-}
-
-/* ===== Seções ===== */
-section{padding:46px 0 0}
-h2{font-size:1.35rem;font-weight:700;margin-bottom:6px}
-h2 .ico{margin-right:8px}
-.sub{color:var(--muted);font-size:.92rem;margin-bottom:20px}
-
-/* ===== Gráfico ===== */
-.grafico-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:20px;
-}
-.grafico-topo{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:14px}
-.periodos{display:flex;gap:6px}
-.periodos button{
-  background:var(--bg2);border:1px solid var(--border);
-  color:var(--muted);font-family:inherit;font-weight:600;font-size:.8rem;
-  border-radius:8px;padding:6px 14px;cursor:pointer;
-}
-.periodos button.ativo{
-  background:rgba(153,69,255,.15);
-  border-color:var(--roxo);color:var(--text);
-}
-#grafico{width:100%;height:auto;display:block}
-.grafico-vazio{color:var(--muted);text-align:center;padding:48px 0;font-size:.9rem}
-
-/* ===== Stats ===== */
-.stats-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-  gap:14px;
-}
-.stat{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:16px 18px;
-}
-.stat .label{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px}
-.stat .valor{font-size:1.12rem;font-weight:700;word-break:break-word}
-
-/* ===== Tabelas ===== */
-.tabelas{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:680px){.tabelas{grid-template-columns:1fr}}
-.tabela-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);overflow:hidden;
-}
-.tabela-card h3{
-  font-size:.95rem;padding:14px 18px;
-  border-bottom:1px solid var(--border);
-  background:var(--bg2);
-}
-.tabela-card table{width:100%;border-collapse:collapse;font-size:.92rem}
-.tabela-card td{padding:10px 18px;border-bottom:1px solid var(--border)}
-.tabela-card tr:last-child td{border-bottom:none}
-.tabela-card td:last-child{text-align:right;font-weight:600;color:var(--verde)}
-
-/* ===== Pares ===== */
-.chips{display:flex;flex-wrap:wrap;gap:10px}
-.chips a{
-  background:var(--card);border:1px solid var(--border);
-  color:var(--text);font-size:.85rem;font-weight:600;
-  padding:8px 16px;border-radius:999px;
-}
-.chips a:hover{border-color:var(--roxo);text-decoration:none}
-
-/* ===== FAQ ===== */
-details{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);margin-bottom:10px;
-  padding:0 18px;
-}
-summary{
-  cursor:pointer;font-weight:600;font-size:.97rem;
-  padding:15px 0;list-style:none;position:relative;padding-right:26px;
-}
-summary::-webkit-details-marker{display:none}
-summary::after{
-  content:"+";position:absolute;right:2px;color:var(--roxo);
-  font-size:1.2rem;transition:transform .2s;
-}
-details[open] summary::after{transform:rotate(45deg)}
-details p{color:var(--muted);font-size:.92rem;padding-bottom:16px}
-details p strong{color:var(--text)}
-
-/* ===== Ferramentas ===== */
-.tools-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:14px;
-}
-.tool{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:18px;
-  color:var(--text);display:block;
-  transition:border-color .15s,transform .15s;
-}
-.tool:hover{border-color:var(--roxo);transform:translateY(-3px);text-decoration:none}
-.tool .emoji{font-size:1.5rem;margin-bottom:8px;display:block}
-.tool .nome{font-weight:700;font-size:.98rem;margin-bottom:4px}
-.tool .desc{color:var(--muted);font-size:.84rem;line-height:1.45}
-
-/* ===== Planos PRO / Premium ===== */
-.planos{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:680px){.planos{grid-template-columns:1fr}}
-.plano{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:26px 24px;
-  display:flex;flex-direction:column;gap:12px;
-}
-.plano.destaque{border-color:rgba(153,69,255,.55);box-shadow:0 0 50px rgba(153,69,255,.12)}
-.plano .tag{font-size:.78rem;font-weight:700;letter-spacing:.06em}
-.plano.pro .tag{color:var(--verde)}
-.plano.premium .tag{color:var(--roxo)}
-.plano .preco{font-size:1.9rem;font-weight:700}
-.plano .preco small{font-size:.85rem;color:var(--muted);font-weight:500}
-.plano ul{list-style:none;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:7px}
-.plano ul li::before{content:"✓ ";color:var(--verde);font-weight:700}
-.plano .btn{
-  margin-top:auto;text-align:center;
-  font-weight:600;padding:11px 0;border-radius:10px;color:#fff;
-}
-.plano.pro .btn{background:linear-gradient(135deg,#0fae6f,#14f195);color:#062a1c}
-.plano.premium .btn{background:linear-gradient(135deg,var(--roxo),#6c2bd9)}
-.plano .btn:hover{opacity:.9;text-decoration:none}
-
-/* ===== Aviso / footer ===== */
-.aviso{
-  margin-top:44px;font-size:.78rem;color:var(--muted);
-  border-top:1px solid var(--border);padding-top:18px;opacity:.8;
-}
-footer{
-  margin-top:30px;border-top:1px solid var(--border);
-  padding:24px 0 34px;text-align:center;
-  font-size:.82rem;color:var(--muted);
-}
-footer a{color:var(--muted)}
-footer a:hover{color:var(--text)}
-
-.erro-api{
-  display:none;margin:18px auto 0;max-width:560px;text-align:center;
-  background:rgba(255,84,112,.08);border:1px solid rgba(255,84,112,.35);
-  border-radius:12px;padding:14px;font-size:.88rem;color:var(--text);
-}
-.erro-api button{
-  margin-left:10px;background:var(--vermelho);border:none;color:#fff;
-  font-family:inherit;font-weight:600;border-radius:8px;
-  padding:5px 14px;cursor:pointer;
-}
-@media(prefers-reduced-motion:reduce){
-  *{transition:none!important;animation:none!important}
-  html{scroll-behavior:auto}
-}
-</style>
+<link rel="stylesheet" href="/mundodefi-ferramentas.css">
 </head>
 <body>
 
-<header>
-  <div class="container nav">
-    <a href="https://mundodefi.com.br/index.html" class="logo">₿ Mundo<em>DeFi</em></a>
-    <nav class="nav-links">
-      <a href="https://mundodefi.com.br/ferramentas/ferramentas.html">Ferramentas</a>
-      <a href="https://mundodefi.com.br/portfolio/dashboard.html">Portfólio</a>
-      <a href="https://mundodefi.com.br/planos.html" class="btn-pro">👑 PRO</a>
-    </nav>
-  </div>
-</header>
+<!-- cabeçalho injetado -->
+<div data-mdf="header"></div>
 
 <main class="container">
 
   <!-- ===== HERO + TAXA AO VIVO ===== -->
   <div class="hero">
     <span class="eyebrow">Conversor Fiat → Cripto · cotação ao vivo · 500 moedas</span>
-    <h1>Converter <span class="par" id="h1-fiat">Real (BRL)</span> em <span class="par" id="h1-moeda">Solana (SOL)</span></h1>
-    <p class="taxa-viva">1 <span id="taxa-sym">SOL</span> vale agora <strong id="taxa-valor">—</strong>
+    <h1>Converter <span class="par" id="h1-fiat">Real (BRL)</span> em <span class="par" id="h1-moeda">Bitcoin (BTC)</span></h1>
+    <p class="taxa-viva">1 <span id="taxa-sym">BTC</span> vale agora <strong id="taxa-valor">—</strong>
       <span class="variacao" id="taxa-var"></span></p>
     <p class="tri-fiat" id="tri-fiat">—</p>
     <p class="atualizado" id="atualizado">Carregando cotação…</p>
@@ -528,102 +195,23 @@ footer a:hover{color:var(--text)}
       <p>Use o <a href="https://mundodefi.com.br/portfolio/dashboard.html">Portfólio do MundoDeFi</a>: registre suas posições de HOLD, DeFi e Trade e acompanhe tudo em um painel só, com gráficos e histórico completo.</p>
     </details>
   </section>
+  <!-- outras ferramentas (bloco injetado) -->
+  <div data-mdf="outras"></div>
 
-  <!-- ===== OUTRAS FERRAMENTAS ===== -->
-  <section>
-    <h2><span class="ico">🛠️</span>Outras ferramentas gratuitas</h2>
-    <p class="sub">Tudo que você precisa para operar cripto com método — grátis e em português.</p>
-    <div class="tools-grid">
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/juros-compostos.html">
-        <span class="emoji">📈</span>
-        <span class="nome">Juros Compostos</span>
-        <span class="desc">Simule crescimento com aportes mensais em BRL e USD.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/lucro-cripto.html">
-        <span class="emoji">🪙</span>
-        <span class="nome">Lucro Cripto</span>
-        <span class="desc">Calcule lucro real com taxas de exchange e imposto de renda.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/liquidacao.html">
-        <span class="emoji">⚠️</span>
-        <span class="nome">Calc. Liquidação</span>
-        <span class="desc">Preço de liquidação para posições alavancadas em futuros.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/apr-apy.html">
-        <span class="emoji">💹</span>
-        <span class="nome">APR → APY</span>
-        <span class="desc">Converta rendimentos anuais com composição diária ou mensal.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/pool-liquidez.html">
-        <span class="emoji">💧</span>
-        <span class="nome">Pool de Liquidez</span>
-        <span class="desc">Impermanent loss, APY real e retorno esperado de pools.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/yield-farming.html">
-        <span class="emoji">🌾</span>
-        <span class="nome">Yield Farming</span>
-        <span class="desc">Simule rendimentos de farms em várias redes.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/staking.html">
-        <span class="emoji">🔒</span>
-        <span class="nome">Simulador Staking</span>
-        <span class="desc">Rendimentos de staking para ETH, SOL e mais.</span>
-      </a>
-      <a class="tool" href="https://mundodefi.com.br/ferramentas/dca.html">
-        <span class="emoji">🔄</span>
-        <span class="nome">Calculadora DCA</span>
-        <span class="desc">Estratégia de aportes periódicos no preço médio.</span>
-      </a>
-    </div>
-  </section>
-
-  <!-- ===== PLANOS PRO / PREMIUM ===== -->
-  <section>
-    <h2><span class="ico">👑</span>Leve seu portfólio ao próximo nível</h2>
-    <p class="sub">As ferramentas são grátis para sempre. Quando quiser ir mais fundo, é só subir de nível.</p>
-    <div class="planos">
-
-      <div class="plano pro">
-        <span class="tag">⚡ PRO — Operador</span>
-        <div class="preco">R$ 9,90 <small>/mês</small></div>
-        <ul>
-          <li>Portfólio completo HOLD + DeFi + Trade</li>
-          <li>Ativos, pools e trades ilimitados</li>
-          <li>Tracking de pools com impermanent loss</li>
-          <li>Histórico completo + exportação para o IR</li>
-        </ul>
-        <a class="btn" href="https://mundodefi.com.br/planos.html">Assinar PRO →</a>
-      </div>
-
-      <div class="plano premium destaque">
-        <span class="tag">👑 PREMIUM — Estrategista</span>
-        <div class="preco">R$ 29,90 <small>/mês</small></div>
-        <ul>
-          <li>Tudo do PRO + acesso ilimitado ao site</li>
-          <li>DeFi Avançado — teses de pools de liquidez</li>
-          <li>Trade Avançado — confluência e gestão de banca</li>
-          <li>1 mentoria individual por mês — vagas limitadas</li>
-        </ul>
-        <a class="btn" href="https://mundodefi.com.br/planos.html">Garantir minha vaga →</a>
-      </div>
-
-    </div>
-  </section>
-
-  <p class="aviso">
+  <!-- planos PRO / Premium (bloco injetado) -->
+  <div data-mdf="pro"></div>
+<p class="aviso">
     As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e podem apresentar
     pequenas diferenças em relação aos preços praticados por exchanges. O MundoDeFi não realiza intermediação de
     compra ou venda de ativos e nada nesta página constitui recomendação de investimento. Cripto envolve risco.
   </p>
 </main>
 
-<footer>
-  <div class="container">
-    © 2026 MundoDeFi · <a href="https://mundodefi.com.br/index.html">Início</a> ·
-    <a href="https://mundodefi.com.br/ferramentas/ferramentas.html">Ferramentas</a> ·
-    <a href="https://mundodefi.com.br/estudos.html">Estudos</a> · Dados: CoinGecko API
-  </div>
-</footer>
+<!-- rodapé injetado -->
+<div data-mdf="footer"></div>
+
+<!-- injetor dos blocos compartilhados -->
+<script src="/mundodefi-ferramentas.js" defer></script>
 
 <script>
 /* =========================================================
@@ -676,7 +264,7 @@ const QUANTIDADES = [1, 5, 10, 50, 100, 500, 1000];
 // ---------- estado ----------
 let LISTA = [];            // top 500: {id, sym, nome, img, rank}
 let fiatAtual = 'brl';
-let moedaAtual = { id:'solana', sym:'SOL', nome:'Solana', img:'' };
+let moedaAtual = { id:'bitcoin', sym:'BTC', nome:'Bitcoin', img:'' };
 let precosFiat = null;     // { brl, usd, eur } — preço de 1 token
 let diasGrafico = 7;
 let ultimoCampo = 'fiat';
@@ -819,6 +407,10 @@ function selecionarPorId(id) {
   moedaAtual = c;
   history.replaceState(null, '', `?fiat=${fiatAtual}&cripto=${c.id}`);
   precosFiat = null;
+  // zera o valor do ativo anterior e recomeça em "1 [nova cripto]"
+  ultimoCampo = 'cripto';
+  document.getElementById('input-cripto').value = '1';
+  document.getElementById('input-fiat').value = '';
   atualizarRotulos();
   montarChips();
   fecharDropdown();
@@ -1059,7 +651,10 @@ setInterval(() => { if (LISTA.length) carregarDados().catch(() => {}); }, 60000)
   if (id) moedaAtual = { id, sym: id.toUpperCase().slice(0, 6), nome: id, img: '' };
   atualizarRotulos();
   montarChips();
-  document.getElementById('input-fiat').value = '100';
+  // abre mostrando "1 [cripto] = preço dela" (sem valor antigo pendurado)
+  ultimoCampo = 'cripto';
+  document.getElementById('input-cripto').value = '1';
+  document.getElementById('input-fiat').value = '';
   iniciar();
 })();
 </script>
