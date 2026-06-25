@@ -11,23 +11,23 @@
 <meta property="og:url" content="https://mundodefi.com.br/comparador-de-ativos.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
-<link rel="stylesheet" href="mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 /* tokens (espelham mundodefi-tokens.css para a página renderizar sozinha) */
 :root{
-  --bg:#080b14;--surface:#0d1120;--surface2:#111827;--surface3:#1a2235;
-  --border:#1e2d45;--border2:#243350;
-  --gold:#f5a623;--gold2:#d4920f;--cyan:#22d3ee;--purple:#8b5cf6;
-  --green:#10b981;--red:#ef4444;--blue:#4b9cff;
-  --text:#e2e8f0;--text-muted:#64748b;--text-dim:#94a3b8;
-  --font:'Sora',sans-serif;--display:'Syne',sans-serif;--mono:'JetBrains Mono',monospace;
+  --bg:#0a0a0a;--surface:#111114;--surface2:#15151a;--surface3:#1a1a20;
+  --border:#26262e;--border2:#33333d;
+  --gold:#f5b614;--gold2:#d4920f;--cyan:#00e5ff;--purple:#9945ff;
+  --green:#14f195;--red:#ff5470;--blue:#4d9fff;
+  --text:#f2f2f5;--text-muted:#9b9ba6;--text-dim:#b8b8c4;
+  --font:'Space Grotesk',sans-serif;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
 }
 html,body{width:100%;min-height:100vh;overflow-x:hidden}
 body{font-family:var(--font);background:var(--bg);color:var(--text);position:relative}
-#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 
 /* ── NAV ── */
 nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:rgba(8,11,20,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
@@ -41,7 +41,7 @@ nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:cente
 
 /* ── PAGE ── */
 .page{position:relative;z-index:1;min-height:calc(100vh - 56px);padding:2rem 1rem 5rem}
-.container{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:1.25rem}
+.page .container{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:1.25rem}
 .page-header{text-align:center;margin-bottom:.5rem}
 .page-header h1{font-family:var(--display);font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;letter-spacing:-.03em;color:var(--gold);text-shadow:0 0 40px rgba(245,166,35,.3);margin-bottom:.4rem}
 .page-header p{font-size:.875rem;color:var(--text-muted)}
@@ -218,17 +218,8 @@ nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:cente
 </head>
 <body>
 
-<canvas id="bgCanvas"></canvas>
-<nav>
-  <a href="index.html" class="nav-logo">
-    <div class="nav-logo-mark">M</div>
-    <div class="nav-logo-txt">Mundo<span>DeFi</span></div>
-  </a>
-  <span class="nav-badge">⚖️ Comparador de Ativos</span>
-  <div class="nav-right">
-    <a href="ferramentas.html" class="nav-back">🛠️ Todas as ferramentas</a>
-  </div>
-</nav>
+<!-- cabeçalho injetado -->
+<div data-mdf="header"></div>
 
 <div class="page">
   <div class="page-header">
@@ -378,40 +369,20 @@ nav{position:sticky;top:0;z-index:100;height:56px;display:flex;align-items:cente
       <div class="faq-item"><div class="faq-q">Rentabilidade passada garante retorno futuro?</div><div class="faq-a">Não. Os gráficos mostram apenas o histórico. Cripto é um ativo de alta volatilidade. Este conteúdo é educacional e não constitui recomendação de investimento.</div></div>
     </div>
 
-    <!-- OUTRAS FERRAMENTAS -->
-    <div class="card">
-      <div class="card-title" style="margin-bottom:1rem">🧰 Outras ferramentas gratuitas</div>
-      <div class="tools-links">
-        <a class="tool-pill" href="juros-compostos.html">📈 Juros Compostos</a>
-        <a class="tool-pill" href="lucro-cripto.html">🪙 Lucro Cripto</a>
-        <a class="tool-pill" href="dca.html">🔄 Calculadora DCA</a>
-        <a class="tool-pill" href="pool-liquidez.html">💧 Pool de Liquidez</a>
-        <a class="tool-pill" href="staking.html">🔒 Staking</a>
-        <a class="tool-pill" href="yield-farming.html">🌾 Yield Farming</a>
-        <a class="tool-pill" href="conversor.html">💱 Conversor Cripto</a>
-      </div>
-    </div>
+    <!-- outras ferramentas (bloco injetado) -->
+    <div data-mdf="outras"></div>
 
-    <!-- CTA -->
-    <div class="cta-card">
-      <h3>Acompanhe tudo isso no seu <span>portfólio</span></h3>
-      <p>Com uma conta gratuita você monta seu portfólio. No <strong style="color:var(--purple)">PRO (R$ 9,90/mês)</strong> acompanha HOLD, DeFi e Trade ilimitados com alertas e exportação para o IR. No <strong style="color:var(--gold)">Premium (R$ 29,90/mês)</strong> tem estratégias avançadas + mentoria — vagas limitadas.</p>
-      <div class="cta-btns">
-        <a class="cta-btn-gold" href="planos.html">👑 Conhecer PRO e Premium</a>
-        <a class="cta-btn-ghost" href="cadastro.html">Criar conta grátis →</a>
-      </div>
-      <div class="cta-foot">Sem cartão para começar · cancele quando quiser · garantia de 7 dias nos planos pagos</div>
-    </div>
+    <!-- planos PRO / Premium (bloco injetado) -->
+    <div data-mdf="pro"></div>
 
   </div>
 </div>
 
-<footer class="site-footer">
-  <div class="f-links">
-    <a href="index.html">Início</a><a href="ferramentas.html">Ferramentas</a><a href="estudos.html">Estudos</a><a href="planos.html">Planos</a><a href="cadastro.html">Criar conta</a>
-  </div>
-  <div class="f-copy">© 2026 MundoDeFi · Conteúdo educacional — não é recomendação de investimento<br>Dados via CoinGecko, Banco Central do Brasil e Twelve Data</div>
-</footer>
+<!-- rodapé injetado -->
+<div data-mdf="footer"></div>
+
+<!-- injetor dos blocos compartilhados -->
+<script src="/mundodefi-ferramentas.js" defer></script>
 
 <!-- SCHEMA FAQ -->
 <script type="application/ld+json">
@@ -850,24 +821,7 @@ async function loadTicker(){
 }
 function setTick(id,o){ if(!o)return; document.getElementById("tk-"+id).textContent="US$ "+o.usd.toLocaleString("en-US"); const c=o.usd_24h_change||0, el=document.getElementById("tk-"+id+"-c"); el.textContent=(c>=0?"▲ +":"▼ ")+c.toFixed(2)+"%"; el.className="ticker-chg "+(c>=0?"up":"down"); }
 
-/* ════════════════ BACKGROUND (estrelas/meteoros) ════════════════ */
-(function(){
-  var canvas=document.getElementById("bgCanvas"), ctx=canvas.getContext("2d"), W,H,stars=[],meteors=[];
-  function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-  function initStars(){stars=[];for(var i=0;i<180;i++)stars.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+0.3,o:Math.random()*0.7+0.1,speed:Math.random()*0.3+0.05,twinkle:Math.random()*Math.PI*2});}
-  function spawnMeteor(){if(meteors.length<3&&Math.random()<0.013)meteors.push({x:Math.random()*W*1.5,y:-20,vx:-2-Math.random()*3,vy:1.5+Math.random()*2,len:80+Math.random()*120,life:0});}
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    var g=ctx.createRadialGradient(W*.5,H*.4,.1,W*.5,H*.4,H*.9);g.addColorStop(0,"rgba(15,20,40,1)");g.addColorStop(.5,"rgba(8,11,20,1)");g.addColorStop(1,"rgba(5,7,14,1)");ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
-    var n=ctx.createRadialGradient(W*.3,H*.3,0,W*.3,H*.3,W*.4);n.addColorStop(0,"rgba(139,92,246,0.04)");n.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=n;ctx.fillRect(0,0,W,H);
-    var n2=ctx.createRadialGradient(W*.75,H*.6,0,W*.75,H*.6,W*.35);n2.addColorStop(0,"rgba(245,166,35,0.03)");n2.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=n2;ctx.fillRect(0,0,W,H);
-    stars.forEach(function(s){s.twinkle+=0.02;var osc=Math.sin(s.twinkle)*0.3+0.7;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,"+(s.o*osc)+")";ctx.fill();s.y+=s.speed*0.1;if(s.y>H){s.y=0;s.x=Math.random()*W;}});
-    spawnMeteor();
-    meteors=meteors.filter(function(m){m.x+=m.vx;m.y+=m.vy;m.life++;var fade=Math.max(0,1-m.life/60);var hyp=Math.hypot(m.vx,m.vy);var mg=ctx.createLinearGradient(m.x,m.y,m.x-m.vx/hyp*m.len,m.y-m.vy/hyp*m.len);mg.addColorStop(0,"rgba(255,240,200,"+(fade*0.9)+")");mg.addColorStop(1,"rgba(255,240,200,0)");ctx.beginPath();ctx.moveTo(m.x,m.y);ctx.lineTo(m.x-m.vx/hyp*m.len,m.y-m.vy/hyp*m.len);ctx.strokeStyle=mg;ctx.lineWidth=1.5;ctx.stroke();return m.life<70&&m.x>-50&&m.y<H+50;});
-    requestAnimationFrame(draw);
-  }
-  resize();initStars();draw();window.addEventListener("resize",function(){resize();initStars();});
-})();
+
 
 /* ════════════════ INIT ════════════════ */
 async function init(){

@@ -306,6 +306,13 @@ select:focus{border-color:var(--roxo)}
 .populares{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--muted)}
 .populares span{cursor:pointer;color:var(--verde);font-weight:600;margin-right:10px}
 .populares span:hover{text-decoration:underline}
+/* FAQ em blocos (alternativa ao <details>) + células numéricas de tabela */
+.faq-item{border-bottom:1px solid var(--border);padding:18px 0}
+.faq-item:last-child{border-bottom:none}
+.faq-item h3{font-size:1.02rem;font-weight:600;margin-bottom:6px}
+.faq-item p{color:var(--muted);font-size:.92rem}
+td.num{text-align:right;font-weight:600}
+td.res{text-align:right;font-weight:700;color:var(--verde)}
 
 /* ── 14. FAQ ────────────────────────────────────────────────────────── */
 details{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);

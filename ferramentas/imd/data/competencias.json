@@ -1,0 +1,20 @@
+{
+  "versao": "1.0",
+  "competencias": {
+    "bitcoin":     { "nome": "Bitcoin & Blockchain", "pilar": "fundamentos", "desc": "Entender o ativo base e como a rede funciona." },
+    "mercado":     { "nome": "Leitura de Mercado",    "pilar": "fundamentos", "desc": "Market cap, oferta, coin vs token e métricas básicas." },
+    "stablecoins": { "nome": "Stablecoins & Dólar",   "pilar": "fundamentos", "desc": "Uso de USDT/USDC para proteção e renda em dólar." },
+    "wallets":     { "nome": "Carteiras & Chaves",    "pilar": "seguranca",   "desc": "Seed phrase, carteira quente/fria e assinatura de transações." },
+    "golpes":      { "nome": "Defesa contra Golpes",  "pilar": "seguranca",   "desc": "Reconhecer phishing, esquemas e promessas irreais." },
+    "custodia":    { "nome": "Autocustódia",          "pilar": "autonomia",   "desc": "Quem realmente controla seus ativos: você ou a corretora." },
+    "onchain":     { "nome": "Dados On-Chain",        "pilar": "autonomia",   "desc": "Ler transações e saldos direto na blockchain." },
+    "redes":       { "nome": "Redes & Taxas",         "pilar": "autonomia",   "desc": "Gas, congestionamento e escolha da rede certa." },
+    "soberania":   { "nome": "Soberania Financeira",  "pilar": "autonomia",   "desc": "Independência de uma única plataforma centralizada." },
+    "defi_base":   { "nome": "Base DeFi",             "pilar": "defi",        "desc": "Experiência geral com finanças descentralizadas." },
+    "dex":         { "nome": "DEX & Swaps",           "pilar": "defi",        "desc": "Trocar ativos sem intermediário central." },
+    "pools":       { "nome": "Pools de Liquidez",     "pilar": "defi",        "desc": "Fornecer liquidez e entender impermanent loss." },
+    "yield":       { "nome": "Staking & Yield",       "pilar": "defi",        "desc": "Diferença entre validar a rede e farmar recompensas." },
+    "lending":     { "nome": "Lending & Risco",       "pilar": "defi",        "desc": "Emprestar/tomar com consciência de colateral e liquidação." },
+    "avancado":    { "nome": "DeFi Avançado",         "pilar": "defi",        "desc": "Ativos embrulhados, bridges e risco de ponte." }
+  }
+}

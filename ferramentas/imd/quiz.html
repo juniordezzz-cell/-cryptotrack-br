@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Diagnóstico IMD · Índice Mundo DeFi</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <a href="index.html" class="brand">
+    <span class="brand-mark">IMD</span>
+    <span><b>Índice<em>MD</em></b><small>por MundoDeFi</small></span>
+  </a>
+  <a href="index.html" class="back-link">✕ Sair</a>
+</header>
+
+<main class="wrap narrow">
+
+  <div class="quiz-head">
+    <div class="progress"><i id="barra-progresso"></i></div>
+    <div class="quiz-meta">
+      <button type="button" class="btn-voltar" id="btn-voltar">← Voltar</button>
+      <span id="passo-label">Pergunta 1</span>
+    </div>
+  </div>
+
+  <div class="quiz-card" id="quiz-card">
+    <span class="pilar-tag" id="pilar-tag"></span>
+    <h2 class="pergunta" id="pergunta-texto">Carregando…</h2>
+    <div class="opcoes" id="opcoes"></div>
+  </div>
+
+</main>
+
+<!-- Overlay de conclusão -->
+<div class="conclusao" id="conclusao">
+  <div class="conclusao-inner">
+    <div class="selo">Diagnóstico concluído</div>
+    <h2>Parabéns! 🎉</h2>
+    <p>Seu Índice Mundo DeFi está pronto:</p>
+    <div class="imd-previa"><span id="imd-previa">0</span><span style="font-size:1.4rem;-webkit-text-fill-color:var(--muted2)">/100</span></div>
+    <a href="resultado.html" class="btn btn-gold">Ver meu resultado completo →</a>
+  </div>
+</div>
+
+<script src="js/motor.js"></script>
+<script src="js/app.js"></script>
+<script src="assets/confetti.js"></script>
+<script src="js/quiz-ui.js"></script>
+</body>
+</html>

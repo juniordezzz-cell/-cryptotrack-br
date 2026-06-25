@@ -1,0 +1,34 @@
+{
+  "versao": "1.0",
+  "pilares": {
+    "seguranca":   { "nome": "Segurança",   "icone": "🛡", "peso": 0.25, "cor": "#14f195", "desc": "Você protege suas chaves, dados e dinheiro?" },
+    "fundamentos": { "nome": "Fundamentos", "icone": "📚", "peso": 0.20, "cor": "#22D3EE", "desc": "Você entende o básico de cripto e mercado?" },
+    "defi":        { "nome": "DeFi",        "icone": "🌐", "peso": 0.30, "cor": "#9945ff", "desc": "Você sabe operar finanças descentralizadas?" },
+    "autonomia":   { "nome": "Autonomia",   "icone": "⚙️", "peso": 0.25, "cor": "#F5A623", "desc": "Você é independente das plataformas centralizadas?" }
+  },
+  "penalidades": [
+    {
+      "tipo": "multiplicador",
+      "pilar": "seguranca",
+      "abaixoDe": 40,
+      "fator": 0.85,
+      "rotulo": "Risco de segurança",
+      "motivo": "Sua pontuação em Segurança ficou baixa. No cripto, saber muito sem se proteger é perigoso — por isso o índice final foi reduzido."
+    },
+    {
+      "tipo": "teto",
+      "pilar": "autonomia",
+      "abaixoDe": 30,
+      "teto": 70,
+      "rotulo": "Dependência total de terceiros",
+      "motivo": "Você ainda depende totalmente de plataformas centralizadas. Sem autocustódia, o índice máximo é limitado a 70."
+    }
+  ],
+  "perfis": [
+    { "min": 0,  "max": 25,  "nome": "Iniciante Absoluto", "emoji": "🌱", "cor": "#8a8a94", "resumo": "Você está começando agora. O foco é entender o básico e se proteger antes de qualquer coisa." },
+    { "min": 26, "max": 50,  "nome": "Explorador",          "emoji": "🧭", "cor": "#22D3EE", "resumo": "Você já domina conceitos iniciais e está pronto pra dar os primeiros passos práticos com mais segurança." },
+    { "min": 51, "max": 75,  "nome": "Usuário Ativo",        "emoji": "⚡", "cor": "#14f195", "resumo": "Você opera com confiança. Hora de aprofundar em DeFi e ganhar mais autonomia sobre seus ativos." },
+    { "min": 76, "max": 90,  "nome": "Avançado",             "emoji": "🚀", "cor": "#9945ff", "resumo": "Você tem repertório forte em segurança e DeFi. Está pronto pra estratégias mais sofisticadas de renda." },
+    { "min": 91, "max": 100, "nome": "Nativo DeFi",          "emoji": "👑", "cor": "#F5A623", "resumo": "Você vive o ecossistema. Autonomia, segurança e domínio de DeFi caminham juntos no seu perfil." }
+  ]
+}

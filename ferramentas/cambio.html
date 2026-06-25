@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Calculadora de Câmbio Cripto — Real, Dólar, Euro, Libra, USDT e USDC."> | MundoDeFi</title>
+<title>Calculadora de Câmbio Cripto — BRL, USD, EUR, GBP, USDT e USDC | MundoDeFi</title>
 <meta name="description" content="Converta entre Real (BRL), Dólar (USD), Euro (EUR), Libra (GBP) e stablecoins USDT e USDC com a cotação do mercado cripto ao vivo. Grátis e em português.">
 <meta name="keywords" content="câmbio cripto, conversor de moedas, real para dolar, real para euro, real para usdt, usdt para euro, usdc cotação, dolar para libra, conversor stablecoin">
 <meta property="og:title" content="Calculadora de Câmbio Cripto — BRL, USD, EUR, GBP, USDT, USDC | MundoDeFi">
@@ -14,189 +14,14 @@
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/cambio.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/mundodefi-tokens.css">
-<style>
-:root{
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --border:#26262e;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
-  --roxo:var(--purple);
-  --verde:var(--green);
-  --vermelho:var(--red);
-  --radius:14px;
-}
-*{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  background:var(--bg);
-  background-image:
-    radial-gradient(900px 420px at 85% -5%, rgba(153,69,255,.10), transparent 60%),
-    radial-gradient(700px 380px at 0% 30%, rgba(20,241,149,.05), transparent 60%);
-  background-repeat:no-repeat;
-  color:var(--text);
-  font-family:'Space Grotesk',system-ui,sans-serif;
-  line-height:1.6;
-  -webkit-font-smoothing:antialiased;
-}
-a{color:var(--verde);text-decoration:none}
-a:hover{text-decoration:underline}
-.container{max-width:1020px;margin:0 auto;padding:0 20px}
-
-/* ===== Header ===== */
-header{
-  position:sticky;top:0;z-index:50;
-  background:rgba(10,10,10,.85);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-}
-.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.logo em{font-style:normal}
-.nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
-.nav-links a{color:var(--muted)}
-.nav-links a:hover{color:var(--text);text-decoration:none}
-.btn-pro{
-  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
-  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
-}
-.btn-pro:hover{opacity:.9;text-decoration:none}
-
-/* ===== Hero ===== */
-.hero{padding:46px 0 8px;text-align:center}
-.eyebrow{
-  display:inline-block;font-size:.75rem;letter-spacing:.14em;
-  color:var(--verde);text-transform:uppercase;font-weight:600;
-  border:1px solid rgba(20,241,149,.3);border-radius:999px;
-  padding:4px 14px;margin-bottom:16px;
-}
-h1{font-size:clamp(1.55rem,4.4vw,2.45rem);font-weight:700;line-height:1.2;margin-bottom:10px}
-h1 .par{color:var(--roxo)}
-.taxa-viva{font-size:1.05rem;color:var(--muted);margin-bottom:6px}
-.taxa-viva strong{color:var(--text);font-size:1.2rem}
-.atualizado{font-size:.78rem;color:var(--muted);opacity:.7}
-
-/* ===== Card conversor (estilo tradutor) ===== */
-.conversor-card{
-  margin:30px auto 0;max-width:860px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:26px 24px;
-  box-shadow:0 0 80px rgba(153,69,255,.12);
-}
-.tradutor{display:flex;align-items:stretch;gap:14px}
-.painel{
-  flex:1;min-width:0;
-  background:var(--bg2);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:14px 16px;
-  display:flex;flex-direction:column;gap:10px;
-  transition:border-color .15s;
-}
-.painel:focus-within{border-color:var(--roxo)}
-.painel-topo{display:flex;align-items:center;gap:10px;min-height:38px;justify-content:space-between}
-.painel label{font-size:.72rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:600}
-.painel input.valor{
-  width:100%;
-  background:transparent;border:none;outline:none;
-  color:var(--text);
-  font-family:inherit;font-size:1.5rem;font-weight:600;
-}
-.painel input.valor::placeholder{color:var(--muted);opacity:.45}
-select{
-  background:var(--card);
-  border:1px solid var(--border);
-  color:var(--text);
-  font-family:inherit;font-weight:600;font-size:.95rem;
-  border-radius:10px;padding:8px 10px;
-  cursor:pointer;outline:none;
-}
-select:focus{border-color:var(--roxo)}
-.meio{display:flex;align-items:center;justify-content:center}
-.swap-btn{
-  width:46px;height:46px;border-radius:50%;
-  background:var(--bg2);border:1px solid var(--border);
-  color:var(--verde);font-size:1.2rem;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  transition:transform .25s,border-color .15s,box-shadow .15s;
-}
-.swap-btn:hover{border-color:var(--verde);transform:rotate(180deg);box-shadow:0 0 18px rgba(20,241,149,.25)}
-@media(max-width:720px){
-  .tradutor{flex-direction:column}
-  .swap-btn{transform:rotate(90deg)}
-  .swap-btn:hover{transform:rotate(270deg)}
-}
-.conversor-rodape{
-  margin-top:14px;font-size:.8rem;color:var(--muted);
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;
-}
-
-.erro-api{
-  display:none;max-width:860px;margin:18px auto 0;
-  background:rgba(255,77,106,.08);border:1px solid rgba(255,77,106,.3);
-  color:var(--text);border-radius:12px;padding:14px 16px;font-size:.9rem;text-align:center;
-}
-.erro-api.ativo{display:block}
-.erro-api button{
-  margin-top:8px;background:var(--bg2);border:1px solid var(--border);
-  color:var(--text);font-family:inherit;font-weight:600;
-  border-radius:8px;padding:6px 14px;cursor:pointer;
-}
-
-/* ===== Seções ===== */
-section{padding:46px 0 0}
-h2{font-size:1.35rem;font-weight:700;margin-bottom:6px}
-h2 .ico{margin-right:8px}
-.sub{color:var(--muted);font-size:.92rem;margin-bottom:20px}
-
-/* ===== Tabela de conversão ===== */
-.tabela-card{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--radius);padding:6px 0;overflow:hidden;
-}
-table{width:100%;border-collapse:collapse;font-size:.95rem}
-th,td{padding:12px 20px;text-align:left}
-th{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;border-bottom:1px solid var(--border)}
-tbody tr{border-bottom:1px solid var(--border)}
-tbody tr:last-child{border-bottom:none}
-td.num{text-align:right;font-weight:600}
-td.res{text-align:right;font-weight:700;color:var(--verde)}
-
-/* ===== FAQ ===== */
-.faq-item{border-bottom:1px solid var(--border);padding:18px 0}
-.faq-item:last-child{border-bottom:none}
-.faq-item h3{font-size:1.02rem;font-weight:600;margin-bottom:6px}
-.faq-item p{color:var(--muted);font-size:.92rem}
-
-.aviso{
-  margin:40px 0 10px;font-size:.8rem;color:var(--muted);opacity:.8;
-  border-top:1px solid var(--border);padding-top:18px;
-}
-
-/* ===== Footer ===== */
-footer{
-  margin-top:50px;border-top:1px solid var(--border);
-  padding:24px 0;font-size:.85rem;color:var(--muted);text-align:center;
-}
-</style>
+<link rel="stylesheet" href="/mundodefi-ferramentas.css">
 </head>
 <body>
 
-<header>
-  <div class="container nav">
-    <a href="https://mundodefi.com.br/index.html" class="logo">₿ Mundo<em>DeFi</em></a>
-    <nav class="nav-links">
-      <a href="https://mundodefi.com.br/ferramentas/ferramentas.html">Ferramentas</a>
-      <a href="https://mundodefi.com.br/portfolio/dashboard.html">Portfólio</a>
-      <a href="https://mundodefi.com.br/planos.html" class="btn-pro">👑 PRO</a>
-    </nav>
-  </div>
-</header>
+<!-- cabeçalho injetado -->
+<div data-mdf="header"></div>
 
 <main class="container">
 
@@ -287,6 +112,12 @@ footer{
     </div>
   </section>
 
+  <!-- outras ferramentas (bloco injetado) -->
+  <div data-mdf="outras"></div>
+
+  <!-- planos PRO / Premium (bloco injetado) -->
+  <div data-mdf="pro"></div>
+
   <p class="aviso">
     As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e podem apresentar
     pequenas diferenças em relação aos preços praticados por exchanges e casas de câmbio. O MundoDeFi não realiza
@@ -294,13 +125,11 @@ footer{
   </p>
 </main>
 
-<footer>
-  <div class="container">
-    © 2026 MundoDeFi · <a href="https://mundodefi.com.br/index.html">Início</a> ·
-    <a href="https://mundodefi.com.br/ferramentas/ferramentas.html">Ferramentas</a> ·
-    <a href="https://mundodefi.com.br/estudos.html">Estudos</a> · Dados: CoinGecko API
-  </div>
-</footer>
+<!-- rodapé injetado -->
+<div data-mdf="footer"></div>
+
+<!-- injetor dos blocos compartilhados -->
+<script src="/mundodefi-ferramentas.js" defer></script>
 
 <script>
 /* =========================================================

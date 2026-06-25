@@ -1,0 +1,230 @@
+{
+  "versao": "1.0",
+  "perguntas": [
+    {
+      "id": "FUN-01",
+      "pilar": "fundamentos",
+      "competencia": "bitcoin",
+      "texto": "Como você descreveria o Bitcoin para um amigo?",
+      "opcoes": [
+        { "texto": "Não sei explicar / nunca parei pra pensar", "pontos": 0 },
+        { "texto": "É uma \"moeda da internet\" que sobe e desce de preço", "pontos": 1 },
+        { "texto": "É um dinheiro digital com quantidade limitada e sem dono", "pontos": 3 },
+        { "texto": "Uma rede descentralizada com oferta fixa de 21 milhões, validada por mineradores", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "FUN-02",
+      "pilar": "fundamentos",
+      "competencia": "mercado",
+      "texto": "O que o \"market cap\" (valor de mercado) de uma cripto representa?",
+      "opcoes": [
+        { "texto": "Não sei", "pontos": 0 },
+        { "texto": "O preço atual de 1 unidade da moeda", "pontos": 1 },
+        { "texto": "Preço × quantidade de moedas em circulação", "pontos": 4 },
+        { "texto": "É a mesma coisa que o volume negociado no dia", "pontos": 1 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "FUN-03",
+      "pilar": "fundamentos",
+      "competencia": "mercado",
+      "texto": "Qual a diferença entre uma \"coin\" (ex.: ETH) e um \"token\" (ex.: AAVE)?",
+      "opcoes": [
+        { "texto": "Não sei a diferença", "pontos": 0 },
+        { "texto": "São sinônimos, só muda o nome", "pontos": 1 },
+        { "texto": "Coin tem blockchain própria; token roda em cima de outra rede", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "FUN-01", "op": ">=", "valor": 3 }]
+    },
+    {
+      "id": "FUN-04",
+      "pilar": "fundamentos",
+      "competencia": "stablecoins",
+      "texto": "Como você usa stablecoins (USDT, USDC) no seu dia a dia?",
+      "opcoes": [
+        { "texto": "Não sei o que são stablecoins", "pontos": 0 },
+        { "texto": "Sei que existem, mas nunca usei", "pontos": 2 },
+        { "texto": "Uso para me proteger da volatilidade e ter renda em dólar", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "SEG-01",
+      "pilar": "seguranca",
+      "competencia": "wallets",
+      "texto": "Onde fica guardada sua frase de recuperação (seed phrase)?",
+      "opcoes": [
+        { "texto": "Não sei o que é uma seed phrase", "pontos": 0 },
+        { "texto": "Num print, no e-mail ou salva no celular", "pontos": 1 },
+        { "texto": "Anotada à mão num papel guardado em casa", "pontos": 3 },
+        { "texto": "Anotada offline, com cópia em outro local físico seguro", "pontos": 4 },
+        { "texto": "Só uso corretora, não tenho carteira própria", "pontos": 1 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "SEG-02",
+      "pilar": "seguranca",
+      "competencia": "golpes",
+      "texto": "Alguém te manda um link prometendo \"dobrar seus criptos\" em 24h. Você:",
+      "opcoes": [
+        { "texto": "Clicaria pra ver do que se trata", "pontos": 0 },
+        { "texto": "Ficaria na dúvida, mas talvez tentasse com pouco", "pontos": 1 },
+        { "texto": "Ignoraria na hora — é golpe clássico", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "SEG-03",
+      "pilar": "seguranca",
+      "competencia": "wallets",
+      "texto": "Você sabe a diferença entre carteira \"quente\" e \"fria\"?",
+      "opcoes": [
+        { "texto": "Não faço ideia", "pontos": 0 },
+        { "texto": "Já ouvi falar, mas não sei explicar bem", "pontos": 2 },
+        { "texto": "Sim: quente fica online; fria fica offline, mais segura", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "SEG-04",
+      "pilar": "seguranca",
+      "competencia": "wallets",
+      "texto": "Antes de assinar uma transação na carteira, você costuma:",
+      "opcoes": [
+        { "texto": "Assino direto, confio na interface", "pontos": 1 },
+        { "texto": "Dou uma olhada rápida no valor", "pontos": 2 },
+        { "texto": "Reviso endereço, permissões e o que estou aprovando", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "SEG-01", "op": ">=", "valor": 3 }]
+    },
+    {
+      "id": "AUT-01",
+      "pilar": "autonomia",
+      "competencia": "custodia",
+      "texto": "Onde estão a maior parte dos seus criptoativos hoje?",
+      "opcoes": [
+        { "texto": "Não tenho nenhum ainda", "pontos": 0 },
+        { "texto": "Tudo numa corretora (Binance, Coinbase, etc.)", "pontos": 1 },
+        { "texto": "Parte na corretora, parte em carteira própria", "pontos": 3 },
+        { "texto": "Maior parte em carteira própria (self-custody)", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "AUT-02",
+      "pilar": "autonomia",
+      "competencia": "onchain",
+      "texto": "Você já consultou uma transação num explorador (Etherscan, Blockscout, Solscan)?",
+      "opcoes": [
+        { "texto": "Nunca, não sei nem o que é", "pontos": 0 },
+        { "texto": "Já vi alguém usar, mas eu mesmo não usei", "pontos": 2 },
+        { "texto": "Sim, sei conferir hash, saldo e status na blockchain", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "AUT-03",
+      "pilar": "autonomia",
+      "competencia": "redes",
+      "texto": "Quando uma transação fica cara ou lenta, você sabe o motivo?",
+      "opcoes": [
+        { "texto": "Não, nunca entendi essa parte", "pontos": 0 },
+        { "texto": "Sei que é a \"taxa de rede\", mas não controlo", "pontos": 2 },
+        { "texto": "Sim: entendo gas/congestionamento e escolho a rede certa", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "AUT-02", "op": ">=", "valor": 2 }]
+    },
+    {
+      "id": "DEFI-01",
+      "pilar": "defi",
+      "competencia": "defi_base",
+      "texto": "Qual sua experiência com DeFi (finanças descentralizadas)?",
+      "opcoes": [
+        { "texto": "Nunca usei e não sei o que é", "pontos": 0 },
+        { "texto": "Sei o que é, mas nunca interagi", "pontos": 1 },
+        { "texto": "Já fiz alguns swaps em DEX (Uniswap, etc.)", "pontos": 3 },
+        { "texto": "Uso DeFi com frequência: pools, farms, lending", "pontos": 4 }
+      ],
+      "condicao": null
+    },
+    {
+      "id": "DEFI-02",
+      "pilar": "defi",
+      "competencia": "dex",
+      "texto": "O que acontece quando você faz um \"swap\" numa DEX?",
+      "opcoes": [
+        { "texto": "Não sei", "pontos": 0 },
+        { "texto": "Troco um token por outro, sem intermediário central", "pontos": 4 },
+        { "texto": "Mando o token pra corretora trocar pra mim", "pontos": 1 }
+      ],
+      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 2 }]
+    },
+    {
+      "id": "DEFI-03",
+      "pilar": "defi",
+      "competencia": "pools",
+      "texto": "Você entende o que é \"impermanent loss\" (perda impermanente) em pools de liquidez?",
+      "opcoes": [
+        { "texto": "Nunca ouvi falar", "pontos": 0 },
+        { "texto": "Ouvi falar, mas não sei calcular o impacto", "pontos": 2 },
+        { "texto": "Sim, entendo como a variação de preço afeta meu LP", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+    },
+    {
+      "id": "DEFI-04",
+      "pilar": "defi",
+      "competencia": "yield",
+      "texto": "Qual a diferença prática entre staking e yield farming pra você?",
+      "opcoes": [
+        { "texto": "Não sei a diferença", "pontos": 0 },
+        { "texto": "Acho que rendem de formas diferentes, mas me confundo", "pontos": 2 },
+        { "texto": "Staking valida a rede; farming fornece liquidez por recompensa", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+    },
+    {
+      "id": "DEFI-05",
+      "pilar": "defi",
+      "competencia": "lending",
+      "texto": "Em protocolos de lending (Aave, Compound), o que mais te preocupa?",
+      "opcoes": [
+        { "texto": "Não uso lending", "pontos": 1 },
+        { "texto": "Só o rendimento (APY), não penso em risco", "pontos": 2 },
+        { "texto": "Saúde do colateral, liquidação e risco do protocolo", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+    },
+    {
+      "id": "DEFI-06",
+      "pilar": "defi",
+      "competencia": "avancado",
+      "texto": "Sobre ativos \"embrulhados\" (WBTC) e bridges entre redes, você:",
+      "opcoes": [
+        { "texto": "Não sei o que é WBTC nem bridge", "pontos": 0 },
+        { "texto": "Conheço o conceito, mas tenho receio de usar", "pontos": 2 },
+        { "texto": "Uso e entendo o risco de custódia e de ponte (bridge)", "pontos": 4 }
+      ],
+      "condicao": [
+        { "se": "DEFI-03", "op": ">=", "valor": 2 },
+        { "se": "DEFI-01", "op": ">=", "valor": 3 }
+      ]
+    },
+    {
+      "id": "AUT-04",
+      "pilar": "autonomia",
+      "competencia": "soberania",
+      "texto": "Se sua corretora principal travasse os saques amanhã, você:",
+      "opcoes": [
+        { "texto": "Ficaria sem acesso aos meus criptos", "pontos": 0 },
+        { "texto": "Perderia parte, mas tenho algo fora dela", "pontos": 2 },
+        { "texto": "Não me afetaria muito — opero por carteira própria", "pontos": 4 }
+      ],
+      "condicao": [{ "se": "AUT-01", "op": ">=", "valor": 3 }]
+    }
+  ]
+}
