@@ -442,98 +442,130 @@
      aos ids da casca nova.
      ============================================================ */
   function wireSalvar(r) {
-    var bloco = document.getElementById("imd-salvar");
-    if (!bloco) return;
+    // ----------------------------------------------------------
+    // INTERRUPTOR DE SEGURANÇA DA TRAVA
+    // false = resultado aberto (login só salva). Suba assim primeiro,
+    //         teste o login no site, e SÓ DEPOIS mude para true.
+    // true  = resultado TRAVADO: só revela após login + 2 consentimentos.
+    // ----------------------------------------------------------
+    var TRAVAR_RESULTADO = false;
 
+    var conteudo   = document.getElementById("imd-result-conteudo");
+    var lock       = document.getElementById("imd-lock");
+    var lockNome   = document.getElementById("imd-lock-nome");
+    var lockRisco  = document.getElementById("imd-lock-risco");
+    var lockLogin  = document.getElementById("imd-lock-login");
+    var lockStatus = document.getElementById("imd-lock-status");
+    var chk1 = document.getElementById("lgpd-1");
+    var chk2 = document.getElementById("lgpd-2");
     var statusEl = document.getElementById("imd-salvar-status");
-    var btnLogin = document.getElementById("imd-btn-login");
-    var btnSalvar = document.getElementById("imd-btn-salvar");
-    var consentBox = document.getElementById("imd-consentimentos");
 
-    function checks() {
-      return Array.prototype.slice.call(
-        bloco.querySelectorAll('input[type="checkbox"]'));
-    }
-    function todosAceitos() {
-      var cs = checks();
-      return cs.length > 0 && cs.every(function (c) { return c.checked; });
-    }
-    function atualizarBtn() {
-      if (btnSalvar) {
-        btnSalvar.disabled = !(Fire && Fire.getUser && Fire.getUser() && todosAceitos());
-      }
+    // preenche a "isca": nome + perfil de risco visíveis no cadeado
+    if (lockNome) lockNome.textContent = usuario.nome ? (", " + usuario.nome) : "";
+    if (lockRisco) {
+      var rp = (r.risco && r.risco.perfil) ? r.risco.perfil.nome : "—";
+      lockRisco.textContent = rp;
     }
 
-    // Modo local (sem chaves Firebase)
+    function consentimentoAtual() {
+      return {
+        acessoDados: !!(chk1 && chk1.checked),
+        armazenamento: !!(chk2 && chk2.checked),
+        // mantém compat com campos antigos esperados em outros lugares
+        historico: !!(chk2 && chk2.checked),
+        analise: !!(chk1 && chk1.checked),
+        educacional: !!(chk1 && chk1.checked),
+        aceitoEm: new Date().toISOString()
+      };
+    }
+    function doisAceitos() {
+      return chk1 && chk2 && chk1.checked && chk2.checked;
+    }
+
+    function revelar() {
+      if (conteudo) conteudo.classList.remove("travado");
+      if (lock) lock.classList.remove("ativo");
+    }
+    function travar() {
+      if (conteudo) conteudo.classList.add("travado");
+      if (lock) lock.classList.add("ativo");
+    }
+
+    // habilita o botão de login só quando os 2 quadradinhos estão marcados
+    function atualizarBotaoLock() {
+      if (!lockLogin) return;
+      var ok = doisAceitos();
+      lockLogin.disabled = !ok;
+      lockLogin.style.opacity = ok ? "1" : ".5";
+    }
+    if (chk1) chk1.addEventListener("change", atualizarBotaoLock);
+    if (chk2) chk2.addEventListener("change", atualizarBotaoLock);
+
+    // salva o diagnóstico (usado tanto no modo travado quanto aberto)
+    function salvar() {
+      if (!Fire || !Fire.configurado || !Fire.getUser()) return Promise.resolve();
+      return Fire.salvarDiagnostico(r, consentimentoAtual())
+        .then(function () {
+          if (statusEl) statusEl.textContent = "✅ Diagnóstico salvo no seu perfil!";
+        })
+        .catch(function (e) {
+          if (statusEl) statusEl.textContent = "Não foi possível salvar agora, mas seu resultado está aqui.";
+          console.error(e);
+        });
+    }
+
+    // -------- MODO LOCAL (sem Firebase) --------
     if (!Fire || !Fire.configurado) {
+      // sem Firebase não há como logar; nunca trava (senão ninguém vê nada)
+      revelar();
       if (statusEl) {
         statusEl.innerHTML =
-          "Modo local ativo — login e salvamento ficam disponíveis assim que " +
-          "as chaves do Firebase forem preenchidas em <code>firebase/config.js</code>.";
+          "Modo local — o salvamento ativa quando as chaves do Firebase " +
+          "estiverem em <code>firebase/config.js</code>.";
       }
-      if (btnLogin) btnLogin.style.display = "none";
-      if (consentBox) consentBox.style.opacity = ".5";
       return;
     }
 
-    bloco.addEventListener("change", atualizarBtn);
-
-    function refletirAuth() {
-      var u = Fire.getUser();
-      if (u) {
-        if (btnLogin) btnLogin.style.display = "none";
-        if (consentBox) consentBox.style.display = "block";
-        if (btnSalvar) btnSalvar.style.display = "inline-flex";
-        if (statusEl) statusEl.textContent =
-          "Conectado como " + (u.displayName || u.email) + ".";
+    // -------- COM FIREBASE --------
+    if (TRAVAR_RESULTADO) {
+      var jaLogado = Fire.getUser();
+      if (jaLogado) {
+        revelar();
+        salvar();
       } else {
-        if (btnLogin) btnLogin.style.display = "inline-flex";
-        if (consentBox) consentBox.style.display = "none";
-        if (btnSalvar) btnSalvar.style.display = "none";
-        if (statusEl) statusEl.textContent =
-          "Entre com o Google para salvar seu diagnóstico.";
+        travar();
+        atualizarBotaoLock();
       }
-      atualizarBtn();
+    } else {
+      // trava desligada: mostra tudo; se logar, salva
+      revelar();
+      if (Fire.getUser()) salvar();
     }
 
-    document.addEventListener("imd:auth", refletirAuth);
-    refletirAuth();
-
-    if (btnLogin) {
-      btnLogin.addEventListener("click", function () {
-        btnLogin.disabled = true;
+    // clique no login do cadeado
+    if (lockLogin) {
+      lockLogin.addEventListener("click", function () {
+        if (!doisAceitos()) return;
+        lockLogin.disabled = true;
+        if (lockStatus) lockStatus.textContent = "Abrindo login…";
         Fire.login()
-          .catch(function (e) {
-            if (statusEl) statusEl.textContent = "Não foi possível entrar. Tente de novo.";
-            console.error(e);
-          })
-          .finally(function () { btnLogin.disabled = false; });
-      });
-    }
-
-    if (btnSalvar) {
-      btnSalvar.addEventListener("click", function () {
-        btnSalvar.disabled = true;
-        if (statusEl) statusEl.textContent = "Salvando…";
-        var consentimento = {
-          armazenamento: !!(document.getElementById("c-armazenamento") || {}).checked,
-          historico: !!(document.getElementById("c-historico") || {}).checked,
-          analise: !!(document.getElementById("c-analise") || {}).checked,
-          educacional: !!(document.getElementById("c-educacional") || {}).checked,
-          aceitoEm: new Date().toISOString()
-        };
-        Fire.salvarDiagnostico(r, consentimento)
           .then(function () {
-            if (statusEl) statusEl.textContent = "✅ Diagnóstico salvo no seu perfil!";
-            btnSalvar.textContent = "Salvo";
+            revelar();
+            return salvar();
           })
           .catch(function (e) {
-            if (statusEl) statusEl.textContent = "Erro ao salvar. Tente novamente.";
-            btnSalvar.disabled = false;
+            if (lockStatus) lockStatus.textContent =
+              "Não foi possível entrar (" + (e.code || "erro") + "). Tente de novo.";
+            lockLogin.disabled = false;
             console.error(e);
           });
       });
     }
+
+    // se a autenticação mudar (ex.: login concluído em outra aba), reavalia
+    document.addEventListener("imd:auth", function () {
+      if (Fire.getUser()) { revelar(); salvar(); }
+    });
   }
 
   /* ============================================================

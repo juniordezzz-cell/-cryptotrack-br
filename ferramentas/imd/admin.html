@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex" />
+  <title>Painel IMD · Resultados dos Diagnósticos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#06070c; --panel:#10131c; --panel2:#151a26;
+      --line:rgba(255,255,255,.08); --text:#f5f7fb; --muted:#aab1c4;
+      --purple:#9b5cff; --green:#28d7b7; --blue:#5aa7ff; --gold:#f4c44f; --danger:#ff6e8f;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 10%, rgba(155,92,255,.16), transparent 25%), linear-gradient(180deg,#05060b 0%, #090b13 100%); color:var(--text); font-family:Inter, system-ui, sans-serif;}
+    .shell{max-width:1240px;margin:0 auto;padding:24px 18px 60px}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:800}
+    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--green));box-shadow:0 0 16px rgba(155,92,255,.7)}
+    .muted{color:var(--muted)}
+    .card{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:20px;padding:22px;margin-bottom:18px}
+    .tag{font-size:12px;color:#cfd5e5;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px}
+    h1{font-size:26px;margin:0 0 4px}
+    .btn{display:inline-flex;align-items:center;gap:9px;padding:12px 18px;border-radius:12px;border:0;font-weight:700;cursor:pointer;font-size:14px}
+    .btn-primary{background:linear-gradient(90deg,var(--purple),#7d3df2);color:#fff}
+    .btn-green{background:linear-gradient(90deg,var(--green),#1fae93);color:#04231d}
+    .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--text)}
+    .btn-google{background:#fff;color:#1f1f1f}
+    .btn-google svg{width:18px;height:18px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .uidbox{font-family:ui-monospace,monospace;font-size:13px;background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--green);word-break:break-all}
+    table{width:100%;border-collapse:collapse;font-size:14px}
+    th,td{text-align:left;padding:12px 12px;border-bottom:1px solid var(--line)}
+    th{color:var(--muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.06em}
+    tr.linha{cursor:pointer;transition:.12s}
+    tr.linha:hover{background:rgba(255,255,255,.03)}
+    .pill{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;border:1px solid var(--line)}
+    .imd-num{font-family:ui-monospace,monospace;font-weight:800;font-size:16px}
+    .filtros{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+    .filtros input,.filtros select{padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--text);font-size:14px;outline:none}
+    .stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px}
+    .stat{background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;padding:16px}
+    .stat b{display:block;font-size:24px;font-family:ui-monospace,monospace}
+    .stat span{color:var(--muted);font-size:12px}
+    .overlay{position:fixed;inset:0;background:rgba(5,6,11,.85);backdrop-filter:blur(6px);display:none;place-items:center;z-index:50;padding:20px}
+    .overlay.ativo{display:grid}
+    .modal{max-width:680px;width:100%;max-height:85vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:26px}
+    .resp-item{padding:12px 0;border-bottom:1px solid var(--line)}
+    .resp-q{font-size:13px;color:var(--muted);margin-bottom:4px}
+    .resp-p{font-weight:700}
+    .hide{display:none}
+    @media(max-width:760px){ .stat-grid{grid-template-columns:1fr 1fr} table{font-size:12px} th,td{padding:8px} }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span> Painel IMD — Resultados</div>
+      <a class="muted" href="index.html" style="text-decoration:none">← Voltar ao IMD</a>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="card" id="bloco-login">
+      <div class="tag">Acesso restrito</div>
+      <h1>Entre para ver os diagnósticos</h1>
+      <p class="muted">Este painel é só para a administração do MundoDeFi. Entre com sua conta Google autorizada.</p>
+      <div class="row" style="margin-top:14px">
+        <button class="btn btn-google" id="btn-login">
+          <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.2 36 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-6.9l-6.5 5C9.1 41.3 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C40.9 35.9 45 30.5 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+          Entrar com Google
+        </button>
+        <span class="muted" id="login-status"></span>
+      </div>
+    </div>
+
+    <!-- SEU UID (aparece após login) -->
+    <div class="card hide" id="bloco-uid">
+      <div class="tag">Seu identificador (UID)</div>
+      <p class="muted" style="margin:0 0 10px">Este é o seu “crachá” no Firebase. Copie e use na regra de segurança do Firestore para travar este painel só para você.</p>
+      <div class="row">
+        <div class="uidbox" id="meu-uid">—</div>
+        <button class="btn btn-ghost" id="btn-copiar-uid">Copiar</button>
+        <button class="btn btn-ghost" id="btn-logout">Sair</button>
+      </div>
+    </div>
+
+    <!-- PAINEL -->
+    <div class="hide" id="bloco-painel">
+      <div class="stat-grid">
+        <div class="stat"><b id="st-total">0</b><span>Diagnósticos</span></div>
+        <div class="stat"><b id="st-imd-medio">0</b><span>IMD médio</span></div>
+        <div class="stat"><b id="st-perfil-comum">—</b><span>Perfil + comum</span></div>
+        <div class="stat"><b id="st-risco-comum">—</b><span>Risco + comum</span></div>
+      </div>
+
+      <div class="card">
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <div class="tag" style="margin:0">Diagnósticos recebidos</div>
+          <div class="row">
+            <button class="btn btn-green" id="btn-export">⬇ Exportar CSV</button>
+            <button class="btn btn-ghost" id="btn-reload">↻ Atualizar</button>
+          </div>
+        </div>
+        <div class="filtros">
+          <input type="text" id="f-busca" placeholder="Buscar por nome…" />
+          <select id="f-risco">
+            <option value="">Todos os perfis de risco</option>
+            <option>Ultraconservador</option><option>Conservador</option>
+            <option>Moderado</option><option>Agressivo</option><option>Ultra-agressivo</option>
+          </select>
+          <select id="f-ordem">
+            <option value="recente">Mais recentes</option>
+            <option value="imd-desc">Maior IMD</option>
+            <option value="imd-asc">Menor IMD</option>
+          </select>
+        </div>
+        <div style="overflow:auto">
+          <table>
+            <thead>
+              <tr><th>Nome</th><th>Idade</th><th>IMD</th><th>Nível</th><th>Perfil de risco</th><th>Data</th></tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+        <p class="muted" id="vazio" style="margin-top:14px"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL detalhe -->
+  <div class="overlay" id="overlay">
+    <div class="modal" id="modal"></div>
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+  <script src="firebase/config.js"></script>
+
+  <script>
+  (function(){
+    "use strict";
+    var cfg = window.IMD_FIREBASE_CONFIG || {};
+    var ok = Object.keys(cfg).length && Object.values(cfg).every(function(v){return v && v!=="COLE_AQUI";});
+    var $ = function(id){ return document.getElementById(id); };
+
+    // mapa id->texto das perguntas (pra mostrar enunciado no detalhe)
+    var PERGUNTAS = {"ENTRADA-01": "Antes de tudo: qual é a sua relação com criptomoedas hoje?", "ENTRADA-02": "Quando você ouve a palavra \"Bitcoin\", o que vem à sua cabeça?", "ENTRADA-03": "E \"blockchain\" — você sabe o que significa?", "PERF-01": "Imagine que você investiu e, em uma semana, seu dinheiro caiu 30%. Qual seria sua reação mais provável?", "PERF-02": "Como você descreveria o seu jeito de lidar com dinheiro e investimentos?", "PERF-03": "Você já ouviu falar em \"alavancagem\" (operar com dinheiro emprestado pra potencializar ganhos)?", "FUN-04": "Você sabe o que são \"stablecoins\" (como USDT e USDC)?", "SEG-01": "Você sabe o que é uma \"carteira\" de cripto e uma \"frase de recuperação\" (seed phrase)?", "SEG-02": "Alguém te manda um link prometendo \"dobrar seus criptos\" em 24 horas. O que você faz?", "SEG-03": "Onde você guarda (ou guardaria) a frase de recuperação da sua carteira?", "AUT-01": "Se você tem (ou tivesse) criptomoedas, onde elas ficariam guardadas?", "AUT-02": "Você já consultou uma transação num explorador de blockchain (Etherscan, Solscan)?", "DEFI-01": "Qual é a sua experiência com DeFi (finanças descentralizadas)?", "DEFI-02": "O que acontece quando você faz um \"swap\" numa DEX?", "DEFI-03": "Você entende o que é \"impermanent loss\" (perda impermanente) em pools de liquidez?", "DEFI-04": "Qual a diferença prática entre staking e yield farming pra você?", "DEFI-05": "Em protocolos de empréstimo (Aave, Compound), o que mais pesaria na sua decisão?", "DEFI-06": "Sobre ativos \"embrulhados\" (WBTC) e bridges entre redes, você diria que:", "AUT-03": "Se sua corretora principal travasse os saques amanhã, o que aconteceria com você?"};
+
+    if(!ok){
+      $("login-status").textContent = "Firebase não configurado (firebase/config.js).";
+      return;
+    }
+
+    firebase.initializeApp(cfg);
+    var auth = firebase.auth();
+    var db = firebase.firestore();
+    var dados = [];
+
+    auth.onAuthStateChanged(function(u){
+      if(u){
+        $("bloco-login").classList.add("hide");
+        $("bloco-uid").classList.remove("hide");
+        $("bloco-painel").classList.remove("hide");
+        $("meu-uid").textContent = u.uid;
+        carregar();
+      } else {
+        $("bloco-login").classList.remove("hide");
+        $("bloco-uid").classList.add("hide");
+        $("bloco-painel").classList.add("hide");
+      }
+    });
+
+    $("btn-login").addEventListener("click", function(){
+      $("login-status").textContent = "Abrindo login…";
+      auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
+        .catch(function(e){ $("login-status").textContent = "Erro: " + (e.code || e.message); });
+    });
+    $("btn-logout").addEventListener("click", function(){ auth.signOut(); });
+
+    $("btn-copiar-uid").addEventListener("click", function(){
+      navigator.clipboard.writeText($("meu-uid").textContent).then(function(){
+        $("btn-copiar-uid").textContent = "Copiado!";
+        setTimeout(function(){ $("btn-copiar-uid").textContent = "Copiar"; }, 1500);
+      });
+    });
+
+    function carregar(){
+      $("vazio").textContent = "Carregando…";
+      db.collection("diagnosticos").orderBy("createdAt","desc").limit(500).get()
+        .then(function(snap){
+          dados = [];
+          snap.forEach(function(doc){ var d = doc.data(); d._id = doc.id; dados.push(d); });
+          render();
+        })
+        .catch(function(e){
+          $("vazio").textContent = "Não foi possível ler os diagnósticos. " +
+            "Se você ainda não ajustou as regras do Firestore, é esperado. (" + (e.code||e.message) + ")";
+        });
+    }
+
+    function fmtData(ts){
+      if(!ts || !ts.toDate) return "—";
+      var d = ts.toDate();
+      return d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    }
+    function nomeDe(d){ return (d.cadastro && d.cadastro.nome) || (d.usuario && d.usuario.nome) || "—"; }
+    function idadeDe(d){ return (d.cadastro && d.cadastro.idade) || "—"; }
+    function riscoDe(d){ return (d.risco && d.risco.perfil) || "—"; }
+
+    function render(){
+      var busca = $("f-busca").value.trim().toLowerCase();
+      var fr = $("f-risco").value;
+      var ordem = $("f-ordem").value;
+
+      var lista = dados.filter(function(d){
+        if(busca && nomeDe(d).toLowerCase().indexOf(busca) === -1) return false;
+        if(fr && riscoDe(d) !== fr) return false;
+        return true;
+      });
+
+      if(ordem === "imd-desc") lista.sort(function(a,b){return (b.imd||0)-(a.imd||0);});
+      else if(ordem === "imd-asc") lista.sort(function(a,b){return (a.imd||0)-(b.imd||0);});
+
+      // estatísticas
+      $("st-total").textContent = dados.length;
+      var media = dados.length ? Math.round(dados.reduce(function(s,d){return s+(d.imd||0);},0)/dados.length) : 0;
+      $("st-imd-medio").textContent = media;
+      $("st-perfil-comum").textContent = maisComum(dados.map(function(d){return d.perfil;}));
+      $("st-risco-comum").textContent = maisComum(dados.map(riscoDe));
+
+      var tb = $("tbody"); tb.innerHTML = "";
+      lista.forEach(function(d){
+        var tr = document.createElement("tr");
+        tr.className = "linha";
+        tr.innerHTML =
+          "<td>"+esc(nomeDe(d))+"</td>"+
+          "<td>"+esc(idadeDe(d))+"</td>"+
+          "<td><span class='imd-num'>"+(d.imd!=null?d.imd:"—")+"</span></td>"+
+          "<td>"+esc(d.perfil||"—")+"</td>"+
+          "<td><span class='pill'>"+esc(riscoDe(d))+"</span></td>"+
+          "<td class='muted'>"+fmtData(d.createdAt)+"</td>";
+        tr.addEventListener("click", function(){ abrirDetalhe(d); });
+        tb.appendChild(tr);
+      });
+      $("vazio").textContent = lista.length ? "" : "Nenhum diagnóstico encontrado.";
+    }
+
+    function maisComum(arr){
+      var c = {}; var melhor = "—"; var max = 0;
+      arr.forEach(function(v){ if(!v) return; c[v]=(c[v]||0)+1; if(c[v]>max){max=c[v];melhor=v;} });
+      return melhor;
+    }
+
+    function abrirDetalhe(d){
+      var html = "<div class='tag'>Diagnóstico de</div><h1 style='margin-bottom:2px'>"+esc(nomeDe(d))+"</h1>"+
+        "<p class='muted'>"+esc(idadeDe(d))+" · "+fmtData(d.createdAt)+"</p>"+
+        "<div class='row' style='margin:14px 0'>"+
+          "<span class='pill'>IMD: "+(d.imd!=null?d.imd:"—")+"/100</span>"+
+          "<span class='pill'>"+esc(d.perfil||"—")+"</span>"+
+          "<span class='pill'>Risco: "+esc(riscoDe(d))+"</span>"+
+        "</div>";
+
+      if(d.pilares){
+        html += "<div class='tag'>Pilares</div><div class='row' style='margin-bottom:14px'>";
+        Object.keys(d.pilares).forEach(function(k){
+          html += "<span class='pill'>"+esc(k)+": "+d.pilares[k]+"</span>";
+        });
+        html += "</div>";
+      }
+
+      html += "<div class='tag'>Respostas</div>";
+      if(d.respostas){
+        Object.keys(d.respostas).forEach(function(id){
+          var texto = PERGUNTAS[id] || id;
+          html += "<div class='resp-item'><div class='resp-q'>"+esc(texto)+"</div>"+
+                  "<div class='resp-p'>Pontos: "+d.respostas[id]+"</div></div>";
+        });
+      } else {
+        html += "<p class='muted'>Sem respostas detalhadas.</p>";
+      }
+
+      if(d.consentimento){
+        html += "<div class='tag' style='margin-top:14px'>Consentimento LGPD</div><div class='row'>";
+        ["armazenamento","historico","analise","educacional"].forEach(function(k){
+          if(d.consentimento[k]) html += "<span class='pill'>✓ "+k+"</span>";
+        });
+        html += "</div>";
+      }
+
+      html += "<div style='margin-top:18px'><button class='btn btn-ghost' onclick=\"document.getElementById('overlay').classList.remove('ativo')\">Fechar</button></div>";
+      $("modal").innerHTML = html;
+      $("overlay").classList.add("ativo");
+    }
+    $("overlay").addEventListener("click", function(e){ if(e.target === this) this.classList.remove("ativo"); });
+
+    // exportar CSV
+    $("btn-export").addEventListener("click", function(){
+      if(!dados.length){ return; }
+      var cols = ["Nome","Idade","IMD","Nivel","Risco_Perfil","Risco_Valor","Seguranca","Fundamentos","DeFi","Autonomia","Email","Data"];
+      var linhas = [cols.join(";")];
+      dados.forEach(function(d){
+        var p = d.pilares || {};
+        var linha = [
+          nomeDe(d), idadeDe(d), (d.imd!=null?d.imd:""), (d.perfil||""),
+          riscoDe(d), (d.risco&&d.risco.valor!=null?d.risco.valor:""),
+          p.seguranca||"", p.fundamentos||"", p.defi||"", p.autonomia||"",
+          (d.usuario&&d.usuario.email)||"", fmtData(d.createdAt)
+        ].map(function(c){ return '"'+String(c).replace(/"/g,'""')+'"'; });
+        linhas.push(linha.join(";"));
+      });
+      var blob = new Blob(["\uFEFF"+linhas.join("\n")], {type:"text/csv;charset=utf-8;"});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = "imd-diagnosticos.csv"; a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    $("btn-reload").addEventListener("click", carregar);
+    ["f-busca","f-risco","f-ordem"].forEach(function(id){
+      $(id).addEventListener("input", render);
+      $(id).addEventListener("change", render);
+    });
+
+    function esc(s){ var d=document.createElement("div"); d.textContent = s==null?"":String(s); return d.innerHTML; }
+  })();
+  </script>
+</body>
+</html>

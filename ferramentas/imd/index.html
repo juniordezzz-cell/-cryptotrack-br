@@ -101,6 +101,20 @@
     .save-status code{font-family:ui-monospace,monospace;font-size:11px;background:var(--panel2);padding:2px 6px;border-radius:6px;color:var(--green)}
     #imd-radar{height:340px;display:grid;place-items:center;padding:8px}
     .choice.active .mark{}
+    /* --- IMD: trava de resultado (borrado + cadeado) --- */
+    #imd-result-conteudo.travado{filter:blur(9px);pointer-events:none;user-select:none}
+    .lock-overlay{display:none;position:relative;z-index:3;max-width:520px;margin:0 auto 18px;
+      background:rgba(16,19,28,.96);border:1px solid var(--line);border-radius:22px;padding:28px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+    .lock-overlay.ativo{display:block}
+    .lock-ico{font-size:34px;margin-bottom:8px}
+    .lock-overlay h2{margin:0 0 6px}
+    .lock-risco{font-size:22px;font-weight:800;margin:6px 0 2px}
+    .lock-sub{color:var(--muted);font-size:14px;margin:0 0 18px}
+    .lock-checks{text-align:left;max-width:420px;margin:0 auto 16px}
+    .lock-checks .check{display:flex;align-items:flex-start;gap:10px;padding:8px 0;font-size:13.5px;color:var(--muted);cursor:pointer}
+    .lock-checks .check input{margin-top:3px;width:18px;height:18px;accent-color:var(--purple);flex-shrink:0}
+    .lock-status{font-size:12.5px;color:var(--muted);margin-top:12px;min-height:18px}
+    .lock-status code{font-family:ui-monospace,monospace;font-size:11px;background:var(--panel2);padding:2px 6px;border-radius:6px;color:var(--green)}
 
   </style>
 </head>
@@ -267,6 +281,27 @@
     <!-- ================= RESULT ================= -->
     <section id="screen-result" class="stage">
       <div class="frame stage-shell">
+
+        <!-- ISCA / CADEADO (aparece antes do login quando a trava está ligada) -->
+        <div class="lock-overlay" id="imd-lock">
+          <div class="lock-ico">🔒</div>
+          <h2>Seu diagnóstico está pronto<span id="imd-lock-nome"></span>!</h2>
+          <div class="lock-risco">Você é <span id="imd-lock-risco" style="color:var(--gold)">—</span></div>
+          <p class="lock-sub">Para ver sua <b>pontuação IMD</b> e todos os números, entre com o Google.</p>
+
+          <div class="lock-checks">
+            <label class="check"><input type="checkbox" id="lgpd-1"><span>Autorizo a equipe MundoDeFi a acessar meus dados para enviar diagnósticos e conteúdos futuros.</span></label>
+            <label class="check"><input type="checkbox" id="lgpd-2"><span>Concordo que meus dados fiquem salvos no meu perfil MundoDeFi.</span></label>
+          </div>
+
+          <button type="button" class="btn-google" id="imd-lock-login" disabled style="opacity:.5">
+            <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.2 36 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-6.9l-6.5 5C9.1 41.3 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C40.9 35.9 45 30.5 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
+            Entrar com Google e revelar
+          </button>
+          <div class="lock-status" id="imd-lock-status"></div>
+        </div>
+
+        <div id="imd-result-conteudo">
         <div class="result-grid">
           <div class="card">
             <div class="tag">Seu Diagnóstico</div>
@@ -314,27 +349,13 @@
           </div>
         </div>
 
-        <!-- SALVAR / LOGIN / LGPD -->
+        <!-- STATUS DE SALVAMENTO (login/consentimento agora ficam no cadeado acima) -->
         <div class="frame panel" style="margin-top:18px">
           <div class="card" id="imd-salvar">
-            <div class="tag">Salve seu diagnóstico</div>
-            <h2>Acompanhe sua evolução</h2>
-            <p class="muted">Entre com sua conta Google para guardar este resultado no seu perfil MundoDeFi e comparar sua evolução ao longo do tempo.</p>
-            <div class="imd-save">
-              <button type="button" class="btn-google" id="imd-btn-login">
-                <svg viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.4 29.3 35 24 35c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 12.4 3 3 12.4 3 24s9.4 21 21 21 21-9.4 21-21c0-1.2-.1-2.3-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16 19 13 24 13c3.1 0 5.9 1.2 8 3.1l5.7-5.7C34.6 5.1 29.6 3 24 3 16 3 9.1 7.6 6.3 14.7z"/><path fill="#4CAF50" d="M24 45c5.2 0 10-2 13.6-5.2l-6.3-5.3C29.2 36 26.7 37 24 37c-5.3 0-9.7-2.6-11.3-6.9l-6.5 5C9.1 41.3 16 45 24 45z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4 5.5l6.3 5.3C40.9 35.9 45 30.5 45 24c0-1.2-.1-2.3-.4-3.5z"/></svg>
-                Entrar com Google
-              </button>
-              <div id="imd-consentimentos" style="display:none">
-                <div class="consent-title">Para salvar, autorizo o MundoDeFi a:</div>
-                <label class="check"><input type="checkbox" id="c-armazenamento"><span><b>Armazenar minhas respostas</b> e o índice calculado.</span></label>
-                <label class="check"><input type="checkbox" id="c-historico"><span><b>Gerar um histórico</b> dos meus diagnósticos para acompanhar evolução.</span></label>
-                <label class="check"><input type="checkbox" id="c-analise"><span><b>Usar os dados para análise personalizada</b> do meu perfil.</span></label>
-                <label class="check"><input type="checkbox" id="c-educacional"><span><b>Uso interno educacional / de mentoria</b> pela equipe MundoDeFi.</span></label>
-              </div>
-              <button type="button" class="big-cta" id="imd-btn-salvar" style="display:none;margin-top:14px;width:auto;padding:13px 22px" disabled>Salvar diagnóstico</button>
-              <div class="save-status" id="imd-salvar-status"></div>
-            </div>
+            <div class="tag">Seu diagnóstico</div>
+            <h2 id="imd-salvar-titulo">Resultado salvo no seu perfil</h2>
+            <p class="muted" id="imd-salvar-sub">Você pode acompanhar sua evolução fazendo o diagnóstico novamente no futuro.</p>
+            <div class="save-status" id="imd-salvar-status"></div>
           </div>
         </div>
 
@@ -342,6 +363,7 @@
           <button class="ghost" onclick="location.reload()">↻ Refazer diagnóstico</button>
           <a class="ghost" href="https://mundodefi.com.br/ferramentas" style="text-decoration:none">Ver mais ferramentas</a>
         </div>
+        </div><!-- /imd-result-conteudo -->
       </div>
     </section>
 

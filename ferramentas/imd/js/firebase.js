@@ -83,13 +83,25 @@
         tempoConclusao: resultado.tempoConclusao,
         totalPerguntas: resultado.totalPerguntas,
         consentimento: consentimento || {},
-        usuario: { nome: u.displayName || null, email: u.email || null },
+        usuario: { uid: u.uid, nome: u.displayName || null, email: u.email || null },
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
 
-      return this.db
-        .collection("users").doc(u.uid)
+      var db = this.db;
+      // 1) salva no perfil do próprio usuário (como antes)
+      var p1 = db.collection("users").doc(u.uid)
         .collection("diagnosticos").add(doc);
+
+      // 2) salva também numa LISTA CENTRAL para o painel admin ler todos
+      //    (mesmo conteúdo; o painel só lê esta coleção)
+      var p2 = db.collection("diagnosticos").add(doc);
+
+      // conclui quando ambos terminarem; se a lista central falhar
+      // (ex.: regra restrita), o salvamento pessoal ainda vale
+      return Promise.allSettled([p1, p2]).then(function (rs) {
+        if (rs[0].status === "rejected") throw rs[0].reason;
+        return rs[0].value;
+      });
     }
   };
 

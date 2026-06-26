@@ -1,0 +1,39 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ========================================================
+    //  REGRAS DE SEGURANÇA DO IMD — MundoDeFi
+    //  Cole estas regras em: Firebase Console > Firestore
+    //  Database > aba "Regras" (Rules) > Publicar.
+    // ========================================================
+
+    //  >>> PASSO ÚNICO: troque a linha abaixo pelo SEU UID <<<
+    //  (pegue em Authentication > Users > coluna "User UID",
+    //   ou no painel admin.html depois de fazer login).
+    function ehAdmin() {
+      return request.auth != null
+        && request.auth.uid == "COLE_AQUI_SEU_UID";
+    }
+
+    // --- Diagnósticos pessoais (cada usuário só mexe nos seus) ---
+    match /users/{uid}/diagnosticos/{doc} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == uid;
+    }
+
+    // --- Lista CENTRAL (alimenta o painel admin) ---
+    //  Qualquer usuário logado pode CRIAR o próprio diagnóstico,
+    //  mas só o ADMIN pode LER a lista inteira.
+    match /diagnosticos/{doc} {
+      allow create: if request.auth != null;
+      allow read:   if ehAdmin();
+      allow update, delete: if ehAdmin();
+    }
+
+    // --- Qualquer outra coisa: bloqueado por padrão ---
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
