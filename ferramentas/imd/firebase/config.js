@@ -1,19 +1,22 @@
 /* ============================================================
    IMD — firebase/config.js
    ------------------------------------------------------------
-   COLE AQUI as chaves do MESMO projeto Firebase que você já
-   usa no MundoDeFi (Firebase Console > Configurações do
-   projeto > Seus apps > SDK setup and configuration).
+   Chaves do projeto Firebase do MundoDeFi (cryptotrack-br).
+   O IMD usa Firebase compat via CDN, então aqui vai só o
+   objeto de configuração — sem import de SDK.
 
-   Enquanto os campos estiverem com "COLE_AQUI", o IMD roda em
-   MODO LOCAL: o diagnóstico funciona 100%, mas sem login Google
-   e sem salvar no Firestore. Basta preencher pra ativar.
+   Para o login + salvamento funcionarem, garanta no Console:
+   • Authentication → Sign-in method → Google = ativado
+   • Firestore Database = criado
+   • Authentication → Settings → Authorized domains =
+     mundodefi.com.br (e o domínio .github.io, se testar lá)
    ============================================================ */
 window.IMD_FIREBASE_CONFIG = {
-  apiKey:            "COLE_AQUI",
-  authDomain:        "COLE_AQUI",
-  projectId:         "COLE_AQUI",
-  storageBucket:     "COLE_AQUI",
-  messagingSenderId: "COLE_AQUI",
-  appId:             "COLE_AQUI"
+  apiKey:            "AIzaSyCvHDXyRfaozjHKL0S9zvs9C00NS6Bd8cs",
+  authDomain:        "cryptotrack-br.firebaseapp.com",
+  projectId:         "cryptotrack-br",
+  storageBucket:     "cryptotrack-br.firebasestorage.app",
+  messagingSenderId: "641396446846",
+  appId:             "1:641396446846:web:279a8b79d2e94f3f30ea2f",
+  measurementId:     "G-998VR1EZZ0"
 };

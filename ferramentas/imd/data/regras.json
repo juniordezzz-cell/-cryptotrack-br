@@ -1,11 +1,12 @@
 {
-  "versao": "1.0",
+  "versao": "2.0",
   "pilares": {
-    "seguranca":   { "nome": "Segurança",   "icone": "🛡", "peso": 0.25, "cor": "#14f195", "desc": "Você protege suas chaves, dados e dinheiro?" },
-    "fundamentos": { "nome": "Fundamentos", "icone": "📚", "peso": 0.20, "cor": "#22D3EE", "desc": "Você entende o básico de cripto e mercado?" },
-    "defi":        { "nome": "DeFi",        "icone": "🌐", "peso": 0.30, "cor": "#9945ff", "desc": "Você sabe operar finanças descentralizadas?" },
-    "autonomia":   { "nome": "Autonomia",   "icone": "⚙️", "peso": 0.25, "cor": "#F5A623", "desc": "Você é independente das plataformas centralizadas?" }
+    "seguranca":   { "nome": "Segurança",   "icone": "🛡", "peso": 0.25, "cor": "#28d7b7", "desc": "Você protege suas chaves, dados e dinheiro?" },
+    "fundamentos": { "nome": "Fundamentos", "icone": "📚", "peso": 0.20, "cor": "#5aa7ff", "desc": "Você entende o básico de cripto e mercado?" },
+    "defi":        { "nome": "DeFi",        "icone": "🌐", "peso": 0.30, "cor": "#9b5cff", "desc": "Você sabe operar finanças descentralizadas?" },
+    "autonomia":   { "nome": "Autonomia",   "icone": "⚙️", "peso": 0.25, "cor": "#f4c44f", "desc": "Você é independente das plataformas centralizadas?" }
   },
+
   "penalidades": [
     {
       "tipo": "multiplicador",
@@ -24,11 +25,21 @@
       "motivo": "Você ainda depende totalmente de plataformas centralizadas. Sem autocustódia, o índice máximo é limitado a 70."
     }
   ],
+
   "perfis": [
-    { "min": 0,  "max": 25,  "nome": "Iniciante Absoluto", "emoji": "🌱", "cor": "#8a8a94", "resumo": "Você está começando agora. O foco é entender o básico e se proteger antes de qualquer coisa." },
-    { "min": 26, "max": 50,  "nome": "Explorador",          "emoji": "🧭", "cor": "#22D3EE", "resumo": "Você já domina conceitos iniciais e está pronto pra dar os primeiros passos práticos com mais segurança." },
-    { "min": 51, "max": 75,  "nome": "Usuário Ativo",        "emoji": "⚡", "cor": "#14f195", "resumo": "Você opera com confiança. Hora de aprofundar em DeFi e ganhar mais autonomia sobre seus ativos." },
-    { "min": 76, "max": 90,  "nome": "Avançado",             "emoji": "🚀", "cor": "#9945ff", "resumo": "Você tem repertório forte em segurança e DeFi. Está pronto pra estratégias mais sofisticadas de renda." },
-    { "min": 91, "max": 100, "nome": "Nativo DeFi",          "emoji": "👑", "cor": "#F5A623", "resumo": "Você vive o ecossistema. Autonomia, segurança e domínio de DeFi caminham juntos no seu perfil." }
+    { "min": 0,  "max": 25,  "nome": "Iniciante Absoluto", "emoji": "🌱", "cor": "#aab1c4", "resumo": "Você está começando agora. O foco é entender o básico e se proteger antes de qualquer coisa." },
+    { "min": 26, "max": 50,  "nome": "Explorador",          "emoji": "🧭", "cor": "#5aa7ff", "resumo": "Você já domina conceitos iniciais e está pronto pra dar os primeiros passos práticos com mais segurança." },
+    { "min": 51, "max": 75,  "nome": "Usuário Ativo",        "emoji": "⚡", "cor": "#28d7b7", "resumo": "Você opera com confiança. Hora de aprofundar em DeFi e ganhar mais autonomia sobre seus ativos." },
+    { "min": 76, "max": 90,  "nome": "Avançado",             "emoji": "🚀", "cor": "#9b5cff", "resumo": "Você tem repertório forte em segurança e DeFi. Está pronto pra estratégias mais sofisticadas de renda." },
+    { "min": 91, "max": 100, "nome": "Nativo DeFi",          "emoji": "👑", "cor": "#f4c44f", "resumo": "Você vive o ecossistema. Autonomia, segurança e domínio de DeFi caminham juntos no seu perfil." }
+  ],
+
+  "_comentario_risco": "Perfil de RISCO é separado do IMD. É lido pela soma dos campos 'risco' das respostas, normalizada de 0 a 100 (0 = ultraconservador, 100 = ultra-agressivo). NÃO afeta o número do IMD.",
+  "perfilRisco": [
+    { "min": 0,  "max": 20,  "nome": "Ultraconservador", "emoji": "🛟", "cor": "#28d7b7", "resumo": "Você prioriza segurança acima de tudo. Prefere proteger o que tem a arriscar por ganhos maiores." },
+    { "min": 21, "max": 40,  "nome": "Conservador",      "emoji": "🛡", "cor": "#5aa7ff", "resumo": "Você aceita riscos pequenos e calculados, mas a preservação do seu capital vem em primeiro lugar." },
+    { "min": 41, "max": 60,  "nome": "Moderado",         "emoji": "⚖️", "cor": "#f4c44f", "resumo": "Você equilibra segurança e ousadia. Topa arriscar uma parte em busca de retorno, mantendo o pé no chão." },
+    { "min": 61, "max": 80,  "nome": "Agressivo",        "emoji": "🔥", "cor": "#ff9f43", "resumo": "Você busca retornos altos e aceita oscilações fortes. Risco faz parte do seu jogo." },
+    { "min": 81, "max": 100, "nome": "Ultra-agressivo",  "emoji": "⚡", "cor": "#ff6e8f", "resumo": "Você vai com tudo atrás do retorno máximo. Atenção: alta agressividade sem domínio de risco é a maior causa de perdas em cripto." }
   ]
 }

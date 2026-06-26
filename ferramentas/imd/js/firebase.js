@@ -70,6 +70,11 @@
       var doc = {
         imd: resultado.imd,
         perfil: resultado.perfil ? resultado.perfil.nome : null,
+        risco: resultado.risco ? {
+          valor: resultado.risco.valor,
+          perfil: resultado.risco.perfil ? resultado.risco.perfil.nome : null
+        } : null,
+        cadastro: resultado.cadastro || null,
         pilares: resultado.pilares,
         competencias: Object.keys(resultado.competencias).reduce(function (o, k) {
           o[k] = resultado.competencias[k].valor; return o;

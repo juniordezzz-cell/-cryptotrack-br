@@ -75,7 +75,11 @@
       var p = this.dados.perguntas.find(function (q) { return q.id === perguntaId; });
       if (!p) return;
       var op = p.opcoes[indiceOpcao];
-      this.estado.respostas[perguntaId] = { pontos: op.pontos, opcao: indiceOpcao };
+      this.estado.respostas[perguntaId] = {
+        pontos: op.pontos,
+        risco: (typeof op.risco === "number" ? op.risco : 0),
+        opcao: indiceOpcao
+      };
       if (this.estado.ordem.indexOf(perguntaId) === -1) this.estado.ordem.push(perguntaId);
     },
 
@@ -139,6 +143,46 @@
       return out;
     },
 
+    /* ---- Perfil de RISCO (eixo independente, NÃO entra no IMD) ----
+       Lê o campo 'risco' de cada resposta (-2..+2), soma, e normaliza
+       de 0 a 100 com base no mínimo/máximo possível das perguntas que
+       a pessoa de fato respondeu. 0 = ultraconservador, 100 = ultra-agressivo. */
+    _calcularRisco: function () {
+      var self = this;
+      var soma = 0, min = 0, max = 0, contou = 0;
+
+      this.dados.perguntas.forEach(function (q) {
+        var resp = self.estado.respostas[q.id];
+        if (!resp) return;
+        // só considera perguntas que têm sinal de risco em alguma opção
+        var riscos = q.opcoes.map(function (o) {
+          return (typeof o.risco === "number" ? o.risco : 0);
+        });
+        var temSinal = riscos.some(function (v) { return v !== 0; });
+        if (!temSinal) return;
+        soma += resp.risco;
+        min += Math.min.apply(null, riscos);
+        max += Math.max.apply(null, riscos);
+        contou++;
+      });
+
+      // sem nenhuma pergunta de risco respondida → moderado neutro (50)
+      if (contou === 0 || max === min) {
+        return { valor: 50, perfil: this._perfilRiscoPor(50), respondidas: 0 };
+      }
+
+      var valor = Math.round(((soma - min) / (max - min)) * 100);
+      valor = Math.max(0, Math.min(100, valor));
+      return { valor: valor, perfil: this._perfilRiscoPor(valor), respondidas: contou };
+    },
+
+    _perfilRiscoPor: function (valor) {
+      var faixas = (this.dados.regras.perfilRisco || []);
+      return faixas.find(function (f) {
+        return valor >= f.min && valor <= f.max;
+      }) || null;
+    },
+
     /* ---- Cálculo final do IMD ---- */
     calcular: function () {
       this.estado.fim = this.estado.fim || Date.now();
@@ -182,6 +226,7 @@
         imd: imd,
         bruto: Math.round(bruto),
         perfil: perfil,
+        risco: this._calcularRisco(),
         pilares: pilares,
         competencias: this._pontuacaoCompetencias(),
         penalidades: aplicadas,
