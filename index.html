@@ -477,11 +477,11 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
         <button class="nav-link">Ferramentas <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
         <div class="mega-menu" style="min-width:700px;left:-160px;transform:none">
           <div class="mega-col">
-            <div class="mega-col-title">Calculadoras</div>
+            <div class="mega-col-title">Calculadoras &amp; trade</div>
             <a href="/ferramentas/juros-compostos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(168,85,247,.12)">📈</div><div class="mega-link-text"><div class="mega-link-name">Juros Compostos</div><div class="mega-link-desc">Simule crescimento com aportes</div></div></a>
             <a href="/ferramentas/lucro-cripto.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,214,143,.1)">🪙</div><div class="mega-link-text"><div class="mega-link-name">Lucro Cripto</div><div class="mega-link-desc">Lucro real com taxas e IR</div></div></a>
             <a href="/ferramentas/comparador-de-ativos.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(0,229,255,.1)">📊</div><div class="mega-link-text"><div class="mega-link-name">Comparador de Ativos <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">Cripto vs ouro, ações e CDI</div></div></a>
-            <a href="/ferramentas/liquidacao.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">⚠️</div><div class="mega-link-text"><div class="mega-link-name">Liquidação</div><div class="mega-link-desc">Preço de liquidação de futuros</div></div></a>
+            <a href="/ferramentas/simulador-de-trade.html" class="mega-link"><div class="mega-link-ico" style="background:rgba(255,77,106,.1)">📊</div><div class="mega-link-text"><div class="mega-link-name">Simulador de Trade <span class="mega-badge mega-badge-new">Novo</span></div><div class="mega-link-desc">Alavancagem, liquidação e banca</div></div></a>
           </div>
           <div class="mega-col">
             <div class="mega-col-title">DeFi &amp; câmbio</div>
@@ -727,25 +727,29 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       </div>
     </a>
 
-    <a href="/ferramentas/liquidacao.html" class="tool-card" style="--tc:var(--red)">
+    <a href="/ferramentas/simulador-de-trade.html" class="tool-card" style="--tc:var(--red)">
       <div class="tool-preview">
         <svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg">
           <rect width="240" height="120" fill="#07080d"/>
           <rect x="16" y="14" width="208" height="92" rx="5" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".8"/>
+          <text x="24" y="28" fill="#00d68f" font-size="7.5" font-family="DM Sans,sans-serif" font-weight="600">📊 Gestão de banca • 10x</text>
+          <rect x="150" y="18" width="66" height="14" rx="3" fill="rgba(20,241,149,.1)" stroke="#14f195" stroke-width=".7"/>
+          <text x="183" y="28" text-anchor="middle" fill="#14f195" font-size="7" font-family="JetBrains Mono,monospace" font-weight="700">+18% / op</text>
           <line x1="16" y1="36" x2="224" y2="36" stroke="#1e1f2e" stroke-width=".7"/>
-          <text x="24" y="28" fill="#ff4d6a" font-size="7.5" font-family="DM Sans,sans-serif" font-weight="600">⚠ Calculadora de Liquidação</text>
-          <text x="24" y="52" fill="#4a4c60" font-size="6.5" font-family="DM Sans,sans-serif">Preço entrada</text><text x="216" y="52" text-anchor="end" fill="#eeeef8" font-size="8" font-family="JetBrains Mono,monospace">$95.000</text>
-          <text x="24" y="65" fill="#4a4c60" font-size="6.5" font-family="DM Sans,sans-serif">Alavancagem</text><text x="216" y="65" text-anchor="end" fill="#f0a500" font-size="8" font-family="JetBrains Mono,monospace">10x LONG</text>
-          <text x="24" y="78" fill="#4a4c60" font-size="6.5" font-family="DM Sans,sans-serif">Margem</text><text x="216" y="78" text-anchor="end" fill="#eeeef8" font-size="8" font-family="JetBrains Mono,monospace">$1.000</text>
-          <line x1="24" y1="86" x2="216" y2="86" stroke="#1e1f2e" stroke-width=".7"/>
-          <text x="24" y="99" fill="#4a4c60" font-size="6.5" font-family="DM Sans,sans-serif">Preço de Liquidação</text>
-          <text x="216" y="99" text-anchor="end" fill="#ff4d6a" font-size="10" font-family="JetBrains Mono,monospace" font-weight="700">$86.363</text>
+          <line x1="28" y1="98" x2="214" y2="98" stroke="#1e1f2e" stroke-width=".7"/>
+          <rect x="36" y="84" width="22" height="14" rx="2" fill="#14f195" opacity=".5"/>
+          <rect x="70" y="76" width="22" height="22" rx="2" fill="#14f195" opacity=".62"/>
+          <rect x="104" y="66" width="22" height="32" rx="2" fill="#14f195" opacity=".74"/>
+          <rect x="138" y="54" width="22" height="44" rx="2" fill="#14f195" opacity=".86"/>
+          <rect x="172" y="44" width="22" height="54" rx="2" fill="#14f195"/>
+          <text x="47" y="80" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="JetBrains Mono,monospace">$50</text>
+          <text x="183" y="41" text-anchor="middle" fill="#14f195" font-size="8.5" font-family="JetBrains Mono,monospace" font-weight="700">$92</text>
         </svg>
       </div>
       <div class="tool-body">
-        <div class="tool-hdr"><div class="tool-icon" style="background:rgba(255,77,106,.12)">⚠️</div><div class="tool-name">Calculadora de Liquidação</div></div>
-        <div class="tool-desc">Calcule o preço de liquidação para posições alavancadas em futuros cripto.</div>
-        <div class="tool-foot"><span class="tool-badge" style="background:rgba(240,165,0,.12);color:var(--gold)">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+        <div class="tool-hdr"><div class="tool-icon" style="background:rgba(255,77,106,.12)">📊</div><div class="tool-name">Simulador de Trade</div></div>
+        <div class="tool-desc">Long e short com alavancagem, preço de liquidação e sua banca crescendo entrada após entrada.</div>
+        <div class="tool-foot"><span class="tool-badge" style="background:rgba(0,229,255,.1);color:var(--neon)">NOVO</span><span class="tool-arrow">→</span></div>
       </div>
     </a>
 
@@ -1025,9 +1029,9 @@ footer{background:var(--bg2);border-top:1px solid var(--border);padding:3rem 2re
       <div class="footer-col-title">Ferramentas</div>
       <a href="/ferramentas/juros-compostos.html" class="footer-link">Juros Compostos</a>
       <a href="/ferramentas/lucro-cripto.html" class="footer-link">Lucro Cripto</a>
-      <a href="/ferramentas/ferramentas.html#pool" class="footer-link">Pool de Liquidez</a>
-      <a href="/ferramentas/ferramentas.html#yield" class="footer-link">Yield Farming</a>
-      <a href="/ferramentas/ferramentas.html#liquidacao" class="footer-link">Calc. Liquidação</a>
+      <a href="/ferramentas/pool-liquidez.html" class="footer-link">Pool de Liquidez</a>
+      <a href="/ferramentas/simulador-de-trade.html" class="footer-link">Simulador de Trade</a>
+      <a href="/ferramentas/cambio.html" class="footer-link">Câmbio Cripto</a>
     </div>
     <div>
       <div class="footer-col-title">Estudos</div>

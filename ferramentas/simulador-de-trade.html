@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de Trade com Alavancagem e Gestão de Banca | MundoDeFi</title>
+<meta name="description" content="Simule operações de trade com alavancagem (long e short), veja lucro, prejuízo e preço de liquidação em tempo real e acompanhe o crescimento da sua banca com juros compostos. Grátis e em português.">
+<meta name="keywords" content="simulador de trade, calculadora de alavancagem, gestão de banca, long short cripto, preço de liquidação, juros compostos trade, simulador de banca cripto">
+<meta property="og:title" content="Simulador de Trade com Alavancagem e Gestão de Banca | MundoDeFi">
+<meta property="og:description" content="Simule trades alavancados (long/short), veja liquidação e acompanhe o crescimento da sua banca operação após operação.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mundodefi.com.br/simulador-de-trade.html">
+<meta property="og:locale" content="pt_BR">
+<link rel="canonical" href="https://mundodefi.com.br/simulador-de-trade.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="mundodefi-tokens.css">
+<style>
+:root{
+  --bg:#0a0a0a;
+  --bg2:#111114;
+  --card:#15151a;
+  --card2:#1b1b22;
+  --border:#26262e;
+  --border2:#33333d;
+  --text:#f2f2f5;
+  --muted:#9b9ba6;
+  --roxo:var(--purple);
+  --verde:var(--green);
+  --vermelho:var(--red);
+  --dourado:var(--gold);
+  --ciano:var(--cyan);
+  --radius:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  background-image:
+    radial-gradient(900px 420px at 85% -5%, rgba(153,69,255,.10), transparent 60%),
+    radial-gradient(700px 380px at 0% 30%, rgba(20,241,149,.05), transparent 60%);
+  background-repeat:no-repeat;
+  color:var(--text);
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--verde);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:1080px;margin:0 auto;padding:0 20px}
+.num{font-family:'Space Mono',monospace}
+
+/* ===== Header ===== */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(10,10,10,.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav{display:flex;align-items:center;justify-content:space-between;height:62px}
+.logo{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo em{font-style:normal}
+.nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
+.nav-links a{color:var(--muted)}
+.nav-links a:hover{color:var(--text);text-decoration:none}
+.btn-pro{
+  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
+  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
+}
+.btn-pro:hover{opacity:.9;text-decoration:none}
+
+/* ===== Hero ===== */
+.hero{padding:40px 0 14px}
+.hero .eyebrow{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ciano);font-weight:600}
+.hero h1{font-size:1.9rem;font-weight:700;letter-spacing:-.02em;margin:.5rem 0 .4rem;line-height:1.2}
+.hero h1 span{color:var(--verde)}
+.hero p{color:var(--muted);font-size:.95rem;max-width:640px}
+
+/* ===== Layout ===== */
+.sim-grid{display:grid;grid-template-columns:340px 1fr;gap:20px;margin:22px 0 40px}
+@media(max-width:880px){.sim-grid{grid-template-columns:1fr}}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+}
+.card + .card{margin-top:20px}
+.card-title{
+  font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);
+  font-weight:700;margin-bottom:16px;padding-left:9px;border-left:3px solid var(--roxo);
+}
+
+/* Forms */
+.field{margin-bottom:15px}
+.field label{display:block;font-size:.8rem;color:var(--muted);margin-bottom:6px;font-weight:500}
+input,select{
+  width:100%;background:var(--bg2);border:1px solid var(--border);
+  padding:11px 12px;border-radius:9px;color:var(--text);font-size:.95rem;
+  font-family:inherit;transition:border-color .15s,box-shadow .15s;
+}
+input:focus,select:focus{outline:none;border-color:var(--roxo);box-shadow:0 0 0 3px rgba(153,69,255,.15)}
+.input-icon{position:relative;display:flex}
+.input-icon input{border-top-right-radius:0;border-bottom-right-radius:0}
+.btn-fetch{
+  background:var(--ciano);color:#04121a;border:none;padding:0 14px;
+  border-top-right-radius:9px;border-bottom-right-radius:9px;font-size:1rem;
+  cursor:pointer;font-weight:700;transition:opacity .15s;
+}
+.btn-fetch:hover{opacity:.85}
+.status{font-size:.72rem;color:var(--muted);margin-top:6px;min-height:15px}
+
+/* Direção */
+.dir-toggle{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:4px;gap:4px}
+.dir-btn{flex:1;border:none;background:transparent;color:var(--muted);font-weight:700;font-size:.85rem;padding:9px;border-radius:7px;cursor:pointer;font-family:inherit;transition:all .15s}
+.dir-btn.active.long{background:rgba(20,241,149,.14);color:var(--verde);box-shadow:inset 0 0 0 1px rgba(20,241,149,.35)}
+.dir-btn.active.short{background:rgba(255,77,106,.14);color:var(--vermelho);box-shadow:inset 0 0 0 1px rgba(255,77,106,.35)}
+
+/* Slider */
+.slider-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px}
+.slider-head{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:9px}
+.slider-head b{color:var(--roxo);font-family:'Space Mono',monospace}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--border2);border-radius:3px;padding:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;border-radius:50%;background:var(--roxo);cursor:pointer;box-shadow:0 0 8px rgba(153,69,255,.6)}
+input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-radius:50%;background:var(--roxo);cursor:pointer}
+
+/* ===== Banca ===== */
+.card-banca{border-color:rgba(245,182,20,.35);background:linear-gradient(180deg,rgba(245,182,20,.05),transparent 55%),var(--card)}
+.card-banca .card-title{border-left-color:var(--dourado);color:var(--dourado)}
+.switch-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:11px 13px;margin-bottom:14px}
+.switch-row .sr-txt{font-size:.82rem;font-weight:600}
+.switch-row .sr-sub{font-size:.7rem;color:var(--muted);font-weight:400;margin-top:1px}
+.switch{position:relative;width:44px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0;position:absolute}
+.slider-toggle{position:absolute;inset:0;background:var(--border2);border-radius:24px;cursor:pointer;transition:.2s}
+.slider-toggle::before{content:"";position:absolute;height:18px;width:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked + .slider-toggle{background:var(--dourado)}
+.switch input:checked + .slider-toggle::before{transform:translateX(20px)}
+
+.preview{
+  background:var(--bg2);border:1px dashed var(--border2);border-radius:10px;
+  padding:13px 14px;font-size:.86rem;line-height:1.5;margin:4px 0 14px;
+}
+.preview b{font-family:'Space Mono',monospace}
+.banca-actions{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:8px}
+.btn{border:none;border-radius:9px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .15s;padding:11px 14px;font-size:.85rem}
+.btn-main{background:linear-gradient(135deg,var(--verde),#0fae6f);color:#052416}
+.btn-main:hover{opacity:.92;box-shadow:0 4px 16px rgba(20,241,149,.22)}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border2);padding:11px 12px}
+.btn-ghost:hover{color:var(--text);border-color:var(--muted)}
+
+.banca-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.stat .st-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.stat .st-val{font-size:1.15rem;font-weight:700;font-family:'Space Mono',monospace;margin-top:3px}
+.stat.full{grid-column:1/-1}
+
+.hist{margin-top:14px}
+.hist-title{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:8px}
+.hist-list{display:flex;flex-direction:column;gap:6px;max-height:210px;overflow-y:auto}
+.hist-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:.8rem}
+.hist-item .hi-n{color:var(--muted);font-weight:600}
+.hist-item .hi-res{font-family:'Space Mono',monospace;font-weight:700}
+.hist-item .hi-saldo{font-family:'Space Mono',monospace;color:var(--muted)}
+.hist-empty{color:var(--muted);font-size:.8rem;padding:6px 2px}
+
+/* ===== Resultados ===== */
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px}
+.info-card p{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.info-card h3{font-size:1.35rem;font-weight:700;margin-top:5px;font-family:'Space Mono',monospace}
+
+.table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:18px}
+.table-head{font-size:.82rem;font-weight:600;padding:13px 16px;background:var(--card2);border-bottom:1px solid var(--border);color:var(--text)}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th,td{padding:11px 14px;text-align:left;white-space:nowrap}
+th{background:rgba(0,0,0,.25);color:var(--muted);font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
+td{font-family:'Space Mono',monospace}
+tr{border-bottom:1px solid rgba(38,38,46,.6)}
+tr:last-child{border-bottom:none}
+tbody tr:hover{background:rgba(255,255,255,.02)}
+
+.verde{color:var(--verde)!important;font-weight:700}
+.vermelho{color:var(--vermelho)!important;font-weight:700}
+.liq{color:var(--dourado)!important;font-weight:700}
+
+.disclaimer{font-size:.76rem;color:var(--muted);line-height:1.6;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.disclaimer strong{color:var(--text)}
+
+/* ===== Footer ===== */
+footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;margin-top:20px}
+.f-links{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;margin-bottom:10px}
+.f-links a{font-size:.82rem;color:var(--muted)}
+.f-links a:hover{color:var(--verde);text-decoration:none}
+.f-copy{font-size:.74rem;color:var(--muted)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container nav">
+    <a href="https://mundodefi.com.br/index.html" class="logo">₿ Mundo<em>DeFi</em></a>
+    <nav class="nav-links">
+      <a href="https://mundodefi.com.br/ferramentas.html">Ferramentas</a>
+      <a href="https://mundodefi.com.br/dashboard.html">Portfólio</a>
+      <a href="https://mundodefi.com.br/planos.html" class="btn-pro">👑 PRO</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="hero">
+    <span class="eyebrow">Ferramenta grátis · Trade com alavancagem</span>
+    <h1>Simulador de <span>Trade</span> com Gestão de Banca</h1>
+    <p>Simule operações long e short com alavancagem, veja lucro, prejuízo e preço de liquidação — e acompanhe a sua banca crescer entrada após entrada, com juros compostos.</p>
+  </section>
+
+  <div class="sim-grid">
+
+    <!-- ===== COLUNA ESQUERDA: PARÂMETROS + BANCA ===== -->
+    <div>
+      <div class="card">
+        <div class="card-title">Parâmetros do trade</div>
+
+        <div class="field">
+          <label>Direção da operação</label>
+          <div class="dir-toggle">
+            <button type="button" class="dir-btn active long" id="btn-long" onclick="setDirection('long')">LONG (compra)</button>
+            <button type="button" class="dir-btn" id="btn-short" onclick="setDirection('short')">SHORT (venda)</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="asset-select">Ativo</label>
+          <select id="asset-select" onchange="onAssetChange()">
+            <option value="bitcoin" selected>Bitcoin (BTC)</option>
+            <option value="ethereum">Ethereum (ETH)</option>
+            <option value="solana">Solana (SOL)</option>
+            <option value="binancecoin">BNB (Binance Coin)</option>
+            <option value="ripple">Ripple (XRP)</option>
+            <option value="cardano">Cardano (ADA)</option>
+            <option value="custom_token">Outro / manual</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="entrada">Preço de entrada ($)</label>
+          <div class="input-icon">
+            <input type="number" id="entrada" value="0" step="any" oninput="calcular()">
+            <button type="button" class="btn-fetch" id="btn-fetch" onclick="fetchPrice()" title="Atualizar preço ao vivo">⚡</button>
+          </div>
+          <div class="status" id="api-status">Carregando preço…</div>
+        </div>
+
+        <div class="field">
+          <label for="saida">Preço-alvo de saída ($)</label>
+          <input type="number" id="saida" value="0" step="any" oninput="calcular()">
+        </div>
+
+        <div class="slider-box">
+          <div class="slider-head"><span>Alavancagem</span><b id="lev-val">5x</b></div>
+          <input type="range" id="lev-slider" min="1" max="10" value="5" oninput="onLeverageChange()">
+        </div>
+      </div>
+
+      <!-- ===== BANCA ===== -->
+      <div class="card card-banca">
+        <div class="card-title">💰 Gestão de banca</div>
+
+        <div class="field">
+          <label for="banca-inicial">Banca inicial ($)</label>
+          <input type="number" id="banca-inicial" value="50" step="any" oninput="setBancaInicial()">
+        </div>
+
+        <div class="switch-row">
+          <div>
+            <div class="sr-txt">Reinvestir lucros</div>
+            <div class="sr-sub">Usa a banca inteira a cada entrada (juros compostos)</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-reinvestir" checked onchange="toggleReinvestir()">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div class="field" id="aposta-wrap" style="display:none">
+          <label for="aposta">Aposta por entrada ($)</label>
+          <input type="number" id="aposta" value="50" step="any" oninput="calcular()">
+        </div>
+
+        <div class="preview" id="preview-banca">Preencha entrada, alvo e banca para ver a projeção.</div>
+
+        <div class="field" style="margin-bottom:10px">
+          <label for="override">Resultado real desta entrada ($) — opcional</label>
+          <input type="number" id="override" placeholder="deixe vazio p/ usar a projeção" step="any">
+        </div>
+
+        <div class="banca-actions">
+          <button class="btn btn-main" onclick="registrarEntrada()">Registrar na banca ↑</button>
+          <button class="btn btn-ghost" onclick="desfazer()" title="Desfazer última">↶</button>
+          <button class="btn btn-ghost" onclick="resetarBanca()" title="Resetar banca">⟳</button>
+        </div>
+
+        <div class="banca-stats">
+          <div class="stat full">
+            <div class="st-label">Banca atual</div>
+            <div class="st-val" id="st-banca">$50.00</div>
+          </div>
+          <div class="stat">
+            <div class="st-label">Crescimento ($)</div>
+            <div class="st-val" id="st-cresc">$0.00</div>
+          </div>
+          <div class="stat">
+            <div class="st-label">Crescimento (%)</div>
+            <div class="st-val" id="st-cresc-pct">0.0%</div>
+          </div>
+          <div class="stat">
+            <div class="st-label">Entradas (puxadas)</div>
+            <div class="st-val" id="st-entradas">0</div>
+          </div>
+          <div class="stat">
+            <div class="st-label">Média / entrada</div>
+            <div class="st-val" id="st-media">$0.00</div>
+          </div>
+        </div>
+
+        <div class="hist">
+          <div class="hist-title">Histórico de entradas</div>
+          <div class="hist-list" id="hist"><div class="hist-empty">Nenhuma entrada registrada ainda.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COLUNA DIREITA: RESULTADOS ===== -->
+    <div>
+      <div class="summary">
+        <div class="info-card">
+          <p>Tamanho da posição</p>
+          <h3 id="card-pos">$250.00</h3>
+        </div>
+        <div class="info-card">
+          <p>Preço de liquidação estimado</p>
+          <h3 id="card-liq" class="liq">$0.00</h3>
+        </div>
+        <div class="info-card">
+          <p>Variação real do ativo</p>
+          <h3 id="card-mov">0.00%</h3>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-head">Matriz de performance por alavancagem</div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Alav.</th>
+                <th>Variação real</th>
+                <th>Retorno alav. (PnL)</th>
+                <th>Lucro/prejuízo</th>
+                <th>Liquidação</th>
+              </tr>
+            </thead>
+            <tbody id="matrix-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <div class="table-head">Impacto rápido no mercado (alav. <span id="cenario-lev-label">5x</span>)</div>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Movimento</th>
+                <th>Preço do ativo</th>
+                <th>Resultado 1x</th>
+                <th>Resultado alavancado</th>
+              </tr>
+            </thead>
+            <tbody id="scenarios-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="disclaimer">
+        <strong>Aviso:</strong> os cálculos usam o modelo de margem isolada com 100% de consumo do colateral na liquidação. Operações alavancadas envolvem alto risco de perda total do capital. Ferramenta educacional — não é recomendação de investimento.
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="f-links">
+      <a href="https://mundodefi.com.br/ferramentas.html">Ferramentas</a>
+      <a href="https://mundodefi.com.br/estudos.html">Estudos</a>
+      <a href="https://mundodefi.com.br/dashboard.html">Portfólio</a>
+      <a href="https://mundodefi.com.br/planos.html">Planos PRO</a>
+    </div>
+    <p class="f-copy">© 2026 MundoDeFi · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinGecko</p>
+  </div>
+</footer>
+
+<script>
+/* ══════════════════════════════════════
+   ESTADO
+══════════════════════════════════════ */
+let dir = 'long';
+let banca = { inicial: 50, atual: 50, entradas: [] };
+let ultimoLiquido = 0;      // resultado projetado da entrada atual (no alvo)
+let ultimoLiquidado = false;
+
+const assetIds = {
+  bitcoin:'bitcoin', ethereum:'ethereum', solana:'solana',
+  binancecoin:'binancecoin', ripple:'ripple', cardano:'cardano'
+};
+
+const el = id => document.getElementById(id);
+
+/* ══════════════════════════════════════
+   HELPERS DE FORMATO
+══════════════════════════════════════ */
+function fmt(v){ return (v<0?'-':'') + '$' + Math.abs(v).toFixed(2); }
+function signed(v){ return (v>=0?'+':'-') + '$' + Math.abs(v).toFixed(2); }
+function pct(v){ return (v>=0?'+':'') + v.toFixed(1) + '%'; }
+function reinvestirOn(){ return el('toggle-reinvestir').checked; }
+function getMargem(){ return reinvestirOn() ? banca.atual : (parseFloat(el('aposta').value) || 0); }
+
+/* ══════════════════════════════════════
+   CONTROLES
+══════════════════════════════════════ */
+function setDirection(d){
+  dir = d;
+  el('btn-long').classList.toggle('active', d==='long');
+  el('btn-short').classList.toggle('active', d==='short');
+  calcular();
+}
+
+function onLeverageChange(){
+  const v = el('lev-slider').value;
+  el('lev-val').textContent = v + 'x';
+  el('cenario-lev-label').textContent = v + 'x';
+  calcular();
+}
+
+function onAssetChange(){
+  const asset = el('asset-select').value;
+  const status = el('api-status');
+  const btn = el('btn-fetch');
+  if(asset === 'custom_token'){
+    status.textContent = 'Modo manual — digite o preço de entrada.';
+    status.style.color = 'var(--muted)';
+    btn.style.display = 'none';
+  } else {
+    btn.style.display = 'block';
+    fetchPrice();
+  }
+}
+
+async function fetchPrice(){
+  const asset = el('asset-select').value;
+  if(asset === 'custom_token') return;
+  const status = el('api-status');
+  status.textContent = 'Buscando preço ao vivo…';
+  status.style.color = 'var(--ciano)';
+  try{
+    const r = await fetch(`https://api.coingecko.com/api/v3/simple/price?ids=${assetIds[asset]}&vs_currencies=usd`);
+    const data = await r.json();
+    const preco = data[assetIds[asset]].usd;
+    el('entrada').value = preco;
+    if((parseFloat(el('saida').value) || 0) === 0){
+      el('saida').value = (preco * 1.05).toFixed(2);
+    }
+    status.textContent = 'Preço atualizado via CoinGecko.';
+    status.style.color = 'var(--verde)';
+    calcular();
+  }catch(e){
+    status.textContent = 'Erro ao conectar à API. Digite manualmente.';
+    status.style.color = 'var(--vermelho)';
+  }
+}
+
+/* ══════════════════════════════════════
+   BANCA
+══════════════════════════════════════ */
+function setBancaInicial(){
+  const v = parseFloat(el('banca-inicial').value) || 0;
+  const delta = banca.atual - banca.inicial;   // preserva o lucro/prejuízo já acumulado
+  banca.inicial = v;
+  banca.atual = banca.entradas.length ? (v + delta) : v;
+  renderBanca();
+  calcular();
+}
+
+function toggleReinvestir(){
+  const on = reinvestirOn();
+  el('aposta-wrap').style.display = on ? 'none' : 'block';
+  if(!on) el('aposta').value = banca.atual.toFixed(2);
+  calcular();
+}
+
+function registrarEntrada(){
+  const ov = el('override').value.trim();
+  let res;
+  if(ov !== '' && !isNaN(parseFloat(ov))){
+    res = parseFloat(ov);
+  } else {
+    if(getMargem() <= 0){ return; }
+    res = ultimoLiquido;
+  }
+  banca.entradas.push({ res, antes: banca.atual, depois: banca.atual + res });
+  banca.atual += res;
+  el('override').value = '';
+  if(!reinvestirOn()) el('aposta').value = el('aposta').value; // mantém aposta fixa
+  renderBanca();
+  calcular();
+}
+
+function desfazer(){
+  if(!banca.entradas.length) return;
+  const last = banca.entradas.pop();
+  banca.atual = last.antes;
+  renderBanca();
+  calcular();
+}
+
+function resetarBanca(){
+  banca.atual = banca.inicial;
+  banca.entradas = [];
+  el('override').value = '';
+  renderBanca();
+  calcular();
+}
+
+function renderBanca(){
+  const cresc = banca.atual - banca.inicial;
+  const crescPct = banca.inicial > 0 ? (cresc / banca.inicial) * 100 : 0;
+  const n = banca.entradas.length;
+  const media = n ? cresc / n : 0;
+
+  el('st-banca').textContent = fmt(banca.atual);
+  el('st-cresc').textContent = signed(cresc);
+  el('st-cresc').className = 'st-val ' + (cresc>=0 ? 'verde' : 'vermelho');
+  el('st-cresc-pct').textContent = pct(crescPct);
+  el('st-cresc-pct').className = 'st-val ' + (cresc>=0 ? 'verde' : 'vermelho');
+  el('st-entradas').textContent = n;
+  el('st-media').textContent = signed(media);
+  el('st-media').className = 'st-val ' + (media>=0 ? 'verde' : 'vermelho');
+
+  const hist = el('hist');
+  if(!n){
+    hist.innerHTML = '<div class="hist-empty">Nenhuma entrada registrada ainda.</div>';
+  } else {
+    hist.innerHTML = banca.entradas.map((e,i)=>{
+      const cls = e.res>=0 ? 'verde' : 'vermelho';
+      return `<div class="hist-item">
+        <span class="hi-n">#${i+1}</span>
+        <span class="hi-res ${cls}">${signed(e.res)}</span>
+        <span class="hi-saldo">→ ${fmt(e.depois)}</span>
+      </div>`;
+    }).reverse().join('');
+  }
+}
+
+/* ══════════════════════════════════════
+   PROJEÇÃO DA BANCA (entrada atual)
+══════════════════════════════════════ */
+function atualizarPreview(assetMov, lev){
+  const M = getMargem();
+  const entrada = parseFloat(el('entrada').value) || 0;
+  const box = el('preview-banca');
+
+  if(entrada <= 0 || M <= 0){
+    box.innerHTML = 'Preencha entrada, alvo e banca para ver a projeção.';
+    ultimoLiquido = 0; ultimoLiquidado = false;
+    return;
+  }
+
+  let pnlPct = assetMov * lev;
+  ultimoLiquidado = pnlPct <= -100;
+  ultimoLiquido = ultimoLiquidado ? -M : M * (pnlPct/100);
+
+  const proj = banca.atual + ultimoLiquido;
+  const pctTrade = banca.atual > 0 ? (ultimoLiquido / banca.atual) * 100 : 0;
+
+  if(ultimoLiquidado){
+    box.innerHTML = `<span class="vermelho">⚠ LIQUIDADO</span> — perda de <b>${fmt(M)}</b> (-100%).<br>
+      Banca <b>${fmt(banca.atual)}</b> → <b class="vermelho">${fmt(proj)}</b>`;
+    return;
+  }
+  const cls = ultimoLiquido >= 0 ? 'verde' : 'vermelho';
+  box.innerHTML = `Se bater o alvo: banca <b>${fmt(banca.atual)}</b> → <b class="${cls}">${fmt(proj)}</b><br>
+    Resultado: <b class="${cls}">${signed(ultimoLiquido)} (${pct(pctTrade)})</b>`;
+}
+
+/* ══════════════════════════════════════
+   CÁLCULO PRINCIPAL
+══════════════════════════════════════ */
+function calcular(){
+  const entrada = parseFloat(el('entrada').value) || 0;
+  const saida   = parseFloat(el('saida').value) || 0;
+  const lev     = parseInt(el('lev-slider').value) || 1;
+  const M       = getMargem();
+
+  if(entrada <= 0){ atualizarPreview(0, lev); return; }
+
+  const assetMov = dir==='long' ? ((saida-entrada)/entrada)*100 : ((entrada-saida)/entrada)*100;
+
+  // Cards
+  el('card-pos').textContent = fmt(M * lev);
+  el('card-mov').textContent = (assetMov>=0?'+':'') + assetMov.toFixed(2) + '%';
+  el('card-mov').className = assetMov>=0 ? 'verde' : 'vermelho';
+
+  let liq = dir==='long' ? entrada*(1-(1/lev)) : entrada*(1+(1/lev));
+  if(liq < 0) liq = 0;
+  el('card-liq').textContent = fmt(liq);
+
+  // Matriz por alavancagem
+  let m = '';
+  [1,2,3,4,5,6,7,8,9,10].forEach(L=>{
+    let pnl = assetMov * L;
+    let lucro = M * (pnl/100);
+    let lp = dir==='long' ? entrada*(1-(1/L)) : entrada*(1+(1/L));
+    if(lp < 0) lp = 0;
+    let pnlTxt = (pnl>=0?'+':'') + pnl.toFixed(2) + '%';
+    let lucroTxt = signed(lucro);
+    let cls = pnl>=0 ? 'verde' : 'vermelho';
+    if(pnl <= -100){ pnlTxt='LIQUIDADO'; lucroTxt=fmt(-M); cls='vermelho'; }
+    m += `<tr><td><strong>${L}x</strong></td><td>${assetMov.toFixed(2)}%</td>
+      <td class="${cls}">${pnlTxt}</td><td class="${cls}">${lucroTxt}</td>
+      <td class="liq">${fmt(lp)}</td></tr>`;
+  });
+  el('matrix-body').innerHTML = m;
+
+  // Cenários rápidos
+  let s = '';
+  [0.05,0.10,-0.05,-0.10].forEach(mov=>{
+    let scP = entrada*(1+mov);
+    let ret1 = dir==='long' ? mov*100 : -mov*100;
+    let retA = ret1 * lev;
+    let nomA = M * (retA/100);
+    let txtA = (retA>=0?'+':'') + retA.toFixed(2) + '%';
+    let txtN = signed(nomA);
+    let cls = retA>=0 ? 'verde' : 'vermelho';
+    if(retA <= -100){ txtA='LIQUIDADO'; txtN=fmt(-M); cls='vermelho'; }
+    let nome = (mov>0?'🟢 Alta':'🔴 Queda') + ' ' + Math.abs(mov*100) + '%';
+    s += `<tr><td><strong>${nome}</strong></td><td>${fmt(scP)}</td>
+      <td class="${ret1>=0?'verde':'vermelho'}">${(ret1>=0?'+':'')}${ret1.toFixed(2)}%</td>
+      <td class="${cls}">${txtA} (${txtN})</td></tr>`;
+  });
+  el('scenarios-body').innerHTML = s;
+
+  // Projeção da banca
+  atualizarPreview(assetMov, lev);
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+window.onload = () => { renderBanca(); fetchPrice(); };
+</script>
+</body>
+</html>
