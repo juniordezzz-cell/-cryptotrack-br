@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Política de Privacidade — MundoDeFi</title>
+<meta name="description" content="Política de Privacidade do MundoDeFi: quais dados coletamos, como usamos, com quem compartilhamos e seus direitos conforme a LGPD.">
+<link rel="canonical" href="https://mundodefi.com.br/politica-de-privacidade.html">
+<meta property="og:title" content="Política de Privacidade — MundoDeFi">
+<meta property="og:description" content="Como o MundoDeFi coleta, usa e protege seus dados, conforme a LGPD.">
+<meta property="og:url" content="https://mundodefi.com.br/politica-de-privacidade.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<style>
+:root{
+  --bg:#05060c;--bg2:#0a0b14;--bg3:#10111c;
+  --border:rgba(255,255,255,0.05);--border2:rgba(255,255,255,0.09);
+  --text:#eef0f6;--muted:#5a5e70;--muted2:#8b8fa3;
+  --display:'Syne',sans-serif;--font:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:10px;--rl:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-weight:300;line-height:1.75;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(5,6,12,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.nav-wrap{max-width:1440px;margin:0 auto;padding:.85rem 1.5rem;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-logo-mark{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,var(--purple,#9945ff),var(--cyan,#00e5ff));display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-family:var(--display);font-size:15px}
+.nav-logo-text{font-family:var(--display);font-weight:800;font-size:1.05rem;letter-spacing:-.03em;background:linear-gradient(135deg,var(--purple,#9945ff),var(--cyan,#00e5ff));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.nav-back{font-size:12px;font-weight:600;color:var(--muted2);text-decoration:none;padding:8px 18px;border-radius:99px;border:1px solid var(--border2);transition:all .15s}
+.nav-back:hover{color:var(--text);border-color:var(--purple,#9945ff)}
+
+/* PAGE */
+.page{max-width:780px;margin:0 auto;padding:3.5rem 1.5rem 5rem}
+.page-eyebrow{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--purple,#9945ff);margin-bottom:.8rem}
+h1{font-family:var(--display);font-size:clamp(1.8rem,4vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.15;margin-bottom:.8rem}
+.page-updated{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:2.8rem;padding-bottom:1.8rem;border-bottom:1px solid var(--border)}
+.intro{font-size:15px;color:var(--muted2);margin-bottom:2.5rem}
+section{margin-bottom:2.6rem}
+h2{font-family:var(--display);font-size:1.15rem;font-weight:700;letter-spacing:-.01em;margin-bottom:.8rem;padding-top:.4rem}
+p{font-size:14px;color:var(--muted2);margin-bottom:.9rem}
+strong{color:var(--text);font-weight:600}
+ul{list-style:none;margin:0 0 .9rem}
+li{font-size:14px;color:var(--muted2);padding-left:1.3rem;position:relative;margin-bottom:.55rem}
+li::before{content:'';position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:2px;background:linear-gradient(135deg,var(--purple,#9945ff),var(--cyan,#00e5ff))}
+a{color:var(--cyan,#00e5ff);text-decoration:none}
+a:hover{text-decoration:underline}
+.contact-card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rl);padding:1.4rem 1.6rem;margin-top:.4rem}
+.contact-card p{margin-bottom:.3rem}
+
+footer{border-top:1px solid var(--border);padding:1.4rem 1.5rem;text-align:center}
+.footer-copy{font-size:11px;color:var(--muted);font-weight:300}
+.footer-copy a{color:var(--muted2)}
+
+@media(max-width:600px){.page{padding:2.5rem 1.2rem 4rem}}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-wrap">
+    <a href="/index.html" class="nav-logo">
+      <div class="nav-logo-mark">₿</div>
+      <div class="nav-logo-text">MundoDeFi</div>
+    </a>
+    <a href="/index.html" class="nav-back">← Voltar ao site</a>
+  </div>
+</nav>
+
+<main class="page">
+  <div class="page-eyebrow">Documento legal</div>
+  <h1>Política de Privacidade</h1>
+  <div class="page-updated">Última atualização: 01 de julho de 2026</div>
+
+  <p class="intro">Esta política explica, de forma direta, quais dados o <strong>MundoDeFi</strong> (mundodefi.com.br) coleta, por que coleta, como protege e quais são os seus direitos, em conformidade com a Lei Geral de Proteção de Dados — LGPD (Lei nº 13.709/2018).</p>
+
+  <section>
+    <h2>1. Quem somos</h2>
+    <p>O MundoDeFi é uma plataforma brasileira de ferramentas, calculadoras e conteúdo educativo sobre criptomoedas e finanças descentralizadas (DeFi). O controlador dos dados tratados neste site é o responsável pelo MundoDeFi, que pode ser contatado pelo canal indicado na seção 10.</p>
+  </section>
+
+  <section>
+    <h2>2. Quais dados coletamos</h2>
+    <p><strong>Dados que você nos fornece:</strong></p>
+    <ul>
+      <li><strong>Conta de acesso:</strong> ao entrar com sua conta Google, recebemos seu nome, endereço de e-mail e foto de perfil, por meio do serviço de autenticação Firebase (Google).</li>
+      <li><strong>Diagnóstico IMD:</strong> ao realizar o diagnóstico Índice MundoDeFi, coletamos seu primeiro nome, faixa etária e as respostas do questionário, para gerar e salvar seu resultado.</li>
+      <li><strong>Dados de portfólio:</strong> ativos, valores e operações que você cadastra voluntariamente nas ferramentas de portfólio ficam vinculados à sua conta.</li>
+    </ul>
+    <p><strong>Dados coletados automaticamente:</strong></p>
+    <ul>
+      <li><strong>Armazenamento local (localStorage):</strong> usamos o armazenamento do seu navegador para guardar preferências e cache de cotações, evitando requisições repetidas. Esses dados ficam no seu dispositivo.</li>
+      <li><strong>Cookies técnicos:</strong> o serviço de autenticação do Google/Firebase pode utilizar cookies estritamente necessários para manter sua sessão de login ativa e segura.</li>
+    </ul>
+    <p>Não coletamos CPF, dados bancários, chaves privadas de carteiras ou senhas de exchanges. Nunca solicite ou informe esse tipo de dado em nossos canais.</p>
+  </section>
+
+  <section>
+    <h2>3. Para que usamos seus dados</h2>
+    <ul>
+      <li>Autenticar seu acesso e manter sua sessão segura;</li>
+      <li>Salvar e exibir seus diagnósticos, portfólios e resultados de ferramentas;</li>
+      <li>Personalizar recomendações de conteúdo e ferramentas dentro da plataforma;</li>
+      <li>Entrar em contato sobre os serviços contratados (planos PRO e PREMIUM);</li>
+      <li>Melhorar as ferramentas com base no uso agregado e anônimo;</li>
+      <li>Cumprir obrigações legais quando aplicável.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>4. Base legal</h2>
+    <p>Tratamos seus dados com base no <strong>consentimento</strong> (art. 7º, I da LGPD), coletado de forma destacada antes do salvamento de resultados do IMD e na criação de conta; na <strong>execução de contrato</strong>, para assinantes dos planos pagos; e no <strong>legítimo interesse</strong>, para melhorias da plataforma com dados agregados.</p>
+  </section>
+
+  <section>
+    <h2>5. Com quem compartilhamos</h2>
+    <p>Não vendemos nem alugamos seus dados pessoais. O compartilhamento ocorre apenas com operadores essenciais ao funcionamento do site:</p>
+    <ul>
+      <li><strong>Google Firebase (Auth e Firestore):</strong> autenticação e armazenamento seguro dos dados de conta, diagnósticos e portfólio;</li>
+      <li><strong>GitHub Pages:</strong> hospedagem das páginas do site;</li>
+      <li><strong>Provedores de dados de mercado</strong> (CoinGecko, Binance, TradingView, Banco Central do Brasil, entre outros): as ferramentas fazem requisições técnicas a essas APIs para exibir cotações e gráficos. Nenhum dado pessoal seu é enviado a elas.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>6. Por quanto tempo guardamos</h2>
+    <p>Seus dados de conta, diagnósticos e portfólio são mantidos enquanto sua conta existir. Ao solicitar a exclusão da conta, os dados pessoais vinculados a ela são removidos de nossas bases, ressalvadas as hipóteses de guarda obrigatória previstas em lei.</p>
+  </section>
+
+  <section>
+    <h2>7. Seus direitos (LGPD)</h2>
+    <p>Você pode, a qualquer momento, solicitar:</p>
+    <ul>
+      <li>Confirmação de que tratamos seus dados e acesso a eles;</li>
+      <li>Correção de dados incompletos, inexatos ou desatualizados;</li>
+      <li>Exclusão dos dados tratados com base no seu consentimento;</li>
+      <li>Portabilidade dos dados a outro fornecedor;</li>
+      <li>Revogação do consentimento;</li>
+      <li>Informação sobre com quem compartilhamos seus dados.</li>
+    </ul>
+    <p>Para exercer qualquer direito, use o canal de contato da seção 10. Responderemos no menor prazo possível.</p>
+  </section>
+
+  <section>
+    <h2>8. Segurança</h2>
+    <p>Os dados de conta e diagnósticos são armazenados na infraestrutura do Google Firebase, com criptografia em trânsito e em repouso, e regras de acesso que restringem a leitura dos seus dados à sua própria conta autenticada. Nenhum sistema é infalível, mas adotamos as medidas técnicas razoáveis para proteger suas informações.</p>
+  </section>
+
+  <section>
+    <h2>9. Crianças e adolescentes</h2>
+    <p>O MundoDeFi não se destina a menores de 18 anos. Não coletamos intencionalmente dados de crianças ou adolescentes. Se você acredita que um menor nos forneceu dados pessoais, entre em contato para que sejam removidos.</p>
+  </section>
+
+  <section>
+    <h2>10. Contato</h2>
+    <div class="contact-card">
+      <p>Dúvidas, solicitações ou exercício de direitos sobre seus dados:</p>
+      <p><strong>E-mail:</strong> <a href="mailto:contato@mundodefi.com.br">contato@mundodefi.com.br</a></p>
+      <p><strong>Instagram:</strong> <a href="https://instagram.com/mundodefi" target="_blank" rel="noopener">@mundodefi</a></p>
+    </div>
+  </section>
+
+  <section>
+    <h2>11. Alterações desta política</h2>
+    <p>Esta política pode ser atualizada para refletir mudanças na plataforma — por exemplo, a futura adoção de ferramentas de análise de tráfego ou exibição de anúncios, que exigirão aviso de cookies específico. A data da última atualização aparece sempre no topo desta página.</p>
+  </section>
+
+  <section>
+    <h2>12. Aviso importante</h2>
+    <p>O MundoDeFi oferece ferramentas e conteúdo <strong>educativo e informativo</strong>. Nada neste site constitui recomendação de investimento, consultoria financeira ou oferta de valores mobiliários. Criptoativos envolvem alto risco; decisões de investimento são de responsabilidade exclusiva do usuário.</p>
+  </section>
+</main>
+
+<footer>
+  <span class="footer-copy">© 2026 MundoDeFi · <a href="/index.html">Voltar ao início</a></span>
+</footer>
+
+</body>
+</html>
