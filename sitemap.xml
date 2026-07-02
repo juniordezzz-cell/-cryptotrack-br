@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://mundodefi.com.br/</loc><lastmod>2026-06-11</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/ferramentas.html</loc><lastmod>2026-06-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/juros-compostos.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/lucro-cripto.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/dca.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/pool-liquidez.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/staking.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/yield-farming.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/liquidacao.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/apr-apy.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/conversor.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/estudos.html</loc><lastmod>2026-06-11</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mundodefi.com.br/planos.html</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://mundodefi.com.br/base/token.html</loc><lastmod>2026-06-11</lastmod><changefreq>daily</changefreq><priority>0.6</priority></url>
+  <url><loc>https://mundodefi.com.br/</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+
+  <!-- Ferramentas -->
+  <url><loc>https://mundodefi.com.br/ferramentas/ferramentas.html</loc><lastmod>2026-07-01</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/juros-compostos.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/lucro-cripto.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/pool-liquidez.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/staking.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/liquidacao.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/conversor.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/cambio.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/comparador-de-ativos.html</loc><lastmod>2026-07-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/simulador-de-trade.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://mundodefi.com.br/ferramentas/imd/index.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Páginas de ativos -->
+  <url><loc>https://mundodefi.com.br/token.html?id=bitcoin</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/token.html?id=ethereum</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/token.html?id=solana</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/token.html?id=binancecoin</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/token.html?id=ripple</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/token.html?id=dogecoin</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+
+  <!-- Conteúdo e conversão -->
+  <url><loc>https://mundodefi.com.br/estudos.html</loc><lastmod>2026-07-01</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/planos.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://mundodefi.com.br/cadastro.html</loc><lastmod>2026-07-01</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
 </urlset>

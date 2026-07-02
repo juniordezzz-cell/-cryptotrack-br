@@ -587,7 +587,7 @@ async function loadSimilar(currentId){
     var t=tm[c.sym+'USDT'];
     var price=t?fmtP(parseFloat(t.lastPrice)):'—';
     var chg=t?parseFloat(t.priceChangePercent):null;
-    return'<tr onclick="location.href=\'/base/token.html?id='+c.id+'\'">'
+    return'<tr onclick="location.href=\'/token.html?id='+c.id+'\'">'
       +'<td class="s-rank">'+c.rank+'</td>'
       +'<td class="s-logo-td"><img class="s-logo" src="'+c.img+'" loading="lazy" alt="'+c.sym+'" onerror="this.style.background=\'var(--bg4)\'"></td>'
       +'<td><div class="s-name">'+c.name+'</div><div class="s-sym">'+c.sym+'</div></td>'
@@ -641,7 +641,7 @@ function navSearch(val){
 function renderNavDD(coins){
   var dd=document.getElementById('nav-dd');
   dd.innerHTML='<div class="ndd-h">Ativos</div>'+coins.map(function(c){
-    return'<a class="ndd-i" href="/base/token.html?id='+c.id+'">'
+    return'<a class="ndd-i" href="/token.html?id='+c.id+'">'
       +'<img class="ndd-ico" src="'+(c.img||c.image||'')+'" loading="lazy" onerror="this.style.background=\'var(--bg4)\'">'
       +'<div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600">'+c.name+'</div><div style="font-size:10px;color:var(--muted2);font-family:var(--mono)">'+c.sym+'</div></div>'
       +'</a>';
@@ -1121,7 +1121,7 @@ function renderPage(bin,cg){
     +'<tbody id="sim-tbody">';
   // Static initial rows (loading state)
   TOP_COINS.filter(function(c){return c.id!==_coinId;}).slice(0,14).forEach(function(c){
-    H+='<tr onclick="location.href=\'/base/token.html?id='+c.id+'\'">'
+    H+='<tr onclick="location.href=\'/token.html?id='+c.id+'\'">'
       +'<td class="s-rank">'+c.rank+'</td>'
       +'<td class="s-logo-td"><img class="s-logo" src="'+c.img+'" loading="lazy" alt="'+c.sym+'" onerror="this.style.background=\'var(--bg4)\'"></td>'
       +'<td><div class="s-name">'+c.name+'</div><div class="s-sym">'+c.sym+'</div></td>'
