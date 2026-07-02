@@ -448,7 +448,7 @@
     //         teste o login no site, e SÓ DEPOIS mude para true.
     // true  = resultado TRAVADO: só revela após login + 2 consentimentos.
     // ----------------------------------------------------------
-    var TRAVAR_RESULTADO = false;
+    var TRAVAR_RESULTADO = true;
 
     var conteudo   = document.getElementById("imd-result-conteudo");
     var lock       = document.getElementById("imd-lock");
