@@ -1,9 +1,10 @@
 {
-  "versao": "2.0",
+  "versao": "3.0",
   "_legenda": {
-    "pontos": "0 a 4 — mede CONHECIMENTO (entra no IMD).",
+    "pontos": "0 a 4 — mede CONHECIMENTO (entra no IMD). 5 níveis de resposta.",
     "risco": "-2 a +2 — mede COMPORTAMENTO. Negativo puxa pra conservador, positivo pra agressivo. NÃO entra no IMD.",
-    "condicao": "libera a pergunta só se as respostas anteriores baterem (árvore adaptativa)."
+    "condicao": "cascata adaptativa: a pergunta só aparece se as respostas anteriores baterem.",
+    "trilhas": "ENTRADA-01 é o seletor: 0-1 = iniciante (12 perguntas), 2+ = intermediário (~16-20), quem destrava INT-09 nível 3+ = avançado (30)."
   },
   "perguntas": [
 
@@ -13,115 +14,62 @@
       "competencia": "bitcoin",
       "texto": "Antes de tudo: qual é a sua relação com criptomoedas hoje?",
       "opcoes": [
-        { "texto": "Nunca tive contato, só ouvi o nome por aí", "pontos": 0, "risco": -1 },
-        { "texto": "Já ouvi falar e tenho curiosidade, mas nunca usei", "pontos": 1, "risco": 0 },
-        { "texto": "Já comprei ou já mexi um pouco", "pontos": 2, "risco": 1 },
-        { "texto": "Uso com frequência e acompanho o mercado de perto", "pontos": 4, "risco": 1 }
+        { "texto": "Praticamente nenhuma — só ouvi o nome por aí", "pontos": 0, "risco": -1 },
+        { "texto": "Tenho curiosidade, mas nunca comprei nada", "pontos": 1, "risco": 0 },
+        { "texto": "Já comprei em corretora (Binance, Mercado Bitcoin...), mas pouca coisa além disso", "pontos": 2, "risco": 0 },
+        { "texto": "Uso com frequência e já movimentei em carteira própria", "pontos": 3, "risco": 1 },
+        { "texto": "Sou usuário pesado: DeFi, pools, várias redes", "pontos": 4, "risco": 1 }
       ],
       "condicao": null
     },
 
     {
-      "id": "ENTRADA-02",
+      "id": "BTC-01",
       "pilar": "fundamentos",
       "competencia": "bitcoin",
-      "texto": "Quando você ouve a palavra \"Bitcoin\", o que vem à sua cabeça?",
+      "texto": "O que é o Bitcoin, na sua visão?",
       "opcoes": [
-        { "texto": "Não sei bem o que é", "pontos": 0, "risco": 0 },
+        { "texto": "Não sei explicar", "pontos": 0, "risco": 0 },
         { "texto": "Uma moeda digital que sobe e desce muito de preço", "pontos": 1, "risco": 1 },
-        { "texto": "Um dinheiro digital limitado, que ninguém controla sozinho", "pontos": 3, "risco": 0 },
-        { "texto": "Uma rede com oferta fixa de 21 milhões, mantida por milhares de computadores", "pontos": 4, "risco": 0 }
+        { "texto": "Um dinheiro digital que dá pra enviar pra qualquer lugar do mundo", "pontos": 2, "risco": 0 },
+        { "texto": "Um dinheiro digital com quantidade limitada, sem dono central", "pontos": 3, "risco": 0 },
+        { "texto": "Uma rede descentralizada com oferta fixa de 21 milhões, validada por mineradores no mundo todo", "pontos": 4, "risco": 0 }
       ],
       "condicao": null
     },
 
     {
-      "id": "ENTRADA-03",
-      "pilar": "fundamentos",
-      "competencia": "bitcoin",
-      "texto": "E \"blockchain\" — você sabe o que significa?",
-      "opcoes": [
-        { "texto": "Nunca ouvi esse termo", "pontos": 0, "risco": 0 },
-        { "texto": "Já ouvi, mas não saberia explicar", "pontos": 1, "risco": 0 },
-        { "texto": "É um tipo de registro digital que não dá pra falsificar", "pontos": 3, "risco": 0 },
-        { "texto": "É um livro-razão público e distribuído, validado por uma rede sem dono central", "pontos": 4, "risco": 0 }
-      ],
-      "condicao": null
-    },
-
-    {
-      "id": "PERF-01",
+      "id": "RISCO-01",
       "pilar": "fundamentos",
       "competencia": "mercado",
-      "texto": "Imagine que você investiu e, em uma semana, seu dinheiro caiu 30%. Qual seria sua reação mais provável?",
+      "texto": "Você investiu e, em uma semana, seu dinheiro caiu 30%. Qual seria sua reação mais provável?",
       "opcoes": [
-        { "texto": "Pânico — eu tiraria tudo na hora pra não perder mais", "pontos": 1, "risco": -2 },
-        { "texto": "Ficaria desconfortável e provavelmente venderia parte", "pontos": 1, "risco": -1 },
-        { "texto": "Seguraria, esperando recuperar com o tempo", "pontos": 2, "risco": 0 },
-        { "texto": "Veria como oportunidade e talvez comprasse mais", "pontos": 2, "risco": 2 }
+        { "texto": "Pânico — tiraria tudo na hora pra não perder mais", "pontos": 1, "risco": -2 },
+        { "texto": "Ficaria muito desconfortável e venderia uma parte", "pontos": 1, "risco": -1 },
+        { "texto": "Seguraria e esperaria recuperar com o tempo", "pontos": 2, "risco": 0 },
+        { "texto": "Seguraria e estudaria se vale aportar mais", "pontos": 3, "risco": 1 },
+        { "texto": "Compraria mais — queda é oportunidade", "pontos": 2, "risco": 2 }
       ],
       "condicao": null
     },
 
     {
-      "id": "PERF-02",
+      "id": "RISCO-02",
       "pilar": "fundamentos",
-      "competencia": "mercado",
-      "texto": "Como você descreveria o seu jeito de lidar com dinheiro e investimentos?",
+      "competencia": "gestao",
+      "texto": "Imagine R$ 10.000 livres hoje (sem dívidas, reserva de emergência ok). O que você faria com eles?",
       "opcoes": [
-        { "texto": "Prefiro segurança total, mesmo que renda pouco", "pontos": 1, "risco": -2 },
-        { "texto": "Aceito um risco pequeno por um retorno um pouco melhor", "pontos": 2, "risco": -1 },
-        { "texto": "Equilibro: um pouco de segurança, um pouco de risco", "pontos": 2, "risco": 0 },
-        { "texto": "Topo arriscar bastante por um retorno alto", "pontos": 2, "risco": 1 },
-        { "texto": "Quanto maior o risco, melhor — busco o retorno máximo", "pontos": 2, "risco": 2 }
+        { "texto": "Tudo em poupança ou CDB — segurança total", "pontos": 1, "risco": -2 },
+        { "texto": "Maior parte em renda fixa, uma pinguela em cripto", "pontos": 2, "risco": -1 },
+        { "texto": "Metade segura, metade em cripto", "pontos": 2, "risco": 0 },
+        { "texto": "Maior parte em cripto consolidada (BTC, ETH, SOL)", "pontos": 3, "risco": 1 },
+        { "texto": "Tudo em cripto, incluindo apostas pequenas de alto risco", "pontos": 2, "risco": 2 }
       ],
       "condicao": null
-    },
-
-    {
-      "id": "PERF-03",
-      "pilar": "defi",
-      "competencia": "lending",
-      "texto": "Você já ouviu falar em \"alavancagem\" (operar com dinheiro emprestado pra potencializar ganhos)?",
-      "opcoes": [
-        { "texto": "Não sei o que é isso", "pontos": 0, "risco": -1 },
-        { "texto": "Sei o que é, mas acho arriscado demais pra mim", "pontos": 2, "risco": -1 },
-        { "texto": "Tenho curiosidade e pretendo testar um dia", "pontos": 2, "risco": 1 },
-        { "texto": "Já usei alavancagem em operações", "pontos": 3, "risco": 2 }
-      ],
-      "condicao": null
-    },
-
-    {
-      "id": "FUN-04",
-      "pilar": "fundamentos",
-      "competencia": "stablecoins",
-      "texto": "Você sabe o que são \"stablecoins\" (como USDT e USDC)?",
-      "opcoes": [
-        { "texto": "Nunca ouvi falar", "pontos": 0, "risco": 0 },
-        { "texto": "Já ouvi, mas não sei pra que servem", "pontos": 1, "risco": 0 },
-        { "texto": "São criptos presas ao dólar, usadas pra fugir da volatilidade", "pontos": 3, "risco": -1 },
-        { "texto": "Uso elas pra me proteger e ter renda em dólar", "pontos": 4, "risco": 0 }
-      ],
-      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 1 }]
     },
 
     {
       "id": "SEG-01",
-      "pilar": "seguranca",
-      "competencia": "wallets",
-      "texto": "Você sabe o que é uma \"carteira\" de cripto e uma \"frase de recuperação\" (seed phrase)?",
-      "opcoes": [
-        { "texto": "Não sei o que é nenhum dos dois", "pontos": 0, "risco": 0 },
-        { "texto": "Sei que existe carteira, mas não sei o que é seed phrase", "pontos": 1, "risco": 0 },
-        { "texto": "Sei o que são, mas ainda não tenho uma carteira própria", "pontos": 2, "risco": 0 },
-        { "texto": "Tenho carteira e guardo minha seed phrase com cuidado", "pontos": 4, "risco": 0 }
-      ],
-      "condicao": null
-    },
-
-    {
-      "id": "SEG-02",
       "pilar": "seguranca",
       "competencia": "golpes",
       "texto": "Alguém te manda um link prometendo \"dobrar seus criptos\" em 24 horas. O que você faz?",
@@ -129,145 +77,475 @@
         { "texto": "Clicaria pra ver do que se trata", "pontos": 0, "risco": 2 },
         { "texto": "Ficaria na dúvida, talvez testasse com pouco", "pontos": 1, "risco": 1 },
         { "texto": "Desconfiaria, mas não teria certeza se é golpe", "pontos": 2, "risco": 0 },
-        { "texto": "Ignoraria na hora — isso é golpe clássico", "pontos": 4, "risco": -1 }
+        { "texto": "Ignoraria na hora — isso é golpe clássico", "pontos": 4, "risco": -1 },
+        { "texto": "Ignoraria e ainda avisaria quem compartilhou que é golpe", "pontos": 4, "risco": -1 }
       ],
       "condicao": null
     },
 
     {
-      "id": "SEG-03",
+      "id": "RISCO-03",
+      "pilar": "fundamentos",
+      "competencia": "gestao",
+      "texto": "Que fatia do seu patrimônio total você acha razoável ter em criptomoedas?",
+      "opcoes": [
+        { "texto": "Nada, por enquanto", "pontos": 1, "risco": -2 },
+        { "texto": "Até 5% — só uma experiência", "pontos": 2, "risco": -1 },
+        { "texto": "Entre 10% e 25%", "pontos": 3, "risco": 0 },
+        { "texto": "Entre 25% e 50%", "pontos": 3, "risco": 1 },
+        { "texto": "Mais da metade do que eu tenho", "pontos": 2, "risco": 2 }
+      ],
+      "condicao": null
+    },
+
+    {
+      "id": "INI-01",
+      "pilar": "fundamentos",
+      "competencia": "bitcoin",
+      "texto": "E \"blockchain\" — o que essa palavra significa pra você?",
+      "opcoes": [
+        { "texto": "Nunca ouvi esse termo", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi, mas não saberia explicar", "pontos": 1, "risco": 0 },
+        { "texto": "Tem a ver com registrar transações digitais", "pontos": 2, "risco": 0 },
+        { "texto": "É um registro que não dá pra falsificar e não tem dono", "pontos": 3, "risco": 0 },
+        { "texto": "É um livro-razão público, distribuído e validado por uma rede inteira", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
+    },
+
+    {
+      "id": "INI-02",
+      "pilar": "fundamentos",
+      "competencia": "mercado",
+      "texto": "O que mais te segurou até agora pra não entrar em cripto?",
+      "opcoes": [
+        { "texto": "Medo de perder tudo — é muito arriscado pra mim", "pontos": 1, "risco": -2 },
+        { "texto": "Medo de cair em golpe", "pontos": 2, "risco": -1 },
+        { "texto": "Sinto que ainda não entendo o suficiente", "pontos": 1, "risco": 0 },
+        { "texto": "Não sei nem por onde começar", "pontos": 1, "risco": 0 },
+        { "texto": "Nada — só falta eu decidir entrar", "pontos": 2, "risco": 1 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
+    },
+
+    {
+      "id": "INI-03",
       "pilar": "seguranca",
       "competencia": "wallets",
-      "texto": "Onde você guarda (ou guardaria) a frase de recuperação da sua carteira?",
+      "texto": "Como você cuida das suas senhas na internet hoje?",
       "opcoes": [
-        { "texto": "Num print, no e-mail ou salva no celular", "pontos": 1, "risco": 1 },
-        { "texto": "Não sei qual seria o lugar certo", "pontos": 1, "risco": 0 },
-        { "texto": "Anotada à mão num papel guardado em casa", "pontos": 3, "risco": -1 },
-        { "texto": "Anotada offline, com uma cópia em outro local físico seguro", "pontos": 4, "risco": -1 }
+        { "texto": "Uso a mesma senha em quase tudo", "pontos": 0, "risco": 1 },
+        { "texto": "Senhas diferentes, mas anotadas no celular ou e-mail", "pontos": 1, "risco": 0 },
+        { "texto": "Senhas fortes e diferentes pra cada serviço", "pontos": 3, "risco": 0 },
+        { "texto": "Uso gerenciador de senhas e verificação em duas etapas (2FA)", "pontos": 4, "risco": -1 },
+        { "texto": "Não sei o que é verificação em duas etapas", "pontos": 0, "risco": 0 }
       ],
-      "condicao": [{ "se": "SEG-01", "op": ">=", "valor": 2 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
     },
 
     {
-      "id": "AUT-01",
+      "id": "INI-04",
+      "pilar": "fundamentos",
+      "competencia": "stablecoins",
+      "texto": "Você sabia que existe \"dólar digital\" — criptomoedas que valem sempre 1 dólar (as stablecoins)?",
+      "opcoes": [
+        { "texto": "Nunca ouvi falar", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi, mas não entendo como funciona", "pontos": 1, "risco": 0 },
+        { "texto": "Acho que é a mesma coisa que Bitcoin", "pontos": 0, "risco": 0 },
+        { "texto": "Sei que é uma cripto atrelada ao dólar", "pontos": 3, "risco": 0 },
+        { "texto": "Sei e sei pra que serve: proteção da volatilidade e renda em dólar", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
+    },
+
+    {
+      "id": "INI-05",
       "pilar": "autonomia",
       "competencia": "custodia",
-      "texto": "Se você tem (ou tivesse) criptomoedas, onde elas ficariam guardadas?",
+      "texto": "Se você fosse começar em cripto hoje, como preferiria dar o primeiro passo?",
       "opcoes": [
-        { "texto": "Não tenho nenhuma ainda", "pontos": 0, "risco": 0 },
-        { "texto": "Tudo numa corretora (Binance, Coinbase, etc.)", "pontos": 1, "risco": 0 },
-        { "texto": "Parte na corretora, parte em carteira própria", "pontos": 3, "risco": 0 },
-        { "texto": "A maior parte em carteira própria (eu no controle)", "pontos": 4, "risco": 0 }
+        { "texto": "Pelo app do meu banco ou corretora brasileira conhecida", "pontos": 1, "risco": -1 },
+        { "texto": "Pediria pra alguém de confiança fazer por mim", "pontos": 0, "risco": -1 },
+        { "texto": "Abriria conta numa corretora grande tipo Binance", "pontos": 2, "risco": 0 },
+        { "texto": "Estudaria antes pra já começar com carteira própria", "pontos": 3, "risco": 0 },
+        { "texto": "Entraria direto no que estiver rendendo mais", "pontos": 0, "risco": 2 }
       ],
-      "condicao": null
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
     },
 
     {
-      "id": "AUT-02",
-      "pilar": "autonomia",
-      "competencia": "onchain",
-      "texto": "Você já consultou uma transação num explorador de blockchain (Etherscan, Solscan)?",
-      "opcoes": [
-        { "texto": "Nunca, não sei nem o que é isso", "pontos": 0, "risco": 0 },
-        { "texto": "Já vi alguém usar, mas eu mesmo não usei", "pontos": 2, "risco": 0 },
-        { "texto": "Sim, sei conferir status e saldo direto na rede", "pontos": 4, "risco": 0 }
-      ],
-      "condicao": [{ "se": "AUT-01", "op": ">=", "valor": 1 }]
-    },
-
-    {
-      "id": "DEFI-01",
+      "id": "INI-06",
       "pilar": "defi",
       "competencia": "defi_base",
-      "texto": "Qual é a sua experiência com DeFi (finanças descentralizadas)?",
+      "texto": "Pra fechar: você já ouviu falar em DeFi (finanças descentralizadas)?",
       "opcoes": [
-        { "texto": "Nunca ouvi falar em DeFi", "pontos": 0, "risco": 0 },
-        { "texto": "Sei o que é, mas nunca usei", "pontos": 1, "risco": 0 },
-        { "texto": "Já fiz algumas trocas em DEX (tipo Uniswap)", "pontos": 3, "risco": 1 },
-        { "texto": "Uso DeFi com frequência: pools, farms, lending", "pontos": 4, "risco": 1 }
+        { "texto": "Nunca ouvi", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi o nome, mas não sei o que é", "pontos": 1, "risco": 0 },
+        { "texto": "Sei que é tipo um sistema financeiro sem banco no meio", "pontos": 2, "risco": 0 },
+        { "texto": "Sei que dá pra ter rendimento com isso", "pontos": 3, "risco": 1 },
+        { "texto": "Entendo bem o conceito — só nunca usei na prática", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": "<=", "valor": 1 }]
+    },
+
+    {
+      "id": "INT-01",
+      "pilar": "autonomia",
+      "competencia": "custodia",
+      "texto": "Onde estão os seus criptos hoje?",
+      "opcoes": [
+        { "texto": "Num app de banco brasileiro (Nubank, PicPay...)", "pontos": 1, "risco": -1 },
+        { "texto": "Tudo numa corretora só", "pontos": 1, "risco": 0 },
+        { "texto": "Espalhados em mais de uma corretora", "pontos": 2, "risco": 0 },
+        { "texto": "Parte em corretora, parte em carteira própria", "pontos": 3, "risco": 0 },
+        { "texto": "A maior parte em carteira própria — eu no controle", "pontos": 4, "risco": 0 }
       ],
       "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
     },
 
     {
-      "id": "DEFI-02",
-      "pilar": "defi",
-      "competencia": "dex",
-      "texto": "O que acontece quando você faz um \"swap\" numa DEX?",
+      "id": "INT-02",
+      "pilar": "autonomia",
+      "competencia": "exchanges",
+      "texto": "Você já sacou cripto de uma corretora pra uma carteira sua (Metamask, Phantom, Trust Wallet)?",
       "opcoes": [
-        { "texto": "Não sei", "pontos": 0, "risco": 0 },
-        { "texto": "Troco um token por outro, sem intermediário central", "pontos": 4, "risco": 0 },
-        { "texto": "Mando o token pra corretora trocar pra mim", "pontos": 1, "risco": 0 }
+        { "texto": "Nunca — nem sabia que dava pra fazer isso", "pontos": 0, "risco": 0 },
+        { "texto": "Sei que dá, mas nunca fiz", "pontos": 1, "risco": 0 },
+        { "texto": "Tentei uma vez e travei no meio do caminho", "pontos": 1, "risco": 0 },
+        { "texto": "Já fiz algumas vezes com sucesso", "pontos": 3, "risco": 0 },
+        { "texto": "Faço com naturalidade, em qualquer rede", "pontos": 4, "risco": 1 }
       ],
-      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
     },
 
     {
-      "id": "DEFI-03",
-      "pilar": "defi",
-      "competencia": "pools",
-      "texto": "Você entende o que é \"impermanent loss\" (perda impermanente) em pools de liquidez?",
+      "id": "INT-03",
+      "pilar": "seguranca",
+      "competencia": "wallets",
+      "texto": "E a \"frase de recuperação\" (seed phrase) — qual sua relação com ela?",
+      "opcoes": [
+        { "texto": "Não sei o que é", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi falar, só isso", "pontos": 1, "risco": 0 },
+        { "texto": "Sei o que é, mas não tenho carteira própria ainda", "pontos": 2, "risco": 0 },
+        { "texto": "Tenho a minha guardada", "pontos": 3, "risco": 0 },
+        { "texto": "Tenho, guardada offline e com backup em outro lugar", "pontos": 4, "risco": -1 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
+    },
+
+    {
+      "id": "INT-04",
+      "pilar": "seguranca",
+      "competencia": "wallets",
+      "texto": "Onde exatamente você guarda sua seed phrase?",
+      "opcoes": [
+        { "texto": "Num print, no e-mail ou nas notas do celular", "pontos": 1, "risco": 1 },
+        { "texto": "Decorada na cabeça, sem cópia física", "pontos": 1, "risco": 1 },
+        { "texto": "Num gerenciador de senhas", "pontos": 2, "risco": 0 },
+        { "texto": "Anotada à mão, num papel guardado em casa", "pontos": 3, "risco": -1 },
+        { "texto": "Offline, com uma segunda cópia em outro local físico", "pontos": 4, "risco": -1 }
+      ],
+      "condicao": [{ "se": "INT-03", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "INT-05",
+      "pilar": "fundamentos",
+      "competencia": "stablecoins",
+      "texto": "Stablecoins (USDT, USDC) — você usa?",
       "opcoes": [
         { "texto": "Nunca ouvi falar", "pontos": 0, "risco": 0 },
-        { "texto": "Ouvi falar, mas não sei calcular o impacto", "pontos": 2, "risco": 1 },
-        { "texto": "Sim, entendo como a variação de preço afeta meu LP", "pontos": 4, "risco": 1 }
+        { "texto": "Conheço, mas não confio nelas", "pontos": 1, "risco": -1 },
+        { "texto": "Conheço, mas nunca precisei usar", "pontos": 1, "risco": 0 },
+        { "texto": "Já usei pra sair da volatilidade em queda", "pontos": 3, "risco": 0 },
+        { "texto": "Uso como estratégia: proteção e renda em dólar", "pontos": 4, "risco": 0 }
       ],
-      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
     },
 
     {
-      "id": "DEFI-04",
-      "pilar": "defi",
-      "competencia": "yield",
-      "texto": "Qual a diferença prática entre staking e yield farming pra você?",
+      "id": "INT-06",
+      "pilar": "fundamentos",
+      "competencia": "mercado",
+      "texto": "O que é \"market cap\" (valor de mercado) de uma criptomoeda?",
       "opcoes": [
-        { "texto": "Não sei a diferença", "pontos": 0, "risco": 0 },
-        { "texto": "Sei que rendem de formas diferentes, mas me confundo", "pontos": 2, "risco": 0 },
-        { "texto": "Staking valida a rede; farming fornece liquidez por recompensa", "pontos": 4, "risco": 1 }
+        { "texto": "Não sei o que é", "pontos": 0, "risco": 0 },
+        { "texto": "Já vi o termo, mas não sei o significado", "pontos": 1, "risco": 0 },
+        { "texto": "É o preço da moeda", "pontos": 1, "risco": 0 },
+        { "texto": "É o preço multiplicado pelas moedas em circulação", "pontos": 3, "risco": 0 },
+        { "texto": "Sei e uso pra comparar o tamanho real dos projetos, não só o preço", "pontos": 4, "risco": 0 }
       ],
-      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
     },
 
     {
-      "id": "DEFI-05",
+      "id": "INT-07",
+      "pilar": "autonomia",
+      "competencia": "redes",
+      "texto": "Taxas de rede (gas) — qual sua experiência com elas?",
+      "opcoes": [
+        { "texto": "Nunca paguei taxa de rede", "pontos": 0, "risco": 0 },
+        { "texto": "Já paguei, mas sem entender o valor", "pontos": 1, "risco": 0 },
+        { "texto": "Sei que o valor muda conforme o congestionamento", "pontos": 2, "risco": 0 },
+        { "texto": "Entendo e comparo taxas entre redes diferentes", "pontos": 3, "risco": 0 },
+        { "texto": "Sei escolher rede e horário pra pagar o mínimo", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "INT-02", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "INT-08",
+      "pilar": "autonomia",
+      "competencia": "onchain",
+      "texto": "Você já usou um explorador de blockchain (Etherscan, Solscan) pra conferir alguma coisa?",
+      "opcoes": [
+        { "texto": "Não sei o que é isso", "pontos": 0, "risco": 0 },
+        { "texto": "Já vi alguém usar, eu mesmo não", "pontos": 1, "risco": 0 },
+        { "texto": "Já abri, mas me perdi na tela", "pontos": 2, "risco": 0 },
+        { "texto": "Já conferi o status de uma transação minha", "pontos": 3, "risco": 0 },
+        { "texto": "Uso direto: confiro saldo, transação e contrato na fonte", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "INT-02", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "INT-09",
+      "pilar": "defi",
+      "competencia": "defi_base",
+      "texto": "Você já conectou sua carteira em algum app descentralizado (Uniswap, Jupiter, Aave, Orca)?",
+      "opcoes": [
+        { "texto": "Nunca — nem sabia que isso existia", "pontos": 0, "risco": 0 },
+        { "texto": "Sei que dá, mas tenho medo de conectar", "pontos": 1, "risco": -1 },
+        { "texto": "Já conectei uma vez, só pra testar", "pontos": 2, "risco": 1 },
+        { "texto": "Uso de vez em quando", "pontos": 3, "risco": 0 },
+        { "texto": "Uso direto, em várias dApps e redes", "pontos": 4, "risco": 1 }
+      ],
+      "condicao": [{ "se": "INT-02", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "INT-10",
+      "pilar": "fundamentos",
+      "competencia": "gestao",
+      "texto": "Como você decide QUANDO comprar cripto?",
+      "opcoes": [
+        { "texto": "Quando dá vontade ou quando todo mundo está falando", "pontos": 1, "risco": 2 },
+        { "texto": "Quando o preço cai muito", "pontos": 2, "risco": 1 },
+        { "texto": "Não compro mais — só observo", "pontos": 1, "risco": -1 },
+        { "texto": "Estudo o cenário e aporto conforme minha análise", "pontos": 3, "risco": 0 },
+        { "texto": "Aporto um valor fixo todo mês, independente do preço (DCA)", "pontos": 4, "risco": -1 }
+      ],
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
+    },
+
+    {
+      "id": "INT-11",
       "pilar": "defi",
       "competencia": "lending",
-      "texto": "Em protocolos de empréstimo (Aave, Compound), o que mais pesaria na sua decisão?",
+      "texto": "Alavancagem (operar com dinheiro emprestado pra ampliar ganhos e perdas) — qual sua relação?",
       "opcoes": [
-        { "texto": "Não usaria, acho arriscado", "pontos": 1, "risco": -2 },
-        { "texto": "Só olharia o rendimento (APY), sem pensar muito no risco", "pontos": 2, "risco": 2 },
-        { "texto": "Pesaria o risco de liquidação e a saúde do colateral", "pontos": 4, "risco": 0 }
+        { "texto": "Não sei o que é", "pontos": 0, "risco": -1 },
+        { "texto": "Sei o que é, mas longe de mim", "pontos": 2, "risco": -1 },
+        { "texto": "Tenho curiosidade, quero testar um dia", "pontos": 2, "risco": 1 },
+        { "texto": "Já usei, com stop e gestão de risco", "pontos": 3, "risco": 1 },
+        { "texto": "Uso com frequência e alavancagem alta", "pontos": 2, "risco": 2 }
       ],
-      "condicao": [{ "se": "DEFI-01", "op": ">=", "valor": 3 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
     },
 
     {
-      "id": "DEFI-06",
-      "pilar": "defi",
-      "competencia": "avancado",
-      "texto": "Sobre ativos \"embrulhados\" (WBTC) e bridges entre redes, você diria que:",
-      "opcoes": [
-        { "texto": "Não sei o que é WBTC nem bridge", "pontos": 0, "risco": 0 },
-        { "texto": "Conheço o conceito, mas tenho receio de usar", "pontos": 2, "risco": -1 },
-        { "texto": "Uso e entendo o risco de custódia e de ponte", "pontos": 4, "risco": 1 }
-      ],
-      "condicao": [
-        { "se": "DEFI-03", "op": ">=", "valor": 2 },
-        { "se": "DEFI-01", "op": ">=", "valor": 3 }
-      ]
-    },
-
-    {
-      "id": "AUT-03",
+      "id": "INT-12",
       "pilar": "autonomia",
       "competencia": "soberania",
-      "texto": "Se sua corretora principal travasse os saques amanhã, o que aconteceria com você?",
+      "texto": "Se a sua corretora principal travasse os saques amanhã, o que acontece com você?",
       "opcoes": [
-        { "texto": "Ficaria sem acesso aos meus criptos", "pontos": 0, "risco": 0 },
-        { "texto": "Perderia acesso a uma parte, mas tenho algo fora dela", "pontos": 2, "risco": 0 },
-        { "texto": "Quase não me afetaria — opero por carteira própria", "pontos": 4, "risco": 0 }
+        { "texto": "Perco acesso a tudo que tenho em cripto", "pontos": 0, "risco": 0 },
+        { "texto": "Perco acesso à maior parte", "pontos": 1, "risco": 0 },
+        { "texto": "Perco uma parte, mas tenho algo fora dela", "pontos": 2, "risco": 0 },
+        { "texto": "Quase nada muda — a maior parte está em carteira própria", "pontos": 4, "risco": 0 },
+        { "texto": "Nada muda — praticamente não uso corretora", "pontos": 4, "risco": 0 }
       ],
-      "condicao": [{ "se": "AUT-01", "op": ">=", "valor": 3 }]
+      "condicao": [{ "se": "ENTRADA-01", "op": ">=", "valor": 2 }]
+    },
+
+    {
+      "id": "AV-01",
+      "pilar": "defi",
+      "competencia": "dex",
+      "texto": "O que acontece, na prática, quando você faz um swap numa DEX?",
+      "opcoes": [
+        { "texto": "Não sei", "pontos": 0, "risco": 0 },
+        { "texto": "É tipo uma ordem de compra na corretora", "pontos": 1, "risco": 0 },
+        { "texto": "Troco um token por outro com outra pessoa diretamente", "pontos": 1, "risco": 0 },
+        { "texto": "Troco via contrato inteligente contra uma pool de liquidez, sem intermediário", "pontos": 3, "risco": 0 },
+        { "texto": "Isso, e ainda considero slippage, taxa da pool e rota da troca", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-02",
+      "pilar": "defi",
+      "competencia": "pools",
+      "texto": "Pools de liquidez: você já forneceu liquidez em alguma?",
+      "opcoes": [
+        { "texto": "Não sei o que é isso", "pontos": 0, "risco": 0 },
+        { "texto": "Sei o que é, mas nunca entrei", "pontos": 1, "risco": 0 },
+        { "texto": "Entrei uma vez pra testar", "pontos": 2, "risco": 1 },
+        { "texto": "Tenho posições ativas em pool", "pontos": 3, "risco": 1 },
+        { "texto": "Gerencio várias pools ativamente", "pontos": 4, "risco": 1 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-03",
+      "pilar": "defi",
+      "competencia": "pools",
+      "texto": "Impermanent loss (perda impermanente): qual seu domínio sobre isso?",
+      "opcoes": [
+        { "texto": "Nunca ouvi falar", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi, mas não sei o que significa", "pontos": 1, "risco": 0 },
+        { "texto": "Entendo o conceito, mas não sei medir o impacto", "pontos": 2, "risco": 1 },
+        { "texto": "Entendo e levo em conta antes de entrar numa pool", "pontos": 3, "risco": 0 },
+        { "texto": "Sei estimar a perda e comparar com as taxas que a pool me paga", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "AV-02", "op": ">=", "valor": 2 }]
+    },
+
+    {
+      "id": "AV-04",
+      "pilar": "defi",
+      "competencia": "pools",
+      "texto": "Liquidez concentrada — escolher uma faixa de preço pra sua posição (Uniswap v3, Orca):",
+      "opcoes": [
+        { "texto": "Não sei o que é isso", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi falar em \"range\", só isso", "pontos": 1, "risco": 0 },
+        { "texto": "Entendo o conceito de faixa, mas nunca usei", "pontos": 2, "risco": 0 },
+        { "texto": "Já abri posição concentrada", "pontos": 3, "risco": 1 },
+        { "texto": "Gerencio faixas e rebalanceio quando o preço sai do range", "pontos": 4, "risco": 1 }
+      ],
+      "condicao": [{ "se": "AV-02", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-05",
+      "pilar": "defi",
+      "competencia": "yield",
+      "texto": "Qual a diferença prática entre staking e yield farming?",
+      "opcoes": [
+        { "texto": "Não sei a diferença", "pontos": 0, "risco": 0 },
+        { "texto": "Acho que é a mesma coisa com nomes diferentes", "pontos": 0, "risco": 0 },
+        { "texto": "Sei que rendem de formas diferentes, mas me confundo", "pontos": 1, "risco": 0 },
+        { "texto": "Staking ajuda a validar a rede; farming fornece liquidez em troca de recompensa", "pontos": 3, "risco": 0 },
+        { "texto": "Isso, e sei que cada um tem riscos bem diferentes", "pontos": 4, "risco": 0 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-06",
+      "pilar": "defi",
+      "competencia": "lending",
+      "texto": "Em protocolos de empréstimo (Aave, Compound), o que mais pesa na sua decisão?",
+      "opcoes": [
+        { "texto": "Não usaria — acho arriscado demais", "pontos": 1, "risco": -2 },
+        { "texto": "O rendimento (APY), principalmente", "pontos": 1, "risco": 2 },
+        { "texto": "APY somado à reputação do protocolo", "pontos": 2, "risco": 1 },
+        { "texto": "O risco de liquidação e a saúde do meu colateral", "pontos": 4, "risco": 0 },
+        { "texto": "Uso estratégias de loop, com gestão apertada do risco", "pontos": 3, "risco": 2 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-07",
+      "pilar": "defi",
+      "competencia": "lending",
+      "texto": "Health factor — o indicador de saúde da sua posição em lending:",
+      "opcoes": [
+        { "texto": "Não sei o que é", "pontos": 0, "risco": 0 },
+        { "texto": "Já ouvi falar", "pontos": 1, "risco": 0 },
+        { "texto": "Sei que mede a distância até a liquidação", "pontos": 3, "risco": 0 },
+        { "texto": "Monitoro o meu ativamente e sei quando reforçar colateral", "pontos": 4, "risco": 0 },
+        { "texto": "Sei o que é, mas não uso lending com colateral", "pontos": 2, "risco": -1 }
+      ],
+      "condicao": [{ "se": "AV-06", "op": ">=", "valor": 2 }]
+    },
+
+    {
+      "id": "AV-08",
+      "pilar": "defi",
+      "competencia": "avancado",
+      "texto": "Bridges (pontes entre redes) e ativos embrulhados (WBTC): qual sua experiência?",
+      "opcoes": [
+        { "texto": "Não sei o que são", "pontos": 0, "risco": 0 },
+        { "texto": "Conheço o conceito, mas tenho receio de usar", "pontos": 2, "risco": -1 },
+        { "texto": "Já usei bridge algumas vezes", "pontos": 3, "risco": 1 },
+        { "texto": "Uso e entendo o risco de custódia da ponte", "pontos": 4, "risco": 0 },
+        { "texto": "Já usei e já perdi dinheiro numa ponte", "pontos": 2, "risco": 1 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-09",
+      "pilar": "defi",
+      "competencia": "avancado",
+      "texto": "Narrativas novas (restaking, RWA, DePIN...): como você lida com elas?",
+      "opcoes": [
+        { "texto": "Não acompanho nada disso", "pontos": 0, "risco": 0 },
+        { "texto": "Ouço falar, mas não entro", "pontos": 1, "risco": -1 },
+        { "texto": "Prefiro ficar nas blue chips, mesmo entendendo as narrativas", "pontos": 3, "risco": -1 },
+        { "texto": "Estudo a fundo e entro de forma seletiva", "pontos": 4, "risco": 1 },
+        { "texto": "Entro cedo em quase tudo que aparece", "pontos": 2, "risco": 2 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-10",
+      "pilar": "fundamentos",
+      "competencia": "gestao",
+      "texto": "Um protocolo novo aparece pagando 400% de APY. Sua reação:",
+      "opcoes": [
+        { "texto": "Entro com tudo antes que o APY caia", "pontos": 0, "risco": 2 },
+        { "texto": "Entro com uma parte pequena, pra não ficar de fora", "pontos": 2, "risco": 1 },
+        { "texto": "Estudo o contrato, a auditoria e o TVL antes de qualquer coisa", "pontos": 4, "risco": 0 },
+        { "texto": "Espero uns meses pra ver se o protocolo sobrevive", "pontos": 3, "risco": -1 },
+        { "texto": "Ignoro — APY nesse nível costuma ser armadilha", "pontos": 3, "risco": -1 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-11",
+      "pilar": "seguranca",
+      "competencia": "golpes",
+      "texto": "Antes de conectar sua carteira numa dApp nova, o que você faz?",
+      "opcoes": [
+        { "texto": "Conecto direto — se apareceu pra mim, deve ser ok", "pontos": 0, "risco": 2 },
+        { "texto": "Dou uma olhada se o site parece confiável", "pontos": 1, "risco": 1 },
+        { "texto": "Confiro a URL oficial e o que a comunidade fala", "pontos": 3, "risco": 0 },
+        { "texto": "Confiro auditoria, leio as permissões que vou assinar e uso carteira separada pra testes", "pontos": 4, "risco": -1 },
+        { "texto": "Não conecto em nada novo, só no que já uso", "pontos": 2, "risco": -1 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
+    },
+
+    {
+      "id": "AV-12",
+      "pilar": "autonomia",
+      "competencia": "soberania",
+      "texto": "Carteira fria (hardware wallet, tipo Ledger): qual sua relação?",
+      "opcoes": [
+        { "texto": "Não sei o que é", "pontos": 0, "risco": 0 },
+        { "texto": "Sei o que é, mas não tenho", "pontos": 1, "risco": 0 },
+        { "texto": "Acho desnecessário pro meu volume", "pontos": 1, "risco": 1 },
+        { "texto": "Tenho, mas uso pouco", "pontos": 3, "risco": 0 },
+        { "texto": "Uso pra guarda de longo prazo — o grosso fica offline", "pontos": 4, "risco": -1 }
+      ],
+      "condicao": [{ "se": "INT-09", "op": ">=", "valor": 3 }]
     }
 
   ]
