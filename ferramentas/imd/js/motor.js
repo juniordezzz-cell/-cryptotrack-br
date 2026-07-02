@@ -240,7 +240,10 @@
       var out = {};
       var self = this;
       Object.keys(this.estado.respostas).forEach(function (id) {
-        out[id] = self.estado.respostas[id].pontos;
+        out[id] = {
+          pontos: self.estado.respostas[id].pontos,
+          opcao: self.estado.respostas[id].opcao
+        };
       });
       return out;
     }

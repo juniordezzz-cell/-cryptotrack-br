@@ -236,6 +236,22 @@
     var elDiag = document.getElementById("imd-diagnostico");
     if (elDiag) elDiag.textContent = perfil.resumo || "";
 
+    // ----- CTA contextual (v3.1): funil PREMIUM conforme o nível -----
+    var ctaTit = document.getElementById("imd-cta-titulo");
+    var ctaTxt = document.getElementById("imd-cta-texto");
+    if (ctaTit && ctaTxt) {
+      var mapaCta = {
+        "Iniciante Absoluto": "Você está no ponto de partida — e essa é a fase em que mais se evolui quando se tem o caminho certo.",
+        "Explorador": "Você já tem base. Com as ferramentas certas, os próximos passos ficam muito mais rápidos e seguros.",
+        "Usuário Ativo": "Você opera com confiança. Ferramentas avançadas de DeFi e liquidez são o seu próximo salto.",
+        "Avançado": "Falta pouco pro topo. Estratégias avançadas de renda e liquidez são o seu terreno agora.",
+        "Nativo DeFi": "Você domina o jogo. Acompanhamento e ferramentas avançadas maximizam o que você já faz bem."
+      };
+      ctaTit.textContent = "Seu nível é " + perfil.nome + " — dá pra evoluir muito mais rápido";
+      ctaTxt.textContent = (mapaCta[perfil.nome] || "Com as ferramentas certas, sua evolução acelera de verdade.") +
+        " No Plano PREMIUM você destrava as ferramentas avançadas do MundoDeFi, e nossa equipe usa este diagnóstico pra montar um plano de evolução pro seu momento.";
+    }
+
     // ----- Selo do PERFIL DE RISCO (eixo separado do IMD) -----
     var risco = r.risco || {};
     var rp = risco.perfil || { nome: "—", emoji: "", cor: "#fff", resumo: "" };
@@ -448,7 +464,7 @@
     //         teste o login no site, e SÓ DEPOIS mude para true.
     // true  = resultado TRAVADO: só revela após login + 2 consentimentos.
     // ----------------------------------------------------------
-    var TRAVAR_RESULTADO = true;
+    var TRAVAR_RESULTADO = false;
 
     var conteudo   = document.getElementById("imd-result-conteudo");
     var lock       = document.getElementById("imd-lock");

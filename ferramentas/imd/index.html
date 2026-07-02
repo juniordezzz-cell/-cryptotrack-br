@@ -102,7 +102,28 @@
     #imd-radar{height:340px;display:grid;place-items:center;padding:8px}
     .choice.active .mark{}
     /* --- IMD: trava de resultado (borrado + cadeado) --- */
-    #imd-result-conteudo.travado{filter:blur(9px);pointer-events:none;user-select:none}
+    #imd-result-conteudo.travado{filter:blur(5px);pointer-events:none;user-select:none}
+
+    /* ===== v3.1 · refinamento visual ===== */
+    .lock-overlay{border:1px solid rgba(255,255,255,.09);border-radius:20px;
+      background:linear-gradient(180deg, rgba(153,69,255,.10), rgba(10,10,14,.92) 45%);
+      box-shadow:0 24px 70px rgba(0,0,0,.55), 0 0 0 1px rgba(153,69,255,.10) inset;
+      backdrop-filter:blur(6px)}
+    .lock-list{display:flex;flex-direction:column;gap:9px;margin:16px auto 18px;max-width:440px;text-align:left}
+    .lock-item{display:flex;align-items:flex-start;gap:10px;font-size:13.5px;color:rgba(255,255,255,.82);
+      background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);
+      border-radius:12px;padding:10px 14px;line-height:1.45}
+    .lock-item-ico{flex:0 0 auto;font-size:15px;line-height:1.4}
+    .score-de{font-size:.45em;color:rgba(255,255,255,.35);font-weight:600}
+    .score-nota{font-size:13px;color:rgba(255,255,255,.55);line-height:1.55;margin:2px 0 10px;max-width:420px}
+    .score-nota b{color:var(--green)}
+    .cta-premium{border:1px solid rgba(153,69,255,.35);
+      background:linear-gradient(160deg, rgba(153,69,255,.12), rgba(255,255,255,.02) 60%);
+      box-shadow:0 10px 40px rgba(153,69,255,.12)}
+    .card{transition:border-color .25s ease, box-shadow .25s ease}
+    .card:hover{border-color:rgba(255,255,255,.14)}
+    .big-cta{transition:transform .15s ease, box-shadow .2s ease}
+    .big-cta:hover{transform:translateY(-1px)}
     .lock-overlay{display:none;position:relative;z-index:3;max-width:520px;margin:0 auto 18px;
       background:rgba(16,19,28,.96);border:1px solid var(--line);border-radius:22px;padding:28px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.5)}
     .lock-overlay.ativo{display:block}
@@ -287,7 +308,14 @@
           <div class="lock-ico">🔒</div>
           <h2>Seu diagnóstico está pronto<span id="imd-lock-nome"></span>!</h2>
           <div class="lock-risco">Você é <span id="imd-lock-risco" style="color:var(--gold)">—</span></div>
-          <p class="lock-sub">Para ver sua <b>pontuação IMD</b> e todos os números, entre com o Google.</p>
+          <p class="lock-sub">Seu diagnóstico completo já foi calculado. Entre com o Google pra destravar:</p>
+
+          <div class="lock-list">
+            <div class="lock-item"><span class="lock-item-ico">📊</span> Seu Índice MundoDeFi de 0 a 100</div>
+            <div class="lock-item"><span class="lock-item-ico">🧩</span> Sua pontuação nos 4 pilares: Segurança, Fundamentos, DeFi e Autonomia</div>
+            <div class="lock-item"><span class="lock-item-ico">💪</span> Suas competências mais fortes e as que precisam de atenção</div>
+            <div class="lock-item"><span class="lock-item-ico">🎯</span> O próximo passo recomendado pro seu nível</div>
+          </div>
 
           <div class="lock-checks">
             <label class="check"><input type="checkbox" id="lgpd-1"><span>Autorizo a equipe MundoDeFi a acessar meus dados para enviar diagnósticos e conteúdos futuros.</span></label>
@@ -307,7 +335,8 @@
             <div class="tag">Seu Diagnóstico</div>
             <div id="imd-parabens" style="color:var(--green);font-weight:700;font-size:15px;margin-bottom:4px;min-height:18px"></div>
             <h2>Índice Mundo DeFi</h2>
-            <div class="score"><span id="imd-score">0</span>/100</div>
+            <div class="score"><span id="imd-score">0</span><span class="score-de">/100</span></div>
+            <p class="score-nota">Este número não é uma nota de prova — é o retrato do seu <b>ponto de partida</b>. Ele mostra exatamente onde focar pra você evoluir mais rápido.</p>
             <div id="imd-risco-selo" style="display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid var(--line);font-size:14px;margin:2px 0 6px">
               <span class="muted">Perfil de investidor:</span> <b id="imd-risco-nome">—</b>
             </div>
@@ -337,15 +366,15 @@
             <div class="tag">Ferramentas recomendadas</div>
             <ul class="list" id="imd-ferramentas"></ul>
           </div>
-          <div class="card">
-            <div class="tag">Próximo passo comercial</div>
-            <h2>Quer acelerar sua evolução?</h2>
-            <p>Agende uma consultoria personalizada para discutir seu diagnóstico, tirar dúvidas e organizar sua jornada com mais clareza.</p>
+          <div class="card cta-premium">
+            <div class="tag">Seu próximo passo</div>
+            <h2 id="imd-cta-titulo">Você pode evoluir muito mais rápido</h2>
+            <p id="imd-cta-texto">Com as ferramentas certas e um plano montado pro seu momento, sua evolução acelera de verdade.</p>
             <div class="control-row">
-              <button class="big-cta">Agendar consultoria</button>
-              <button class="big-cta alt">Plano PRO</button>
+              <a class="big-cta" href="https://mundodefi.com.br/planos.html" style="text-decoration:none">Conhecer o Plano PREMIUM</a>
+              <a class="big-cta alt" href="https://mundodefi.com.br/planos.html" style="text-decoration:none">Ver o Plano PRO</a>
             </div>
-            <div class="footer-note">O valor vem primeiro. A venda acontece depois que o usuário já recebeu diagnóstico e orientação.</div>
+            <div class="footer-note">Nossa equipe usa este diagnóstico pra montar um plano de evolução personalizado pra você.</div>
           </div>
         </div>
 

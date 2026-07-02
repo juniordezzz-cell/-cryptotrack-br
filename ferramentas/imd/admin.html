@@ -53,7 +53,8 @@
     .resp-p{font-weight:700}
     .hide{display:none}
     @media(max-width:760px){ .stat-grid{grid-template-columns:1fr 1fr} table{font-size:12px} th,td{padding:8px} }
-  </style>
+  .resp-a{color:#14f195;font-size:13px;margin:4px 0 2px;line-height:1.45}
+</style>
 </head>
 <body>
   <div class="shell">
@@ -148,8 +149,13 @@
     var ok = Object.keys(cfg).length && Object.values(cfg).every(function(v){return v && v!=="COLE_AQUI";});
     var $ = function(id){ return document.getElementById(id); };
 
-    // mapa id->texto das perguntas (pra mostrar enunciado no detalhe)
-    var PERGUNTAS = {"ENTRADA-01": "Antes de tudo: qual é a sua relação com criptomoedas hoje?", "ENTRADA-02": "Quando você ouve a palavra \"Bitcoin\", o que vem à sua cabeça?", "ENTRADA-03": "E \"blockchain\" — você sabe o que significa?", "PERF-01": "Imagine que você investiu e, em uma semana, seu dinheiro caiu 30%. Qual seria sua reação mais provável?", "PERF-02": "Como você descreveria o seu jeito de lidar com dinheiro e investimentos?", "PERF-03": "Você já ouviu falar em \"alavancagem\" (operar com dinheiro emprestado pra potencializar ganhos)?", "FUN-04": "Você sabe o que são \"stablecoins\" (como USDT e USDC)?", "SEG-01": "Você sabe o que é uma \"carteira\" de cripto e uma \"frase de recuperação\" (seed phrase)?", "SEG-02": "Alguém te manda um link prometendo \"dobrar seus criptos\" em 24 horas. O que você faz?", "SEG-03": "Onde você guarda (ou guardaria) a frase de recuperação da sua carteira?", "AUT-01": "Se você tem (ou tivesse) criptomoedas, onde elas ficariam guardadas?", "AUT-02": "Você já consultou uma transação num explorador de blockchain (Etherscan, Solscan)?", "DEFI-01": "Qual é a sua experiência com DeFi (finanças descentralizadas)?", "DEFI-02": "O que acontece quando você faz um \"swap\" numa DEX?", "DEFI-03": "Você entende o que é \"impermanent loss\" (perda impermanente) em pools de liquidez?", "DEFI-04": "Qual a diferença prática entre staking e yield farming pra você?", "DEFI-05": "Em protocolos de empréstimo (Aave, Compound), o que mais pesaria na sua decisão?", "DEFI-06": "Sobre ativos \"embrulhados\" (WBTC) e bridges entre redes, você diria que:", "AUT-03": "Se sua corretora principal travasse os saques amanhã, o que aconteceria com você?"};
+    // mapa id -> {texto, opcoes[]} carregado direto do banco (sempre em dia com perguntas.json)
+    var PERGUNTAS = {};
+    fetch("data/perguntas.json").then(function(r){ return r.json(); }).then(function(j){
+      (j.perguntas || []).forEach(function(q){
+        PERGUNTAS[q.id] = { texto: q.texto, opcoes: (q.opcoes || []).map(function(o){ return o.texto; }) };
+      });
+    }).catch(function(e){ console.warn("perguntas.json não carregou", e); });
 
     if(!ok){
       $("login-status").textContent = "Firebase não configurado (firebase/config.js).";
@@ -276,9 +282,19 @@
       html += "<div class='tag'>Respostas</div>";
       if(d.respostas){
         Object.keys(d.respostas).forEach(function(id){
-          var texto = PERGUNTAS[id] || id;
-          html += "<div class='resp-item'><div class='resp-q'>"+esc(texto)+"</div>"+
-                  "<div class='resp-p'>Pontos: "+d.respostas[id]+"</div></div>";
+          var p = PERGUNTAS[id] || {};
+          var texto = p.texto || id;
+          var r = d.respostas[id];
+          if (r !== null && typeof r === "object") {
+            var optTxt = (p.opcoes && typeof r.opcao === "number" && p.opcoes[r.opcao] !== undefined)
+              ? p.opcoes[r.opcao] : ("(opção nº " + (r.opcao + 1) + ")");
+            html += "<div class='resp-item'><div class='resp-q'>"+esc(texto)+"</div>"+
+                    "<div class='resp-a'>➜ "+esc(optTxt)+"</div>"+
+                    "<div class='resp-p'>Pontos: "+r.pontos+"</div></div>";
+          } else {
+            html += "<div class='resp-item'><div class='resp-q'>"+esc(texto)+"</div>"+
+                    "<div class='resp-p'>Pontos: "+r+" · <span class='muted'>diagnóstico antigo (sem texto da resposta)</span></div></div>";
+          }
         });
       } else {
         html += "<p class='muted'>Sem respostas detalhadas.</p>";
