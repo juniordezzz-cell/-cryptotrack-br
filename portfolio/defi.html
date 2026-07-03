@@ -1,210 +1,297 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DeFi · MundoDeFi</title>
-<link rel="stylesheet" href="/mundodefi.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DeFi — Portfólio MundoDeFi</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/portfolio/portfolio.css">
 </head>
 <body>
-<div id="nav-mount"></div>
-
-<div class="page-wrap">
-  <div class="page-head">
-    <div>
-      <h1 class="page-title">🌊 DeFi</h1>
-      <p class="page-sub">Pools de liquidez, staking e lending · renda passiva</p>
-    </div>
-    <div class="page-head-actions">
-      <button class="btn btn-gold" onclick="openPosModal()">+ Adicionar Posição</button>
-    </div>
-  </div>
-
-  <div class="kpi-grid c4">
-    <div class="kpi" style="--kpi-accent:var(--defi)">
-      <div class="kpi-label">🌊 Patrimônio DeFi</div>
-      <div class="kpi-value v-defi" id="k-patrimonio">—</div>
-      <div class="kpi-sub">Capital: <span id="k-capital">—</span></div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">💰 Lucro DeFi</div>
-      <div class="kpi-value" id="k-lucro">—</div>
-      <div class="kpi-sub">rendimentos acumulados</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--gold)">
-      <div class="kpi-label">📊 APR Médio</div>
-      <div class="kpi-value v-gold" id="k-apr">—</div>
-      <div class="kpi-sub">ponderado por capital</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--neon)">
-      <div class="kpi-label">📅 Renda Mensal Est.</div>
-      <div class="kpi-value v-neon" id="k-renda">—</div>
-      <div class="kpi-sub">posições ativas</div>
-    </div>
-  </div>
-
-  <div class="charts-row">
-    <div class="chart-box">
-      <div class="chart-box-head"><span class="chart-box-title">Evolução dos Rendimentos</span></div>
-      <div class="chart-area" style="height:240px"><canvas id="chart-evol"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <div class="chart-box-head"><span class="chart-box-title">Distribuição por Protocolo</span></div>
-      <div class="chart-area" style="height:180px;display:flex;align-items:center;justify-content:center"><canvas id="chart-dist" width="180" height="180"></canvas></div>
-      <div class="donut-legend" id="dist-legend"></div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="panel-head"><span class="panel-title">Posições DeFi</span></div>
-    <div class="tbl-wrap">
-      <table class="data">
-        <thead><tr>
-          <th>Protocolo</th><th>Tipo</th><th>Capital Investido</th><th>APR</th>
-          <th>Lucro Acumulado</th><th>Status</th><th>Ações</th>
-        </tr></thead>
-        <tbody id="pos-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Posição -->
-<div class="modal-overlay" id="pos-modal">
-  <div class="modal">
-    <div class="modal-head"><span class="modal-title" id="pos-modal-title">Adicionar Posição</span><button class="modal-close" onclick="closePosModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="pos-id">
-      <div class="fgrp"><label>Protocolo</label><input class="finput" type="text" id="pos-protocolo" placeholder="Uniswap, Aave, Lido..."></div>
-      <div class="frow">
-        <div class="fgrp"><label>Tipo</label><select class="fselect" id="pos-tipo">
-          <option value="pool">Liquidity Pool</option>
-          <option value="staking">Staking</option>
-          <option value="lending">Lending</option>
-        </select></div>
-        <div class="fgrp"><label>Status</label><select class="fselect" id="pos-status">
-          <option value="ativa">Ativa</option>
-          <option value="encerrada">Encerrada</option>
-        </select></div>
-      </div>
-      <div class="frow">
-        <div class="fgrp"><label>Capital Investido (USD)</label><input class="finput" type="number" step="any" id="pos-capital" placeholder="1000"></div>
-        <div class="fgrp"><label>APR (%)</label><input class="finput" type="number" step="any" id="pos-apr" placeholder="12.5"></div>
-      </div>
-      <div class="fgrp"><label>Lucro Acumulado (USD)</label><input class="finput" type="number" step="any" id="pos-lucro" placeholder="0"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closePosModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarPos()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="/mundodefi-core.js"></script>
+<div class="app" id="app"></div>
+<script src="/portfolio/portfolio.js"></script>
 <script>
-var chEvol=null, chDist=null;
-var palette=['#00D2AA','#4D9FFF','#9945FF','#F5B614','#FF4D6A','#00E5FF','#14F195'];
-var tipoLabel={pool:'Liquidity Pool',staking:'Staking',lending:'Lending'};
-var tipoBadge={pool:'badge-pool',staking:'badge-staking',lending:'badge-lending'};
+(function(){
+'use strict';
+var e=P.esc;
+var tab='pools';
+var CH={Solana:'ch-sol',Base:'ch-base',Arbitrum:'ch-arb',BSC:'ch-bnb'};
 
-function toast(m,t){ var e=document.getElementById('toast'); e.textContent=m; e.className='toast show '+(t||''); setTimeout(function(){e.className='toast '+(t||'');},2600); }
+function pool(id){return P.st.defi.pools.filter(function(p){return p.id===id;})[0];}
 
+/* ── NOVA POOL ── */
+function formPool(){
+  var carts=P.st.carteiras.map(function(c){return '<option value="'+c.id+'">'+e(c.nome)+'</option>';}).join('');
+  P.modal('Nova pool de liquidez',
+   '<div class="frow3"><div class="fg"><label>Par</label><input id="fPar" placeholder="Ex: SOL/USDC" style="text-transform:uppercase"></div>'
+   +'<div class="fg"><label>Plataforma</label><input id="fProto" placeholder="Ex: Orca, Raydium…"></div>'
+   +'<div class="fg"><label>Blockchain</label><input id="fChain" placeholder="Ex: Solana"></div></div>'
+   +'<div class="frow3"><div class="fg"><label>Carteira</label><select id="fCart">'+carts+'</select></div>'
+   +'<div class="fg"><label>Depósito inicial (US$)</label><input id="fDep" type="number" step="any" placeholder="0,00"></div>'
+   +'<div class="fg"><label>Data de abertura</label><input id="fDt" type="date" value="'+P.today()+'"></div></div>'
+   +'<div class="fg"><label>Tokens depositados</label><input id="fTok" placeholder="Ex: 20 SOL + 1.400 USDC"></div>'
+   +'<div class="sb-sec" style="padding-left:0">📓 Diário estratégico (nasce com a posição)</div>'
+   +'<div class="fg"><label>Objetivo</label><input id="dObj" placeholder="O que você quer com essa pool?"></div>'
+   +'<div class="fg"><label>Motivo da entrada</label><input id="dMot" placeholder="Por que agora? Por que essa pool?"></div>'
+   +'<div class="frow"><div class="fg"><label>Plano A</label><input id="dPa" placeholder="Cenário principal"></div>'
+   +'<div class="fg"><label>Plano B</label><input id="dPb" placeholder="Se o mercado virar…"></div></div>'
+   +'<div class="fg"><label>Critério de saída</label><input id="dSai" placeholder="O que te faz encerrar?"></div>'
+   +'<div class="fg"><label>Observações</label><textarea id="dObs"></textarea></div>',
+   {wide:true,footer:'<button class="btn btn-p" id="okPool">Criar pool</button>'});
+  document.getElementById('okPool').onclick=function(){
+    var par=P.val('fPar').toUpperCase();if(!par)return;
+    var dep=P.num('fDep'),dt=P.val('fDt')||P.today();
+    P.st.defi.pools.push({id:P.uid(),par:par,proto:P.val('fProto')||'—',chain:P.val('fChain')||'—',
+     cart:P.val('fCart')||P.st.carteiras[0].id,st:'a',ab:dt,en:null,
+     dep:dep?[{dt:dt,usd:dep,tok:P.val('fTok')}]:[],ret:[],tax:[],reb:[],
+     cur:{usd:dep,tok:P.val('fTok')},
+     di:{obj:P.val('dObj'),mot:P.val('dMot'),pa:P.val('dPa'),pb:P.val('dPb'),sai:P.val('dSai'),obs:P.val('dObs')},notas:[]});
+    P.save();P.closeModal();render();
+  };
+}
+
+/* ── AÇÕES DA POOL ── */
+function acao(p,tipo){
+  var cfg={
+    tax:['Registrar taxas coletadas','Valor coletado (US$)'],
+    dep:['Registrar aporte','Valor do aporte (US$)'],
+    ret:['Registrar retirada','Valor retirado (US$)'],
+    reb:['Registrar rebalanceamento',null],
+    nota:['Adicionar nota ao diário',null],
+    cur:['Atualizar valor atual','Valor atual da posição (US$)']
+  }[tipo];
+  var body='';
+  if(cfg[1])body+='<div class="fg"><label>'+cfg[1]+'</label><input id="aUsd" type="number" step="any" placeholder="0,00"></div>';
+  if(tipo==='dep'||tipo==='ret'||tipo==='cur')body+='<div class="fg"><label>Tokens (ex: 20 SOL + 1.400 USDC)</label><input id="aTok" placeholder="opcional"></div>';
+  if(tipo==='reb'||tipo==='nota')body+='<div class="fg"><label>Descrição</label><textarea id="aTxt" placeholder="O que aconteceu e por quê?"></textarea></div>';
+  body+='<div class="fg"><label>Data</label><input id="aDt" type="date" value="'+P.today()+'"></div>';
+  P.modal(cfg[0]+' — '+e(p.par),body,{footer:'<button class="btn btn-p" id="okA">Salvar</button>'});
+  document.getElementById('okA').onclick=function(){
+    var dt=P.val('aDt')||P.today(),usd=P.num('aUsd'),txt=P.val('aTxt'),tok=P.val('aTok');
+    if(tipo==='tax')p.tax.push({dt:dt,usd:usd});
+    if(tipo==='dep'){p.dep.push({dt:dt,usd:usd,tok:tok});p.cur.usd=(Number(p.cur.usd)||0)+usd;}
+    if(tipo==='ret'){p.ret.push({dt:dt,usd:usd,tok:tok});p.cur.usd=Math.max(0,(Number(p.cur.usd)||0)-usd);}
+    if(tipo==='reb')p.reb.push({dt:dt,txt:txt});
+    if(tipo==='nota')p.notas.push({dt:dt,txt:txt});
+    if(tipo==='cur'){p.cur.usd=usd;if(tok)p.cur.tok=tok;}
+    P.save();P.closeModal();render();detalhe(p.id);
+  };
+}
+function encerrar(p){
+  P.modal('Encerrar pool — '+e(p.par),
+   '<div class="notice">Ao encerrar, o valor final retirado entra como retirada, a pool vai para o histórico e o resultado passa a somar no acumulado da estratégia <b>'+e(P.stratKey(p))+'</b>. Nada é apagado.</div>'
+   +'<div class="frow"><div class="fg"><label>Valor final retirado (US$)</label><input id="aUsd" type="number" step="any" value="'+(p.cur.usd||0)+'"></div>'
+   +'<div class="fg"><label>Data</label><input id="aDt" type="date" value="'+P.today()+'"></div></div>'
+   +'<div class="fg"><label>Tokens retirados</label><input id="aTok" placeholder="Ex: 21,4 SOL + 1.310 USDC" value="'+e(p.cur.tok||'')+'"></div>'
+   +'<div class="fg"><label>Nota de encerramento</label><textarea id="aTxt" placeholder="O que aprendeu com essa pool?"></textarea></div>',
+   {footer:'<button class="btn btn-red" id="okE">Encerrar pool</button>'});
+  document.getElementById('okE').onclick=function(){
+    var dt=P.val('aDt')||P.today();
+    var usd=P.num('aUsd');
+    if(usd)p.ret.push({dt:dt,usd:usd,tok:P.val('aTok')});
+    var txt=P.val('aTxt');if(txt)p.notas.push({dt:dt,txt:'Encerramento: '+txt});
+    p.st='e';p.en=dt;p.cur.usd=0;
+    P.save();P.closeModal();render();
+  };
+}
+
+/* ── DETALHE DA POOL ── */
+function detalhe(id){
+  var p=pool(id);if(!p)return;
+  var L=P.poolLucro(p),dep=P.poolSum(p,'dep'),ret=P.poolSum(p,'ret'),tax=P.poolSum(p,'tax');
+  var tl=[];
+  p.dep.forEach(function(x){tl.push({dt:x.dt,txt:'<b>Depósito</b> '+P.money(x.usd)+(x.tok?' · <span class="tok-line">'+e(x.tok)+'</span>':'')});});
+  p.ret.forEach(function(x){tl.push({dt:x.dt,txt:'<b>Retirada</b> '+P.money(x.usd)+(x.tok?' · <span class="tok-line">'+e(x.tok)+'</span>':'')});});
+  p.tax.forEach(function(x){tl.push({dt:x.dt,txt:'<b>Taxas</b> '+P.money(x.usd)});});
+  p.reb.forEach(function(x){tl.push({dt:x.dt,txt:'<b>Rebalanceamento</b> — '+e(x.txt)});});
+  p.notas.forEach(function(x){tl.push({dt:x.dt,txt:'<b>Nota</b> — '+e(x.txt)});});
+  tl.sort(function(a,b){return String(b.dt||'').localeCompare(String(a.dt||''));});
+
+  var di=p.di||{};
+  var diH=['obj|🎯 Objetivo','mot|💡 Motivo','pa|🅰 Plano A','pb|🅱 Plano B','sai|🚪 Critério de saída','obs|📝 Observações']
+   .map(function(x){var k=x.split('|');return di[k[0]]?'<div class="d-item"><b>'+k[1]+'</b><p>'+e(di[k[0]])+'</p></div>':'';}).join('');
+
+  var body='<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:1rem">'
+   +'<span class="chain-tag" style="border:1px solid var(--line2)">'+e(p.proto)+'</span>'
+   +'<span class="tag">'+e(p.chain)+'</span>'
+   +'<span class="badge '+(p.st==='a'?'b-open':'b-closed')+'">'+(p.st==='a'?'Pool aberta':'Pool encerrada')+'</span>'
+   +'<span class="mono" style="font-size:11px;color:var(--mut2)">'+P.dBR(p.ab)+(p.en?' → '+P.dBR(p.en):' → hoje')+'</span>'
+   +'<span style="margin-left:auto">'+P.lockBtn('Oráculo: interpretar esta pool','premium')+'</span></div>';
+
+  body+='<div class="mgrid" style="grid-template-columns:repeat(5,1fr);margin-bottom:1rem">'
+   +'<div class="mc" style="padding:.7rem .8rem"><div class="mc-lbl">Depositado</div><div class="mc-val" style="font-size:1rem">'+P.money(dep)+'</div></div>'
+   +'<div class="mc" style="padding:.7rem .8rem"><div class="mc-lbl">Retirado</div><div class="mc-val" style="font-size:1rem">'+P.money(ret)+'</div></div>'
+   +'<div class="mc" style="padding:.7rem .8rem"><div class="mc-lbl">Taxas</div><div class="mc-val" style="font-size:1rem;color:var(--cyan,#00E5FF)">'+P.money(tax)+'</div></div>'
+   +'<div class="mc" style="padding:.7rem .8rem"><div class="mc-lbl">Valor atual</div><div class="mc-val" style="font-size:1rem">'+(p.st==='a'?P.money(p.cur.usd):'—')+'</div></div>'
+   +'<div class="mc" style="padding:.7rem .8rem"><div class="mc-lbl">Resultado</div><div class="mc-val '+P.cls(L)+'" style="font-size:1rem">'+P.money(L)+'</div></div>'
+   +'</div>';
+  if(p.st==='a'&&p.cur.tok)body+='<div class="notice">Tokens atuais na posição: <span class="tok-line">'+e(p.cur.tok)+'</span></div>';
+
+  if(p.st==='a'){
+    body+='<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.2rem">'
+     +'<button class="btn btn-green btn-sm" data-a="tax">+ Taxas</button>'
+     +'<button class="btn btn-g btn-sm" data-a="dep">+ Aporte</button>'
+     +'<button class="btn btn-g btn-sm" data-a="ret">− Retirada</button>'
+     +'<button class="btn btn-g btn-sm" data-a="reb">↔ Rebalanceamento</button>'
+     +'<button class="btn btn-g btn-sm" data-a="cur">✎ Atualizar valor</button>'
+     +'<button class="btn btn-g btn-sm" data-a="nota">📝 Nota</button>'
+     +'<button class="btn btn-red btn-sm" data-a="end" style="margin-left:auto">Encerrar pool</button></div>';
+  }
+  body+='<div class="grid2b"><div><div class="sb-sec" style="padding-left:0">📓 Diário estratégico</div><div class="diario">'+(diH||'<div class="empty">Diário vazio</div>')+'</div></div>'
+   +'<div><div class="sb-sec" style="padding-left:0">🕐 Linha do tempo</div><div class="tl">'
+   +(tl.map(function(x){return '<div class="tl-item"><span class="tl-date">'+P.dBR(x.dt)+'</span><span class="tl-txt">'+x.txt+'</span></div>';}).join('')||'<div class="empty">Sem eventos</div>')
+   +'</div></div></div>';
+
+  P.modal(e(p.par)+' <span style="color:var(--mut2);font-weight:400;font-size:12px">'+e(p.proto)+'</span>',body,{wide:true});
+  document.querySelectorAll('[data-a]').forEach(function(b){
+    b.onclick=function(){var a=b.dataset.a;if(a==='end')return encerrar(p);acao(p,a);};
+  });
+}
+
+/* ── SWAPS / LENDING ── */
+function formSwap(){
+  var carts=P.st.carteiras.map(function(c){return '<option value="'+c.id+'">'+e(c.nome)+'</option>';}).join('');
+  P.modal('Registrar swap',
+   '<div class="frow"><div class="fg"><label>Vendeu (token)</label><input id="fDeT" placeholder="Ex: ORCA" style="text-transform:uppercase"></div>'
+   +'<div class="fg"><label>Quantidade</label><input id="fDeQ" placeholder="Ex: 320"></div></div>'
+   +'<div class="frow"><div class="fg"><label>Comprou (token)</label><input id="fPaT" placeholder="Ex: JUP" style="text-transform:uppercase"></div>'
+   +'<div class="fg"><label>Quantidade</label><input id="fPaQ" placeholder="Ex: 610"></div></div>'
+   +'<div class="frow"><div class="fg"><label>Data</label><input id="fDt" type="date" value="'+P.today()+'"></div>'
+   +'<div class="fg"><label>Carteira</label><select id="fCart">'+carts+'</select></div></div>'
+   +'<div class="fg"><label>Motivo da troca</label><textarea id="fMot" placeholder="Por que trocou?"></textarea></div>',
+   {footer:'<button class="btn btn-p" id="okS">Salvar</button>'});
+  document.getElementById('okS').onclick=function(){
+    if(!P.val('fDeT')||!P.val('fPaT'))return;
+    P.st.defi.swaps.push({id:P.uid(),dt:P.val('fDt')||P.today(),deT:P.val('fDeT').toUpperCase(),deQ:P.val('fDeQ'),
+     paT:P.val('fPaT').toUpperCase(),paQ:P.val('fPaQ'),mot:P.val('fMot'),cart:P.val('fCart')});
+    P.save();P.closeModal();render();
+  };
+}
+function formLend(){
+  var carts=P.st.carteiras.map(function(c){return '<option value="'+c.id+'">'+e(c.nome)+'</option>';}).join('');
+  P.modal('Registrar lending',
+   '<div class="frow3"><div class="fg"><label>Plataforma</label><input id="fPlat" placeholder="Ex: Kamino, Aave"></div>'
+   +'<div class="fg"><label>Blockchain</label><input id="fChain" placeholder="Ex: Solana"></div>'
+   +'<div class="fg"><label>Tipo</label><select id="fTipo"><option value="s">Supply (emprestei)</option><option value="b">Borrow (peguei emprestado)</option></select></div></div>'
+   +'<div class="frow3"><div class="fg"><label>Token</label><input id="fTk" placeholder="Ex: USDC" style="text-transform:uppercase"></div>'
+   +'<div class="fg"><label>Quantidade</label><input id="fQ" placeholder="Ex: 1.500"></div>'
+   +'<div class="fg"><label>Valor (US$)</label><input id="fUsd" type="number" step="any"></div></div>'
+   +'<div class="frow"><div class="fg"><label>APY (%)</label><input id="fApy" type="number" step="any"></div>'
+   +'<div class="fg"><label>Carteira</label><select id="fCart">'+carts+'</select></div></div>',
+   {footer:'<button class="btn btn-p" id="okL">Salvar</button>'});
+  document.getElementById('okL').onclick=function(){
+    if(!P.val('fTk'))return;
+    P.st.defi.lend.push({id:P.uid(),plat:P.val('fPlat')||'—',chain:P.val('fChain')||'—',tipo:P.val('fTipo')||'s',
+     tk:P.val('fTk').toUpperCase(),q:P.val('fQ'),usd:P.num('fUsd'),apy:P.num('fApy'),cart:P.val('fCart'),st:'a'});
+    P.save();P.closeModal();render();
+  };
+}
+
+/* ── RENDER ── */
+function poolCard(p){
+  var L=P.poolLucro(p),tax=P.poolSum(p,'tax');
+  return '<div class="pool-card" data-p="'+p.id+'">'
+   +'<div class="pool-hd"><div><div class="pool-par">'+e(p.par)+'</div><div class="pool-proto">'+e(p.proto)+' · '+e(p.chain)+'</div></div>'
+   +'<span class="badge '+(p.st==='a'?'b-open':'b-closed')+'" style="margin-left:auto">'+(p.st==='a'?'Aberta':'Encerrada')+'</span></div>'
+   +'<div class="pool-nums"><div><span>Valor atual</span><b>'+(p.st==='a'?P.money(p.cur.usd):'—')+'</b></div>'
+   +'<div><span>Taxas</span><b style="color:var(--cyan,#00E5FF)">'+P.money(tax)+'</b></div>'
+   +'<div><span>Resultado</span><b class="'+P.cls(L)+'">'+P.money(L)+'</b></div></div>'
+   +(p.st==='a'&&p.cur.tok?'<div class="tok-line">'+e(p.cur.tok)+'</div>':'')
+   +'</div>';
+}
 function render(){
-  document.getElementById('k-patrimonio').textContent=MDFI.fmt(MDFI.dPatrimonio());
-  document.getElementById('k-capital').textContent=MDFI.fmt(MDFI.dCapital());
-  var lucro=MDFI.dLucro();
-  var le=document.getElementById('k-lucro'); le.textContent=MDFI.fmtS(lucro); le.className='kpi-value '+(lucro>=0?'v-green':'v-red');
-  document.getElementById('k-apr').textContent=MDFI.dAPRMedio().toFixed(2)+'%';
-  document.getElementById('k-renda').textContent=MDFI.fmt(MDFI.dRendaMensal());
-  renderTabela(); renderEvol(); renderDist();
-  MDFI.updateNavTotal();
+  document.getElementById('pgTitle').textContent='DeFi';
+  document.getElementById('pgSub').textContent='Pools de liquidez, swaps e lending — o coração do sistema';
+  document.getElementById('btnAdd').onclick=function(){
+    if(tab==='swaps')return formSwap();
+    if(tab==='lend')return formLend();
+    formPool();
+  };
+  var pools=P.st.defi.pools.filter(P.filtCart);
+  var abertas=pools.filter(function(p){return p.st==='a';});
+  var valor=abertas.reduce(function(s,p){return s+(Number(p.cur.usd)||0);},0);
+  var tax=pools.reduce(function(s,p){return s+P.poolSum(p,'tax');},0);
+  var lucro=pools.reduce(function(s,p){return s+P.poolLucro(p);},0);
+
+  var html='<div class="mgrid">'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Valor em pools</div><div class="mc-val">'+P.money(valor)+'</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--cyan,#00E5FF)"></div><div class="mc-lbl">Taxas coletadas</div><div class="mc-val" style="color:var(--cyan,#00E5FF)">'+P.money(tax)+'</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Lucro DeFi total</div><div class="mc-val '+P.cls(lucro)+'">'+P.money(lucro)+'</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--gold,#F5B614)"></div><div class="mc-lbl">Pools ativas</div><div class="mc-val">'+abertas.length+'</div></div>'
+   +'</div>';
+
+  html+='<div class="tabs">'
+   +'<button class="tab'+(tab==='pools'?' on':'')+'" data-t="pools">🌊 Pools</button>'
+   +'<button class="tab'+(tab==='swaps'?' on':'')+'" data-t="swaps">🔁 Swaps</button>'
+   +'<button class="tab'+(tab==='lend'?' on':'')+'" data-t="lend">🏦 Lending</button>'
+   +'</div>';
+
+  if(tab==='pools'){
+    var strats=P.strategies().filter(function(s){return s.closed.length>0;});
+    if(strats.length){
+      html+=strats.map(function(s){
+        return '<div class="strat-res"><span style="font-size:16px">📈</span>'
+         +'<div><b>'+e(s.key)+'</b> — resultado acumulado da estratégia ('+s.closed.length+' pool'+(s.closed.length>1?'s':'')+' encerrada'+(s.closed.length>1?'s':'')+'): '
+         +'<b class="'+P.cls(s.res)+'">'+P.money(s.res)+'</b>'
+         +(s.open.length?' <span style="color:var(--mut);font-size:12px">· pool aberta em andamento (contada separada)</span>':'')
+         +'</div></div>';
+      }).join('');
+    }
+    html+='<div class="sb-sec" style="padding-left:0">Pools abertas</div>';
+    html+=abertas.length?'<div class="pool-grid">'+abertas.map(poolCard).join('')+'</div>':'<div class="empty">Nenhuma pool aberta — crie a primeira em <b>+ Adicionar</b>.</div>';
+    var enc=pools.filter(function(p){return p.st==='e';});
+    var lim=P.isFree()?4:1000;
+    html+='<div class="sb-sec" style="padding-left:0;margin-top:1rem">Histórico — pools encerradas (nada é apagado)</div>';
+    if(enc.length){
+      var rows=enc.slice(0,lim).map(function(p){
+        var L=P.poolLucro(p);
+        return '<tr style="cursor:pointer" data-p="'+p.id+'"><td><div class="pool-name">'+e(p.par)+'</div><div class="pool-proj">'+e(p.proto)+'</div></td>'
+         +'<td><span class="tag">'+e(p.chain)+'</span></td>'
+         +'<td class="mono" style="color:var(--mut)">'+P.dBR(p.ab)+' → '+P.dBR(p.en)+'</td>'
+         +'<td class="num mono">'+P.money(P.poolSum(p,'dep'))+'</td>'
+         +'<td class="num mono" style="color:var(--cyan,#00E5FF)">'+P.money(P.poolSum(p,'tax'))+'</td>'
+         +'<td class="num"><span class="res-pill '+(L>=0?'res-up':'res-dn')+'">'+P.money(L)+'</span></td></tr>';
+      }).join('');
+      if(P.isFree()&&enc.length>lim)rows+='<tr class="lockrow"><td colspan="6">🔒 Ver todo o histórico de pools — PRO</td></tr>';
+      html+='<div class="card"><div class="tblw"><table style="min-width:720px"><thead><tr><th>Pool</th><th>Chain</th><th>Período</th><th class="num">Depositado</th><th class="num">Taxas</th><th class="num">Resultado</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+    }else html+='<div class="empty">Nenhuma pool encerrada ainda.</div>';
+  }
+
+  if(tab==='swaps'){
+    var sw=P.st.defi.swaps.filter(P.filtCart).slice().sort(function(a,b){return String(b.dt).localeCompare(String(a.dt));});
+    var limS=P.isFree()?6:1000;
+    var rowsS=sw.slice(0,limS).map(function(s){
+      return '<tr><td class="mono" style="color:var(--mut)">'+P.dBR(s.dt)+'</td>'
+       +'<td class="mono"><b>'+e(s.deQ)+' '+e(s.deT)+'</b> → <b style="color:var(--green,#14F195)">'+e(s.paQ)+' '+e(s.paT)+'</b></td>'
+       +'<td style="color:var(--mut);font-size:12px;max-width:340px">'+e(s.mot||'—')+'</td></tr>';
+    }).join('');
+    if(P.isFree()&&sw.length>limS)rowsS+='<tr class="lockrow"><td colspan="3">🔒 Ver todos os swaps — PRO</td></tr>';
+    html+='<div class="notice">Todo swap fica registrado: quantidade, data e motivo. É assim que você estuda suas próprias decisões depois.</div>'
+     +'<div class="card"><div class="tblw"><table style="min-width:560px"><thead><tr><th>Data</th><th>Troca</th><th>Motivo</th></tr></thead><tbody>'
+     +(rowsS||'<tr><td colspan="3"><div class="empty">Nenhum swap registrado</div></td></tr>')+'</tbody></table></div></div>';
+  }
+
+  if(tab==='lend'){
+    var ld=P.st.defi.lend.filter(P.filtCart);
+    var rowsL=ld.map(function(l){
+      return '<tr><td><b>'+e(l.plat)+'</b></td><td><span class="tag">'+e(l.chain)+'</span></td>'
+       +'<td><span class="badge '+(l.tipo==='s'?'b-open':'b-closed')+'">'+(l.tipo==='s'?'Supply':'Borrow')+'</span></td>'
+       +'<td class="mono">'+e(l.q)+' '+e(l.tk)+'</td>'
+       +'<td class="num mono">'+P.money(l.usd)+'</td>'
+       +'<td class="num mono" style="color:var(--green,#14F195)">'+(l.apy?l.apy.toFixed(1)+'%':'—')+'</td></tr>';
+    }).join('');
+    html+='<div class="card"><div class="tblw"><table style="min-width:620px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Posição</th><th class="num">Valor</th><th class="num">APY</th></tr></thead><tbody>'
+     +(rowsL||'<tr><td colspan="6"><div class="empty">Nenhuma posição de lending</div></td></tr>')+'</tbody></table></div></div>';
+  }
+
+  document.getElementById('pg').innerHTML=html;
+  document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){tab=b.dataset.t;render();};});
+  document.querySelectorAll('[data-p]').forEach(function(el){el.onclick=function(){detalhe(el.dataset.p);};});
 }
-
-function renderTabela(){
-  var posicoes=MDFI.dPosicoes();
-  var tb=document.getElementById('pos-tbody');
-  if(!posicoes.length){ tb.innerHTML='<tr class="empty-row"><td colspan="7">Nenhuma posição. Clique em <b>+ Adicionar Posição</b>.</td></tr>'; return; }
-  tb.innerHTML=posicoes.map(function(p){
-    return '<tr>'+
-      '<td><div class="cell-name">'+p.protocolo+'</div></td>'+
-      '<td><span class="badge '+(tipoBadge[p.tipo]||'badge-pool')+'">'+(tipoLabel[p.tipo]||p.tipo)+'</span></td>'+
-      '<td class="mono">'+MDFI.fmt(p.capital)+'</td>'+
-      '<td class="mono v-gold" style="font-weight:700">'+(p.apr||0).toFixed(2)+'%</td>'+
-      '<td class="mono '+((p.lucroAcum||0)>=0?'t-up':'t-dn')+'">'+MDFI.fmtS(p.lucroAcum||0)+'</td>'+
-      '<td><span class="badge '+(p.status==='ativa'?'badge-ativa':'badge-encerrada')+'">'+(p.status==='ativa'?'Ativa':'Encerrada')+'</span></td>'+
-      '<td><div class="row-actions"><button class="icon-btn" onclick="editPos(\''+p.id+'\')">✏️</button><button class="icon-btn del" onclick="delPos(\''+p.id+'\')">🗑</button></div></td>'+
-    '</tr>';
-  }).join('');
-}
-
-function renderEvol(){
-  var lucroTotal=MDFI.dLucro(); var labels=[],data=[]; var now=new Date();
-  for(var i=5;i>=0;i--){ var d=new Date(now.getFullYear(),now.getMonth()-i,1); labels.push(d.toLocaleDateString('pt-BR',{month:'short'})); data.push(+(lucroTotal*(1-(i/6))).toFixed(2)); }
-  if(chEvol) chEvol.destroy();
-  chEvol=new Chart(document.getElementById('chart-evol'),{type:'line',data:{labels:labels,datasets:[{label:'Rendimentos',data:data,borderColor:'#00D2AA',backgroundColor:'rgba(0,210,170,.12)',borderWidth:2,fill:true,tension:.4,pointRadius:3,pointBackgroundColor:'#00D2AA'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
-}
-
-function renderDist(){
-  var items=MDFI.dPosicoes().map(function(p,i){return {nome:p.protocolo,valor:(p.capital||0)+(p.lucroAcum||0),cor:palette[i%palette.length]};}).filter(function(x){return x.valor>0;});
-  var total=items.reduce(function(s,x){return s+x.valor;},0);
-  if(chDist) chDist.destroy();
-  if(!items.length){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem posições</div>'; return; }
-  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:items.map(function(x){return x.nome;}),datasets:[{data:items.map(function(x){return +x.valor.toFixed(2);}),backgroundColor:items.map(function(x){return x.cor;}),borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+MDFI.fmt(c.parsed);}}}}}});
-  document.getElementById('dist-legend').innerHTML=items.map(function(x){var p=total>0?(x.valor/total*100).toFixed(0):0;return '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:'+x.cor+'"></span>'+x.nome+'</div><span class="dleg-pct">'+p+'%</span></div>';}).join('');
-}
-
-/* ─── CRUD ─── */
-function openPosModal(){ resetModal(); document.getElementById('pos-modal-title').textContent='Adicionar Posição'; document.getElementById('pos-modal').classList.add('open'); }
-function closePosModal(){ document.getElementById('pos-modal').classList.remove('open'); }
-function resetModal(){ document.getElementById('pos-id').value=''; document.getElementById('pos-protocolo').value=''; document.getElementById('pos-tipo').value='pool'; document.getElementById('pos-status').value='ativa'; document.getElementById('pos-capital').value=''; document.getElementById('pos-apr').value=''; document.getElementById('pos-lucro').value=''; }
-
-function editPos(id){
-  var p=MDFI.dPosicoes().find(function(x){return x.id===id;}); if(!p)return;
-  document.getElementById('pos-modal-title').textContent='Editar Posição';
-  document.getElementById('pos-id').value=id;
-  document.getElementById('pos-protocolo').value=p.protocolo;
-  document.getElementById('pos-tipo').value=p.tipo;
-  document.getElementById('pos-status').value=p.status;
-  document.getElementById('pos-capital').value=p.capital;
-  document.getElementById('pos-apr').value=p.apr;
-  document.getElementById('pos-lucro').value=p.lucroAcum;
-  document.getElementById('pos-modal').classList.add('open');
-}
-
-function salvarPos(){
-  var prot=document.getElementById('pos-protocolo').value.trim();
-  var cap=parseFloat(document.getElementById('pos-capital').value);
-  var apr=parseFloat(document.getElementById('pos-apr').value)||0;
-  var lucro=parseFloat(document.getElementById('pos-lucro').value)||0;
-  if(!prot){ toast('Informe o protocolo','err'); return; }
-  if(!cap||cap<=0){ toast('Capital inválido','err'); return; }
-  var posicoes=MDFI.dPosicoes(); var id=document.getElementById('pos-id').value;
-  var dados={protocolo:prot,tipo:document.getElementById('pos-tipo').value,status:document.getElementById('pos-status').value,capital:cap,apr:apr,lucroAcum:lucro};
-  if(id){ var p=posicoes.find(function(x){return x.id===id;}); if(p)Object.assign(p,dados); toast('Posição atualizada','ok'); }
-  else { dados.id=MDFI.uid(); posicoes.push(dados); toast('Posição adicionada','ok'); }
-  MDFI.save(); closePosModal(); render();
-}
-
-function delPos(id){
-  if(!confirm('Excluir esta posição?'))return;
-  var w=MDFI.carteiraAtiva(); w.defi.posicoes=w.defi.posicoes.filter(function(x){return x.id!==id;});
-  MDFI.save(); render(); toast('Posição removida','ok');
-}
-
-window.openAuthModal=function(){ window.location.href='/portfolio/dashboard.html'; };
-
-window.onWalletChange=function(){ render(); };
-
-MDFI.loadLocal();
-MDFI.mountNav('defi');
-render();
-MDFI.initFirebase(function(user){ MDFI.updateNavAuth(user); render(); });
+P.init('defi',render);
+})();
 </script>
 </body>
 </html>

@@ -1,250 +1,86 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trade · MundoDeFi</title>
-<link rel="stylesheet" href="/mundodefi.css">
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trade — Portfólio MundoDeFi</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/portfolio/portfolio.css">
 </head>
 <body>
-<div id="nav-mount"></div>
-
-<div class="page-wrap">
-  <div class="page-head">
-    <div>
-      <h1 class="page-title">⚡ Trade</h1>
-      <p class="page-sub">Registro e análise de operações</p>
-    </div>
-    <div class="page-head-actions">
-      <button class="btn btn-ghost btn-sm" onclick="openBancaModal()">⚙ Banca inicial</button>
-      <button class="btn btn-gold" onclick="openOpModal()">+ Registrar Operação</button>
-    </div>
-  </div>
-
-  <div class="kpi-grid c6">
-    <div class="kpi" style="--kpi-accent:var(--gold)">
-      <div class="kpi-label">🏦 Banca Atual</div>
-      <div class="kpi-value v-gold" id="k-banca">—</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">💰 Lucro Total</div>
-      <div class="kpi-value" id="k-lucro">—</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--neon)">
-      <div class="kpi-label">🎯 Win Rate</div>
-      <div class="kpi-value v-neon" id="k-wr">—</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--blue)">
-      <div class="kpi-label">📋 Operações</div>
-      <div class="kpi-value v-blue" id="k-ops">—</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--green)">
-      <div class="kpi-label">✅ Wins</div>
-      <div class="kpi-value v-green" id="k-wins">—</div>
-    </div>
-    <div class="kpi" style="--kpi-accent:var(--red)">
-      <div class="kpi-label">❌ Losses</div>
-      <div class="kpi-value v-red" id="k-losses">—</div>
-    </div>
-  </div>
-
-  <div class="charts-row">
-    <div class="chart-box">
-      <div class="chart-box-head"><span class="chart-box-title">Evolução da Banca</span></div>
-      <div class="chart-area" style="height:240px"><canvas id="chart-banca"></canvas></div>
-    </div>
-    <div class="chart-box">
-      <div class="chart-box-head"><span class="chart-box-title">Distribuição de Resultados</span></div>
-      <div class="chart-area" style="height:180px;display:flex;align-items:center;justify-content:center"><canvas id="chart-dist" width="180" height="180"></canvas></div>
-      <div class="donut-legend" id="dist-legend"></div>
-    </div>
-  </div>
-
-  <div class="panel">
-    <div class="panel-head"><span class="panel-title">Lucro por Período (mensal)</span></div>
-    <div class="panel-body"><div class="chart-area" style="height:200px"><canvas id="chart-periodo"></canvas></div></div>
-  </div>
-
-  <div class="panel">
-    <div class="panel-head"><span class="panel-title">Histórico de Operações</span></div>
-    <div class="tbl-wrap">
-      <table class="data">
-        <thead><tr>
-          <th>Data</th><th>Ativo</th><th>Tipo</th><th>Entrada</th><th>Saída</th>
-          <th>Lucro/Prejuízo</th><th>Observação</th><th>Ações</th>
-        </tr></thead>
-        <tbody id="ops-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Operação -->
-<div class="modal-overlay" id="op-modal">
-  <div class="modal">
-    <div class="modal-head"><span class="modal-title" id="op-modal-title">Registrar Operação</span><button class="modal-close" onclick="closeOpModal()">✕</button></div>
-    <div class="modal-body">
-      <input type="hidden" id="op-id">
-      <div class="frow">
-        <div class="fgrp"><label>Data</label><input class="finput" type="date" id="op-data"></div>
-        <div class="fgrp"><label>Ativo</label><input class="finput" type="text" id="op-ativo" placeholder="BTC/USDT"></div>
-      </div>
-      <div class="frow">
-        <div class="fgrp"><label>Tipo</label><select class="fselect" id="op-tipo"><option value="long">Long</option><option value="short">Short</option></select></div>
-        <div class="fgrp"><label>Resultado (USD)</label><input class="finput" type="number" step="any" id="op-resultado" placeholder="150 ou -80"></div>
-      </div>
-      <div class="frow">
-        <div class="fgrp"><label>Preço Entrada (opcional)</label><input class="finput" type="number" step="any" id="op-entrada" placeholder="0"></div>
-        <div class="fgrp"><label>Preço Saída (opcional)</label><input class="finput" type="number" step="any" id="op-saida" placeholder="0"></div>
-      </div>
-      <div class="fgrp"><label>Observação</label><input class="finput" type="text" id="op-obs" placeholder="Setup, motivo..."></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeOpModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarOp()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Banca -->
-<div class="modal-overlay" id="banca-modal">
-  <div class="modal" style="max-width:380px">
-    <div class="modal-head"><span class="modal-title">Banca Inicial</span><button class="modal-close" onclick="closeBancaModal()">✕</button></div>
-    <div class="modal-body">
-      <div class="fgrp"><label>Valor da banca inicial (USD)</label><input class="finput" type="number" step="any" id="banca-input" placeholder="1000"></div>
-      <p style="font-size:12px;color:var(--muted2)">A banca atual = banca inicial + soma dos resultados.</p>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-ghost" onclick="closeBancaModal()">Cancelar</button>
-      <button class="btn btn-gold" onclick="salvarBanca()">Salvar</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<script src="/mundodefi-core.js"></script>
+<div class="app" id="app"></div>
+<script src="/portfolio/portfolio.js"></script>
 <script>
-var chBanca=null, chDist=null, chPeriodo=null;
+(function(){
+'use strict';
+var e=P.esc;
 
-function toast(m,t){ var e=document.getElementById('toast'); e.textContent=m; e.className='toast show '+(t||''); setTimeout(function(){e.className='toast '+(t||'');},2600); }
+function formOp(){
+  P.modal('Nova operação',
+   '<div class="frow3"><div class="fg"><label>Ativo</label><input id="fAt" placeholder="Ex: BTC" style="text-transform:uppercase"></div>'
+   +'<div class="fg"><label>Direção</label><select id="fDir"><option value="L">Long</option><option value="S">Short</option></select></div>'
+   +'<div class="fg"><label>Alavancagem</label><input id="fAl" type="number" step="1" value="1"></div></div>'
+   +'<div class="frow"><div class="fg"><label>Resultado (US$, use − para perda)</label><input id="fRes" type="number" step="any" placeholder="Ex: 120 ou -45"></div>'
+   +'<div class="fg"><label>Data</label><input id="fDt" type="date" value="'+P.today()+'"></div></div>'
+   +'<div class="fg"><label>Anotação (setup, motivo, lição)</label><textarea id="fTxt" placeholder="O que você viu nessa operação?"></textarea></div>',
+   {footer:'<button class="btn btn-p" id="okOp">Salvar</button>'});
+  document.getElementById('okOp').onclick=function(){
+    var at=P.val('fAt').toUpperCase();if(!at)return;
+    var res=P.num('fRes');
+    P.st.trade.ops.push({id:P.uid(),dt:P.val('fDt')||P.today(),ativo:at,dir:P.val('fDir')||'L',alav:P.num('fAl')||1,res:res,txt:P.val('fTxt')});
+    P.st.trade.banca.atu=(Number(P.st.trade.banca.atu)||0)+res;
+    P.save();P.closeModal();render();
+  };
+}
+function formBanca(){
+  var b=P.st.trade.banca;
+  P.modal('Configurar banca',
+   '<div class="frow"><div class="fg"><label>Banca inicial (US$)</label><input id="fIni" type="number" step="any" value="'+(b.ini||0)+'"></div>'
+   +'<div class="fg"><label>Banca atual (US$)</label><input id="fAtu" type="number" step="any" value="'+(b.atu||0)+'"></div></div>'
+   +'<div class="fhint">A banca atual também é ajustada automaticamente a cada operação registrada.</div>',
+   {footer:'<button class="btn btn-p" id="okB">Salvar</button>'});
+  document.getElementById('okB').onclick=function(){
+    b.ini=P.num('fIni');b.atu=P.num('fAtu');P.save();P.closeModal();render();
+  };
+}
 
 function render(){
-  document.getElementById('k-banca').textContent=MDFI.fmt(MDFI.tBancaAtual());
-  var lucro=MDFI.tLucro();
-  var le=document.getElementById('k-lucro'); le.textContent=MDFI.fmtS(lucro); le.className='kpi-value '+(lucro>=0?'v-green':'v-red');
-  document.getElementById('k-wr').textContent=MDFI.tWinRate().toFixed(1)+'%';
-  document.getElementById('k-ops').textContent=MDFI.tTotalOps();
-  document.getElementById('k-wins').textContent=MDFI.tWins();
-  document.getElementById('k-losses').textContent=MDFI.tLosses();
-  renderTabela(); renderBanca(); renderDist(); renderPeriodo();
-  MDFI.updateNavTotal();
-}
+  document.getElementById('pgTitle').textContent='Trade';
+  document.getElementById('pgSub').textContent='Suas operações, gestão de banca e métricas de desempenho';
+  document.getElementById('btnAdd').onclick=formOp;
 
-function renderTabela(){
-  var ops0=MDFI.tOps();
-  var tb=document.getElementById('ops-tbody');
-  if(!ops0.length){ tb.innerHTML='<tr class="empty-row"><td colspan="8">Nenhuma operação. Clique em <b>+ Registrar Operação</b>.</td></tr>'; return; }
-  var ops=ops0.slice().sort(function(a,b){return new Date(b.data)-new Date(a.data);});
-  tb.innerHTML=ops.map(function(o){
-    var res=o.resultado||0;
-    return '<tr>'+
-      '<td class="mono">'+(o.data?new Date(o.data).toLocaleDateString('pt-BR'):'—')+'</td>'+
-      '<td><div class="cell-name">'+(o.ativo||'—')+'</div></td>'+
-      '<td><span class="badge '+(o.tipo==='short'?'badge-short':'badge-long')+'">'+(o.tipo==='short'?'Short':'Long')+'</span></td>'+
-      '<td class="mono">'+(o.entrada?MDFI.fmt(o.entrada):'—')+'</td>'+
-      '<td class="mono">'+(o.saida?MDFI.fmt(o.saida):'—')+'</td>'+
-      '<td class="mono '+(res>=0?'t-up':'t-dn')+'" style="font-weight:700">'+MDFI.fmtS(res)+'</td>'+
-      '<td style="color:var(--muted2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(o.obs||'—')+'</td>'+
-      '<td><div class="row-actions"><button class="icon-btn" onclick="editOp(\''+o.id+'\')">✏️</button><button class="icon-btn del" onclick="delOp(\''+o.id+'\')">🗑</button></div></td>'+
-    '</tr>';
+  var b=P.st.trade.banca,s=P.tradeStats();
+  var ev=b.ini>0?(b.atu-b.ini)/b.ini*100:0;
+
+  var html='<div class="atlas-card"><div class="ico">📓</div><div><b>Diário Inteligente</b><p>O Atlas lê suas anotações e resultados e devolve padrões, erros recorrentes e acertos. Exclusivo Premium.</p></div><div class="right">'+P.lockBtn('Diário Inteligente','premium')+'</div></div>';
+
+  html+='<div class="mgrid">'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Banca atual</div><div class="mc-val">'+P.money(b.atu)+'</div><div class="mc-sub">inicial: '+P.money(b.ini)+' <span class="'+P.cls(ev)+'">('+P.pct(ev)+')</span></div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Resultado total</div><div class="mc-val '+P.cls(s.res)+'">'+P.money(s.res)+'</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--cyan,#00E5FF)"></div><div class="mc-lbl">Win rate</div><div class="mc-val">'+s.win.toFixed(0)+'%</div><div class="mc-sub">'+s.n+' operações</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--gold,#F5B614)"></div><div class="mc-lbl">Gestão</div><div class="mc-val" style="font-size:1rem;padding-top:6px"><button class="btn btn-g btn-sm" id="btnBanca">Configurar banca</button></div></div>'
+   +'</div>';
+
+  var ops=P.st.trade.ops.slice().sort(function(a,c){return String(c.dt||'').localeCompare(String(a.dt||''));});
+  var lim=P.isFree()?8:1000;
+  var rows=ops.slice(0,lim).map(function(o){
+    return '<tr><td class="mono" style="color:var(--mut)">'+P.dBR(o.dt)+'</td><td><b>'+e(o.ativo)+'</b></td>'
+     +'<td><span class="badge '+(o.dir==='L'?'b-open':'b-closed')+'">'+(o.dir==='L'?'Long':'Short')+'</span></td>'
+     +'<td class="num mono">'+(o.alav||1)+'x</td>'
+     +'<td class="num"><span class="res-pill '+(o.res>=0?'res-up':'res-dn')+'">'+P.money(o.res)+'</span></td>'
+     +'<td style="color:var(--mut);font-size:12px;max-width:280px">'+e(o.txt||'—')+'</td></tr>';
   }).join('');
+  if(P.isFree()&&ops.length>lim)rows+='<tr class="lockrow"><td colspan="6">🔒 Ver histórico completo de operações — PRO</td></tr>';
+  html+='<div class="card"><div class="card-hd"><div class="card-title">Operações</div></div><div class="tblw"><table style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'
+   +(rows||'<tr><td colspan="6"><div class="empty">Nenhuma operação — registre a primeira em <b>+ Adicionar</b>.</div></td></tr>')+'</tbody></table></div></div>';
+
+  document.getElementById('pg').innerHTML=html;
+  document.getElementById('btnBanca').onclick=formBanca;
 }
-
-function renderBanca(){
-  var st=MDFI.st();
-  var ops=ops0.slice().sort(function(a,b){return new Date(a.data)-new Date(b.data);});
-  var saldo=MDFI.tBancaIni(); var labels=['Início'],data=[saldo];
-  ops.forEach(function(o){ saldo+=(o.resultado||0); labels.push(o.data?new Date(o.data).toLocaleDateString('pt-BR',{day:'2-digit',month:'2-digit'}):''); data.push(+saldo.toFixed(2)); });
-  if(chBanca) chBanca.destroy();
-  chBanca=new Chart(document.getElementById('chart-banca'),{type:'line',data:{labels:labels,datasets:[{label:'Banca',data:data,borderColor:'#F5B614',backgroundColor:'rgba(245,182,20,.1)',borderWidth:2,fill:true,tension:.3,pointRadius:labels.length<15?3:0,pointBackgroundColor:'#F5B614'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmt(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0',maxTicksLimit:8},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
-}
-
-function renderDist(){
-  var wins=MDFI.tWins(), losses=MDFI.tLosses();
-  if(chDist) chDist.destroy();
-  if(!wins&&!losses){ document.getElementById('dist-legend').innerHTML='<div style="color:var(--muted2);font-size:13px">Sem operações</div>'; return; }
-  chDist=new Chart(document.getElementById('chart-dist'),{type:'doughnut',data:{labels:['Wins','Losses'],datasets:[{data:[wins,losses],backgroundColor:['#14F195','#FF4D6A'],borderColor:'#0B0F1A',borderWidth:3,hoverOffset:6}]},options:{responsive:false,cutout:'62%',plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+c.parsed;}}}}}});
-  var tot=wins+losses;
-  document.getElementById('dist-legend').innerHTML=
-    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#14F195"></span>Wins</div><span class="dleg-pct">'+(tot?(wins/tot*100).toFixed(0):0)+'%</span></div>'+
-    '<div class="dleg"><div class="dleg-left"><span class="dleg-dot" style="background:#FF4D6A"></span>Losses</div><span class="dleg-pct">'+(tot?(losses/tot*100).toFixed(0):0)+'%</span></div>';
-}
-
-function renderPeriodo(){
-  var byMonth={};
-  MDFI.tOps().forEach(function(o){ if(!o.data)return; var d=new Date(o.data); var k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); byMonth[k]=(byMonth[k]||0)+(o.resultado||0); });
-  var keys=Object.keys(byMonth).sort();
-  var labels=keys.map(function(k){var p=k.split('-');return new Date(p[0],p[1]-1,1).toLocaleDateString('pt-BR',{month:'short',year:'2-digit'});});
-  var data=keys.map(function(k){return +byMonth[k].toFixed(2);});
-  if(chPeriodo) chPeriodo.destroy();
-  chPeriodo=new Chart(document.getElementById('chart-periodo'),{type:'bar',data:{labels:labels.length?labels:['—'],datasets:[{label:'Lucro',data:data.length?data:[0],backgroundColor:data.map(function(v){return v>=0?'rgba(20,241,149,.6)':'rgba(255,77,106,.6)';}),borderColor:data.map(function(v){return v>=0?'#14F195':'#FF4D6A';}),borderWidth:1,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+MDFI.fmtS(c.parsed.y);}}}},scales:{x:{ticks:{color:'#8492B0'},grid:{display:false}},y:{ticks:{color:'#8492B0',callback:function(v){return MDFI.moedaSimbolo()+v.toFixed(0);}},grid:{color:'rgba(128,128,128,.06)'}}}}});
-}
-
-/* ─── CRUD operação ─── */
-function openOpModal(){ resetOp(); document.getElementById('op-modal-title').textContent='Registrar Operação'; document.getElementById('op-data').value=new Date().toISOString().slice(0,10); document.getElementById('op-modal').classList.add('open'); }
-function closeOpModal(){ document.getElementById('op-modal').classList.remove('open'); }
-function resetOp(){ ['op-id','op-ativo','op-resultado','op-entrada','op-saida','op-obs'].forEach(function(id){document.getElementById(id).value='';}); document.getElementById('op-tipo').value='long'; }
-
-function editOp(id){
-  var o=MDFI.tOps().find(function(x){return x.id===id;}); if(!o)return;
-  document.getElementById('op-modal-title').textContent='Editar Operação';
-  document.getElementById('op-id').value=id;
-  document.getElementById('op-data').value=o.data||'';
-  document.getElementById('op-ativo').value=o.ativo||'';
-  document.getElementById('op-tipo').value=o.tipo||'long';
-  document.getElementById('op-resultado').value=o.resultado||'';
-  document.getElementById('op-entrada').value=o.entrada||'';
-  document.getElementById('op-saida').value=o.saida||'';
-  document.getElementById('op-obs').value=o.obs||'';
-  document.getElementById('op-modal').classList.add('open');
-}
-
-function salvarOp(){
-  var ativo=document.getElementById('op-ativo').value.trim();
-  var resStr=document.getElementById('op-resultado').value;
-  if(!ativo){ toast('Informe o ativo','err'); return; }
-  if(resStr===''){ toast('Informe o resultado','err'); return; }
-  var ops=MDFI.tOps(); var id=document.getElementById('op-id').value;
-  var dados={data:document.getElementById('op-data').value,ativo:ativo,tipo:document.getElementById('op-tipo').value,resultado:parseFloat(resStr),entrada:parseFloat(document.getElementById('op-entrada').value)||0,saida:parseFloat(document.getElementById('op-saida').value)||0,obs:document.getElementById('op-obs').value.trim()};
-  if(id){ var o=ops.find(function(x){return x.id===id;}); if(o)Object.assign(o,dados); toast('Operação atualizada','ok'); }
-  else { dados.id=MDFI.uid(); ops.push(dados); toast('Operação registrada','ok'); }
-  MDFI.save(); closeOpModal(); render();
-}
-
-function delOp(id){
-  if(!confirm('Excluir esta operação?'))return;
-  var w=MDFI.carteiraAtiva(); w.trade.operacoes=w.trade.operacoes.filter(function(x){return x.id!==id;});
-  MDFI.save(); render(); toast('Operação removida','ok');
-}
-
-/* ─── Banca ─── */
-function openBancaModal(){ document.getElementById('banca-input').value=MDFI.tBancaIni()||''; document.getElementById('banca-modal').classList.add('open'); }
-function closeBancaModal(){ document.getElementById('banca-modal').classList.remove('open'); }
-function salvarBanca(){ var v=parseFloat(document.getElementById('banca-input').value)||0; MDFI.carteiraAtiva().trade.bancaInicial=v; MDFI.save(); closeBancaModal(); render(); toast('Banca atualizada','ok'); }
-
-window.openAuthModal=function(){ window.location.href='/portfolio/dashboard.html'; };
-
-window.onWalletChange=function(){ render(); };
-
-MDFI.loadLocal();
-MDFI.mountNav('trade');
-render();
-MDFI.initFirebase(function(user){ MDFI.updateNavAuth(user); render(); });
+P.init('trade',render);
+})();
 </script>
 </body>
 </html>
