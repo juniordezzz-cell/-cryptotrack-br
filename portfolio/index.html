@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Portfólio MundoDeFi</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/portfolio/portfolio.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script src="/portfolio/portfolio.js"></script>
+<script>
+(function(){
+'use strict';
+var e=P.esc;
+
+function eventos(){
+  var ev=[];
+  P.st.hold.forEach(function(a){a.txs.forEach(function(t){
+    ev.push({dt:t.dt,txt:(t.t==='c'?'Compra':'Venda')+' de <b>'+t.q+' '+e(a.tk)+'</b> a '+P.money(t.pr)});});});
+  P.st.defi.pools.forEach(function(p){
+    p.tax.forEach(function(t){ev.push({dt:t.dt,txt:'Taxas coletadas na pool <b>'+e(p.par)+'</b>: '+P.money(t.usd)});});
+    p.dep.forEach(function(d){ev.push({dt:d.dt,txt:'Depósito na pool <b>'+e(p.par)+' · '+e(p.proto)+'</b>: '+P.money(d.usd)});});
+    p.ret.forEach(function(r){ev.push({dt:r.dt,txt:'Retirada da pool <b>'+e(p.par)+'</b>: '+P.money(r.usd)});});
+  });
+  P.st.defi.swaps.forEach(function(s){ev.push({dt:s.dt,txt:'Swap: <b>'+e(s.deQ)+' '+e(s.deT)+'</b> → <b>'+e(s.paQ)+' '+e(s.paT)+'</b>'});});
+  P.st.trade.ops.forEach(function(o){ev.push({dt:o.dt,txt:'Trade '+(o.dir==='L'?'Long':'Short')+' em <b>'+e(o.ativo)+'</b>: <span class="'+P.cls(o.res)+'">'+P.money(o.res)+'</span>'});});
+  ev.sort(function(a,b){return String(b.dt||'').localeCompare(String(a.dt||''));});
+  return ev;
+}
+
+function render(){
+  document.getElementById('pgTitle').textContent='Dashboard';
+  document.getElementById('pgSub').textContent='Visão consolidada de todo o seu patrimônio cripto';
+  document.getElementById('btnAdd').onclick=function(){
+    P.modal('Adicionar','<div class="up-list" style="margin-top:0">'
+     +'<a class="up-item" href="/portfolio/hold.html"><span>💎</span>Transação de HOLD (compra/venda)</a>'
+     +'<a class="up-item" href="/portfolio/defi.html"><span>🌊</span>Pool, swap ou lending</a>'
+     +'<a class="up-item" href="/portfolio/trade.html"><span>⚡</span>Operação de trade</a>'
+     +'</div>');
+  };
+  var T=P.totais();
+  var html='';
+
+  html+='<div class="atlas-card"><div class="ico">🔮</div><div><b>Atlas — a camada inteligente do seu patrimônio</b><p>Análises, insights e o Oráculo interpretando suas posições. Exclusivo do plano Premium.</p></div><div class="right">'
+   +P.lockBtn('Análise do Atlas','premium')+P.lockBtn('Oráculo','premium')+'</div></div>';
+
+  html+='<div class="mgrid">'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Patrimônio total</div><div class="mc-val">'+P.money(T.pat)+'</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Lucro total</div><div class="mc-val '+P.cls(T.lucro)+'">'+P.money(T.lucro)+'</div><div class="mc-sub '+P.cls(T.rent)+'">'+P.pct(T.rent)+' de rentabilidade</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--cyan,#00E5FF)"></div><div class="mc-lbl">Taxas DeFi coletadas</div><div class="mc-val" style="color:var(--cyan,#00E5FF)">'+P.money(T.tax)+'</div><div class="mc-sub">renda das suas pools</div></div>'
+   +'<div class="mc"><div class="mc-accent" style="background:var(--gold,#F5B614)"></div><div class="mc-lbl">Resultado em trade</div><div class="mc-val '+P.cls(T.trL)+'">'+P.money(T.trL)+'</div><div class="mc-sub">banca: '+P.money(T.trade)+'</div></div>'
+   +'</div>';
+
+  html+='<div class="grid2">'
+   +'<div class="card"><div class="card-hd"><div class="card-title">Evolução do Patrimônio</div><div class="right"><span class="badge" style="background:var(--panel2);color:var(--mut)">12 meses</span></div></div><div class="card-bd"><div class="chart-box"><canvas id="ch1"></canvas></div></div></div>'
+   +'<div class="card"><div class="card-hd"><div class="card-title">Distribuição</div></div><div class="card-bd"><div class="chart-box sm"><canvas id="ch2"></canvas></div></div></div>'
+   +'</div>';
+
+  var carts=P.st.carteiras.map(function(c){
+    var v=0;
+    P.st.hold.forEach(function(a){if(a.cart===c.id)v+=P.holdPos(a).val;});
+    P.st.defi.pools.forEach(function(p){if(p.cart===c.id&&p.st==='a')v+=Number(p.cur.usd)||0;});
+    P.st.defi.lend.forEach(function(l){if(l.cart===c.id&&l.st==='a')v+=l.tipo==='s'?Number(l.usd):-Number(l.usd);});
+    return '<div class="rank-row" style="padding:.7rem 1.1rem"><span style="font-size:15px">👛</span><span class="rank-name">'+e(c.nome)+'</span><span class="rank-val">'+P.money(v)+'</span></div>';
+  }).join('');
+  var ev=eventos();
+  var lim=P.isFree()?5:10;
+  var evH=ev.slice(0,lim).map(function(x){return '<div class="tl-item"><span class="tl-date">'+P.dBR(x.dt)+'</span><span class="tl-txt">'+x.txt+'</span></div>';}).join('');
+  if(P.isFree()&&ev.length>lim)evH+='<div class="tl-item lockrow-like" style="cursor:pointer" onclick="P.upsell(\'pro\')"><span class="tl-date">🔒</span><span class="tl-txt" style="color:var(--gold,#F5B614);font-weight:700">Ver histórico completo — PRO</span></div>';
+
+  html+='<div class="grid2b">'
+   +'<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div><div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'+(carts||'<div class="empty">Nenhuma carteira</div>')+'</div>'
+   +'<div class="card"><div class="card-hd"><div class="card-title">Últimas operações</div></div><div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">'+(evH||'<div class="empty">Sem operações ainda</div>')+'</div></div></div>'
+   +'</div>';
+
+  var rows=P.st.hold.filter(P.filtCart).map(function(a){
+    var x=P.holdPos(a);if(x.qty<=0)return'';
+    var pc=x.cost>0?x.lucro/x.cost*100:0;
+    var cn=(P.st.carteiras.filter(function(c){return c.id===a.cart;})[0]||{}).nome||'—';
+    return '<tr><td><div class="tk"><div class="tk-ic">'+e(a.tk)+'</div><div><b>'+e(a.tk)+'</b><small>'+e(cn)+'</small></div></div></td>'
+     +'<td class="num mono">'+x.qty.toLocaleString('pt-BR',{maximumFractionDigits:6})+'</td>'
+     +'<td class="num mono">'+P.money(x.avg,2)+'</td><td class="num mono">'+P.money(a.last||0,2)+'</td>'
+     +'<td class="num mono">'+P.money(x.val)+'</td>'
+     +'<td class="num mono '+P.cls(x.lucro)+'">'+P.money(x.lucro)+' <small style="color:var(--mut2)">('+P.pct(pc)+')</small></td></tr>';
+  }).join('');
+  html+='<div class="card"><div class="card-hd"><div class="card-title">Ativos em HOLD</div><div class="right"><a class="btn btn-g btn-sm" href="/portfolio/hold.html">Gerenciar →</a></div></div><div class="tblw"><table style="min-width:640px"><thead><tr><th>Ativo</th><th class="num">Qtd</th><th class="num">Preço médio</th><th class="num">Preço atual</th><th class="num">Valor</th><th class="num">Lucro</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhum ativo — adicione na página HOLD</div></td></tr>')+'</tbody></table></div></div>';
+
+  document.getElementById('pg').innerHTML=html;
+
+  document.getElementById('btnCart').onclick=function(){
+    if(P.st.carteiras.length>=P.limCart())return P.upsell('pro');
+    P.modal('Nova carteira','<div class="fg"><label>Nome da carteira</label><input id="fNome" placeholder="Ex: Phantom, Rabby, Ledger…"></div>',
+     {footer:'<button class="btn btn-p" id="okCart">Salvar</button>'});
+    document.getElementById('okCart').onclick=function(){
+      var n=P.val('fNome');if(!n)return;
+      P.st.carteiras.push({id:P.uid(),nome:n});P.save();location.reload();
+    };
+  };
+
+  /* gráficos */
+  var brl=P.st.cfg.moeda==='brl',rt=brl?P.rate:1,pre=brl?'R$ ':'$';
+  var snaps=P.st.snaps.slice();snaps.push({dt:P.today(),v:T.pat});
+  if(window._c1)window._c1.destroy();
+  window._c1=new Chart(document.getElementById('ch1'),{type:'bar',
+   data:{labels:snaps.map(function(s){var p=s.dt.split('-');return p[1]+'/'+p[0].slice(2);}),
+    datasets:[{data:snaps.map(function(s){return Math.round(s.v*rt);}),backgroundColor:'rgba(153,69,255,.55)',borderColor:'#9945FF',borderWidth:1.5,borderRadius:6}]},
+   options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return pre+Number(c.raw).toLocaleString(brl?'pt-BR':'en-US');}}}},
+    scales:{x:{grid:{display:false},ticks:{color:'#5C6478',font:{family:'Space Mono',size:10}}},
+     y:{grid:{color:'rgba(255,255,255,.05)'},ticks:{color:'#5C6478',font:{family:'Space Mono',size:10},callback:function(v){return pre+(v>=1000?(v/1000)+'k':v);}}}}}});
+  if(window._c2)window._c2.destroy();
+  window._c2=new Chart(document.getElementById('ch2'),{type:'doughnut',
+   data:{labels:['HOLD','DeFi','Trade'],datasets:[{data:[T.hold*rt,(T.defi+T.lend)*rt,T.trade*rt],
+    backgroundColor:['#F5B614','#14F195','#00E5FF'],borderColor:'#0C101C',borderWidth:3}]},
+   options:{responsive:true,maintainAspectRatio:false,cutout:'64%',
+    plugins:{legend:{position:'right',labels:{color:'#8B93A7',font:{family:'Space Grotesk',size:12},boxWidth:12,boxHeight:12,borderRadius:3,useBorderRadius:true}},
+     tooltip:{callbacks:{label:function(c){return ' '+c.label+': '+pre+Math.round(c.raw).toLocaleString(brl?'pt-BR':'en-US');}}}}}});
+}
+P.init('dash',render);
+})();
+</script>
+</body>
+</html>
