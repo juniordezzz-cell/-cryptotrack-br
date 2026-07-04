@@ -242,7 +242,7 @@ var MDFI = (function () {
   /* NAV */
   function renderNav(active) {
     var items = [
-      { id: 'dashboard', label: 'Dashboard', icon: '📊', href: '/portfolio/dashboard.html' },
+      { id: 'dashboard', label: 'Dashboard', icon: '📊', href: '/portfolio/' },
       { id: 'hold', label: 'HOLD', icon: '💎', href: '/portfolio/hold.html' },
       { id: 'defi', label: 'DeFi', icon: '🌊', href: '/portfolio/defi.html' },
       { id: 'trade', label: 'Trade', icon: '⚡', href: '/portfolio/trade.html' }
@@ -322,7 +322,7 @@ var MDFI = (function () {
     else { btn.textContent = 'Entrar'; btn.classList.remove('logged'); btn.onclick = function () { openAuthFromNav(); }; }
     renderWalletDropdown();
   }
-  function openAuthFromNav() { if (typeof window.openAuthModal === 'function') window.openAuthModal(); else window.location.href = '/portfolio/dashboard.html'; }
+  function openAuthFromNav() { if (typeof window.openAuthModal === 'function') window.openAuthModal(); else window.location.href = '/portfolio/'; }
 
   return {
     st: function () { return st; }, defaultState: defaultState,
