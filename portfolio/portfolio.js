@@ -9,18 +9,18 @@
 window.MDF_PLANOS = {
   gratis: {
     nome:'Grátis',
-    carteiras:1,          // Grátis = 1 carteira
-    historico:10,         // mostra os 10 últimos lançamentos
-    graficosAvancados:false,
-    exportar:false,       // não baixa CSV/planilha
+    carteiras:1,          // ÚNICA trava do grátis: 1 carteira
+    historico:999999,     // histórico completo (sem trava)
+    graficosAvancados:true, // todos os gráficos liberados
+    exportar:false,       // exportar CSV é exclusivo PRO
     atlas:false
   },
   pro: {
     nome:'PRO',           // R$ 19,90 — carro-chefe
     carteiras:9999,       // carteiras ilimitadas
-    historico:999999,     // histórico completo
+    historico:999999,
     graficosAvancados:true,
-    exportar:true,        // baixa os dados
+    exportar:true,        // baixa os dados (CSV)
     atlas:false
   },
   premium: {
@@ -282,11 +282,9 @@ P.rt=function(){return P.st.cfg.moeda==='brl'?P.rate:1;};
 P.moneyCb=function(){var brl=P.st.cfg.moeda==='brl',pre=brl?'R$ ':'$';return function(c){return ' '+pre+Math.round(c.raw).toLocaleString(brl?'pt-BR':'en-US');};};
 /* card de gráfico com cadeado se for avançado e o plano não tiver */
 P.grafCard=function(avancado,id,title,sm){
-  var lock=avancado&&!P.canGraf();
-  return '<div class="card"><div class="card-hd"><div class="card-title">'+title+(avancado?' <span class="badge b-pro" style="margin-left:6px">PRO</span>':'')+'</div></div>'
-   +'<div class="card-bd"><div class="lockw'+(lock?' locked':'')+'"><div class="chart-box'+(sm?' sm':'')+'"><canvas id="'+id+'"></canvas></div>'
-   +(lock?'<div class="lock-ov"><b>🔒 Gráfico avançado — PRO</b><p>Desbloqueie os gráficos avançados do seu patrimônio.</p>'+P.lockBtn('Desbloquear no PRO','pro')+'</div>':'')
-   +'</div></div></div>';
+  /* todos os gráficos são liberados para todos os planos */
+  return '<div class="card"><div class="card-hd"><div class="card-title">'+title+'</div></div>'
+   +'<div class="card-bd"><div class="chart-box'+(sm?' sm':'')+'"><canvas id="'+id+'"></canvas></div></div></div>';
 };
 /* contagem animada */
 P.countUps=function(){
@@ -318,7 +316,7 @@ P.shell=function(active){
    +'<div class="sb-sec">Inteligência</div>'
    +'<a class="sb-item'+(atlas?' active':'')+'" href="/portfolio/atlas.html"><span class="ico">🔮</span>Atlas <span class="badge" style="background:var(--gold-soft);color:var(--gold,#F5B614);margin-left:auto">'+(P.hasAtlas()?'👑':'🔒')+'</span></a>'
    +'<div class="sb-foot">'
-   +'<div class="sb-plan"><div class="sb-plan-lbl">Plano (demo — simular)</div><select id="planSel">'
+   +'<div class="sb-plan"><div class="sb-plan-lbl">Seu plano</div><select id="planSel">'
    +Object.keys(window.MDF_PLANOS).map(function(p){return '<option value="'+p+'"'+(P.st.cfg.plano===p?' selected':'')+'>'+window.MDF_PLANOS[p].nome+'</option>';}).join('')
    +'</select></div>'
    +'<a class="sb-link" href="#" id="sbSeed">↻ Recarregar dados demo</a>'
@@ -365,6 +363,26 @@ P.boot=function(active,renderFn){
 
 /* ══════════════════ VIEWS (renderizadores por página) ══════════════════ */
 
+/* bloco PRO/PREMIUM (antes do rodapé de cada página) → planos.html */
+P.planosCTA=function(){
+  if(P.st.cfg.plano==='premium')return '';
+  return '<div class="plans-cta">'
+   +'<div class="pc-card pc-pro"><div class="pc-tag">⚡ PRO</div><div class="pc-price">R$ 19,90 <small>/mês</small></div>'
+   +'<p>Carteiras ilimitadas e exportação dos seus dados para o IR.</p>'
+   +'<a href="/planos.html" class="btn btn-p" style="width:100%">Assinar PRO</a></div>'
+   +'<div class="pc-card pc-prem"><div class="pc-pill">👑 Atlas incluso</div><div class="pc-tag" style="color:var(--gold,#F5B614)">PREMIUM</div><div class="pc-price">R$ 49,90 <small>/mês</small></div>'
+   +'<p>Tudo do PRO + Atlas: Oráculo, análises e Diário Inteligente.</p>'
+   +'<a href="/planos.html" class="btn btn-gold" style="width:100%">Ativar Atlas</a></div>'
+   +'</div>';
+};
+
+/* banner do Atlas (chamativo, com Oráculo em destaque) */
+P.atlasBanner=function(ico,titulo,texto){
+  return '<div class="atlas-card"><div class="ico">'+ico+'</div>'
+   +'<div><b>'+titulo+' <span class="crown">Premium</span></b><p>'+texto+'</p></div>'
+   +'<div class="right"><span class="orac-tag">🔮 Oráculo</span>'+P.advBtn()+'</div></div>';
+};
+
 /* ---------- DASHBOARD ---------- */
 P.vDash=function(){
   var e=P.esc,T=P.totais();
@@ -376,7 +394,7 @@ P.vDash=function(){
      +'<a class="up-item" href="/portfolio/defi.html"><span>🌊</span>Pool, swap ou lending</a>'
      +'<a class="up-item" href="/portfolio/trade.html"><span>⚡</span>Operação de trade</a></div>');
   };
-  var html='<div class="atlas-card"><div class="ico">🔮</div><div><b>Atlas — a camada inteligente do seu patrimônio</b><p>Análises, insights e o Oráculo interpretando suas posições. Exclusivo Premium.</p></div><div class="right">'+P.advBtn()+'</div></div>';
+  var html=P.atlasBanner('🔮','Pergunte ao Oráculo sobre o seu patrimônio','O Atlas interpreta suas posições, lucro e evolução e responde em linguagem natural — a camada inteligente do MundoDeFi.');
   html+='<div class="mgrid">'
    +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Patrimônio total</div><div class="mc-val" data-cv="'+T.pat+'">'+P.money(T.pat)+'</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
    +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Lucro total</div><div class="mc-val '+P.cls(T.lucro)+'" data-cv="'+T.lucro+'">'+P.money(T.lucro)+'</div><div class="mc-sub '+P.cls(T.rent)+'">'+P.pct(T.rent)+' de rentabilidade</div></div>'
@@ -403,14 +421,14 @@ P.vDash=function(){
      +'<td class="num mono">'+P.money(x.val)+'</td><td class="num mono '+P.cls(x.lucro)+'">'+P.money(x.lucro)+' <small style="color:var(--mut2)">('+P.pct(pc)+')</small></td></tr>';
   }).join('');
   html+='<div class="card"><div class="card-hd"><div class="card-title">Ativos em HOLD</div><div class="right"><a class="btn btn-g btn-sm" href="/portfolio/hold.html">Gerenciar →</a></div></div><div class="tblw"><table style="min-width:640px"><thead><tr><th>Ativo</th><th class="num">Qtd</th><th class="num">Preço médio</th><th class="num">Preço atual</th><th class="num">Valor</th><th class="num">Lucro</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhum ativo — adicione na página HOLD</div></td></tr>')+'</tbody></table></div></div>';
-  document.getElementById('pg').innerHTML=html;
+  html+=P.planosCTA();document.getElementById('pg').innerHTML=html;
   document.getElementById('btnCart').onclick=function(){
     if(P.st.carteiras.length>=P.limCart())return P.upsell('pro');
     P.modal('Nova carteira','<div class="fg"><label>Nome da carteira</label><input id="fNome" placeholder="Ex: Phantom, Rabby, Ledger…"></div>',{footer:'<button class="btn btn-p" id="okCart">Salvar</button>'});
     document.getElementById('okCart').onclick=function(){var n=P.val('fNome');if(!n)return;P.st.carteiras.push({id:P.uid(),nome:n});P.save();P.render();};
   };
   var r=P.rt(),brl=P.st.cfg.moeda==='brl',pre=brl?'R$ ':'$';
-  if(P.canGraf()){
+  {
     var snaps=P.st.snaps.slice();snaps.push({dt:P.today(),v:T.pat});
     P.mkChart('chEvo',{type:'bar',data:{labels:snaps.map(function(s){var p=s.dt.split('-');return p[1]+'/'+p[0].slice(2);}),datasets:[{data:snaps.map(function(s){return Math.round(s.v*r);}),backgroundColor:'rgba(153,69,255,.55)',borderColor:'#9945FF',borderWidth:1.5,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:Object.assign(P.gTicks(),{callback:function(v){return pre+(v>=1000?(v/1000)+'k':v);}})}}}});
   }
@@ -487,7 +505,7 @@ P.vHold=function(){
   var hrows=txs.slice(0,lim).map(function(x){return '<tr><td class="mono" style="color:var(--mut)">'+P.dBR(x.t.dt)+'</td><td><b>'+e(x.a.tk)+'</b></td><td><span class="badge '+(x.t.t==='c'?'b-open':'b-closed')+'">'+(x.t.t==='c'?'Compra':'Venda')+'</span></td><td class="num mono">'+x.t.q+'</td><td class="num mono">'+P.money(x.t.pr,2)+'</td><td class="num mono">'+P.money(x.t.q*x.t.pr)+'</td></tr>';}).join('');
   if(txs.length>lim)hrows+='<tr class="lockrow"><td colspan="6">🔒 Ver histórico completo — PRO</td></tr>';
   html+='<div class="card"><div class="card-hd"><div class="card-title">Histórico de transações</div></div><div class="tblw"><table style="min-width:620px"><thead><tr><th>Data</th><th>Ativo</th><th>Tipo</th><th class="num">Qtd</th><th class="num">Preço</th><th class="num">Total</th></tr></thead><tbody>'+(hrows||'<tr><td colspan="6"><div class="empty">Sem transações</div></td></tr>')+'</tbody></table></div></div>';
-  document.getElementById('pg').innerHTML=html;
+  html+=P.planosCTA();document.getElementById('pg').innerHTML=html;
   document.querySelectorAll('[data-tx]').forEach(function(b){b.onclick=function(){P.hFormTx({aid:b.dataset.tx});};});
   P.exporters={hold:function(){
     var L=[['Ativo','Carteira','Quantidade','Preço médio USD','Preço atual USD','Valor USD','Lucro USD']];
@@ -496,7 +514,7 @@ P.vHold=function(){
   }};
   var r=P.rt();
   P.mkChart('chHA',{type:'doughnut',data:{labels:aL,datasets:[{data:aD.map(function(v){return v*r;}),backgroundColor:['#F5B614','#9945FF','#00E5FF','#14F195','#FF4D6A','#9fd8ff'],borderColor:'#0C101C',borderWidth:3}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'right',labels:{color:'#8B93A7',font:{family:'Space Mono',size:11},boxWidth:11,boxHeight:11}},tooltip:{callbacks:{label:P.moneyCb()}}}}});
-  if(P.canGraf())P.mkChart('chHL',{type:'bar',data:{labels:lL,datasets:[{data:lD.map(function(v){return Math.round(v*r);}),backgroundColor:lD.map(function(v){return v>=0?'rgba(20,241,149,.65)':'rgba(255,77,106,.65)';}),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:P.gTicks()}}}});
+  P.mkChart('chHL',{type:'bar',data:{labels:lL,datasets:[{data:lD.map(function(v){return Math.round(v*r);}),backgroundColor:lD.map(function(v){return v>=0?'rgba(20,241,149,.65)':'rgba(255,77,106,.65)';}),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:P.gTicks()}}}});
   P.countUps();
 };
 
@@ -526,7 +544,7 @@ P.vTrade=function(){
   document.getElementById('pgTitle').textContent='Trade';
   document.getElementById('pgSub').textContent='Suas operações, gestão de banca e métricas de desempenho';
   document.getElementById('btnAdd').onclick=P.tFormOp;
-  var html='<div class="atlas-card"><div class="ico">📓</div><div><b>Diário Inteligente</b><p>O Atlas lê suas anotações e resultados e devolve padrões, erros recorrentes e acertos. Exclusivo Premium.</p></div><div class="right">'+P.advBtn()+'</div></div>';
+  var html=P.atlasBanner('📓','Oráculo + Diário Inteligente','O Atlas lê suas operações e anotações e revela padrões, erros recorrentes e acertos — pergunte e entenda seu trade.');
   html+='<div class="mgrid">'
    +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Banca atual</div><div class="mc-val" data-cv="'+b.atu+'">'+P.money(b.atu)+'</div><div class="mc-sub">inicial: '+P.money(b.ini)+' <span class="'+P.cls(ev)+'">('+P.pct(ev)+')</span></div></div>'
    +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Resultado total</div><div class="mc-val '+P.cls(s.res)+'" data-cv="'+s.res+'">'+P.money(s.res)+'</div></div>'
@@ -538,13 +556,13 @@ P.vTrade=function(){
   var rows=ops.slice(0,lim).map(function(o){return '<tr><td class="mono" style="color:var(--mut)">'+P.dBR(o.dt)+'</td><td><b>'+e(o.ativo)+'</b></td><td><span class="badge '+(o.dir==='L'?'b-open':'b-closed')+'">'+(o.dir==='L'?'Long':'Short')+'</span></td><td class="num mono">'+(o.alav||1)+'x</td><td class="num"><span class="res-pill '+(o.res>=0?'res-up':'res-dn')+'">'+P.money(o.res)+'</span></td><td style="color:var(--mut);font-size:12px;max-width:280px">'+e(o.txt||'—')+'</td></tr>';}).join('');
   if(ops.length>lim)rows+='<tr class="lockrow"><td colspan="6">🔒 Ver histórico completo — PRO</td></tr>';
   html+='<div class="card"><div class="card-hd"><div class="card-title">Operações</div><div class="right">'+P.exportBtn('trade')+'</div></div><div class="tblw"><table style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'+(rows||'<tr><td colspan="6"><div class="empty">Nenhuma operação — registre em <b>+ Adicionar</b>.</div></td></tr>')+'</tbody></table></div></div>';
-  document.getElementById('pg').innerHTML=html;
+  html+=P.planosCTA();document.getElementById('pg').innerHTML=html;
   document.getElementById('btnBanca').onclick=P.tFormBanca;
   P.exporters={trade:function(){var L=[['Data','Ativo','Direção','Alavancagem','Resultado USD','Anotação']];P.st.trade.ops.forEach(function(o){L.push([o.dt,o.ativo,o.dir==='L'?'Long':'Short',o.alav||1,(o.res||0).toFixed(2),o.txt||'']);});P.exportCSV('mundodefi-trade',L);}};
   var r=P.rt();
   var asc=P.st.trade.ops.slice().sort(function(a,c){return String(a.dt||'').localeCompare(String(c.dt||''));});
   var acc=Number(b.ini)||0,curve=[{l:'início',v:acc}];asc.forEach(function(o,i){acc+=Number(o.res)||0;curve.push({l:'#'+(i+1),v:acc});});
-  if(P.canGraf())P.mkChart('chTC',{type:'line',data:{labels:curve.map(function(c){return c.l;}),datasets:[{data:curve.map(function(c){return Math.round(c.v*r);}),borderColor:'#00E5FF',borderWidth:2.2,pointRadius:3,pointBackgroundColor:'#00E5FF',fill:true,backgroundColor:'rgba(0,229,255,.08)',tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:P.gTicks()}}}});
+  P.mkChart('chTC',{type:'line',data:{labels:curve.map(function(c){return c.l;}),datasets:[{data:curve.map(function(c){return Math.round(c.v*r);}),borderColor:'#00E5FF',borderWidth:2.2,pointRadius:3,pointBackgroundColor:'#00E5FF',fill:true,backgroundColor:'rgba(0,229,255,.08)',tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:P.gTicks()}}}});
   P.mkChart('chTO',{type:'bar',data:{labels:asc.map(function(o,i){return '#'+(i+1)+' '+o.ativo;}),datasets:[{data:asc.map(function(o){return Math.round((Number(o.res)||0)*r);}),backgroundColor:asc.map(function(o){return o.res>=0?'rgba(20,241,149,.65)':'rgba(255,77,106,.65)';}),borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:P.moneyCb()}}},scales:{x:{grid:{display:false},ticks:P.gTicks()},y:{grid:P.gGrid(),ticks:P.gTicks()}}}});
   P.countUps();
 };
@@ -638,7 +656,8 @@ P.vDefi=function(){
   document.getElementById('btnAdd').onclick=function(){if(P.dTab==='swaps')return P.dFormSwap();if(P.dTab==='lend')return P.dFormLend();P.dFormPool();};
   var pools=P.st.defi.pools.filter(P.filtCart),abertas=pools.filter(function(p){return p.st==='a';});
   var valor=abertas.reduce(function(s,p){return s+(Number(p.cur.usd)||0);},0),tax=pools.reduce(function(s,p){return s+P.poolSum(p,'tax');},0),lucro=pools.reduce(function(s,p){return s+P.poolLucro(p);},0);
-  var html='<div class="mgrid">'
+  var html=P.atlasBanner('🌊','Oráculo de Liquidez','O Atlas interpreta suas pools, taxas coletadas e rebalanceamentos — pergunte sobre suas estratégias de liquidez.');
+  html+='<div class="mgrid">'
    +'<div class="mc"><div class="mc-accent" style="background:var(--green,#14F195)"></div><div class="mc-lbl">Valor em pools</div><div class="mc-val" data-cv="'+valor+'">'+P.money(valor)+'</div></div>'
    +'<div class="mc"><div class="mc-accent" style="background:var(--cyan,#00E5FF)"></div><div class="mc-lbl">Taxas coletadas</div><div class="mc-val" style="color:var(--cyan,#00E5FF)" data-cv="'+tax+'">'+P.money(tax)+'</div></div>'
    +'<div class="mc"><div class="mc-accent" style="background:var(--purple,#9945FF)"></div><div class="mc-lbl">Lucro DeFi total</div><div class="mc-val '+P.cls(lucro)+'" data-cv="'+lucro+'">'+P.money(lucro)+'</div></div>'
@@ -665,11 +684,11 @@ P.vDefi=function(){
     var rowsL=ld.map(function(l){return '<tr><td><b>'+e(l.plat)+'</b></td><td><span class="tag">'+e(l.chain)+'</span></td><td><span class="badge '+(l.tipo==='s'?'b-open':'b-closed')+'">'+(l.tipo==='s'?'Supply':'Borrow')+'</span></td><td class="mono">'+e(l.q)+' '+e(l.tk)+'</td><td class="num mono">'+P.money(l.usd)+'</td><td class="num mono" style="color:var(--green,#14F195)">'+(l.apy?l.apy.toFixed(1)+'%':'—')+'</td></tr>';}).join('');
     html+='<div class="card"><div class="tblw"><table style="min-width:620px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Posição</th><th class="num">Valor</th><th class="num">APY</th></tr></thead><tbody>'+(rowsL||'<tr><td colspan="6"><div class="empty">Nenhuma posição</div></td></tr>')+'</tbody></table></div></div>';
   }
-  document.getElementById('pg').innerHTML=html;
+  html+=P.planosCTA();document.getElementById('pg').innerHTML=html;
   document.querySelectorAll('.tab').forEach(function(b){b.onclick=function(){P.dTab=b.dataset.t;P.render();};});
   document.querySelectorAll('[data-p]').forEach(function(el){el.onclick=function(){P.dDetalhe(el.dataset.p);};});
   P.exporters={defi:function(){var L=[['Par','Plataforma','Chain','Status','Abertura','Encerramento','Depositado USD','Retirado USD','Taxas USD','Resultado USD']];P.st.defi.pools.filter(P.filtCart).forEach(function(p){L.push([p.par,p.proto,p.chain,p.st==='a'?'Aberta':'Encerrada',p.ab,p.en||'',P.poolSum(p,'dep').toFixed(2),P.poolSum(p,'ret').toFixed(2),P.poolSum(p,'tax').toFixed(2),P.poolLucro(p).toFixed(2)]);});P.exportCSV('mundodefi-defi',L);}};
-  if(P.dTab==='pools'&&P.canGraf()){
+  if(P.dTab==='pools'){
     var r=P.rt(),mm={},labs=[];
     for(var i=5;i>=0;i--){var d=new Date();d.setMonth(d.getMonth()-i);var k=d.toISOString().slice(0,7);mm[k]=0;labs.push(k);}
     pools.forEach(function(p){p.tax.forEach(function(t){var k=String(t.dt||'').slice(0,7);if(k in mm)mm[k]+=Number(t.usd)||0;});});

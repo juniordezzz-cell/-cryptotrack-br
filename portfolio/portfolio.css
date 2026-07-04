@@ -279,3 +279,54 @@ body.atlas .top h1::after{background:var(--gold,#F5B614);box-shadow:0 0 14px rgb
 .adv-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:10px;border:1px solid rgba(245,182,20,.4);background:var(--gold-soft);color:var(--gold,#F5B614);font-size:12.5px;font-weight:700;transition:all .14s}
 .adv-btn:hover{filter:brightness(1.1);border-style:solid}
 @media(max-width:960px){.ins-grid{grid-template-columns:1fr}}
+
+/* ═══════════════ REFORMA VISUAL v3 (menos quadrado, mais premium) ═══════════════ */
+/* cantos mais arredondados em tudo */
+:root{--r:10px;--rl:18px;--rxl:24px}
+.mc,.card,.pool-card{border-radius:20px;border-color:rgba(255,255,255,.05)}
+.card-hd{border-bottom-color:rgba(255,255,255,.05)}
+
+/* separação por TOM, não por linha (bordas quase invisíveis, fundo dá o contraste) */
+.mc{background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.015));box-shadow:0 2px 20px rgba(0,0,0,.25)}
+.card{background:linear-gradient(170deg,rgba(255,255,255,.032),rgba(255,255,255,.012));box-shadow:0 4px 26px rgba(0,0,0,.22)}
+.mc-accent{height:0} /* remove a barrinha reta no topo do card — era o que "quadrava" */
+.mc{padding-top:1.15rem}
+
+/* gradiente de fundo tipo Project 0 — cor sobe do rodapé, mais forte no meio-baixo */
+body::after{content:'';position:fixed;left:0;right:0;bottom:0;height:52vh;pointer-events:none;z-index:0;
+ background:linear-gradient(180deg,transparent,rgba(153,69,255,.05) 46%,rgba(0,229,255,.045) 72%,rgba(153,69,255,.10));
+ -webkit-mask:linear-gradient(180deg,transparent,#000 60%);mask:linear-gradient(180deg,transparent,#000 60%)}
+body.atlas::after{background:linear-gradient(180deg,transparent,rgba(245,182,20,.05) 46%,rgba(153,69,255,.05) 72%,rgba(245,182,20,.10))}
+
+/* topo com números-chave respirando */
+.top h1{font-size:1.6rem}
+.mc-val{font-size:1.5rem;font-weight:600;letter-spacing:-.02em}
+.mc-lbl{letter-spacing:.13em}
+
+/* seletor de plano — fonte do site (Space Grotesk), mais bonito */
+.sb-plan{background:linear-gradient(150deg,rgba(153,69,255,.10),rgba(255,255,255,.02));border-color:rgba(153,69,255,.2);border-radius:14px}
+.sb-plan-lbl{font-family:var(--font);font-weight:700;letter-spacing:.04em;text-transform:none;font-size:11px;color:var(--mut)}
+.sb-plan select{font-family:var(--font);font-weight:600;font-size:13.5px;border-radius:9px;cursor:pointer}
+
+/* tag do Oráculo no banner do Atlas */
+.orac-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:6px 12px;border-radius:99px;background:linear-gradient(120deg,rgba(153,69,255,.18),rgba(0,229,255,.12));border:1px solid rgba(153,69,255,.3);color:#c9b6ff;white-space:nowrap}
+.atlas-card{border-radius:20px}
+.atlas-card b .crown{margin-left:6px}
+
+/* bloco PRO/PREMIUM antes do rodapé */
+.plans-cta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1.8rem;padding-top:1.6rem;border-top:1px solid rgba(255,255,255,.05)}
+.pc-card{position:relative;border-radius:20px;padding:1.4rem 1.5rem;display:flex;flex-direction:column;gap:.5rem}
+.pc-pro{background:linear-gradient(160deg,rgba(153,69,255,.14),rgba(255,255,255,.015));border:1px solid rgba(153,69,255,.35)}
+.pc-prem{background:linear-gradient(160deg,rgba(245,182,20,.12),rgba(255,255,255,.015));border:1px solid rgba(245,182,20,.4)}
+.pc-tag{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple,#9945FF)}
+.pc-price{font-family:var(--mono);font-size:1.7rem;font-weight:700;letter-spacing:-.02em}
+.pc-price small{font-size:12px;color:var(--mut);font-weight:400}
+.pc-card p{font-size:12.5px;color:var(--mut);line-height:1.55;flex:1;margin-bottom:.3rem}
+.pc-pill{position:absolute;top:-11px;right:16px;background:var(--gold,#F5B614);color:#181203;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:99px}
+.btn-gold{background:linear-gradient(120deg,var(--gold,#F5B614),#e0a30a);color:#181203}
+.btn-gold:hover{filter:brightness(1.08)}
+@media(max-width:640px){.plans-cta{grid-template-columns:1fr}}
+
+/* tira o "quadrado" das tabelas: cantos e hover mais suaves */
+.card .tblw{border-radius:0 0 20px 20px}
+.pool-card{border-radius:18px}
