@@ -330,3 +330,55 @@ body.atlas::after{background:linear-gradient(180deg,transparent,rgba(245,182,20,
 /* tira o "quadrado" das tabelas: cantos e hover mais suaves */
 .card .tblw{border-radius:0 0 20px 20px}
 .pool-card{border-radius:18px}
+
+/* ═══════════════ v4 — AZUL NEON + DOURADO (premium) ═══════════════
+   Comando visual: azul neon (#2E9CFF) + dourado (#F5B614) como cores principais.
+   Verde/vermelho ficam SÓ em ganho/perda (função). Bloco aditivo — não remove nada acima. */
+:root{--azul:#2E9CFF;--azulb:#5FD0FF;--azul-soft:rgba(46,156,255,.12)}
+
+/* fundo: azul em cima, dourado embaixo */
+body::before{background:
+ radial-gradient(760px 480px at 10% -8%,rgba(46,156,255,.13),transparent 64%),
+ radial-gradient(680px 460px at 100% 10%,rgba(95,208,255,.07),transparent 60%),
+ radial-gradient(620px 460px at 84% 104%,rgba(245,182,20,.06),transparent 62%)}
+body::after{background:linear-gradient(180deg,transparent,rgba(46,156,255,.05) 46%,rgba(95,208,255,.045) 72%,rgba(46,156,255,.10));
+ -webkit-mask:linear-gradient(180deg,transparent,#000 60%);mask:linear-gradient(180deg,transparent,#000 60%)}
+
+/* acento por seção → azul manda, dourado no HOLD */
+[data-view="dash"]{--acc:var(--azul)}
+[data-view="hold"]{--acc:var(--gold,#F5B614)}
+[data-view="defi"]{--acc:var(--azul)}
+[data-view="trade"]{--acc:var(--azulb)}
+
+/* logo, seleção, foco → azul */
+.sb-logo-text{background:linear-gradient(120deg,var(--azul),var(--azulb));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+::selection{background:var(--azul);color:#04121f}
+:focus-visible{outline:2px solid var(--azul)}
+
+/* CARDS: topo aceso, luz no canto (na cor da seção), sombra, arredondado */
+.mc,.card,.pool-card{border-radius:20px;border:1px solid rgba(255,255,255,.07);
+ background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.008) 55%,rgba(255,255,255,0)),rgba(14,18,28,.5);
+ box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 16px 34px -20px rgba(0,0,0,.8)}
+.mc-lbl,.mc-val,.mc-sub{position:relative;z-index:1}
+.mc::after{content:'';position:absolute;top:0;left:14px;right:14px;height:1px;pointer-events:none;
+ background:linear-gradient(90deg,transparent,var(--acc,var(--azul)),transparent);opacity:.55}
+.mc::before{content:'';position:absolute;top:-45%;right:-12%;width:170px;height:170px;border-radius:50%;
+ pointer-events:none;filter:blur(8px);opacity:.15;background:radial-gradient(closest-side,var(--acc,var(--azul)),transparent 72%)}
+.card{background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.006) 50%,rgba(255,255,255,0)),rgba(13,17,27,.55);
+ box-shadow:0 1px 0 rgba(255,255,255,.06) inset,0 20px 44px -24px rgba(0,0,0,.82)}
+
+/* hover glows → azul */
+.mc:hover{border-color:rgba(46,156,255,.4);box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 24px rgba(46,156,255,.12);transform:translateY(-2px)}
+.pool-card:hover{border-color:rgba(46,156,255,.45);box-shadow:0 8px 28px rgba(0,0,0,.35),0 0 24px rgba(46,156,255,.12)}
+
+/* botões, tabs, pools, oráculo → azul (dourado nos planos premium fica) */
+.btn-p{background:var(--azul);color:#04121f}
+.btn-g:hover{border-color:var(--azul);color:var(--azul)}
+.tab.on{background:var(--azul-soft);border-color:rgba(46,156,255,.4);color:var(--azulb)}
+.strat-res{background:linear-gradient(120deg,var(--azul-soft),transparent);border-color:rgba(46,156,255,.22)}
+.orac{background:linear-gradient(160deg,rgba(46,156,255,.08),var(--panel));border-color:rgba(46,156,255,.28)}
+.orac-hd .orb2{background:linear-gradient(135deg,var(--azul),var(--azulb))}
+.orac-msg b,.d-item b,.tok-line{color:var(--azulb)}
+.orac-chip:hover,.sb-link:hover{border-color:var(--azul);color:var(--azul)}
+.orac-in input:focus,.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--azul)}
+.pb-p,.b-pro{background:var(--azul-soft);color:var(--azulb)}
