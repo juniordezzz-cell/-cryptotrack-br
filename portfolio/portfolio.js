@@ -275,7 +275,8 @@ P.exportBtn=function(id){
 
 /* ── GRÁFICOS ── */
 var CHARTS={};
-P.mkChart=function(id,cfg){var el=document.getElementById(id);if(!el)return;if(CHARTS[id])CHARTS[id].destroy();CHARTS[id]=new Chart(el,cfg);};
+P._drawn={};
+P.mkChart=function(id,cfg){var el=document.getElementById(id);if(!el)return;if(CHARTS[id])CHARTS[id].destroy();if(P._drawn[id]){cfg.options=cfg.options||{};cfg.options.animation=false;}CHARTS[id]=new Chart(el,cfg);P._drawn[id]=true;};
 P.gTicks=function(){return{color:'#5C6478',font:{family:'Space Mono',size:10}};};
 P.gGrid=function(){return{color:'rgba(255,255,255,.05)'};};
 P.rt=function(){return P.st.cfg.moeda==='brl'?P.rate:1;};
