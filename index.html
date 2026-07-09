@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MundoDeFi — Cotações, DeFi, Pools de Liquidez, Calculadoras e Portfólio Cripto</title>
-<meta name="description" content="Pesquise qualquer criptomoeda e descubra cotação, fundamentos, pools de liquidez, rendimento DeFi e oportunidades. Mais de 8 ferramentas grátis, rankings, estudos e portfólio — em português.">
+<meta name="description" content="Pesquise qualquer criptomoeda e descubra cotação, fundamentos, pools de liquidez, rendimento DeFi e oportunidades. Mais de 8 ferramentas grátis, rankings e portfólio — em português.">
 <link rel="canonical" href="https://mundodefi.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MundoDeFi">
@@ -208,21 +208,6 @@ section{padding:3.2rem 0}
 .rank-val{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap}
 .skel{color:var(--mut2);font-size:12.5px;padding:1rem;text-align:center}
 
-/* ═══ ESTUDOS ═══ */
-.est-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:14px}
-.est-feat{background:linear-gradient(135deg,rgba(245,182,20,.10),var(--panel));border:1px solid rgba(245,182,20,.28);border-radius:var(--rxl);padding:1.8rem;display:flex;flex-direction:column;gap:.7rem;transition:transform .15s}
-.est-feat:hover{transform:translateY(-3px)}
-.est-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold,#F5B614)}
-.est-feat h3{font-size:1.4rem;font-weight:700;letter-spacing:-.02em}
-.est-feat p{color:var(--mut);font-size:13.5px;line-height:1.65;flex:1}
-.est-cta{font-size:12.5px;font-weight:700;color:var(--cyan,#00E5FF)}
-.est-side{display:flex;flex-direction:column;gap:10px}
-.est-item{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);padding:.95rem 1.1rem;display:flex;align-items:center;gap:12px;transition:border-color .15s}
-.est-item:hover{border-color:var(--line2)}
-.est-item .ico{font-size:17px;width:36px;height:36px;border-radius:9px;background:var(--panel2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.est-item b{font-size:13.5px;display:block}
-.est-item span{font-size:11.5px;color:var(--mut)}
-
 /* ═══ PLANOS (padrão do site) ═══ */
 .plans{padding:3.4rem 0 3rem}
 .plans-head{text-align:center;margin-bottom:1.8rem}
@@ -346,24 +331,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
           <div class="mega-col">
             <div class="mega-title">Diagnóstico</div>
             <a href="/ferramentas/imd/" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">🧭</div><div><div class="mega-name">Índice Mundo DeFi<span class="badge b-new">Novo</span></div><div class="mega-desc">Sua nota como investidor cripto em 5 minutos</div></div></a>
-            <a href="/ferramentas.html" class="mega-link"><div class="mega-ico">🧰</div><div><div class="mega-name">Todas as ferramentas</div><div class="mega-desc">Central completa e gratuita</div></div></a>
-          </div>
-        </div>
-      </div>
-      <div class="nav-item">
-        <button class="nav-link" type="button">Estudos <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega">
-          <div class="mega-col">
-            <div class="mega-title">Centro de Estudos</div>
-            <a href="/estudos.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">🎓</div><div><div class="mega-name">Todos os estudos</div><div class="mega-desc">Do iniciante ao avançado</div></div></a>
-            <a href="/estudos/bitcoin.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">₿</div><div><div class="mega-name">Estudo: Bitcoin<span class="badge b-new">Novo</span></div><div class="mega-desc">Análise completa e interativa</div></div></a>
-            <a href="/ferramentas/imd/" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">🧭</div><div><div class="mega-name">Diagnóstico IMD</div><div class="mega-desc">Seu ponto de partida nos estudos</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-title">Trilhas em produção</div>
-            <div class="mega-link mega-soon"><div class="mega-ico">🌊</div><div><div class="mega-name">Estratégias de Liquidez<span class="badge b-soon">Em breve</span></div><div class="mega-desc">Pools, farms e gestão de posições</div></div></div>
-            <div class="mega-link mega-soon"><div class="mega-ico">🛡️</div><div><div class="mega-name">Gestão de Risco<span class="badge b-soon">Em breve</span></div><div class="mega-desc">Proteja seu capital em cripto</div></div></div>
-            <div class="mega-link mega-soon"><div class="mega-ico">🔁</div><div><div class="mega-name">Ciclos de Mercado<span class="badge b-soon">Em breve</span></div><div class="mega-desc">Narrativas, halving e liquidez</div></div></div>
+            <a href="/ferramentas/ferramentas.html" class="mega-link"><div class="mega-ico">🧰</div><div><div class="mega-name">Todas as ferramentas</div><div class="mega-desc">Central completa e gratuita</div></div></a>
           </div>
         </div>
       </div>
@@ -433,7 +401,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
     </div>
     <div class="hero-ctas">
       <a href="/cadastro.html" class="btn btn-green btn-big">Criar portfólio grátis</a>
-      <a href="/ferramentas.html" class="btn btn-ghost btn-big" style="background:rgba(10,14,24,.7)">Ver ferramentas grátis</a>
+      <a href="/ferramentas/ferramentas.html" class="btn btn-ghost btn-big" style="background:rgba(10,14,24,.7)">Ver ferramentas grátis</a>
     </div>
   </div>
   <div class="stats" aria-label="Resumo do mercado">
@@ -452,7 +420,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 <!-- ═══ FAIXA: 8+ FERRAMENTAS + ATLAS AI ═══ -->
 <div class="banner">
   <div class="wrap banner-in">
-    <a href="/ferramentas.html" class="ban-card ban-tools">
+    <a href="/ferramentas/ferramentas.html" class="ban-card ban-tools">
       <div class="ban-num">8+</div>
       <div>
         <h2>ferramentas gratuitas para investidores DeFi</h2>
@@ -474,7 +442,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   <div class="wrap">
     <div class="sec-head">
       <div><div class="sec-eyebrow">100% grátis · o principal ativo do site</div><div class="sec-title">Ferramentas para decidir melhor</div></div>
-      <a href="/ferramentas.html" class="sec-link">Ver todas →</a>
+      <a href="/ferramentas/ferramentas.html" class="sec-link">Ver todas →</a>
     </div>
     <div class="tools-grid">
 
@@ -717,30 +685,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   </div>
 </section>
 
-<!-- ═══ ESTUDOS ═══ -->
-<section id="estudos">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><div class="sec-eyebrow">Centro de Estudos</div><div class="sec-title">Aprenda antes de investir</div></div>
-      <a href="/estudos.html" class="sec-link">Ver todos os estudos →</a>
-    </div>
-    <div class="est-grid">
-      <a href="/estudos/bitcoin.html" class="est-feat">
-        <div class="est-tag">Estudo em destaque</div>
-        <h3>₿ Bitcoin: o estudo completo</h3>
-        <p>Fundamentos, métricas on-chain, comparativo com outros ativos, calculadora de retorno interativa e cenários condicionais — tudo em uma página, em português.</p>
-        <div class="est-cta">Ler o estudo →</div>
-      </a>
-      <div class="est-side">
-        <a href="/ferramentas/imd/" class="est-item"><div class="ico">🧭</div><div><b>Não sabe por onde começar?</b><span>Faça o Diagnóstico IMD e receba sua trilha</span></div></a>
-        <a href="/estudos.html" class="est-item"><div class="ico">🌱</div><div><b>Iniciante</b><span>Primeiros passos no mundo cripto</span></div></a>
-        <a href="/estudos.html" class="est-item"><div class="ico">🌊</div><div><b>DeFi &amp; Pools de Liquidez</b><span>Renda em dólar com finanças descentralizadas</span></div></a>
-        <a href="/estudos.html" class="est-item"><div class="ico">🛡️</div><div><b>Gestão de Risco</b><span>Proteja seu capital antes de buscar retorno</span></div></a>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ═══ PLANOS (padrão do site) ═══ -->
 <section class="plans" id="pro">
   <div class="wrap">
@@ -751,16 +695,16 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
     <div class="plans-grid">
       <div class="plan plan-pro">
         <div class="plan-tag">⚡ PRO</div>
-        <div class="plan-price">R$ 9,90 <small>/mês</small></div>
+        <div class="plan-price">R$ 19,90 <small>/mês</small></div>
         <p>Portfólio completo e ilimitado: HOLD, DeFi e Trade com export para o IR.</p>
         <a href="/planos.html" class="btn btn-purple">Assinar PRO</a>
       </div>
       <div class="plan plan-prem">
         <div class="plan-pill">🍩 Mentoria Individual</div>
         <div class="plan-tag">PREMIUM</div>
-        <div class="plan-price">R$ 29,90 <small>/mês</small></div>
+        <div class="plan-price">R$ 49,90 <small>/mês</small></div>
         <p>Tudo do PRO + estratégias avançadas + 1 encontro individual por mês — vagas limitadas.</p>
-        <a href="/planos.html" class="btn btn-gold">Garantir minha vaga</a>
+        <span class="btn btn-gold" style="opacity:.55;cursor:default;pointer-events:none">Em breve</span>
       </div>
     </div>
     <div class="plans-foot">Cancele quando quiser · garantia de 7 dias · <a href="/cadastro.html">ou crie sua conta gratuita →</a></div>
@@ -778,8 +722,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       <div class="foot-col">
         <div class="foot-title">Plataforma</div>
         <a href="/portfolio/index.html">Portfólio</a>
-        <a href="/ferramentas.html">Ferramentas</a>
-        <a href="/estudos.html">Estudos</a>
+        <a href="/ferramentas/ferramentas.html">Ferramentas</a>
         <a href="/planos.html">Planos</a>
       </div>
       <div class="foot-col">
@@ -793,7 +736,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       <div class="foot-col">
         <div class="foot-title">Comece aqui</div>
         <a href="/ferramentas/imd/">Diagnóstico IMD</a>
-        <a href="/estudos/bitcoin.html">Estudo: Bitcoin</a>
         <a href="/cadastro.html">Criar conta grátis</a>
       </div>
     </div>

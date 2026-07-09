@@ -416,8 +416,8 @@
     // catálogo: pilar -> ferramentas sugeridas (rótulo + link relativo ao site)
     var CATALOGO = {
       seguranca: [
-        { ico: "🔐", nome: "Guia de Carteiras & Seed", url: "/estudos" },
-        { ico: "🛡", nome: "Checklist de Segurança", url: "/estudos" }
+        { ico: "🧰", nome: "Central de Ferramentas", url: "/ferramentas/ferramentas.html" },
+        { ico: "💼", nome: "Portfólio MundoDeFi", url: "/portfolio/" }
       ],
       fundamentos: [
         { ico: "📈", nome: "Calculadora de Juros Compostos", url: "/ferramentas/juros-compostos" },

@@ -31,8 +31,7 @@
     links: {
       inicio:      '/index.html',
       ferramentas: '/ferramentas/ferramentas.html',
-      portfolio:   '/portfolio/dashboard.html',
-      estudos:     '/estudos.html',
+      portfolio:   '/portfolio/',
       planos:      '/planos.html',
       cadastro:    '/cadastro.html',
     },
@@ -40,14 +39,14 @@
     // Menu do cabeçalho (ordem = ordem que aparece)
     menu: [
       { texto: 'Ferramentas', link: '/ferramentas/ferramentas.html' },
-      { texto: 'Portfólio',   link: '/portfolio/dashboard.html' },
+      { texto: 'Portfólio',   link: '/portfolio/' },
     ],
     botaoPro: { texto: '👑 PRO', link: '/planos.html' },
 
     // Bloco PRO (roxo)
     pro: {
       tag:   '⚡ PRO',
-      preco: 'R$ 9,90',
+      preco: 'R$ 19,90',
       ciclo: '/mês',
       desc:  'Portfólio completo e ilimitado: HOLD, DeFi e Trade com export para o IR.',
       cta:   'Assinar PRO',
@@ -58,10 +57,10 @@
     premium: {
       badge: 'Mentoria individual',
       tag:   'PREMIUM',
-      preco: 'R$ 29,90',
+      preco: 'R$ 49,90',
       ciclo: '/mês',
       desc:  'Tudo do PRO + estratégias avançadas + 1 encontro individual por mês — vagas limitadas.',
-      cta:   'Garantir minha vaga',
+      cta:   'Em breve',
       link:  '/planos.html',
     },
 
@@ -84,8 +83,7 @@
         { preview: 'juros',      emoji: '📈', cor: '#14f195', nome: 'Juros Compostos',      desc: 'Simule o crescimento do patrimônio com aportes mensais.',      badge: 'Grátis',  link: '/ferramentas/juros-compostos.html' },
         { preview: 'lucro',      emoji: '🪙', cor: '#4d9fff', nome: 'Lucro Cripto',         desc: 'Calcule o lucro real com preço de entrada, saída, taxas e IR.', badge: 'Grátis',  link: '/ferramentas/lucro-cripto.html' },
         { preview: 'conversao',  emoji: '💱', cor: '#00e5ff', nome: 'Conversão',            desc: 'Converta entre cripto, Real, Dólar e Euro com cotação ao vivo.', badge: 'Grátis', link: '/ferramentas/conversor.html' },
-        { preview: 'estudos',    emoji: '📚', cor: '#f5b614', nome: 'Estudos',              desc: 'Guias e glossário para dominar DeFi do zero.',                 badge: 'Premium', link: '/estudos.html' },
-        { preview: 'portfolio',  emoji: '💼', cor: '#9945ff', nome: 'Portfólio',            desc: 'Acompanhe HOLD, DeFi e Trade num painel só.',                  badge: 'Grátis',  link: '/portfolio/dashboard.html' },
+        { preview: 'portfolio',  emoji: '💼', cor: '#9945ff', nome: 'Portfólio',            desc: 'Acompanhe HOLD, DeFi e Trade num painel só.',                  badge: 'Grátis',  link: '/portfolio/' },
       ],
     },
 
@@ -94,7 +92,6 @@
       links: [
         { texto: 'Início',      link: '/index.html' },
         { texto: 'Ferramentas', link: '/ferramentas/ferramentas.html' },
-        { texto: 'Estudos',     link: '/estudos.html' },
         { texto: 'Planos',      link: '/planos.html' },
       ],
       nota: 'Conteúdo educacional — não é recomendação de investimento',
@@ -115,8 +112,6 @@
       '<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="120" fill="#07080d"/><defs><linearGradient id="mdfJg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#14f195" stop-opacity=".3"/><stop offset="100%" stop-color="#14f195" stop-opacity="0"/></linearGradient></defs><path d="M16 100 L60 92 L100 78 L140 58 L180 38 L224 18 L224 104 L16 104 Z" fill="url(#mdfJg)"/><path d="M16 100 L60 92 L100 78 L140 58 L180 38 L224 18" fill="none" stroke="#14f195" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="224" cy="18" r="4" fill="#14f195"/><rect x="150" y="12" width="76" height="22" rx="4" fill="#13141f" stroke="#14f195" stroke-width=".7"/><text x="188" y="22" text-anchor="middle" fill="#14f195" font-size="8" font-family="JetBrains Mono,monospace" font-weight="700">R$ 98.420</text><text x="188" y="30" text-anchor="middle" fill="#888aa8" font-size="6" font-family="sans-serif">em 24 meses</text></svg>',
     comparador:
       '<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="120" fill="#07080d"/><text x="16" y="22" fill="#cfcfe0" font-size="8.5" font-family="sans-serif" font-weight="600">Bitcoin vs Ouro</text><path d="M16 90 L60 80 L100 62 L140 68 L180 42 L224 28" fill="none" stroke="#00e5ff" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><path d="M16 92 L60 90 L100 86 L140 88 L180 82 L224 78" fill="none" stroke="#f0a500" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/><circle cx="224" cy="28" r="3.5" fill="#00e5ff"/><circle cx="224" cy="78" r="3.5" fill="#f0a500"/><rect x="150" y="14" width="74" height="16" rx="4" fill="rgba(0,229,255,.12)" stroke="#00e5ff" stroke-width=".7"/><text x="187" y="25" text-anchor="middle" fill="#00e5ff" font-size="7.5" font-family="JetBrains Mono,monospace" font-weight="700">BTC +212%</text><g font-family="sans-serif" font-size="7"><circle cx="20" cy="106" r="3" fill="#00e5ff"/><text x="27" y="109" fill="#888aa8">BTC</text><circle cx="64" cy="106" r="3" fill="#f0a500"/><text x="71" y="109" fill="#888aa8">Ouro</text></g></svg>',
-    estudos:
-      '<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="120" fill="#07080d"/><text x="16" y="20" fill="#f5b614" font-size="8.5" font-family="sans-serif" font-weight="700">Centro de Estudos</text><g><rect x="16" y="28" width="208" height="24" rx="4" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".7"/><circle cx="28" cy="40" r="4" fill="#9945ff"/><rect x="40" y="35" width="116" height="3.6" rx="1.8" fill="#3a3c50"/><rect x="40" y="43" width="78" height="3" rx="1.5" fill="#26262e"/><rect x="184" y="34" width="32" height="11" rx="3" fill="rgba(245,182,20,.14)"/><text x="200" y="42" text-anchor="middle" fill="#f5b614" font-size="6" font-family="sans-serif" font-weight="600">DeFi</text></g><g><rect x="16" y="56" width="208" height="24" rx="4" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".7"/><circle cx="28" cy="68" r="4" fill="#00e5ff"/><rect x="40" y="63" width="100" height="3.6" rx="1.8" fill="#3a3c50"/><rect x="40" y="71" width="70" height="3" rx="1.5" fill="#26262e"/><rect x="178" y="62" width="38" height="11" rx="3" fill="rgba(0,229,255,.12)"/><text x="197" y="70" text-anchor="middle" fill="#00e5ff" font-size="6" font-family="sans-serif" font-weight="600">Trading</text></g><g><rect x="16" y="84" width="208" height="24" rx="4" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".7"/><circle cx="28" cy="96" r="4" fill="#14f195"/><rect x="40" y="91" width="120" height="3.6" rx="1.8" fill="#3a3c50"/><rect x="40" y="99" width="84" height="3" rx="1.5" fill="#26262e"/><rect x="176" y="90" width="40" height="11" rx="3" fill="rgba(20,241,149,.14)"/><text x="196" y="98" text-anchor="middle" fill="#14f195" font-size="6" font-family="sans-serif" font-weight="600">Glossário</text></g></svg>',
     lucro:
       '<svg viewBox="0 0 240 120" xmlns="http://www.w3.org/2000/svg"><rect width="240" height="120" fill="#07080d"/><rect x="14" y="14" width="212" height="92" rx="5" fill="#0d0e16" stroke="#1e1f2e" stroke-width=".8"/><line x1="14" y1="36" x2="226" y2="36" stroke="#1e1f2e" stroke-width=".7"/><text x="22" y="28" fill="#888aa8" font-size="7.5" font-family="sans-serif" font-weight="600">Lucro Cripto — BTC</text><rect x="30" y="56" width="26" height="38" rx="3" fill="#4d9fff" opacity=".75"/><text x="43" y="52" text-anchor="middle" fill="#4d9fff" font-size="6.5" font-family="JetBrains Mono,monospace">$9.500</text><rect x="72" y="44" width="26" height="50" rx="3" fill="#14f195" opacity=".75"/><text x="85" y="40" text-anchor="middle" fill="#14f195" font-size="6.5" font-family="JetBrains Mono,monospace">$14.200</text><rect x="114" y="82" width="26" height="12" rx="3" fill="#ff5470" opacity=".7"/><text x="127" y="78" text-anchor="middle" fill="#ff5470" font-size="6.5" font-family="sans-serif">Taxas</text><rect x="156" y="62" width="26" height="32" rx="3" fill="#14f195"/><text x="169" y="58" text-anchor="middle" fill="#14f195" font-size="6.5" font-family="JetBrains Mono,monospace">+$4.700</text><text x="43" y="102" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="sans-serif">Invest.</text><text x="85" y="102" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="sans-serif">Saída</text><text x="127" y="102" text-anchor="middle" fill="#4a4c60" font-size="6" font-family="sans-serif">Taxas</text><text x="169" y="102" text-anchor="middle" fill="#14f195" font-size="6" font-family="sans-serif">Lucro</text><rect x="180" y="18" width="42" height="14" rx="3" fill="rgba(20,241,149,.12)" stroke="rgba(20,241,149,.3)" stroke-width=".7"/><text x="201" y="28" text-anchor="middle" fill="#14f195" font-size="7.5" font-family="JetBrains Mono,monospace" font-weight="700">+49.5%</text></svg>',
     conversao:
