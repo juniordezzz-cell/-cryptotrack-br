@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro | Relatórios</title>
+  <link rel="icon" href="../assets/logo/logo.svg">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/tables.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/planner.css">
+  <link rel="stylesheet" href="../css/nexus.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="relatorios">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
+      <nav class="sidebar-nav" aria-label="Menu principal">
+        <a class="nav-link" href="../index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
+        <a class="nav-link" href="entradas.html" data-nav="entradas"><span class="nav-icon entradas"></span><span>Entradas</span></a>
+        <a class="nav-link" href="despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
+        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
+        <a class="nav-link" href="investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
+        <a class="nav-link" href="relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="nav-link" href="configuracoes.html" data-nav="configuracoes"><span class="nav-icon configuracoes"></span><span>Configurações</span></a>
+        <a class="nav-link" href="#"><span class="nav-icon sair"></span><span>Sair</span></a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Abrir menu">☰</button>
+        <div class="topbar-title">
+          <h1>Relatórios</h1>
+          <p>Mensal, trimestral, anual, comparativos e exportação</p>
+        </div>
+        <div class="topbar-actions">
+          <button id="exportPdf" class="button" type="button"><span>▥</span> Exportar PDF</button>
+          <button id="exportExcel" class="button primary" type="button"><span>↓</span> Exportar Excel</button>
+        </div>
+      </header>
+
+      <section class="card pad">
+        <div class="chart-head">
+          <h2 class="section-title">Comparativo</h2>
+          <div class="segmented" aria-label="Tipo de relatório">
+            <button class="is-active" type="button" data-report-view="mensal">Mensal</button>
+            <button type="button" data-report-view="trimestral">Trimestral</button>
+            <button type="button" data-report-view="anual">Anual</button>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="relatoriosComparativoChart" aria-label="Gráfico comparativo de receitas e despesas"></canvas>
+        </div>
+      </section>
+
+      <section class="card table-card">
+        <div class="table-actions">
+          <h2 class="section-title">Tabela comparativa</h2>
+          <span class="status-pill">Receitas x despesas</span>
+        </div>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Período</th><th>Receitas</th><th>Despesas</th><th>Saldo</th><th>Status</th></tr></thead>
+            <tbody id="relatoriosTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/charts.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/relatorios.js"></script>
+  <script src="../js/nexus-intents.js"></script>
+  <script src="../js/nexus-config.js"></script>
+  <script src="../js/nexus.js"></script>
+</body>
+</html>

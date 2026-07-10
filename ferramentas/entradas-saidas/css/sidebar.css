@@ -1,0 +1,116 @@
+.sidebar {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 0 22px;
+  border-right: 1px solid var(--line);
+  background:
+    linear-gradient(180deg, rgba(10, 14, 15, 0.96), rgba(5, 7, 8, 0.98)),
+    radial-gradient(circle at 50% 110%, rgba(98, 255, 77, 0.08), transparent 13rem);
+}
+
+body.light-theme .sidebar {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(237, 243, 241, 0.98)),
+    radial-gradient(circle at 50% 110%, rgba(98, 255, 77, 0.12), transparent 13rem);
+}
+
+.brand {
+  display: flex;
+  justify-content: center;
+  padding: 0 18px 20px;
+}
+
+.brand img {
+  width: 64px;
+  height: 64px;
+  filter: drop-shadow(0 0 18px rgba(98, 255, 77, 0.18));
+}
+
+.sidebar-nav,
+.sidebar-footer {
+  display: grid;
+  gap: 8px;
+}
+
+.sidebar-nav {
+  margin-top: 8px;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+}
+
+.nav-link {
+  min-height: 48px;
+  font-size: 0.92rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px 0 22px;
+  color: var(--muted);
+  border-left: 3px solid transparent;
+  transition: color 160ms ease, background 160ms ease, border-color 160ms ease, padding-left 160ms ease;
+}
+
+.nav-link:hover,
+.nav-link.is-active {
+  color: var(--text);
+  background: linear-gradient(90deg, rgba(98, 255, 77, 0.18), rgba(98, 255, 77, 0.05));
+  border-left-color: var(--green);
+}
+
+.nav-link:hover:not(.is-active) {
+  padding-left: 26px;
+}
+
+.nav-link.is-active .nav-icon,
+.nav-link:hover .nav-icon {
+  color: var(--green);
+}
+
+.nav-icon {
+  width: 20px;
+  min-width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.nav-icon.dashboard::before {
+  content: "▦";
+}
+
+.nav-icon.entradas::before {
+  content: "↗";
+}
+
+.nav-icon.despesas::before {
+  content: "↘";
+}
+
+.nav-icon.comparativo::before {
+  content: "⇄";
+}
+
+.nav-icon.investimentos::before {
+  content: "◔";
+}
+
+.nav-icon.relatorios::before {
+  content: "▤";
+}
+
+.nav-icon.configuracoes::before {
+  content: "⚙";
+}
+
+.nav-icon.sair::before {
+  content: "⇥";
+}

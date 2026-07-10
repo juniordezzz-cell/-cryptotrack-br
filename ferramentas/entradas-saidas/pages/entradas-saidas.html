@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro | Entradas x Saídas</title>
+  <link rel="icon" href="../assets/logo/logo.svg">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/sidebar.css">
+  <link rel="stylesheet" href="../css/cards.css">
+  <link rel="stylesheet" href="../css/dashboard.css">
+  <link rel="stylesheet" href="../css/tables.css">
+  <link rel="stylesheet" href="../css/forms.css">
+  <link rel="stylesheet" href="../css/planner.css">
+  <link rel="stylesheet" href="../css/nexus.css">
+  <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="comparativo">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
+      <nav class="sidebar-nav" aria-label="Menu principal">
+        <a class="nav-link" href="../index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
+        <a class="nav-link" href="entradas.html" data-nav="entradas"><span class="nav-icon entradas"></span><span>Entradas</span></a>
+        <a class="nav-link" href="despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
+        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
+        <a class="nav-link" href="investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
+        <a class="nav-link" href="relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a class="nav-link" href="configuracoes.html" data-nav="configuracoes"><span class="nav-icon configuracoes"></span><span>Configurações</span></a>
+        <a class="nav-link" href="#"><span class="nav-icon sair"></span><span>Sair</span></a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Abrir menu">☰</button>
+        <div class="topbar-title">
+          <h1>Entradas x Saídas</h1>
+          <p>Monte seu orçamento mensal: quanto entra, quanto sai e quanto sobra</p>
+        </div>
+        <div class="topbar-actions">
+          <input class="input-control" type="text" id="plannerOwner" placeholder="Seu nome" aria-label="Seu nome" style="max-width: 200px;">
+          <button class="button danger" type="button" id="plannerReset">Limpar tudo</button>
+        </div>
+      </header>
+
+      <section class="stats-grid" aria-label="Resumo do orçamento">
+        <article class="card metric-card positive"><div><p class="metric-label">Total de entradas</p><p class="metric-value success-text" data-planner-entradas>R$ 0,00</p><p class="metric-note">Tudo que entra no mês</p></div><span class="metric-icon">↗</span></article>
+        <article class="card metric-card negative"><div><p class="metric-label">Saídas essenciais</p><p class="metric-value danger-text" data-planner-essenciais>R$ 0,00</p><p class="metric-note">Contas que não dá pra cortar</p></div><span class="metric-icon">!</span></article>
+        <article class="card metric-card negative"><div><p class="metric-label">Saídas não essenciais</p><p class="metric-value danger-text" data-planner-nao-essenciais>R$ 0,00</p><p class="metric-note">Onde dá pra economizar</p></div><span class="metric-icon">✂</span></article>
+        <article class="card metric-card"><div><p class="metric-label">Sobra do mês</p><p class="metric-value" data-planner-sobra>R$ 0,00</p><p class="metric-note">Entradas menos saídas</p></div><span class="metric-icon">▣</span></article>
+      </section>
+
+      <section class="planner-grid">
+        <!-- COLUNA ESQUERDA: SAÍDAS (lista maior) -->
+        <article class="card planner-card expenses">
+          <div class="planner-head">
+            <h2>Saídas do mês<small>Preencha o valor médio de cada gasto</small></h2>
+            <span class="planner-badge red" data-planner-total-saidas>R$ 0,00</span>
+          </div>
+
+          <div class="planner-subhead">
+            <span>Essenciais — moradia, contas e obrigações</span>
+            <strong data-planner-sub-essenciais>R$ 0,00</strong>
+          </div>
+          <div class="planner-rows" data-planner-list="essentials"></div>
+          <div class="planner-add">
+            <button class="button" type="button" data-planner-add="essentials">+ Adicionar gasto essencial</button>
+          </div>
+
+          <div class="planner-subhead">
+            <span>Não essenciais — conforto e lazer</span>
+            <strong data-planner-sub-nao-essenciais>R$ 0,00</strong>
+          </div>
+          <div class="planner-rows" data-planner-list="nonEssentials"></div>
+          <div class="planner-add">
+            <button class="button" type="button" data-planner-add="nonEssentials">+ Adicionar gasto não essencial</button>
+          </div>
+        </article>
+
+        <!-- COLUNA DIREITA: ENTRADAS (lista menor) + RESULTADO -->
+        <div class="planner-side">
+          <article class="card planner-card incomes">
+            <div class="planner-head">
+              <h2>Entradas do mês<small>Salário, benefícios e rendas extras</small></h2>
+              <span class="planner-badge green" data-planner-total-entradas>R$ 0,00</span>
+            </div>
+            <div class="planner-rows" data-planner-list="incomes"></div>
+            <div class="planner-add">
+              <button class="button" type="button" data-planner-add="incomes">+ Adicionar entrada</button>
+            </div>
+          </article>
+
+          <article class="card planner-result">
+            <div class="result-line highlight" data-planner-sobra-box>
+              <p>Se o orçamento estiver certo, todo mês vai sobrar:</p>
+              <strong data-planner-sobra>R$ 0,00</strong>
+            </div>
+            <div class="result-line">
+              <p>Reserva de emergência ideal para o seu padrão de vida:</p>
+              <strong class="success-text" data-planner-reserva>R$ 0,00</strong>
+            </div>
+            <p class="result-note">A reserva ideal cobre 6 meses dos seus gastos essenciais. Com a sobra atual, você levaria <strong data-planner-meses>—</strong> para montar a sua.</p>
+            <div class="commit-track"><span class="commit-fill" data-planner-commit></span></div>
+            <div class="commit-caption">
+              <span>Renda comprometida</span>
+              <span data-planner-commit-pct>0%</span>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/entradas-saidas.js"></script>
+  <script src="../js/nexus-intents.js"></script>
+  <script src="../js/nexus-config.js"></script>
+  <script src="../js/nexus.js"></script>
+</body>
+</html>

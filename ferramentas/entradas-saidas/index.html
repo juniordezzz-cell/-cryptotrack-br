@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle Financeiro | Dashboard</title>
+  <link rel="icon" href="assets/logo/logo.svg">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/sidebar.css">
+  <link rel="stylesheet" href="css/cards.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/planner.css">
+  <link rel="stylesheet" href="css/nexus.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="dashboard">
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="index.html" aria-label="Controle Financeiro">
+        <img src="assets/logo/logo.svg" alt="Controle Financeiro">
+      </a>
+
+      <nav class="sidebar-nav" aria-label="Menu principal">
+        <a class="nav-link" href="index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
+        <a class="nav-link" href="pages/entradas.html" data-nav="entradas"><span class="nav-icon entradas"></span><span>Entradas</span></a>
+        <a class="nav-link" href="pages/despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
+        <a class="nav-link" href="pages/entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
+        <a class="nav-link" href="pages/investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
+        <a class="nav-link" href="pages/relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a class="nav-link" href="pages/configuracoes.html" data-nav="configuracoes"><span class="nav-icon configuracoes"></span><span>Configurações</span></a>
+        <a class="nav-link" href="#"><span class="nav-icon sair"></span><span>Sair</span></a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Abrir menu">☰</button>
+        <div class="topbar-title">
+          <h1>Controle Financeiro</h1>
+          <p>Visão geral das suas finanças</p>
+        </div>
+        <div class="topbar-actions">
+          <input class="date-control" type="date" data-current-date aria-label="Data atual">
+        </div>
+      </header>
+
+      <section class="stats-grid" aria-label="Indicadores principais">
+        <article class="card metric-card positive">
+          <div>
+            <p class="metric-label">Total de entradas</p>
+            <p class="metric-value" data-total-entradas>R$ 0,00</p>
+            <p class="metric-note" data-note-entradas>—</p>
+          </div>
+          <span class="metric-icon">↗</span>
+        </article>
+
+        <article class="card metric-card negative">
+          <div>
+            <p class="metric-label">Total de saídas</p>
+            <p class="metric-value" data-total-despesas>R$ 0,00</p>
+            <p class="metric-note" data-note-despesas>—</p>
+          </div>
+          <span class="metric-icon">↘</span>
+        </article>
+
+        <article class="card metric-card">
+          <div>
+            <p class="metric-label">Saldo do mês</p>
+            <p class="metric-value" data-saldo-mes>R$ 0,00</p>
+            <p class="metric-note" data-note-saldo>—</p>
+          </div>
+          <span class="metric-icon">▣</span>
+        </article>
+
+        <article class="card metric-card positive">
+          <div>
+            <p class="metric-label">Investimentos</p>
+            <p class="metric-value" data-total-investimentos>R$ 0,00</p>
+            <p class="metric-note">0% da carteira</p>
+          </div>
+          <span class="metric-icon">◔</span>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="card pad">
+          <div class="chart-head">
+            <h2 class="section-title">Fluxo financeiro - mês atual</h2>
+            <div class="legend">
+              <span class="legend-item"><span class="dot green"></span>Entradas</span>
+              <span class="legend-item"><span class="dot red"></span>Saídas</span>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas id="cashFlowChart" aria-label="Gráfico de linha do fluxo financeiro"></canvas>
+          </div>
+        </article>
+
+        <article class="card pad">
+          <h2 class="section-title">Distribuição das despesas</h2>
+          <div class="distribution-layout">
+            <div class="canvas-wrap small">
+              <canvas id="expenseDistributionChart" aria-label="Gráfico de pizza das despesas"></canvas>
+            </div>
+            <div class="distribution-list">
+              <div class="distribution-line">
+                <span><span class="dot red"></span> Essenciais <small data-essential-value>R$ 0,00</small></span>
+                <strong data-essential-percent>0%</strong>
+              </div>
+              <div class="distribution-line">
+                <span><span class="dot red"></span> Não essenciais <small data-non-essential-value>R$ 0,00</small></span>
+                <strong data-non-essential-percent>0%</strong>
+              </div>
+              <div class="distribution-line">
+                <span><span class="dot green"></span> Investimentos <small>R$ 0,00</small></span>
+                <strong>0%</strong>
+              </div>
+              <div class="divider"></div>
+              <div class="summary-row">
+                <span>Total de despesas</span>
+                <strong class="danger-text" data-total-expenses>R$ 0,00</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-row">
+        <article class="card pad">
+          <h2 class="section-title">Resumo do mês</h2>
+          <div class="stat-list">
+            <div class="summary-row"><span>Entradas</span><strong class="success-text" data-resumo-entradas>R$ 0,00</strong></div>
+            <div class="summary-row"><span>Despesas</span><strong class="danger-text" data-resumo-despesas>R$ 0,00</strong></div>
+            <div class="summary-row"><span>Investimentos</span><strong class="success-text" data-resumo-investimentos>R$ 0,00</strong></div>
+            <div class="divider"></div>
+            <div class="summary-row"><span>Saldo final</span><strong data-resumo-saldo>R$ 0,00</strong></div>
+          </div>
+        </article>
+
+        <article class="card pad">
+          <h2 class="section-title">Detalhamento de despesas</h2>
+          <div class="progress-list" data-expense-detail></div>
+        </article>
+
+        <article class="card pad">
+          <div class="chart-head">
+            <h2 class="section-title">Evolução do saldo</h2>
+            <select class="select-control" aria-label="Período do saldo">
+              <option>Últimos 6 meses</option>
+              <option>Últimos 12 meses</option>
+            </select>
+          </div>
+          <div class="canvas-wrap small">
+            <canvas id="saldoChart" aria-label="Gráfico de área da evolução do saldo"></canvas>
+          </div>
+        </article>
+      </section>
+
+      <section class="page-grid" style="margin-bottom: 14px;">
+        <article class="card pad">
+          <h2 class="section-title">Desempenho mês a mês</h2>
+          <div class="monthly-performance" data-monthly-performance>
+            <p class="empty-state">Cadastre entradas e despesas para acompanhar sua evolução mensal.</p>
+          </div>
+        </article>
+      </section>
+
+      <section class="dashboard-grid">
+        <article class="card pad">
+          <h2 class="section-title">Últimas movimentações</h2>
+          <div class="transactions-compact" data-last-transactions></div>
+        </article>
+
+        <article class="investment-panel">
+          <h2 class="section-title">Meus investimentos</h2>
+          <div class="investments-strip">
+            <div class="card pad">
+              <div class="canvas-wrap small">
+                <canvas id="investmentChart" aria-label="Gráfico de alocação de investimentos"></canvas>
+              </div>
+            </div>
+            <div class="mini-card card">
+              <p>Total investido</p>
+              <strong class="success-text">R$ 0,00</strong>
+            </div>
+            <div class="mini-card card">
+              <p>Rendimento</p>
+              <strong class="success-text">R$ 0,00</strong>
+            </div>
+            <div class="mini-card card">
+              <p>Rentabilidade</p>
+              <strong class="success-text">0,00%</strong>
+            </div>
+            <div class="mini-card card">
+              <p>Distribuição por classe</p>
+              <strong>Sem alocações</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <script src="js/utils.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/nexus-intents.js"></script>
+  <script src="js/nexus-config.js"></script>
+  <script src="js/nexus.js"></script>
+</body>
+</html>

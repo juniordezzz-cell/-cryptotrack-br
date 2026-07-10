@@ -1,0 +1,27 @@
+{
+  "resumo": {
+    "receitas": 2000,
+    "despesas": 1810,
+    "saldo": 190,
+    "investimentos": 0
+  },
+  "entradas": [
+    { "data": "2026-03-05", "origem": "Salário", "descricao": "Salário mensal", "valor": 1550 },
+    { "data": "2026-03-12", "origem": "Freelance", "descricao": "Projeto de identidade visual", "valor": 350 },
+    { "data": "2026-03-24", "origem": "Outras receitas", "descricao": "Reembolso", "valor": 100 }
+  ],
+  "despesas": [
+    { "data": "2026-03-02", "categoria": "Casa", "tipo": "Essenciais", "descricao": "Aluguel e contas", "valor": 850 },
+    { "data": "2026-03-07", "categoria": "Transporte", "tipo": "Essenciais", "descricao": "Aplicativos e combustível", "valor": 250 },
+    { "data": "2026-03-11", "categoria": "Alimentação", "tipo": "Essenciais", "descricao": "Mercado", "valor": 350 },
+    { "data": "2026-03-14", "categoria": "Saúde", "tipo": "Essenciais", "descricao": "Farmácia", "valor": 100 },
+    { "data": "2026-03-20", "categoria": "Lazer", "tipo": "Não essenciais", "descricao": "Cinema", "valor": 80 },
+    { "data": "2026-03-27", "categoria": "Outros", "tipo": "Não essenciais", "descricao": "Compras diversas", "valor": 180 }
+  ],
+  "investimentos": {
+    "reservaEmergencia": 0,
+    "investido": 0,
+    "caixaDisponivel": 190,
+    "rentabilidade": 0
+  }
+}
