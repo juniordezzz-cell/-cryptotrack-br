@@ -198,6 +198,62 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 .f-copy{font-size:.74rem;color:var(--muted)}
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+
+/* ===== Selo PRO ===== */
+.pro-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(153,69,255,.14);border:1px solid rgba(153,69,255,.4);
+  color:#c9a3ff;font-size:.72rem;font-weight:700;letter-spacing:.04em;
+  padding:4px 10px;border-radius:999px;margin-left:10px;vertical-align:middle;
+}
+
+/* ===== Gráfico ===== */
+.chart-card{margin-top:22px}
+.chart-toolbar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.chart-asset{font-size:.95rem;font-weight:700}
+.chart-asset .live-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--verde);margin-right:6px;box-shadow:0 0 6px var(--verde);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.chart-tf{display:flex;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:3px;gap:3px}
+.chart-tf button{border:none;background:transparent;color:var(--muted);font-family:inherit;font-weight:700;font-size:.76rem;padding:6px 11px;border-radius:6px;cursor:pointer;transition:all .15s}
+.chart-tf button.active{background:rgba(153,69,255,.18);color:var(--roxo)}
+.chart-canvas-wrap{position:relative;width:100%;height:420px;border-radius:10px;overflow:hidden;background:var(--bg2);border:1px solid var(--border)}
+.chart-canvas-wrap canvas{display:block;cursor:grab;touch-action:none}
+.chart-canvas-wrap canvas.dragging{cursor:grabbing}
+.chart-msg{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:.85rem;padding:20px;background:var(--bg2)}
+.chart-legend{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:.78rem;color:var(--muted)}
+.chart-legend span{display:inline-flex;align-items:center;gap:6px}
+.chart-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.chart-legend .dot-entrada{background:var(--ciano)}
+.chart-legend .dot-saida{background:var(--verde)}
+.chart-legend .dot-liq{background:var(--dourado)}
+.chart-hint{font-size:.72rem;color:var(--muted);margin-top:8px}
+
+/* ===== PRO-GATE — vitrine bloqueada + faixa de assinatura ===== */
+.pro-banner{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  background:linear-gradient(135deg,rgba(153,69,255,.14),rgba(153,69,255,.05));
+  border:1px solid rgba(153,69,255,.35);border-radius:12px;
+  padding:12px 18px;margin-bottom:16px;
+}
+.pro-banner-icon{font-size:1.1rem}
+.pro-banner-text{flex:1;min-width:200px;font-size:.86rem;color:var(--text)}
+.pro-banner-text strong{color:#c9a3ff}
+.pro-banner-btn{
+  flex:0 0 auto;padding:9px 18px;border-radius:10px;font-weight:700;font-size:.84rem;
+  color:#fff;background:linear-gradient(135deg,var(--roxo),#6c2bd9);text-decoration:none;
+  box-shadow:0 6px 18px rgba(153,69,255,.3);transition:transform .15s ease,box-shadow .15s ease;
+}
+.pro-banner-btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(153,69,255,.4);text-decoration:none}
+
+/* Zonas de edição travadas — a pessoa vê, mas não mexe */
+body.mdf-locked [data-mdf-lock-zone]{
+  position:relative;pointer-events:none;opacity:.55;filter:grayscale(.3);user-select:none;
+}
+body.mdf-locked [data-mdf-lock-zone]::after{
+  content:"👑 Exclusivo PRO";position:absolute;top:10px;right:10px;
+  background:rgba(153,69,255,.9);color:#fff;font-size:.66rem;font-weight:800;
+  letter-spacing:.04em;padding:4px 10px;border-radius:999px;pointer-events:none;z-index:2;
+}
 </style>
 </head>
 <body>
@@ -216,12 +272,35 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 <main class="container">
 
   <section class="hero">
-    <span class="eyebrow">Ferramenta grátis · Trade com alavancagem</span>
+    <span class="eyebrow">Trade com alavancagem</span><span class="pro-tag">👑 Ferramenta PRO</span>
     <h1>Simulador de <span>Trade</span> com Gestão de Banca</h1>
-    <p>Simule operações long e short com alavancagem, veja lucro, prejuízo e preço de liquidação — e acompanhe a sua banca crescer entrada após entrada, com juros compostos.</p>
+    <p>Simule operações long e short com alavancagem, veja lucro, prejuízo e preço de liquidação — e acompanhe a sua banca crescer entrada após entrada, com juros compostos. Arraste direto no gráfico ou digite os valores.</p>
   </section>
 
-  <div class="sim-grid">
+  <!-- ===== GRÁFICO (topo, largura total) ===== -->
+  <div class="card chart-card" data-mdf-lock-zone>
+    <div class="chart-toolbar">
+      <div class="chart-asset"><span class="live-dot"></span><span id="chart-asset-name">Bitcoin (BTC)</span></div>
+      <div class="chart-tf" id="chart-tf">
+        <button type="button" data-tf="15m">15m</button>
+        <button type="button" data-tf="1h" class="active">1h</button>
+        <button type="button" data-tf="4h">4h</button>
+        <button type="button" data-tf="1d">1d</button>
+      </div>
+    </div>
+    <div class="chart-canvas-wrap">
+      <canvas id="trade-chart"></canvas>
+      <div class="chart-msg" id="chart-msg">Selecione um ativo da lista (não é possível exibir gráfico para "Outro / manual").</div>
+    </div>
+    <div class="chart-legend">
+      <span><i class="dot-entrada"></i>Entrada</span>
+      <span><i class="dot-saida"></i>Alvo de saída</span>
+      <span><i class="dot-liq"></i>Liquidação estimada</span>
+    </div>
+    <div class="chart-hint">Arraste as linhas de entrada e saída direto no gráfico — os campos abaixo atualizam sozinhos.</div>
+  </div>
+
+  <div class="sim-grid" data-mdf-lock-zone>
 
     <!-- ===== COLUNA ESQUERDA: PARÂMETROS + BANCA ===== -->
     <div>
@@ -407,6 +486,8 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
   </div>
 </footer>
 
+<script src="/nexus/nexus-auth.js"></script>
+<script src="/pro-gate.js"></script>
 <script>
 /* ══════════════════════════════════════
    ESTADO
@@ -419,6 +500,17 @@ let ultimoLiquidado = false;
 const assetIds = {
   bitcoin:'bitcoin', ethereum:'ethereum', solana:'solana',
   binancecoin:'binancecoin', ripple:'ripple', cardano:'cardano'
+};
+
+const binanceSymbols = {
+  bitcoin:'BTCUSDT', ethereum:'ETHUSDT', solana:'SOLUSDT',
+  binancecoin:'BNBUSDT', ripple:'XRPUSDT', cardano:'ADAUSDT'
+};
+
+const assetNames = {
+  bitcoin:'Bitcoin (BTC)', ethereum:'Ethereum (ETH)', solana:'Solana (SOL)',
+  binancecoin:'BNB (Binance Coin)', ripple:'Ripple (XRP)', cardano:'Cardano (ADA)',
+  custom_token:'Ativo manual'
 };
 
 const el = id => document.getElementById(id);
@@ -453,6 +545,7 @@ function onAssetChange(){
   const asset = el('asset-select').value;
   const status = el('api-status');
   const btn = el('btn-fetch');
+  el('chart-asset-name').textContent = assetNames[asset] || 'Ativo';
   if(asset === 'custom_token'){
     status.textContent = 'Modo manual — digite o preço de entrada.';
     status.style.color = 'var(--muted)';
@@ -461,6 +554,7 @@ function onAssetChange(){
     btn.style.display = 'block';
     fetchPrice();
   }
+  fetchKlines();
 }
 
 async function fetchPrice(){
@@ -658,12 +752,276 @@ function calcular(){
 
   // Projeção da banca
   atualizarPreview(assetMov, lev);
+
+  // Redesenha as linhas do gráfico (entrada/saída/liquidação)
+  if(typeof drawChart === 'function') drawChart();
+}
+
+/* ══════════════════════════════════════
+   GRÁFICO — candles Binance + linhas arrastáveis
+══════════════════════════════════════ */
+let candleData = [];
+let chartInterval = '1h';
+let chartCtx = null;
+let chartW = 0, chartH = 420;
+let dragTarget = null; // 'entrada' | 'saida'
+const CHART_PAD = { top:16, right:78, bottom:22, left:10 };
+
+function tokens(){
+  const cs = getComputedStyle(document.documentElement);
+  return {
+    ciano: (cs.getPropertyValue('--cyan')||'#22D3EE').trim(),
+    verde: (cs.getPropertyValue('--green')||'#14F195').trim(),
+    vermelho: (cs.getPropertyValue('--red')||'#FF4D6A').trim(),
+    dourado: (cs.getPropertyValue('--gold')||'#F5B614').trim(),
+    roxo: (cs.getPropertyValue('--purple')||'#9945FF').trim(),
+    muted: '#9b9ba6',
+    grid: 'rgba(255,255,255,.06)'
+  };
+}
+
+function decimalsForPrice(p){
+  if(p >= 100) return 2;
+  if(p >= 1) return 3;
+  if(p >= 0.01) return 5;
+  return 8;
+}
+
+function setupCanvas(){
+  const canvas = el('trade-chart');
+  const wrap = canvas.parentElement;
+  const dpr = window.devicePixelRatio || 1;
+  const rect = wrap.getBoundingClientRect();
+  chartW = rect.width;
+  chartH = rect.height || 420;
+  canvas.width = chartW * dpr;
+  canvas.height = chartH * dpr;
+  canvas.style.width = chartW + 'px';
+  canvas.style.height = chartH + 'px';
+  chartCtx = canvas.getContext('2d');
+  chartCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function priceRange(){
+  const entrada = parseFloat(el('entrada').value) || 0;
+  const saida = parseFloat(el('saida').value) || 0;
+  const liq = parseFloat((el('card-liq').textContent||'').replace(/[^0-9.]/g,'')) || 0;
+  let vals = candleData.length
+    ? candleData.flatMap(c => [c.h, c.l])
+    : [];
+  [entrada, saida, liq].forEach(v => { if(v > 0) vals.push(v); });
+  if(!vals.length) return { min:0, max:1 };
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if(min === max){ min *= 0.98; max *= 1.02; }
+  const pad = (max - min) * 0.08;
+  return { min: Math.max(0, min - pad), max: max + pad };
+}
+
+function priceToY(price, range){
+  const usable = chartH - CHART_PAD.top - CHART_PAD.bottom;
+  return CHART_PAD.top + (1 - (price - range.min) / (range.max - range.min)) * usable;
+}
+function yToPrice(y, range){
+  const usable = chartH - CHART_PAD.top - CHART_PAD.bottom;
+  const ratio = 1 - (y - CHART_PAD.top) / usable;
+  return range.min + ratio * (range.max - range.min);
+}
+
+function drawLine(ctx, y, color, label, dashed, range){
+  const usableRight = chartW - CHART_PAD.right;
+  ctx.save();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.4;
+  if(dashed) ctx.setLineDash([5,4]);
+  ctx.beginPath();
+  ctx.moveTo(CHART_PAD.left, y);
+  ctx.lineTo(usableRight, y);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // bolha de preço
+  const boxW = CHART_PAD.right - 6;
+  ctx.fillStyle = color;
+  ctx.fillRect(usableRight + 4, y - 9, boxW, 18);
+  ctx.fillStyle = '#04060a';
+  ctx.font = '700 10px "Space Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(label, usableRight + 4 + boxW/2, y + 1);
+  ctx.restore();
+}
+
+function drawChart(){
+  if(!chartCtx) return;
+  const asset = el('asset-select') ? el('asset-select').value : null;
+  const ctx = chartCtx;
+  const T = tokens();
+  ctx.clearRect(0, 0, chartW, chartH);
+
+  const msg = el('chart-msg');
+  if(asset === 'custom_token'){
+    if(msg) msg.style.display = 'flex';
+    return;
+  }
+  if(msg) msg.style.display = 'none';
+
+  const range = priceRange();
+
+  // grid horizontal + eixo de preço
+  ctx.strokeStyle = T.grid;
+  ctx.fillStyle = T.muted;
+  ctx.font = '10px "Space Mono", monospace';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  const usable = chartH - CHART_PAD.top - CHART_PAD.bottom;
+  for(let i=0;i<=4;i++){
+    const y = CHART_PAD.top + (usable/4)*i;
+    ctx.beginPath();
+    ctx.moveTo(CHART_PAD.left, y);
+    ctx.lineTo(chartW - CHART_PAD.right, y);
+    ctx.stroke();
+  }
+
+  // candles
+  if(candleData.length){
+    const n = candleData.length;
+    const usableW = chartW - CHART_PAD.left - CHART_PAD.right;
+    const slot = usableW / n;
+    const bodyW = Math.max(1.5, slot * 0.6);
+    candleData.forEach((c, i) => {
+      const x = CHART_PAD.left + slot * i + slot/2;
+      const yO = priceToY(c.o, range);
+      const yC = priceToY(c.c, range);
+      const yH = priceToY(c.h, range);
+      const yL = priceToY(c.l, range);
+      const up = c.c >= c.o;
+      const color = up ? T.verde : T.vermelho;
+      ctx.strokeStyle = color;
+      ctx.fillStyle = color;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(x, yH);
+      ctx.lineTo(x, yL);
+      ctx.stroke();
+      const top = Math.min(yO, yC);
+      const h = Math.max(1, Math.abs(yC - yO));
+      ctx.fillRect(x - bodyW/2, top, bodyW, h);
+    });
+  }
+
+  // linhas de entrada / saída / liquidação
+  const entrada = parseFloat(el('entrada').value) || 0;
+  const saida = parseFloat(el('saida').value) || 0;
+  const liq = parseFloat((el('card-liq').textContent||'').replace(/[^0-9.]/g,'')) || 0;
+
+  if(liq > 0) drawLine(ctx, priceToY(liq, range), T.dourado, liq.toFixed(decimalsForPrice(liq)), true, range);
+  if(entrada > 0) drawLine(ctx, priceToY(entrada, range), T.ciano, entrada.toFixed(decimalsForPrice(entrada)), false, range);
+  if(saida > 0) drawLine(ctx, priceToY(saida, range), T.verde, saida.toFixed(decimalsForPrice(saida)), false, range);
+}
+
+async function fetchKlines(){
+  const asset = el('asset-select').value;
+  const symbol = binanceSymbols[asset];
+  if(!symbol){
+    candleData = [];
+    drawChart();
+    return;
+  }
+  try{
+    const r = await fetch(`https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${chartInterval}&limit=100`);
+    const data = await r.json();
+    candleData = data.map(k => ({ t:k[0], o:+k[1], h:+k[2], l:+k[3], c:+k[4] }));
+    drawChart();
+  }catch(e){
+    candleData = [];
+    drawChart();
+  }
+}
+
+/* Interação de arrastar as linhas de entrada/saída */
+function hitTest(y){
+  const range = priceRange();
+  const entrada = parseFloat(el('entrada').value) || 0;
+  const saida = parseFloat(el('saida').value) || 0;
+  const yEntrada = priceToY(entrada, range);
+  const ySaida = priceToY(saida, range);
+  if(Math.abs(y - yEntrada) <= 9) return 'entrada';
+  if(Math.abs(y - ySaida) <= 9) return 'saida';
+  return null;
+}
+
+function pointerY(evt, canvas){
+  const rect = canvas.getBoundingClientRect();
+  const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+  return clientY - rect.top;
+}
+
+function initChartInteraction(){
+  const canvas = el('trade-chart');
+
+  function onDown(evt){
+    if(document.body.classList.contains('mdf-locked')) return;
+    const y = pointerY(evt, canvas);
+    const target = hitTest(y);
+    if(target){
+      dragTarget = target;
+      canvas.classList.add('dragging');
+      evt.preventDefault();
+    }
+  }
+
+  function onMove(evt){
+    if(!dragTarget) return;
+    const y = pointerY(evt, canvas);
+    const range = priceRange();
+    let price = yToPrice(y, range);
+    if(price < 0) price = 0;
+    price = parseFloat(price.toFixed(decimalsForPrice(price)));
+    el(dragTarget).value = price;
+    calcular();
+    evt.preventDefault();
+  }
+
+  function onUp(){
+    if(dragTarget){
+      dragTarget = null;
+      canvas.classList.remove('dragging');
+    }
+  }
+
+  canvas.addEventListener('mousedown', onDown);
+  window.addEventListener('mousemove', onMove);
+  window.addEventListener('mouseup', onUp);
+  canvas.addEventListener('touchstart', onDown, { passive:false });
+  window.addEventListener('touchmove', onMove, { passive:false });
+  window.addEventListener('touchend', onUp);
+
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { setupCanvas(); drawChart(); }, 120);
+  });
+
+  el('chart-tf').addEventListener('click', (evt) => {
+    const btn = evt.target.closest('button[data-tf]');
+    if(!btn) return;
+    document.querySelectorAll('#chart-tf button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    chartInterval = btn.dataset.tf;
+    fetchKlines();
+  });
 }
 
 /* ══════════════════════════════════════
    INIT
 ══════════════════════════════════════ */
-window.onload = () => { renderBanca(); fetchPrice(); };
+window.onload = () => {
+  renderBanca();
+  fetchPrice();
+  setupCanvas();
+  initChartInteraction();
+  fetchKlines();
+};
 </script>
 </body>
 </html>
