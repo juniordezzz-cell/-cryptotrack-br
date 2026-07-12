@@ -26,6 +26,13 @@ service cloud.firestore {
       return get(/databases/$(database)/documents/pendentes_pro/$(request.auth.token.email.lower())).data.plano;
     }
 
+    // Esta pessoa (logada) é PRO ou Premium?
+    function ehPro() {
+      return request.auth != null
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.plano in ['pro', 'premium'];
+    }
+
     // ---------------- PERFIL DO USUÁRIO (users/{uid}) ----------------
     //  Campo "plano": "gratis" | "pro" | "premium"
     //  • O usuário NÃO consegue se promover a PRO sozinho.
@@ -57,6 +64,17 @@ service cloud.firestore {
         allow read, write: if request.auth != null
           && request.auth.uid == uid;
       }
+    }
+
+    // ---------------- FERRAMENTA "ENTRADAS E SAÍDAS" (exclusiva PRO) ----------------
+    //  Cada pessoa só lê/escreve o próprio documento, e só se for PRO/Premium.
+    //  Quem não é PRO nem chega a ler — no site, essas pessoas ficam no modo
+    //  vitrine (dados de demonstração, sem tocar nesta coleção).
+    match /entradas_saidas_dados/{uid} {
+      allow read, write: if request.auth != null
+        && request.auth.uid == uid
+        && ehPro();
+      allow read, write: if ehAdmin();
     }
 
     // ---------------- COMPRAS PENDENTES DA KIWIFY ----------------

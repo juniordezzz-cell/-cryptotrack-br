@@ -81,17 +81,21 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    if (document.body.dataset.page !== "entradas") {
-      return;
-    }
-
+  function boot() {
     const state = FinanceUtils.refreshSummary(FinanceUtils.getState());
     FinanceUtils.saveState(state);
     FinanceUtils.fillMonthSelect("#entradaMonth", state);
     renderCards(state);
     renderTable(state);
     renderChart(state);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.body.dataset.page !== "entradas") {
+      return;
+    }
+    boot();
     bindFilters();
+    document.addEventListener("finance-cloud-ready", boot);
   });
 })();

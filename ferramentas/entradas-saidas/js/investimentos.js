@@ -182,17 +182,38 @@
     }
   }
 
+  function boot(inv) {
+    const state = FinanceUtils.getState();
+    const fresh = recompute(getInvestments(state));
+    inv.emergencyReserve = fresh.emergencyReserve;
+    inv.availableCash = fresh.availableCash;
+    inv.profitability = fresh.profitability;
+    inv.assets = fresh.assets;
+    inv.invested = fresh.invested;
+    inv.allocation = fresh.allocation;
+    FinanceUtils.saveState(FinanceUtils.refreshSummary(state));
+    /* reflete os valores atualizados nos 3 campos numéricos do topo */
+    const campos = [["#invReserva", "emergencyReserve"], ["#invCaixa", "availableCash"], ["#invRent", "profitability"]];
+    campos.forEach(([selector, key]) => {
+      const el = document.querySelector(selector);
+      if (el && document.activeElement !== el) {
+        el.value = inv[key] || "";
+      }
+    });
+    renderList(inv);
+    renderAll(inv);
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     if (document.body.dataset.page !== "investimentos") {
       return;
     }
-
     const state = FinanceUtils.getState();
     const inv = recompute(getInvestments(state));
     FinanceUtils.saveState(FinanceUtils.refreshSummary(state));
-
     renderList(inv);
     renderAll(inv);
     bind(inv);
+    document.addEventListener("finance-cloud-ready", () => boot(inv));
   });
 })();

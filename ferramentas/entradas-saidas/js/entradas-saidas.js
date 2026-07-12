@@ -262,6 +262,22 @@
     }
   }
 
+  function boot(planner) {
+    const state = FinanceUtils.getState();
+    const fresh = getPlanner(state);
+    planner.owner = fresh.owner;
+    LISTS.forEach((listName) => {
+      planner[listName] = fresh[listName];
+    });
+    FinanceUtils.saveState(state);
+    renderLists(planner);
+    renderTotals(planner);
+    const ownerInput = document.querySelector("#plannerOwner");
+    if (ownerInput && document.activeElement !== ownerInput) {
+      ownerInput.value = planner.owner || "";
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
     if (document.body.dataset.page !== "comparativo") {
       return;
@@ -274,5 +290,6 @@
     renderLists(planner);
     renderTotals(planner);
     bindEvents(planner);
+    document.addEventListener("finance-cloud-ready", () => boot(planner));
   });
 })();

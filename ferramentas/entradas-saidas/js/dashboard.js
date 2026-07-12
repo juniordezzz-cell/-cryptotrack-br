@@ -222,11 +222,7 @@
     FinanceUtils.setText("[data-dash-classes]", classes ? classes + (classes === 1 ? " classe" : " classes") : "Sem alocações");
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    if (document.body.dataset.page !== "dashboard") {
-      return;
-    }
-
+  function boot() {
     const state = FinanceUtils.refreshSummary(FinanceUtils.getState());
     FinanceUtils.saveState(state);
     renderSummary(state);
@@ -235,5 +231,13 @@
     renderMonthlyPerformance(state);
     renderTransactions(state);
     renderCharts(state);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.body.dataset.page !== "dashboard") {
+      return;
+    }
+    boot();
+    document.addEventListener("finance-cloud-ready", boot);
   });
 })();

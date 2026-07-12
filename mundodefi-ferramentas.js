@@ -79,7 +79,7 @@
       titulo: 'Outras ferramentas gratuitas',
       sub: 'Tudo o que você precisa para operar cripto com método — grátis e em português.',
       cards: [
-        { preview: 'financas',   emoji: '💰', cor: '#14f195', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: 'Novo', link: '/ferramentas/entradas-saidas/' },
+        { preview: 'financas',   emoji: '💰', cor: '#9945FF', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: '👑 PRO', link: '/ferramentas/entradas-saidas/' },
         { preview: 'comparador', emoji: '📊', cor: '#00e5ff', nome: 'Comparador de Ativos', desc: 'Compare cripto com ouro, ações, índices e CDI.',               badge: 'Grátis',  link: '/ferramentas/comparador-de-ativos.html' },
         { preview: 'juros',      emoji: '📈', cor: '#14f195', nome: 'Juros Compostos',      desc: 'Simule o crescimento do patrimônio com aportes mensais.',      badge: 'Grátis',  link: '/ferramentas/juros-compostos.html' },
         { preview: 'lucro',      emoji: '🪙', cor: '#4d9fff', nome: 'Lucro Cripto',         desc: 'Calcule o lucro real com preço de entrada, saída, taxas e IR.', badge: 'Grátis',  link: '/ferramentas/lucro-cripto.html' },

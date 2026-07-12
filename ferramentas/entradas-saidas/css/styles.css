@@ -460,3 +460,77 @@ textarea:focus {
   border-color: rgba(98, 255, 77, 0.55) !important;
   box-shadow: 0 0 0 3px rgba(98, 255, 77, 0.1);
 }
+
+/* ============================================================
+   PRO-GATE — vitrine bloqueada + faixa de assinatura
+   ============================================================ */
+.pro-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: linear-gradient(135deg, rgba(153, 69, 255, 0.14), rgba(153, 69, 255, 0.05));
+  border: 1px solid rgba(153, 69, 255, 0.35);
+  border-radius: 12px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  animation: cardRise 0.4s ease both;
+}
+
+.pro-banner-icon {
+  font-size: 1.1rem;
+}
+
+.pro-banner-text {
+  flex: 1;
+  min-width: 200px;
+  font-size: 0.86rem;
+  color: var(--text);
+}
+
+.pro-banner-text strong {
+  color: #b98cff;
+}
+
+.pro-banner-btn {
+  flex: 0 0 auto;
+  padding: 9px 18px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #fff;
+  background: linear-gradient(135deg, #9945FF, #7b2ff7);
+  text-decoration: none;
+  box-shadow: 0 6px 18px rgba(153, 69, 255, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pro-banner-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(153, 69, 255, 0.4);
+}
+
+/* Zonas de edição travadas — a pessoa vê, mas não mexe */
+body.mdf-locked [data-mdf-lock-zone] {
+  position: relative;
+  pointer-events: none;
+  opacity: 0.5;
+  filter: grayscale(0.35);
+  user-select: none;
+}
+
+body.mdf-locked [data-mdf-lock-zone]::after {
+  content: "👑 Exclusivo PRO";
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(153, 69, 255, 0.9);
+  color: #fff;
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  padding: 4px 10px;
+  border-radius: 999px;
+  pointer-events: none;
+  z-index: 2;
+}

@@ -108,7 +108,7 @@
 
     if (resetButton) {
       resetButton.addEventListener("click", () => {
-        localStorage.removeItem(FinanceUtils.STORAGE_KEY);
+        FinanceUtils.resetarNuvem();
         FinanceUtils.applyTheme("dark");
         FinanceUtils.toast("Dados restaurados.");
       });

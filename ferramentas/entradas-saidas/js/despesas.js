@@ -208,11 +208,7 @@
     });
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    if (document.body.dataset.page !== "despesas") {
-      return;
-    }
-
+  function boot() {
     const state = FinanceUtils.refreshSummary(FinanceUtils.getState());
     FinanceUtils.saveState(state);
     FinanceUtils.fillMonthSelect("#despesaMonth", state);
@@ -220,7 +216,15 @@
     renderTables(state);
     renderCharts(state);
     renderShopping(state);
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (document.body.dataset.page !== "despesas") {
+      return;
+    }
+    boot();
     bindFilters();
     bindShopping();
+    document.addEventListener("finance-cloud-ready", boot);
   });
 })();

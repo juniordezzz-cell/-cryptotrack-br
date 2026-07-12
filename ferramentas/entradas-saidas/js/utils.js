@@ -65,21 +65,98 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  function getState() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (!stored) {
-      return clone(defaultState);
-    }
+  /* Estado zerado — é o que um assinante PRO novo recebe na
+     primeira vez (sem herdar nenhum dado de demonstração). */
+  function freshState() {
+    const fresh = clone(defaultState);
+    fresh.entries = [];
+    fresh.expenses = [];
+    fresh.categories = [];
+    fresh.summary = { receitas: 0, despesas: 0, saldo: 0, investimentos: 0 };
+    fresh.cashFlow = { labels: defaultState.cashFlow.labels, receitas: [0, 0, 0, 0, 0, 0, 0], despesas: [0, 0, 0, 0, 0, 0, 0] };
+    fresh.netWorth = { labels: defaultState.netWorth.labels, values: [0, 0, 0, 0, 0, 0] };
+    fresh.investments = { emergencyReserve: 0, invested: 0, availableCash: 0, profitability: 0, allocation: [] };
+    delete fresh.planner;
+    return fresh;
+  }
 
-    try {
-      return { ...clone(defaultState), ...JSON.parse(stored) };
-    } catch (error) {
-      return clone(defaultState);
+  /* ============================================================
+     MODO NUVEM (PRO) vs MODO VITRINE (todo mundo)
+     ------------------------------------------------------------
+     • Sem nuvem ativa → getState() sempre devolve os dados de
+       DEMONSTRAÇÃO (defaultState), só leitura. Isso é a vitrine.
+     • Com nuvem ativa (pessoa logada e PRO) → getState() e
+       saveState() passam a ler/gravar no Firestore, na conta
+       da pessoa. Nada mais fica salvo no navegador.
+     ============================================================ */
+  let cloudUid = null;
+  let cloudCache = null;
+  let cloudSaveTimer = null;
+
+  function cloudDocRef(uid) {
+    return firebase.firestore().collection("entradas_saidas_dados").doc(uid);
+  }
+
+  function ativarNuvem(uid) {
+    if (cloudUid === uid && cloudCache) {
+      return; /* já carregado */
     }
+    cloudUid = uid;
+    cloudDocRef(uid)
+      .get()
+      .then((snap) => {
+        cloudCache = snap.exists && snap.data() && snap.data().state ? { ...freshState(), ...snap.data().state } : freshState();
+        document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
+      })
+      .catch(() => {
+        cloudCache = freshState();
+        document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
+      });
+  }
+
+  function desativarNuvem() {
+    cloudUid = null;
+    cloudCache = null;
+    window.clearTimeout(cloudSaveTimer);
+  }
+
+  function persistirNuvemAgora() {
+    if (!cloudUid || !cloudCache) {
+      return;
+    }
+    cloudDocRef(cloudUid)
+      .set({ state: cloudCache, atualizadoEm: new Date().toISOString() }, { merge: true })
+      .catch(() => {});
+  }
+
+  function persistirNuvem() {
+    window.clearTimeout(cloudSaveTimer);
+    cloudSaveTimer = window.setTimeout(persistirNuvemAgora, 500);
+  }
+
+  function resetarNuvem() {
+    if (!cloudUid) {
+      return;
+    }
+    cloudCache = freshState();
+    persistirNuvemAgora();
+    document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
+  }
+
+  function getState() {
+    if (cloudUid && cloudCache) {
+      return clone(cloudCache);
+    }
+    return clone(defaultState);
   }
 
   function saveState(nextState) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextState));
+    if (cloudUid) {
+      cloudCache = clone(nextState);
+      persistirNuvem();
+    }
+    /* Sem nuvem ativa (vitrine): não persiste em lugar nenhum —
+       são só os dados de demonstração, de propósito. */
     return nextState;
   }
 
@@ -330,6 +407,9 @@
     getState,
     saveState,
     updateState,
+    ativarNuvem,
+    desativarNuvem,
+    resetarNuvem,
     refreshSummary,
     formatCurrency,
     formatPercent,
