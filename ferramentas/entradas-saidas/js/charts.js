@@ -27,8 +27,19 @@
   function getContext(canvas) {
     const rect = canvas.getBoundingClientRect();
     const dpr = window.devicePixelRatio || 1;
-    const width = Math.max(rect.width, 280);
-    const height = Math.max(rect.height, 180);
+
+    /* Se a caixinha for menor que o mínimo de resolução, aumentamos
+       LARGURA E ALTURA NA MESMA PROPORÇÃO — nunca só um lado.
+       Isso é o que garante que um container quadrado (como o do
+       gráfico "Meus Investimentos") sempre produza um círculo
+       perfeito, e não um oval. */
+    const minWidth = 280;
+    const minHeight = 180;
+    const rawWidth = rect.width || minWidth;
+    const rawHeight = rect.height || minHeight;
+    const scale = Math.max(1, minWidth / rawWidth, minHeight / rawHeight);
+    const width = rawWidth * scale;
+    const height = rawHeight * scale;
 
     canvas.width = Math.floor(width * dpr);
     canvas.height = Math.floor(height * dpr);

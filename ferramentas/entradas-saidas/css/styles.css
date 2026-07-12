@@ -265,6 +265,12 @@ textarea:focus {
   height: 210px;
 }
 
+/* O painel "Meus Investimentos" define seu próprio tamanho quadrado
+   em dashboard.css — não deixamos essa regra genérica sobrescrever. */
+.investments-strip .canvas-wrap.small {
+  height: auto;
+}
+
 .canvas-wrap canvas {
   width: 100%;
   height: 100%;
