@@ -217,6 +217,31 @@
     });
   }
 
+  /* Contador animado: o valor "sobe" até o número final (R$) */
+  function countUpCurrency(selector, value, duration) {
+    const elements = document.querySelectorAll(selector);
+    const target = Number(value) || 0;
+    const animations = getState().settings.animations !== false;
+    if (!elements.length) {
+      return;
+    }
+    if (!animations) {
+      elements.forEach((el) => { el.textContent = formatCurrency(target); });
+      return;
+    }
+    const total = duration || 900;
+    const ease = (t) => 1 - Math.pow(1 - t, 3);
+    let start = null;
+    function frame(ts) {
+      if (!start) start = ts;
+      const p = Math.min((ts - start) / total, 1);
+      const current = target * ease(p);
+      elements.forEach((el) => { el.textContent = formatCurrency(current); });
+      if (p < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
   function downloadText(filename, text, type) {
     const blob = new Blob([text], { type });
     const url = URL.createObjectURL(blob);
@@ -276,6 +301,7 @@
     summarizeExpenses,
     renderRows,
     setText,
+    countUpCurrency,
     downloadText,
     toCsv,
     toast,

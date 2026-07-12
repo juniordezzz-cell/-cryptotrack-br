@@ -1,3 +1,15 @@
+/* ============================================================
+   FINANCE CHARTS v2 — gráficos animados em canvas puro
+   ------------------------------------------------------------
+   Mesma API da v1 (lineChart, areaChart, barChart,
+   horizontalBars, doughnutChart) — só que com:
+   • curvas suaves (Catmull-Rom)
+   • easing (easeOutQuart) em todas as animações
+   • brilho/glow nas linhas e ponto pulsante no final
+   • donut com pontas arredondadas e varredura animada
+   • grid e eixos mais elegantes
+   ============================================================ */
+
 (function () {
   const colors = {
     green: "#62ff4d",
@@ -5,10 +17,12 @@
     red: "#ff4750",
     redSoft: "rgba(255, 71, 80, 0.22)",
     gray: "#aeb5bb",
-    grid: "rgba(255, 255, 255, 0.08)",
+    grid: "rgba(255, 255, 255, 0.06)",
     text: "#dce1e6",
     amber: "#f2c14e"
   };
+
+  const easeOutQuart = (t) => 1 - Math.pow(1 - t, 4);
 
   function getContext(canvas) {
     const rect = canvas.getBoundingClientRect();
@@ -22,7 +36,7 @@
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, width, height);
-    ctx.font = "12px Inter, Segoe UI, sans-serif";
+    ctx.font = "11.5px Inter, Segoe UI, sans-serif";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
     return { ctx, width, height };
@@ -35,7 +49,7 @@
 
     const state = FinanceUtils.getState();
     const shouldAnimate = state.settings.animations !== false;
-    const totalDuration = shouldAnimate ? duration || 850 : 1;
+    const totalDuration = shouldAnimate ? duration || 1100 : 1;
     let start = null;
 
     function frame(timestamp) {
@@ -43,10 +57,10 @@
         start = timestamp;
       }
 
-      const progress = Math.min((timestamp - start) / totalDuration, 1);
-      draw(progress);
+      const linear = Math.min((timestamp - start) / totalDuration, 1);
+      draw(easeOutQuart(linear));
 
-      if (progress < 1) {
+      if (linear < 1) {
         requestAnimationFrame(frame);
       }
     }
@@ -66,70 +80,114 @@
     return FinanceUtils.formatCurrency(value).replace(",00", "");
   }
 
+  function niceStep(range) {
+    const rough = range / 4;
+    const pow = Math.pow(10, Math.floor(Math.log10(rough || 1)));
+    const candidates = [1, 2, 2.5, 5, 10];
+    for (const c of candidates) {
+      if (rough <= c * pow) return c * pow;
+    }
+    return 10 * pow;
+  }
+
+  function getRange(values, minHint) {
+    const rawMax = Math.max(...values, 1);
+    const rawMin = Math.min(...values, minHint === undefined ? 0 : minHint);
+    const span = rawMax - rawMin || rawMax || 1;
+    const step = niceStep(span * 1.15);
+    const min = Math.floor(rawMin / step) * step;
+    const max = Math.ceil((rawMax + span * 0.08) / step) * step;
+    return { min, max: max === min ? min + step : max };
+  }
+
   function drawGrid(ctx, plot, min, max, steps) {
     ctx.save();
-    ctx.strokeStyle = colors.grid;
     ctx.fillStyle = colors.gray;
     ctx.lineWidth = 1;
     ctx.textAlign = "right";
     ctx.textBaseline = "middle";
+    ctx.globalAlpha = 0.9;
 
     for (let index = 0; index <= steps; index += 1) {
       const ratio = index / steps;
       const y = plot.y + plot.height - plot.height * ratio;
       const value = min + (max - min) * ratio;
 
+      ctx.strokeStyle = index === 0 ? "rgba(255,255,255,0.14)" : colors.grid;
+      ctx.setLineDash(index === 0 ? [] : [4, 6]);
       ctx.beginPath();
       ctx.moveTo(plot.x, y);
       ctx.lineTo(plot.x + plot.width, y);
       ctx.stroke();
+      ctx.setLineDash([]);
       ctx.fillText(formatAxis(value), plot.x - 10, y);
     }
 
     ctx.restore();
   }
 
-  function getRange(values, minHint) {
-    const max = Math.max(...values, 1);
-    const min = Math.min(...values, minHint === undefined ? 0 : minHint);
-    const padding = (max - min || max || 1) * 0.12;
-    return {
-      min: Math.floor((min - padding) / 100) * 100,
-      max: Math.ceil((max + padding) / 100) * 100
-    };
+  /* Curva suave Catmull-Rom → segmentos Bézier */
+  function tracePath(ctx, points) {
+    if (points.length < 2) {
+      return;
+    }
+    ctx.moveTo(points[0].x, points[0].y);
+    for (let i = 0; i < points.length - 1; i += 1) {
+      const p0 = points[i - 1] || points[i];
+      const p1 = points[i];
+      const p2 = points[i + 1];
+      const p3 = points[i + 2] || p2;
+      const cp1x = p1.x + (p2.x - p0.x) / 6;
+      const cp1y = p1.y + (p2.y - p0.y) / 6;
+      const cp2x = p2.x - (p3.x - p1.x) / 6;
+      const cp2y = p2.y - (p3.y - p1.y) / 6;
+      ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+    }
+  }
+
+  function drawXLabels(ctx, plot, labels) {
+    ctx.save();
+    ctx.fillStyle = colors.gray;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    ctx.globalAlpha = 0.85;
+    const skip = Math.max(1, Math.ceil(labels.length / 6));
+    labels.forEach((label, index) => {
+      if (index % skip !== 0 && index !== labels.length - 1) {
+        return;
+      }
+      const x = plot.x + (plot.width * index) / (labels.length - 1 || 1);
+      ctx.fillText(label, x, plot.y + plot.height + 14);
+    });
+    ctx.restore();
   }
 
   function lineChart(selector, config) {
     const canvas = document.querySelector(selector);
     animate(canvas, (progress) => {
       const { ctx, width, height } = getContext(canvas);
-      const plot = { x: 72, y: 24, width: width - 92, height: height - 64 };
+      const plot = { x: 70, y: 18, width: width - 88, height: height - 56 };
       const values = config.datasets.flatMap((dataset) => dataset.values);
       const range = getRange(values, config.min);
 
       drawGrid(ctx, plot, range.min, range.max, 4);
-
-      ctx.save();
-      ctx.fillStyle = colors.gray;
-      ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      const skip = Math.max(1, Math.ceil(config.labels.length / 6));
-      config.labels.forEach((label, index) => {
-        if (index % skip !== 0 && index !== config.labels.length - 1) {
-          return;
-        }
-        const x = plot.x + (plot.width * index) / (config.labels.length - 1);
-        ctx.fillText(label, x, plot.y + plot.height + 18);
-      });
-      ctx.restore();
+      drawXLabels(ctx, plot, config.labels);
 
       config.datasets.forEach((dataset) => {
+        const count = dataset.values.length;
         const points = dataset.values.map((value, index) => {
-          const x = plot.x + (plot.width * index) / (dataset.values.length - 1);
+          const x = plot.x + (plot.width * index) / (count - 1 || 1);
           const scaled = (value - range.min) / (range.max - range.min || 1);
-          const y = plot.y + plot.height - plot.height * scaled * progress;
+          const y = plot.y + plot.height - plot.height * scaled;
           return { x, y };
         });
+
+        /* revelação da esquerda para a direita */
+        const revealX = plot.x + plot.width * progress;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(plot.x - 6, 0, revealX - plot.x + 6, height);
+        ctx.clip();
 
         if (dataset.fill) {
           const gradient = ctx.createLinearGradient(0, plot.y, 0, plot.y + plot.height);
@@ -137,31 +195,42 @@
           gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
           ctx.fillStyle = gradient;
           ctx.beginPath();
-          ctx.moveTo(points[0].x, plot.y + plot.height);
-          points.forEach((point) => ctx.lineTo(point.x, point.y));
+          tracePath(ctx, points);
           ctx.lineTo(points[points.length - 1].x, plot.y + plot.height);
+          ctx.lineTo(points[0].x, plot.y + plot.height);
           ctx.closePath();
           ctx.fill();
         }
 
         ctx.strokeStyle = dataset.color;
-        ctx.lineWidth = 2.5;
+        ctx.lineWidth = 2.6;
+        ctx.shadowColor = dataset.color;
+        ctx.shadowBlur = 12;
         ctx.beginPath();
-        points.forEach((point, index) => {
-          if (index === 0) {
-            ctx.moveTo(point.x, point.y);
-          } else {
-            ctx.lineTo(point.x, point.y);
-          }
-        });
+        tracePath(ctx, points);
         ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.restore();
 
-        ctx.fillStyle = dataset.color;
-        points.forEach((point) => {
+        /* ponto de destaque no fim da linha revelada */
+        const tipIndex = Math.min(count - 1, Math.floor(progress * (count - 1)));
+        const tip = points[tipIndex];
+        if (tip) {
+          ctx.save();
+          ctx.fillStyle = dataset.color;
+          ctx.shadowColor = dataset.color;
+          ctx.shadowBlur = 14;
           ctx.beginPath();
-          ctx.arc(point.x, point.y, 3.5, 0, Math.PI * 2);
+          ctx.arc(tip.x, tip.y, 4, 0, Math.PI * 2);
           ctx.fill();
-        });
+          ctx.shadowBlur = 0;
+          ctx.strokeStyle = "rgba(255,255,255,0.85)";
+          ctx.lineWidth = 1.4;
+          ctx.beginPath();
+          ctx.arc(tip.x, tip.y, 4, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
       });
     });
   }
@@ -180,7 +249,7 @@
     const canvas = document.querySelector(selector);
     animate(canvas, (progress) => {
       const { ctx, width, height } = getContext(canvas);
-      const plot = { x: 72, y: 24, width: width - 92, height: height - 64 };
+      const plot = { x: 70, y: 18, width: width - 88, height: height - 56 };
       const values = config.datasets.flatMap((dataset) => dataset.values);
       const range = getRange(values);
       const groupWidth = plot.width / config.labels.length;
@@ -194,7 +263,7 @@
       ctx.fillStyle = colors.gray;
       config.labels.forEach((label, index) => {
         const x = plot.x + groupWidth * index + groupWidth / 2;
-        ctx.fillText(label, x, plot.y + plot.height + 18);
+        ctx.fillText(label, x, plot.y + plot.height + 14);
       });
       ctx.restore();
 
@@ -202,7 +271,9 @@
         config.datasets.forEach((dataset, datasetIndex) => {
           const value = dataset.values[labelIndex];
           const scaled = value / (range.max || 1);
-          const heightValue = plot.height * scaled * progress;
+          /* stagger: cada grupo sobe um pouquinho depois do anterior */
+          const local = Math.max(0, Math.min(1, progress * 1.6 - (labelIndex / config.labels.length) * 0.6));
+          const heightValue = plot.height * scaled * local;
           const x =
             plot.x +
             groupWidth * labelIndex +
@@ -211,7 +282,10 @@
             datasetIndex * barWidth;
           const y = plot.y + plot.height - heightValue;
 
-          ctx.fillStyle = dataset.color;
+          const grad = ctx.createLinearGradient(0, y, 0, plot.y + plot.height);
+          grad.addColorStop(0, dataset.color);
+          grad.addColorStop(1, dataset.colorSoft || dataset.color + "55");
+          ctx.fillStyle = grad;
           roundRect(ctx, x, y, barWidth - 4, heightValue, 5);
           ctx.fill();
         });
@@ -230,19 +304,24 @@
       ctx.save();
       config.labels.forEach((label, index) => {
         const y = plot.y + rowHeight * index + rowHeight / 2;
-        const barHeight = Math.min(18, rowHeight * 0.46);
-        const widthValue = (config.values[index] / max) * plot.width * progress;
+        const barHeight = Math.min(16, rowHeight * 0.46);
+        const local = Math.max(0, Math.min(1, progress * 1.5 - (index / config.labels.length) * 0.5));
+        const widthValue = (config.values[index] / max) * plot.width * local;
 
         ctx.fillStyle = colors.gray;
         ctx.textAlign = "right";
         ctx.textBaseline = "middle";
         ctx.fillText(label, plot.x - 12, y);
 
-        ctx.fillStyle = "rgba(255, 255, 255, 0.08)";
+        ctx.fillStyle = "rgba(255, 255, 255, 0.07)";
         roundRect(ctx, plot.x, y - barHeight / 2, plot.width, barHeight, 999);
         ctx.fill();
 
-        ctx.fillStyle = config.color || colors.red;
+        const grad = ctx.createLinearGradient(plot.x, 0, plot.x + plot.width, 0);
+        const cor = config.color || colors.red;
+        grad.addColorStop(0, cor + "99");
+        grad.addColorStop(1, cor);
+        ctx.fillStyle = grad;
         roundRect(ctx, plot.x, y - barHeight / 2, widthValue, barHeight, 999);
         ctx.fill();
 
@@ -261,36 +340,47 @@
       const size = Math.min(width, height);
       const centerX = width / 2;
       const centerY = height / 2;
-      const radius = size * 0.31;
-      const lineWidth = Math.max(26, size * 0.11);
+      const radius = size * 0.34;
+      const lineWidth = Math.max(18, size * 0.09);
       const total = config.values.reduce((sum, value) => sum + value, 0) || 1;
+      const gap = 0.05; /* respiro entre fatias, em radianos */
       let start = -Math.PI / 2;
 
       ctx.save();
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+      ctx.lineCap = "round";
+
+      /* trilho de fundo */
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.06)";
       ctx.lineWidth = lineWidth;
       ctx.beginPath();
       ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
       ctx.stroke();
 
       config.values.forEach((value, index) => {
-        const angle = (value / total) * Math.PI * 2 * progress;
-        ctx.strokeStyle = config.colors[index];
-        ctx.beginPath();
-        ctx.arc(centerX, centerY, radius, start, start + angle);
-        ctx.stroke();
-        start += (value / total) * Math.PI * 2;
+        const slice = (value / total) * Math.PI * 2;
+        const angle = Math.max(0, slice * progress - gap);
+        if (angle > 0.01) {
+          ctx.strokeStyle = config.colors[index];
+          ctx.shadowColor = config.colors[index];
+          ctx.shadowBlur = 10;
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, radius, start + gap / 2, start + gap / 2 + angle);
+          ctx.stroke();
+          ctx.shadowBlur = 0;
+        }
+        start += slice;
       });
 
       ctx.fillStyle = colors.text;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.font = "800 20px Inter, Segoe UI, sans-serif";
-      ctx.fillText(config.center || "", centerX, centerY - 2);
-      ctx.font = "12px Inter, Segoe UI, sans-serif";
+      ctx.font = "800 19px Inter, Segoe UI, sans-serif";
+      ctx.globalAlpha = Math.min(1, progress * 1.6);
+      ctx.fillText(config.center || "", centerX, centerY - 4);
+      ctx.font = "11.5px Inter, Segoe UI, sans-serif";
       ctx.fillStyle = colors.gray;
       if (config.caption) {
-        ctx.fillText(config.caption, centerX, centerY + 20);
+        ctx.fillText(config.caption, centerX, centerY + 16);
       }
       ctx.restore();
     });

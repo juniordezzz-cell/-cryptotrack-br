@@ -400,9 +400,9 @@
     const root = document.createElement("div");
     root.className = "nexus-root";
     root.innerHTML = `
-      <button class="nexus-fab" type="button" aria-label="Abrir o Nexus, analista financeiro" aria-expanded="false">
+      <button class="nexus-fab" type="button" aria-label="Abrir o Nexus, analista financeiro" aria-expanded="false" title="Nexus — seu analista financeiro">
         <span class="nexus-fab-icon">◆</span>
-        <span class="nexus-fab-label">Nexus</span>
+        <span class="nexus-fab-label">Falar com o Nexus</span>
       </button>
       <section class="nexus-panel" role="dialog" aria-label="Chat com o Nexus" hidden>
         <header class="nexus-header">

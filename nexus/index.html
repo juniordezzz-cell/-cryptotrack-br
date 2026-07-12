@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nexus — a inteligência artificial do MundoDeFi</title>
+<meta name="description" content="Conheça o Nexus: a IA do MundoDeFi que lê seu portfólio e responde sobre patrimônio, HOLD, DeFi, pools de liquidez e trade. Exclusivo para assinantes PRO.">
+<link rel="canonical" href="https://mundodefi.com.br/nexus/">
+<meta property="og:title" content="Nexus — a inteligência artificial do MundoDeFi">
+<meta property="og:description" content="A IA que conhece o seu portfólio: melhor ativo, pool que mais rende, winrate no trade e muito mais.">
+<meta property="og:url" content="https://mundodefi.com.br/nexus/">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/nexus/nexus.css">
+<style>
+:root{
+  --nx-bg:#050914;--nx-panel:#0b1120;--nx-line:rgba(255,255,255,.08);
+  --nx-text:#EAF2FF;--nx-muted:#8b96ad;--nx-cyan:#22D3EE;--nx-gold:#F5B614;
+  --nx-purple:#9945FF;--nx-green:#14F195;
+}
+*{box-sizing:border-box}
+html{background:var(--nx-bg)}
+body{
+  margin:0;color:var(--nx-text);font-family:'Space Grotesk',system-ui,sans-serif;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% -5%, rgba(34,211,238,.14), transparent),
+    radial-gradient(ellipse 40% 30% at 85% 20%, rgba(153,69,255,.08), transparent),
+    var(--nx-bg);
+  min-height:100vh;
+}
+a{color:var(--nx-cyan);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+/* topo */
+.top{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{font-weight:700;font-size:1.05rem;color:var(--nx-text)}
+.brand:hover{text-decoration:none}
+.brand .b1{color:#fff}.brand .b2{color:var(--nx-green)}
+.top nav{display:flex;gap:20px;align-items:center;font-size:.9rem}
+.top nav a{color:var(--nx-muted)}
+.top nav a:hover{color:var(--nx-text);text-decoration:none}
+.btn{display:inline-block;padding:12px 24px;border-radius:12px;font-weight:700;font-size:.92rem;transition:transform .15s ease,box-shadow .15s ease;cursor:pointer;border:none}
+.btn:hover{transform:translateY(-2px);text-decoration:none}
+.btn-gold{color:#1a1205;background:linear-gradient(135deg,var(--nx-gold),#d99a06);box-shadow:0 8px 24px rgba(245,182,20,.28)}
+.btn-cyan{color:#03151a;background:linear-gradient(135deg,var(--nx-cyan),#0891b2);box-shadow:0 8px 24px rgba(34,211,238,.28)}
+.btn-ghost{color:var(--nx-text);background:rgba(255,255,255,.05);border:1px solid var(--nx-line)}
+
+/* hero */
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:70px 0 60px}
+.tag{display:inline-block;padding:5px 14px;border-radius:999px;font-size:.72rem;font-weight:800;letter-spacing:.08em;color:var(--nx-gold);border:1px solid rgba(245,182,20,.4);background:rgba(245,182,20,.07);margin-bottom:18px}
+.hero h1{font-size:clamp(2rem,4.6vw,3.1rem);line-height:1.12;margin:0 0 16px}
+.hero h1 em{font-style:normal;background:linear-gradient(90deg,var(--nx-cyan),var(--nx-green));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--nx-muted);font-size:1.02rem;line-height:1.65;margin:0 0 26px;max-width:480px}
+.hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+
+/* esfera gigante do hero */
+.orb-stage{display:grid;place-items:center;min-height:320px}
+.orb-big{
+  position:relative;width:190px;height:190px;border-radius:50%;
+  display:grid;place-items:center;font-size:3.4rem;color:#03151a;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,.9), transparent 34%),
+    radial-gradient(circle at 60% 65%, var(--nx-cyan) 0%, #0891b2 55%, #083344 100%);
+  box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 70px rgba(34,211,238,.4),inset 0 -14px 30px rgba(0,0,0,.35);
+  animation:orbFloat 7s ease-in-out infinite, orbGlow 3s ease-in-out infinite;
+}
+.orb-big::before,.orb-big::after{content:"";position:absolute;inset:-16px;border-radius:50%;border:2px solid rgba(34,211,238,.4);animation:orbPing 3s cubic-bezier(0,0,.2,1) infinite;pointer-events:none}
+.orb-big::after{animation-delay:1.5s;border-color:rgba(34,211,238,.25)}
+.orb-big span{animation:orbSpin 10s linear infinite;filter:drop-shadow(0 0 10px rgba(255,255,255,.6))}
+@keyframes orbFloat{0%{transform:translate(0,0)}12%{transform:translate(-14px,-12px)}25%{transform:translate(-20px,0)}37%{transform:translate(-14px,12px)}50%{transform:translate(0,18px)}62%{transform:translate(14px,12px)}75%{transform:translate(20px,0)}87%{transform:translate(14px,-12px)}100%{transform:translate(0,0)}}
+@keyframes orbGlow{0%,100%{box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 50px rgba(34,211,238,.3),inset 0 -14px 30px rgba(0,0,0,.35)}50%{box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 95px rgba(34,211,238,.6),inset 0 -14px 30px rgba(0,0,0,.35)}}
+@keyframes orbPing{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(1.45);opacity:0}}
+@keyframes orbSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* seções */
+section{padding:48px 0}
+.sec-title{font-size:1.55rem;margin:0 0 8px;text-align:center}
+.sec-sub{color:var(--nx-muted);text-align:center;margin:0 auto 34px;max-width:560px;line-height:1.6}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fcard{background:var(--nx-panel);border:1px solid var(--nx-line);border-radius:16px;padding:1.5rem;transition:transform .2s ease,border-color .2s ease}
+.fcard:hover{transform:translateY(-4px);border-color:rgba(34,211,238,.4)}
+.fcard .ico{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;font-size:1.25rem;margin-bottom:14px;background:rgba(34,211,238,.1)}
+.fcard h3{margin:0 0 8px;font-size:1.02rem}
+.fcard p{margin:0;color:var(--nx-muted);font-size:.88rem;line-height:1.6}
+
+/* exemplos de pergunta */
+.qa{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:840px;margin:0 auto}
+.qa-item{background:var(--nx-panel);border:1px solid var(--nx-line);border-radius:14px;padding:1.1rem 1.3rem;display:flex;gap:12px;align-items:flex-start}
+.qa-item .q{color:var(--nx-cyan);font-family:'Space Mono',monospace;font-size:.82rem}
+.qa-item p{margin:4px 0 0;color:var(--nx-muted);font-size:.85rem;line-height:1.55}
+.qa-item strong{color:var(--nx-text);display:block;font-size:.92rem}
+
+/* faixa PRO */
+.pro-band{background:linear-gradient(135deg,rgba(245,182,20,.08),rgba(153,69,255,.06));border:1px solid rgba(245,182,20,.25);border-radius:20px;padding:2.4rem;text-align:center}
+.pro-band h2{margin:0 0 10px;font-size:1.5rem}
+.pro-band h2 span{color:var(--nx-gold)}
+.pro-band p{color:var(--nx-muted);margin:0 auto 22px;max-width:520px;line-height:1.65}
+.pro-price{font-family:'Space Mono',monospace;color:var(--nx-gold);font-size:1.05rem;margin-bottom:18px}
+
+/* futuro IA */
+.future{display:flex;gap:16px;align-items:flex-start;background:var(--nx-panel);border:1px dashed rgba(34,211,238,.35);border-radius:16px;padding:1.4rem 1.6rem;max-width:760px;margin:0 auto}
+.future .dot-ia{flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(34,211,238,.12);font-size:1.1rem}
+.future p{margin:0;color:var(--nx-muted);font-size:.9rem;line-height:1.65}
+.future strong{color:var(--nx-text)}
+
+footer{border-top:1px solid var(--nx-line);padding:26px 0 34px;margin-top:30px;color:var(--nx-muted);font-size:.82rem;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+footer nav{display:flex;gap:16px}
+footer a{color:var(--nx-muted)}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;padding:44px 0 30px;text-align:center}
+  .hero p{margin-left:auto;margin-right:auto}
+  .hero-ctas{justify-content:center}
+  .orb-stage{min-height:260px;order:-1}
+  .grid3{grid-template-columns:1fr}
+  .qa{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body data-nexus-page="pagina-nexus">
+
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="/index.html"><span class="b1">Mundo</span><span class="b2">DeFi</span></a>
+    <nav>
+      <a href="/ferramentas/ferramentas.html">Ferramentas</a>
+      <a href="/portfolio/">Portfólio</a>
+      <a class="btn btn-gold" style="padding:9px 18px" href="/planos.html">👑 PRO</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div>
+      <span class="tag">✦ EXCLUSIVO PLANO PRO</span>
+      <h1>Nexus. A inteligência que <em>conhece o seu portfólio</em>.</h1>
+      <p>O Nexus vive dentro do seu Portfólio MundoDeFi e responde na hora: qual ativo performa melhor, qual pool rende mais, como está seu winrate no trade e para onde vai seu patrimônio.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-cyan" href="/portfolio/">Abrir no Portfólio</a>
+        <a class="btn btn-ghost" href="/planos.html">Assinar PRO — R$ 19,90/mês</a>
+      </div>
+    </div>
+    <div class="orb-stage">
+      <div class="orb-big" aria-hidden="true"><span>◆</span></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec-title">Um analista em cada módulo</h2>
+    <p class="sec-sub">O Nexus acompanha você em todas as telas do Portfólio — Dashboard, HOLD, DeFi, Trade e Atlas — sempre com os seus números na ponta da língua.</p>
+    <div class="grid3">
+      <div class="fcard"><div class="ico">💎</div><h3>HOLD</h3><p>Preço médio, valor atual e lucro de cada ativo. Pergunte "qual meu melhor ativo?" e receba o ranking completo da sua carteira.</p></div>
+      <div class="fcard"><div class="ico">🌊</div><h3>DeFi &amp; Pools</h3><p>Resultado líquido de cada pool, taxas coletadas e comparação entre estratégias de liquidez. O diferencial do MundoDeFi, agora com IA.</p></div>
+      <div class="fcard"><div class="ico">⚡</div><h3>Trade</h3><p>Winrate, resultado acumulado e evolução da banca. O Nexus mostra os números frios para você operar sem ilusão.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2 class="sec-title">Pergunte com suas palavras</h2>
+    <p class="sec-sub">Nada de menus escondidos. É uma conversa — e a resposta vem com os seus dados reais.</p>
+    <div class="qa">
+      <div class="qa-item"><span class="q">›</span><div><strong>"Qual meu patrimônio total?"</strong><p>Soma HOLD + DeFi + lend/staking + banca de trade, com lucro e rentabilidade.</p></div></div>
+      <div class="qa-item"><span class="q">›</span><div><strong>"Qual pool está rendendo mais?"</strong><p>Ranking das suas pools pelo resultado líquido: depósitos, retiradas, taxas e valor atual.</p></div></div>
+      <div class="qa-item"><span class="q">›</span><div><strong>"Qual ativo performa melhor?"</strong><p>Ranking do seu HOLD por rentabilidade, com lucro em dólar ou real.</p></div></div>
+      <div class="qa-item"><span class="q">›</span><div><strong>"Como está meu trade?"</strong><p>Winrate, número de operações, resultado acumulado e evolução da banca.</p></div></div>
+      <div class="qa-item"><span class="q">›</span><div><strong>"Como está minha alocação?"</strong><p>Percentual do patrimônio em cada frente — para você enxergar concentração de risco.</p></div></div>
+      <div class="qa-item"><span class="q">›</span><div><strong>"O que é impermanent loss?"</strong><p>O Nexus também explica os conceitos de DeFi, liquidez e gestão de risco.</p></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="future">
+      <div class="dot-ia">🧠</div>
+      <p><strong>E ele vai ficar ainda mais inteligente.</strong> O Nexus já nasce preparado para se conectar a um modelo de IA completo: análises de contexto, alertas inteligentes e conversas livres sobre o mercado. Assinantes PRO recebem cada evolução automaticamente, sem pagar nada a mais.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="pro-band">
+      <h2>O Nexus é exclusivo do <span>MundoDeFi PRO</span></h2>
+      <p>Portfólio ilimitado, histórico completo, exportação para o IR — e o Nexus lendo seus números em todos os módulos.</p>
+      <div class="pro-price">R$ 19,90/mês · cancele quando quiser · garantia de 7 dias</div>
+      <a class="btn btn-gold" href="/planos.html">Assinar MundoDeFi PRO</a>
+    </div>
+  </section>
+
+  <footer>
+    <span>© MundoDeFi — conteúdo educacional, não é recomendação de investimento.</span>
+    <nav>
+      <a href="/index.html">Início</a>
+      <a href="/ferramentas/ferramentas.html">Ferramentas</a>
+      <a href="/portfolio/">Portfólio</a>
+      <a href="/planos.html">Planos</a>
+    </nav>
+  </footer>
+</div>
+
+<!-- O widget do Nexus também vive aqui: quem for PRO já pode conversar nesta página -->
+<script src="/nexus/nexus-portfolio-kb.js"></script>
+<script src="/nexus/nexus-auth.js"></script>
+<script src="/nexus/nexus-core.js"></script>
+</body>
+</html>

@@ -1,29 +1,62 @@
+/* ============================================================
+   DASHBOARD v2 — layout proporcional + gráficos com altura fixa
+   ============================================================ */
+
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(320px, 0.9fr);
-  gap: 12px;
-  margin-bottom: 12px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(320px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: stretch;
 }
 
 .dashboard-row {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.1fr) minmax(320px, 0.9fr);
-  gap: 12px;
-  margin-bottom: 12px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) minmax(300px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+  align-items: stretch;
+}
+
+.dashboard-grid > .card,
+.dashboard-row > .card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ── alturas dos gráficos (adeus, gráfico espichado) ── */
+.canvas-wrap {
+  position: relative;
+  height: 300px;
+  flex: 1;
+  min-height: 240px;
+}
+
+.canvas-wrap.small {
+  height: 220px;
+  min-height: 200px;
+}
+
+.canvas-wrap canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .investments-strip {
   display: grid;
   grid-template-columns: minmax(200px, 0.9fr) repeat(2, minmax(0, 1fr));
   grid-auto-rows: 1fr;
-  gap: 12px;
+  gap: 16px;
 }
 
 .investments-strip > .card.pad:first-child {
@@ -33,7 +66,9 @@
 }
 
 .investments-strip > .card.pad:first-child .canvas-wrap {
-  height: 180px;
+  height: 190px;
+  min-height: 190px;
+  width: 100%;
 }
 
 .investment-panel .section-title {
@@ -72,10 +107,12 @@
 
 .dot.green {
   background: var(--green);
+  box-shadow: 0 0 8px rgba(98, 255, 77, 0.55);
 }
 
 .dot.red {
   background: var(--red);
+  box-shadow: 0 0 8px rgba(255, 71, 80, 0.55);
 }
 
 .dot.gray {
@@ -84,14 +121,16 @@
 
 .distribution-layout {
   display: grid;
-  grid-template-columns: minmax(180px, 0.9fr) minmax(180px, 1fr);
+  grid-template-columns: minmax(180px, 0.95fr) minmax(170px, 1fr);
   gap: 18px;
   align-items: center;
+  flex: 1;
 }
 
 .distribution-list {
   display: grid;
   gap: 16px;
+  align-content: center;
 }
 
 .distribution-line {
@@ -134,4 +173,62 @@
 .transaction-item small {
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+/* ── animações de entrada dos cards (cascata) ── */
+@keyframes cardRise {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.stats-grid .card,
+.dashboard-grid > .card,
+.dashboard-row > .card,
+.page-grid > .card,
+.investment-panel {
+  animation: cardRise 0.55s cubic-bezier(0.22, 0.8, 0.32, 1) both;
+}
+
+.stats-grid .card:nth-child(1) { animation-delay: 0.02s; }
+.stats-grid .card:nth-child(2) { animation-delay: 0.08s; }
+.stats-grid .card:nth-child(3) { animation-delay: 0.14s; }
+.stats-grid .card:nth-child(4) { animation-delay: 0.2s; }
+.dashboard-grid > .card:nth-child(1) { animation-delay: 0.12s; }
+.dashboard-grid > .card:nth-child(2) { animation-delay: 0.18s; }
+.dashboard-row > .card:nth-child(1) { animation-delay: 0.16s; }
+.dashboard-row > .card:nth-child(2) { animation-delay: 0.22s; }
+.dashboard-row > .card:nth-child(3) { animation-delay: 0.28s; }
+
+/* ── ícones das métricas com brilho ── */
+.metric-icon {
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.metric-card:hover .metric-icon {
+  transform: scale(1.1) rotate(-4deg);
+}
+
+.metric-card.positive .metric-icon {
+  box-shadow: 0 0 18px rgba(98, 255, 77, 0.18);
+}
+
+.metric-card.negative .metric-icon {
+  box-shadow: 0 0 18px rgba(255, 71, 80, 0.18);
+}
+
+/* respeita quem prefere menos movimento */
+@media (prefers-reduced-motion: reduce) {
+  .stats-grid .card,
+  .dashboard-grid > .card,
+  .dashboard-row > .card,
+  .page-grid > .card,
+  .investment-panel {
+    animation: none;
+  }
 }

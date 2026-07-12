@@ -1,14 +1,14 @@
 (function () {
   function renderSummary(state) {
-    FinanceUtils.setText("[data-total-entradas]", FinanceUtils.formatCurrency(state.summary.receitas));
-    FinanceUtils.setText("[data-total-despesas]", FinanceUtils.formatCurrency(state.summary.despesas));
-    FinanceUtils.setText("[data-saldo-mes]", FinanceUtils.formatCurrency(state.summary.saldo));
-    FinanceUtils.setText("[data-total-investimentos]", FinanceUtils.formatCurrency(state.summary.investimentos));
+    FinanceUtils.countUpCurrency("[data-total-entradas]", state.summary.receitas);
+    FinanceUtils.countUpCurrency("[data-total-despesas]", state.summary.despesas);
+    FinanceUtils.countUpCurrency("[data-saldo-mes]", state.summary.saldo);
+    FinanceUtils.countUpCurrency("[data-total-investimentos]", state.summary.investimentos);
 
-    FinanceUtils.setText("[data-resumo-entradas]", FinanceUtils.formatCurrency(state.summary.receitas));
-    FinanceUtils.setText("[data-resumo-despesas]", FinanceUtils.formatCurrency(state.summary.despesas));
-    FinanceUtils.setText("[data-resumo-investimentos]", FinanceUtils.formatCurrency(state.summary.investimentos));
-    FinanceUtils.setText("[data-resumo-saldo]", FinanceUtils.formatCurrency(state.summary.saldo));
+    FinanceUtils.countUpCurrency("[data-resumo-entradas]", state.summary.receitas);
+    FinanceUtils.countUpCurrency("[data-resumo-despesas]", state.summary.despesas);
+    FinanceUtils.countUpCurrency("[data-resumo-investimentos]", state.summary.investimentos);
+    FinanceUtils.countUpCurrency("[data-resumo-saldo]", state.summary.saldo);
     renderMonthNotes(state);
   }
 

@@ -3,35 +3,83 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // ========================================================
-    //  REGRAS DE SEGURANÇA DO IMD — MundoDeFi
-    //  Cole estas regras em: Firebase Console > Firestore
-    //  Database > aba "Regras" (Rules) > Publicar.
+    //  REGRAS DE SEGURANÇA — MundoDeFi (IMD + Planos PRO)
+    //  Cole TUDO em: Firebase Console > Firestore Database >
+    //  aba "Regras" (Rules) > Publicar.
+    //  Substitui as regras antigas por completo.
     // ========================================================
 
-    //  >>> PASSO ÚNICO: troque a linha abaixo pelo SEU UID <<<
-    //  (pegue em Authentication > Users > coluna "User UID",
-    //   ou no painel admin.html depois de fazer login).
+    // Admin = Jeferson
     function ehAdmin() {
       return request.auth != null
-        && request.auth.uid == "COLE_AQUI_SEU_UID";
+        && request.auth.uid == "y4uE6R6YalRR0K3u1lgV0ww93VB3";
     }
 
-    // --- Diagnósticos pessoais (cada usuário só mexe nos seus) ---
-    match /users/{uid}/diagnosticos/{doc} {
-      allow read, write: if request.auth != null
-        && request.auth.uid == uid;
+    // Existe compra da Kiwify esperando este e-mail?
+    function temCompraPendente() {
+      return request.auth.token.email != null
+        && exists(/databases/$(database)/documents/pendentes_pro/$(request.auth.token.email.lower()));
     }
 
-    // --- Lista CENTRAL (alimenta o painel admin) ---
+    // O plano que está sendo gravado bate com o da compra pendente?
+    function planoDaCompra() {
+      return get(/databases/$(database)/documents/pendentes_pro/$(request.auth.token.email.lower())).data.plano;
+    }
+
+    // ---------------- PERFIL DO USUÁRIO (users/{uid}) ----------------
+    //  Campo "plano": "gratis" | "pro" | "premium"
+    //  • O usuário NÃO consegue se promover a PRO sozinho.
+    //  • Exceção automática: se a Kiwify registrou uma compra
+    //    pendente para o e-mail dele, o site ativa o plano sozinho.
+    //  • O webhook da Kiwify usa o Admin SDK e ignora estas regras
+    //    (é assim que a ativação instantânea funciona).
+    match /users/{uid} {
+      allow read: if request.auth != null
+        && (request.auth.uid == uid || ehAdmin());
+
+      allow create: if request.auth != null && request.auth.uid == uid
+        && (
+          !request.resource.data.keys().hasAny(['plano'])
+          || request.resource.data.plano == 'gratis'
+          || (temCompraPendente() && request.resource.data.plano == planoDaCompra())
+        );
+
+      allow update: if request.auth != null && request.auth.uid == uid
+        && (
+          !request.resource.data.diff(resource.data).affectedKeys().hasAny(['plano'])
+          || (temCompraPendente() && request.resource.data.plano == planoDaCompra())
+        );
+
+      allow write: if ehAdmin();
+
+      // --- Diagnósticos pessoais do IMD (cada usuário só mexe nos seus) ---
+      match /diagnosticos/{doc} {
+        allow read, write: if request.auth != null
+          && request.auth.uid == uid;
+      }
+    }
+
+    // ---------------- COMPRAS PENDENTES DA KIWIFY ----------------
+    //  Criadas pelo webhook (Admin SDK) quando a pessoa compra
+    //  antes de ter conta. O dono do e-mail pode ler e apagar a
+    //  sua — é o "resgate" automático feito pelo site no login.
+    match /pendentes_pro/{email} {
+      allow read, delete: if request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() == email;
+      allow write: if ehAdmin();
+    }
+
+    // ---------------- LISTA CENTRAL DO IMD ----------------
     //  Qualquer usuário logado pode CRIAR o próprio diagnóstico,
-    //  mas só o ADMIN pode LER a lista inteira.
+    //  mas só o ADMIN pode LER a lista inteira (painel admin).
     match /diagnosticos/{doc} {
       allow create: if request.auth != null;
       allow read:   if ehAdmin();
       allow update, delete: if ehAdmin();
     }
 
-    // --- Qualquer outra coisa: bloqueado por padrão ---
+    // ---------------- Resto: bloqueado por padrão ----------------
     match /{document=**} {
       allow read, write: if false;
     }
