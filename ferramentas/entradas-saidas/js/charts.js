@@ -69,6 +69,21 @@
 
     const redraw = () => draw(1);
     window.addEventListener("resize", redraw, { passive: true });
+
+    /* Garante círculos perfeitos: se o layout mudar o tamanho real
+       do canvas (animações de entrada, grids, fontes), redesenha
+       na proporção certa — nada de donut oval. */
+    if (typeof ResizeObserver !== "undefined" && canvas.parentElement) {
+      let first = true;
+      const observer = new ResizeObserver(() => {
+        if (first) {
+          first = false; /* ignora a medição inicial */
+          return;
+        }
+        redraw();
+      });
+      observer.observe(canvas.parentElement);
+    }
   }
 
   function formatAxis(value) {

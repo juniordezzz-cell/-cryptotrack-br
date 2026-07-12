@@ -199,7 +199,50 @@
       const found = state.expenses.find((expense) => expense.category === name);
       return { name, value, type: found ? found.type : "Outros" };
     });
+    deriveCashFlow(state);
+    deriveNetWorth(state);
     return state;
+  }
+
+  /* Fluxo do mês atual: acumulado de entradas x saídas em 7 marcos */
+  function deriveCashFlow(state) {
+    const keys = monthOptions(state);
+    if (!keys.length) {
+      return;
+    }
+    const key = keys[0];
+    const [year, month] = key.split("-").map(Number);
+    const lastDay = new Date(year, month, 0).getDate();
+    const checkpoints = [1, 5, 10, 15, 20, 25, lastDay];
+    const inMonth = (rows) => rows.filter((r) => getMonthKey(r.date) === key);
+    const upTo = (rows, day) =>
+      rows.reduce((acc, r) => (Number(String(r.date).slice(8, 10)) <= day ? acc + r.value : acc), 0);
+    const monthEntries = inMonth(state.entries);
+    const monthExpenses = inMonth(state.expenses);
+    state.cashFlow = {
+      labels: checkpoints.map((d) => `${String(d).padStart(2, "0")} ${monthLabel(key).slice(0, 3)}`),
+      receitas: checkpoints.map((d) => upTo(monthEntries, d)),
+      despesas: checkpoints.map((d) => upTo(monthExpenses, d))
+    };
+  }
+
+  /* Evolução do saldo: acumulado mês a mês (últimos 6 meses com dados) */
+  function deriveNetWorth(state) {
+    const keys = monthOptions(state).slice(0, 6).reverse();
+    if (!keys.length) {
+      return;
+    }
+    const sumMonth = (rows, key) =>
+      rows.reduce((acc, r) => (getMonthKey(r.date) === key ? acc + r.value : acc), 0);
+    let acumulado = 0;
+    const values = keys.map((key) => {
+      acumulado += sumMonth(state.entries, key) - sumMonth(state.expenses, key);
+      return acumulado;
+    });
+    state.netWorth = {
+      labels: keys.map((key) => monthLabel(key).slice(0, 3)),
+      values
+    };
   }
 
   function renderRows(tbody, rows, template) {

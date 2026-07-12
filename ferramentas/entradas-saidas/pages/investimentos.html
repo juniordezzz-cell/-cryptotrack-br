@@ -21,9 +21,9 @@
       <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
       <nav class="sidebar-nav" aria-label="Menu principal">
         <a class="nav-link" href="../index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
+        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
         <a class="nav-link" href="entradas.html" data-nav="entradas"><span class="nav-icon entradas"></span><span>Entradas</span></a>
         <a class="nav-link" href="despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
-        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
         <a class="nav-link" href="investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
         <a class="nav-link" href="relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
       </nav>
@@ -46,32 +46,50 @@
       </header>
 
       <section class="stats-grid">
-        <article class="card metric-card positive"><div><p class="metric-label">Alocação</p><p class="metric-value">0%</p><p class="metric-note">do total investido</p></div><span class="metric-icon">◔</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Reserva de emergência</p><p class="metric-value" data-reserva>R$ 0,00</p><p class="metric-note">Meta futura</p></div><span class="metric-icon">R</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Investimentos</p><p class="metric-value" data-investido>R$ 0,00</p><p class="metric-note">Sem ativos específicos</p></div><span class="metric-icon">I</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Total investido</p><p class="metric-value" data-investido>R$ 0,00</p><p class="metric-note" data-invest-nota>Some seus aportes abaixo</p></div><span class="metric-icon">◔</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Reserva de emergência</p><p class="metric-value" data-reserva>R$ 0,00</p><p class="metric-note">Seu colchão de segurança</p></div><span class="metric-icon">R</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Rendimento</p><p class="metric-value" data-rendimento>R$ 0,00</p><p class="metric-note" data-rentabilidade-nota>0% de rentabilidade</p></div><span class="metric-icon">↗</span></article>
         <article class="card metric-card"><div><p class="metric-label">Caixa disponível</p><p class="metric-value" data-caixa>R$ 0,00</p><p class="metric-note">Saldo livre</p></div><span class="metric-icon">▣</span></article>
       </section>
 
       <section class="two-column page-grid">
-        <article class="card pad">
-          <h2 class="section-title">Distribuição</h2>
-          <div class="distribution-layout">
-            <div class="canvas-wrap">
-              <canvas id="investimentosPizzaChart" aria-label="Gráfico de pizza dos investimentos"></canvas>
-            </div>
-            <div class="progress-list" data-investment-distribution></div>
+        <article class="card planner-card">
+          <div class="planner-head">
+            <h2>Meus investimentos<small>Preencha manualmente — tudo aparece no Dashboard</small></h2>
+            <span class="planner-badge green" data-invest-badge>R$ 0,00</span>
+          </div>
+
+          <div class="form-grid" style="padding-top:14px">
+            <div class="field"><label for="invReserva">Reserva de emergência (R$)</label><input id="invReserva" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+            <div class="field"><label for="invCaixa">Caixa disponível (R$)</label><input id="invCaixa" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+            <div class="field"><label for="invRent">Rentabilidade acumulada (%)</label><input id="invRent" type="number" step="0.01" inputmode="decimal" placeholder="0,00"></div>
+          </div>
+
+          <div class="planner-subhead" style="margin-top:10px">
+            <span>Aportes e ativos — nome + valor atual</span>
+            <strong data-invest-sub>R$ 0,00</strong>
+          </div>
+          <div class="planner-rows" data-invest-list></div>
+          <div class="planner-add">
+            <button class="button" type="button" data-invest-add>+ Adicionar investimento</button>
           </div>
         </article>
 
         <article class="card pad">
-          <h2 class="section-title">Resumo simples</h2>
+          <h2 class="section-title">Distribuição</h2>
+          <div class="distribution-layout">
+            <div class="canvas-wrap small">
+              <canvas id="investimentosPizzaChart" aria-label="Gráfico de pizza dos investimentos"></canvas>
+            </div>
+            <div class="progress-list" data-investment-distribution></div>
+          </div>
+          <div class="divider" style="margin:14px 0"></div>
           <div class="stat-list">
             <div class="summary-row"><span>Total investido</span><strong class="success-text" data-investido>R$ 0,00</strong></div>
+            <div class="summary-row"><span>Rendimento estimado</span><strong class="success-text" data-rendimento>R$ 0,00</strong></div>
             <div class="summary-row"><span>Rentabilidade</span><strong class="success-text" data-rentabilidade>0%</strong></div>
             <div class="summary-row"><span>Reserva de emergência</span><strong data-reserva>R$ 0,00</strong></div>
             <div class="summary-row"><span>Caixa disponível</span><strong data-caixa>R$ 0,00</strong></div>
-            <div class="divider"></div>
-            <p class="muted">Esta página mantém uma visão geral, sem cadastro de ativos específicos.</p>
           </div>
         </article>
       </section>

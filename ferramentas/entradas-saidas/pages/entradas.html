@@ -21,9 +21,9 @@
       <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
       <nav class="sidebar-nav" aria-label="Menu principal">
         <a class="nav-link" href="../index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
+        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
         <a class="nav-link" href="entradas.html" data-nav="entradas"><span class="nav-icon entradas"></span><span>Entradas</span></a>
         <a class="nav-link" href="despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
-        <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
         <a class="nav-link" href="investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
         <a class="nav-link" href="relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
       </nav>
@@ -47,9 +47,9 @@
 
       <section class="stats-grid">
         <article class="card metric-card positive"><div><p class="metric-label">Total recebido</p><p class="metric-value" data-entradas-total>R$ 0,00</p><p class="metric-note">Receitas do período</p></div><span class="metric-icon">↗</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Salário</p><p class="metric-value" data-entradas-salario>R$ 0,00</p><p class="metric-note">Receita fixa</p></div><span class="metric-icon">S</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Freelance</p><p class="metric-value" data-entradas-freelance>R$ 0,00</p><p class="metric-note">Receita variável</p></div><span class="metric-icon">F</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Outras receitas</p><p class="metric-value" data-entradas-outras>R$ 0,00</p><p class="metric-note">Recebimentos extras</p></div><span class="metric-icon">+</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Maior entrada</p><p class="metric-value" data-entradas-maior>R$ 0,00</p><p class="metric-note" data-entradas-maior-nome>—</p></div><span class="metric-icon">★</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Fontes de renda</p><p class="metric-value" data-entradas-fontes>0</p><p class="metric-note">Entradas diferentes no mês</p></div><span class="metric-icon">◫</span></article>
+        <article class="card metric-card positive"><div><p class="metric-label">Média por fonte</p><p class="metric-value" data-entradas-media>R$ 0,00</p><p class="metric-note">Total ÷ fontes</p></div><span class="metric-icon">÷</span></article>
       </section>
 
       <section class="two-column page-grid">
@@ -60,26 +60,10 @@
           </div>
         </article>
 
-        <article class="card pad">
-          <h2 class="section-title">Cadastro de nova entrada</h2>
-          <form id="entradaForm">
-            <div class="form-grid">
-              <div class="field"><label for="entradaDate">Data</label><input id="entradaDate" name="date" type="date" value="2026-03-31" required></div>
-              <div class="field">
-                <label for="entradaSource">Origem</label>
-                <select id="entradaSource" name="source" required>
-                  <option>Salário</option>
-                  <option>Freelance</option>
-                  <option>Outras receitas</option>
-                </select>
-              </div>
-              <div class="field"><label for="entradaValue">Valor</label><input id="entradaValue" name="value" type="number" min="0" step="0.01" placeholder="0,00" required></div>
-              <div class="field"><label for="entradaDescription">Descrição</label><input id="entradaDescription" name="description" type="text" placeholder="Ex: Bônus mensal" required></div>
-            </div>
-            <div class="form-actions">
-              <button class="button primary" type="submit"><span>+</span> Cadastrar entrada</button>
-            </div>
-          </form>
+        <article class="card pad view-hint">
+          <h2 class="section-title">De onde vêm estes números?</h2>
+          <p class="hint-text">Esta página mostra apenas as <strong>entradas</strong> lançadas no seu orçamento. Para adicionar, editar ou remover valores, use a página <strong>Entradas x Saídas</strong> — ela é o único lugar de lançamento, e tudo aqui atualiza sozinho.</p>
+          <a class="button primary" href="entradas-saidas.html">Ir para Entradas x Saídas →</a>
         </article>
       </section>
 

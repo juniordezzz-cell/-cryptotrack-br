@@ -15,12 +15,20 @@
     FinanceUtils.setText("[data-despesas-total]", FinanceUtils.formatCurrency(summary.total));
     FinanceUtils.setText("[data-despesas-essenciais]", FinanceUtils.formatCurrency(summary.byType["Essenciais"] || 0));
     FinanceUtils.setText("[data-despesas-nao-essenciais]", FinanceUtils.formatCurrency(summary.byType["Não essenciais"] || 0));
-    FinanceUtils.setText("[data-despesas-maior]", FinanceUtils.formatCurrency(Math.max(...Object.values(summary.byCategory))));
+    const categorias = Object.values(summary.byCategory);
+    FinanceUtils.setText("[data-despesas-maior]", FinanceUtils.formatCurrency(categorias.length ? Math.max(...categorias) : 0));
   }
 
   function renderTables(state) {
     const rows = getFilteredExpenses(state);
-    FinanceUtils.renderRows(document.querySelector("#despesasTableBody"), rows, (item) => `
+    const tbody = document.querySelector("#despesasTableBody");
+    if (!rows.length) {
+      if (tbody) {
+        tbody.innerHTML = '<tr><td colspan="5" class="empty-state">Nenhuma saída ainda. Lance seus gastos na página <a href="entradas-saidas.html">Entradas x Saídas</a>.</td></tr>';
+      }
+      return;
+    }
+    FinanceUtils.renderRows(tbody, rows, (item) => `
       <tr>
         <td>${FinanceUtils.formatDate(item.date)}</td>
         <td>${item.category}</td>

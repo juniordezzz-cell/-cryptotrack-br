@@ -202,11 +202,24 @@
     });
 
     FinanceCharts.doughnutChart("#investmentChart", {
-      values: [state.investments.invested, state.investments.availableCash || 1],
+      values: state.investments.invested
+        ? [state.investments.invested, state.investments.availableCash || 0.01]
+        : [0.01, 1],
       colors: [FinanceCharts.colors.green, "rgba(98, 255, 77, 0.24)"],
-      center: FinanceUtils.formatPercent(state.investments.invested ? 100 : 0),
-      caption: "alocação"
+      center: state.investments.invested
+        ? FinanceUtils.formatCurrency(state.investments.invested).replace(",00", "")
+        : "R$ 0",
+      caption: "investido"
     });
+
+    /* mini-cards do painel "Meus investimentos" */
+    const inv = state.investments;
+    const rendimento = (inv.invested || 0) * ((inv.profitability || 0) / 100);
+    FinanceUtils.countUpCurrency("[data-dash-investido]", inv.invested || 0);
+    FinanceUtils.countUpCurrency("[data-dash-rendimento]", rendimento);
+    FinanceUtils.setText("[data-dash-rentabilidade]", FinanceUtils.formatPercent(inv.profitability || 0));
+    const classes = (inv.allocation || []).filter((a) => a.value > 0).length;
+    FinanceUtils.setText("[data-dash-classes]", classes ? classes + (classes === 1 ? " classe" : " classes") : "Sem alocações");
   }
 
   document.addEventListener("DOMContentLoaded", () => {

@@ -127,10 +127,57 @@
     }
   }
 
+  /* ============================================================
+     SINCRONIZAÇÃO — esta página é a FONTE ÚNICA de lançamentos.
+     Cada linha preenchida aqui vira uma movimentação do mês:
+       entradas  → state.entries   (página "Entradas" só exibe)
+       saídas    → state.expenses  (página "Despesas" só exibe)
+     Registros gerados aqui têm id começando com "pl-". Os dados
+     de demonstração antigos são removidos na primeira edição.
+     ============================================================ */
+  const DEMO_IDS = ["e1", "e2", "e3", "d1", "d2", "d3", "d4", "d5", "d6"];
+
+  function syncMovimentos(state, planner) {
+    const hoje = new Date().toISOString().slice(0, 10);
+    const manter = (row) => !String(row.id).startsWith("pl-") && !DEMO_IDS.includes(row.id);
+
+    const novasEntradas = planner.incomes
+      .filter((row) => (Number(row.value) || 0) > 0)
+      .map((row) => ({
+        id: "pl-" + row.id,
+        date: hoje,
+        source: row.label || "Entrada",
+        description: row.label || "Entrada do planejamento",
+        value: Number(row.value) || 0
+      }));
+
+    const mapDespesa = (tipo) => (row) => ({
+      id: "pl-" + row.id,
+      date: hoje,
+      category: row.label || (tipo === "Essenciais" ? "Essencial" : "Não essencial"),
+      type: tipo,
+      description: row.label || "Saída do planejamento",
+      value: Number(row.value) || 0
+    });
+
+    const novasSaidas = planner.essentials
+      .filter((row) => (Number(row.value) || 0) > 0)
+      .map(mapDespesa("Essenciais"))
+      .concat(
+        planner.nonEssentials
+          .filter((row) => (Number(row.value) || 0) > 0)
+          .map(mapDespesa("Não essenciais"))
+      );
+
+    state.entries = state.entries.filter(manter).concat(novasEntradas);
+    state.expenses = state.expenses.filter(manter).concat(novasSaidas);
+    return FinanceUtils.refreshSummary(state);
+  }
+
   function savePlanner(planner) {
     FinanceUtils.updateState((state) => {
       state.planner = planner;
-      return state;
+      return syncMovimentos(state, planner);
     });
   }
 
