@@ -186,7 +186,13 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 var _indo = false;
 MDFI.loadLocal();
 MDFI.initFirebase(function(user){
-  if(user && !_indo){ _indo = true; window.location.href = '/portfolio/'; }
+  if(user && !_indo){
+    _indo = true;
+    // Volta para onde a pessoa estava antes de logar (?return=/pagina),
+    // ou para a home. Nunca mais empurra forçado para o portfólio.
+    var destino = new URLSearchParams(location.search).get('return') || '/index.html';
+    window.location.href = destino;
+  }
 });
 
 var mode = 'signup';
