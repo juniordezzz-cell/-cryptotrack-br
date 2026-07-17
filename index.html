@@ -74,7 +74,15 @@ nav{position:sticky;top:0;z-index:500;background:rgba(7,10,18,.86);backdrop-filt
 .b-pro{background:var(--purple-soft);color:var(--purple,#9945FF)}
 .b-soon{background:var(--panel2);color:var(--mut)}
 .b-free{background:var(--gold-soft);color:var(--gold,#F5B614)}
+/* ===== SELOS DOS CARDS DE FERRAMENTA ===== */
+.tsel{display:inline-flex;align-items:center;gap:5px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;border-radius:6px;white-space:nowrap;line-height:1}
+.tsel::before{content:"";width:8px;height:8px;border-radius:2px;flex:none}
+.tsel-free{font-size:10px;padding:4px 9px;background:var(--green-soft,rgba(20,241,149,.11));color:var(--green,#14F195);border:1px solid rgba(20,241,149,.3)}
+.tsel-free::before{background:var(--green,#14F195)}
+.tsel-pro{font-size:12.5px;padding:5px 12px;background:var(--gold-soft,rgba(245,182,20,.12));color:var(--gold,#F5B614);border:1px solid rgba(245,182,20,.45);box-shadow:0 0 0 1px rgba(245,182,20,.12),0 4px 12px rgba(245,182,20,.14)}
+.tsel-pro::before{content:"👑";width:auto;height:auto;font-size:12px}
 .nav-right{display:flex;align-items:center;gap:9px;flex-shrink:0;margin-left:auto}
+[hidden]{display:none!important}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:99px;font-weight:700;font-size:13.5px;border:1px solid transparent;transition:all .15s;text-align:center}
 .btn-ghost{padding:9px 18px;border-color:var(--line2);color:var(--txt);background:transparent}
 .btn-ghost:hover{border-color:var(--cyan,#00E5FF);color:var(--cyan,#00E5FF)}
@@ -410,57 +418,11 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 <!-- ═══ ESTEIRA DE COTAÇÕES ═══ -->
 <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 
-<!-- ═══ HERO (Matrix + busca + ticker) ═══ -->
-<header class="hero">
-  <canvas id="mx" aria-hidden="true"></canvas>
-  <div class="hero-shade" aria-hidden="true"></div>
-  <div class="hero-in">
-    <div class="hero-eyebrow">◉ Dados ao vivo · Cripto &amp; DeFi em português</div>
-    <h1>O MundoDeFi não vende ferramentas.<br><em>Vende um ambiente de inteligência</em> para investidores de cripto.</h1>
-    <p class="hero-sub">Calculadoras, simuladores e automações que fazem o trabalho pesado por você — tudo num lugar só. Comece por uma ferramenta abaixo; a busca de ativos fica logo em seguida.</p>
-    <div class="hero-ctas">
-      <a href="#ferramentas" class="btn btn-green btn-big">⚡ Explorar ferramentas</a>
-      <a href="/cadastro.html" class="btn btn-ghost btn-big" style="background:rgba(10,14,24,.7)">Criar conta grátis</a>
-    </div>
-  </div>
-  <div class="stats" aria-label="Resumo do mercado">
-    <div class="st"><span class="st-lbl">Bitcoin</span><b class="st-val" id="sBTC">—</b><span class="st-sub" id="sBTCv"></span></div>
-    <div class="st"><span class="st-lbl">Ethereum</span><b class="st-val" id="sETH">—</b><span class="st-sub" id="sETHv"></span></div>
-    <div class="st"><span class="st-lbl">Solana</span><b class="st-val" id="sSOL">—</b><span class="st-sub" id="sSOLv"></span></div>
-    <div class="st"><span class="st-lbl">Market Cap</span><b class="st-val" id="sCap">—</b><span class="st-sub" id="sCapv"></span></div>
-    <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
-    <div class="st"><span class="st-lbl">Dólar USD</span><b class="st-val" id="sBrl">—</b><span class="st-sub">BRL</span></div>
-    <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
-    <div class="st"><span class="st-lbl">Volume 24h</span><b class="st-val" id="sVol">—</b><span class="st-sub">USD</span></div>
-    <div class="st"><span class="st-lbl">Ativos</span><b class="st-val" id="sAtv">—</b><span class="st-sub">Listados</span></div>
-  </div>
-</header>
-
-<!-- ═══ FAIXA: 8+ FERRAMENTAS + ATLAS AI ═══ -->
-<div class="banner">
-  <div class="wrap banner-in">
-    <a href="/ferramentas/ferramentas.html" class="ban-card ban-tools">
-      <div class="ban-num">8+</div>
-      <div>
-        <h2>ferramentas gratuitas para investidores DeFi</h2>
-        <p>Calculadoras, simuladores e conversores — tudo junto, sem precisar caçar em dez sites diferentes.</p>
-      </div>
-    </a>
-    <div class="ban-card ban-atlas">
-      <div class="ico">🔮</div>
-      <div>
-        <h3>Atlas AI <span class="badge b-gold">Em breve</span></h3>
-        <p>Seu assistente inteligente para investimentos DeFi — interpretando seu patrimônio, suas pools e seus objetivos.</p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══ FERRAMENTAS (seção nº 2) ═══ -->
+<!-- ═══ FERRAMENTAS (primeira coisa da home) ═══ -->
 <section id="ferramentas">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="sec-eyebrow">100% grátis · o principal ativo do site</div><div class="sec-title">Ferramentas para decidir melhor</div></div>
+      <div><div class="sec-eyebrow">◉ Bem-vindo ao MundoDeFi</div><div class="sec-title">Aqui estão as melhores ferramentas do mercado cripto</div></div>
       <a href="/ferramentas/ferramentas.html" class="sec-link">Ver todas →</a>
     </div>
     <div class="tools-grid">
@@ -481,7 +443,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--purple-soft)">🧭</span>IMD — Índice Mundo DeFi <span class="badge b-new">Novo</span></div>
           <div class="tool-ds">Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e um plano do que estudar primeiro — em ~5 minutos.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -502,7 +464,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">📊</span>Monte seu portfólio aqui</div>
           <div class="tool-ds">Rastreie HOLD, DeFi e Trade em tempo real com gráficos e histórico completo.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -523,7 +485,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--green-soft)">📈</span>Juros Compostos</div>
           <div class="tool-ds">Simule crescimento com aportes mensais e taxas cripto, em BRL e USD.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -543,7 +505,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">🪙</span>Lucro Cripto</div>
           <div class="tool-ds">Lucro real com preço de entrada, saída, taxas de exchange e imposto de renda.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -565,30 +527,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--cyan-soft)">💧</span>Pool de Liquidez</div>
           <div class="tool-ds">Calcule impermanent loss, APY real e retorno esperado de pools DeFi.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/simulador-de-trade.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia simulador de trade">
-            <rect x="10" y="6" width="200" height="20" rx="6" fill="rgba(255,255,255,.04)"/>
-            <text x="18" y="20" class="svg-lbl2">Gestão de banca · 10x</text>
-            <rect x="146" y="9" width="58" height="14" rx="7" fill="var(--green-soft)"/><text x="175" y="19" text-anchor="middle" style="font-family:var(--mono);font-size:9px;font-weight:700;fill:var(--green,#14F195)">+18% / op</text>
-            <rect x="20" y="92" width="24" height="20" rx="3" fill="var(--green,#14F195)" opacity=".45"/>
-            <rect x="54" y="84" width="24" height="28" rx="3" fill="var(--green,#14F195)" opacity=".6"/>
-            <rect x="88" y="74" width="24" height="38" rx="3" fill="var(--green,#14F195)" opacity=".75"/>
-            <rect x="122" y="60" width="24" height="52" rx="3" fill="var(--green,#14F195)" opacity=".88"/>
-            <rect x="156" y="42" width="24" height="70" rx="3" fill="var(--green,#14F195)"/>
-            <text x="168" y="36" text-anchor="middle" class="svg-val">$92</text>
-            <text x="32" y="88" text-anchor="middle" class="svg-lbl">$50</text>
-            <line x1="14" y1="112" x2="206" y2="112" stroke="rgba(255,255,255,.1)"/>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--red-soft)">⚡</span>Simulador de Trade</div>
-          <div class="tool-ds">Long e short com alavancagem, preço de liquidação e sua banca crescendo após cada puxada.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -608,7 +547,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--cyan-soft)">🔄</span>Conversor Cripto</div>
           <div class="tool-ds">Converta entre cripto, BRL, USD e EUR com cotação ao vivo.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -628,7 +567,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--green-soft)">💵</span>Calculadora de Câmbio</div>
           <div class="tool-ds">Converta entre Real, Dólar, Euro e stablecoins (USDT, USDC) ao vivo.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -651,7 +590,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--purple-soft)">🔒</span>Simulador de Staking</div>
           <div class="tool-ds">Projete rendimentos de staking ao longo do tempo, mês a mês.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -670,7 +609,30 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="tool-bd">
           <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">⚖️</span>Comparador de Ativos</div>
           <div class="tool-ds">Compare cripto com ouro, ações, índices e CDI lado a lado.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
+        </div>
+      </a>
+
+      <a href="/ferramentas/simulador-de-trade.html" class="tool-card">
+        <div class="tool-vis">
+          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia simulador de trade">
+            <rect x="10" y="6" width="200" height="20" rx="6" fill="rgba(255,255,255,.04)"/>
+            <text x="18" y="20" class="svg-lbl2">Gestão de banca · 10x</text>
+            <rect x="146" y="9" width="58" height="14" rx="7" fill="var(--green-soft)"/><text x="175" y="19" text-anchor="middle" style="font-family:var(--mono);font-size:9px;font-weight:700;fill:var(--green,#14F195)">+18% / op</text>
+            <rect x="20" y="92" width="24" height="20" rx="3" fill="var(--green,#14F195)" opacity=".45"/>
+            <rect x="54" y="84" width="24" height="28" rx="3" fill="var(--green,#14F195)" opacity=".6"/>
+            <rect x="88" y="74" width="24" height="38" rx="3" fill="var(--green,#14F195)" opacity=".75"/>
+            <rect x="122" y="60" width="24" height="52" rx="3" fill="var(--green,#14F195)" opacity=".88"/>
+            <rect x="156" y="42" width="24" height="70" rx="3" fill="var(--green,#14F195)"/>
+            <text x="168" y="36" text-anchor="middle" class="svg-val">$92</text>
+            <text x="32" y="88" text-anchor="middle" class="svg-lbl">$50</text>
+            <line x1="14" y1="112" x2="206" y2="112" stroke="rgba(255,255,255,.1)"/>
+          </svg>
+        </div>
+        <div class="tool-bd">
+          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">⚡</span>Simulador de Trade</div>
+          <div class="tool-ds">Long e short com alavancagem, preço de liquidação e sua banca crescendo após cada puxada.</div>
+          <div class="tool-ft"><span class="tsel tsel-pro">PRO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
@@ -690,15 +652,28 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
           </svg>
         </div>
         <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--green-soft)">💰</span>Entradas e Saídas</div>
+          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">💰</span>Entradas e Saídas</div>
           <div class="tool-ds">Controle financeiro completo: fluxo de caixa, investimentos e o Nexus.</div>
-          <div class="tool-ft"><span class="badge b-free">✓ Gratuito</span><span class="tool-arrow">→</span></div>
+          <div class="tool-ft"><span class="tsel tsel-pro">PRO</span><span class="tool-arrow">→</span></div>
         </div>
       </a>
 
     </div>
   </div>
 </section>
+
+<!-- ═══ RÉGUA DE MERCADO (movida para baixo das ferramentas) ═══ -->
+<div class="stats" aria-label="Resumo do mercado">
+  <div class="st"><span class="st-lbl">Bitcoin</span><b class="st-val" id="sBTC">—</b><span class="st-sub" id="sBTCv"></span></div>
+  <div class="st"><span class="st-lbl">Ethereum</span><b class="st-val" id="sETH">—</b><span class="st-sub" id="sETHv"></span></div>
+  <div class="st"><span class="st-lbl">Solana</span><b class="st-val" id="sSOL">—</b><span class="st-sub" id="sSOLv"></span></div>
+  <div class="st"><span class="st-lbl">Market Cap</span><b class="st-val" id="sCap">—</b><span class="st-sub" id="sCapv"></span></div>
+  <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
+  <div class="st"><span class="st-lbl">Dólar USD</span><b class="st-val" id="sBrl">—</b><span class="st-sub">BRL</span></div>
+  <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
+  <div class="st"><span class="st-lbl">Volume 24h</span><b class="st-val" id="sVol">—</b><span class="st-sub">USD</span></div>
+  <div class="st"><span class="st-lbl">Ativos</span><b class="st-val" id="sAtv">—</b><span class="st-sub">Listados</span></div>
+</div>
 
 <!-- ═══ BUSCA DE ATIVOS (movida para baixo das ferramentas) ═══ -->
 <section id="busca-ativos">
