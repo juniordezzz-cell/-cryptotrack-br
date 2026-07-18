@@ -169,10 +169,11 @@
     const summary = FinanceUtils.summarizeExpenses(state.expenses);
     const total = summary.total || 1;
 
-    FinanceUtils.setText("[data-essential-percent]", `${Math.round(((summary.byType["Essenciais"] || 0) / total) * 100)}%`);
-    FinanceUtils.setText("[data-essential-value]", FinanceUtils.formatCurrency(summary.byType["Essenciais"] || 0));
-    FinanceUtils.setText("[data-non-essential-percent]", `${Math.round(((summary.byType["Não essenciais"] || 0) / total) * 100)}%`);
-    FinanceUtils.setText("[data-non-essential-value]", FinanceUtils.formatCurrency(summary.byType["Não essenciais"] || 0));
+    const TYPES = FinanceUtils.EXPENSE_TYPES;
+    FinanceUtils.setText("[data-essential-percent]", `${Math.round(((summary.byType[TYPES.fixed] || 0) / total) * 100)}%`);
+    FinanceUtils.setText("[data-essential-value]", FinanceUtils.formatCurrency(summary.byType[TYPES.fixed] || 0));
+    FinanceUtils.setText("[data-non-essential-percent]", `${Math.round(((summary.byType[TYPES.variable] || 0) / total) * 100)}%`);
+    FinanceUtils.setText("[data-non-essential-value]", FinanceUtils.formatCurrency(summary.byType[TYPES.variable] || 0));
     FinanceUtils.setText("[data-total-expenses]", FinanceUtils.formatCurrency(summary.total));
   }
 
@@ -187,7 +188,7 @@
 
     const summary = FinanceUtils.summarizeExpenses(state.expenses);
     FinanceCharts.doughnutChart("#expenseDistributionChart", {
-      values: [summary.byType["Essenciais"] || 0, summary.byType["Não essenciais"] || 0, state.summary.investimentos || 0],
+      values: [summary.byType[FinanceUtils.EXPENSE_TYPES.fixed] || 0, summary.byType[FinanceUtils.EXPENSE_TYPES.variable] || 0, state.summary.investimentos || 0],
       colors: [FinanceCharts.colors.red, "#c82b35", FinanceCharts.colors.green],
       center: FinanceUtils.formatCurrency(summary.total).replace(",00", ""),
       caption: "despesas"

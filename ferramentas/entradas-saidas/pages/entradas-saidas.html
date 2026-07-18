@@ -26,6 +26,7 @@
         <a class="nav-link" href="despesas.html" data-nav="despesas"><span class="nav-icon despesas"></span><span>Despesas</span></a>
         <a class="nav-link" href="investimentos.html" data-nav="investimentos"><span class="nav-icon investimentos"></span><span>Investimentos</span></a>
         <a class="nav-link" href="relatorios.html" data-nav="relatorios"><span class="nav-icon relatorios"></span><span>Relatórios</span></a>
+        <a class="nav-link" href="analises.html" data-nav="analises"><span class="nav-icon analises"></span><span>Análises</span></a>
       </nav>
       <div class="sidebar-footer">
         <a class="nav-link" href="configuracoes.html" data-nav="configuracoes"><span class="nav-icon configuracoes"></span><span>Configurações</span></a>
@@ -38,9 +39,10 @@
         <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Abrir menu">☰</button>
         <div class="topbar-title">
           <h1>Entradas x Saídas</h1>
-          <p>Monte seu orçamento mensal: quanto entra, quanto sai e quanto sobra</p>
+          <p>Renda recorrente, gastos fixos que repetem e gastos que variam por mês</p>
         </div>
         <div class="topbar-actions">
+          <select id="plannerMonth" class="select-control" aria-label="Mês do planejamento" data-mdf-lock-zone></select>
           <input class="input-control" type="text" id="plannerOwner" placeholder="Seu nome" aria-label="Seu nome" style="max-width: 200px;" data-mdf-lock-zone>
           <button class="button danger" type="button" id="plannerReset" data-mdf-lock-zone>Limpar tudo</button>
         </div>
@@ -48,8 +50,8 @@
 
       <section class="stats-grid" aria-label="Resumo do orçamento">
         <article class="card metric-card positive"><div><p class="metric-label">Total de entradas</p><p class="metric-value success-text" data-planner-entradas>R$ 0,00</p><p class="metric-note">Tudo que entra no mês</p></div><span class="metric-icon">↗</span></article>
-        <article class="card metric-card negative"><div><p class="metric-label">Saídas essenciais</p><p class="metric-value danger-text" data-planner-essenciais>R$ 0,00</p><p class="metric-note">Contas que não dá pra cortar</p></div><span class="metric-icon">!</span></article>
-        <article class="card metric-card negative"><div><p class="metric-label">Saídas não essenciais</p><p class="metric-value danger-text" data-planner-nao-essenciais>R$ 0,00</p><p class="metric-note">Onde dá pra economizar</p></div><span class="metric-icon">✂</span></article>
+        <article class="card metric-card negative"><div><p class="metric-label">Gastos fixos</p><p class="metric-value danger-text" data-planner-essenciais>R$ 0,00</p><p class="metric-note">Repetem todo mês</p></div><span class="metric-icon">!</span></article>
+        <article class="card metric-card negative"><div><p class="metric-label">Gastos não fixos</p><p class="metric-value danger-text" data-planner-nao-essenciais>R$ 0,00</p><p class="metric-note">Variam a cada mês</p></div><span class="metric-icon">✂</span></article>
         <article class="card metric-card"><div><p class="metric-label">Sobra do mês</p><p class="metric-value" data-planner-sobra>R$ 0,00</p><p class="metric-note">Entradas menos saídas</p></div><span class="metric-icon">▣</span></article>
       </section>
 
@@ -58,7 +60,7 @@
         <div class="planner-side">
           <article class="card planner-card incomes">
             <div class="planner-head">
-              <h2>Entradas do mês<small>Salário, benefícios e rendas extras</small></h2>
+              <h2>Entradas<small>Salário e rendas — cada fonte com sua frequência</small></h2>
               <span class="planner-badge green" data-planner-total-entradas>R$ 0,00</span>
             </div>
             <div class="planner-rows" data-planner-list="incomes"></div>
@@ -76,7 +78,7 @@
               <p>Reserva de emergência ideal para o seu padrão de vida:</p>
               <strong class="success-text" data-planner-reserva>R$ 0,00</strong>
             </div>
-            <p class="result-note">A reserva ideal cobre 6 meses dos seus gastos essenciais. Com a sobra atual, você levaria <strong data-planner-meses>—</strong> para montar a sua.</p>
+            <p class="result-note">A reserva ideal cobre 6 meses dos seus gastos fixos. Com a sobra atual, você levaria <strong data-planner-meses>—</strong> para montar a sua.</p>
             <div class="commit-track"><span class="commit-fill" data-planner-commit></span></div>
             <div class="commit-caption">
               <span>Renda comprometida</span>
@@ -87,26 +89,26 @@
       <!-- COLUNA DIREITA: SAÍDAS (lista maior) -->
         <article class="card planner-card expenses">
           <div class="planner-head">
-            <h2>Saídas do mês<small>Preencha o valor médio de cada gasto</small></h2>
+            <h2>Saídas<small>Fixos repetem todo mês; não fixos são do mês escolhido</small></h2>
             <span class="planner-badge red" data-planner-total-saidas>R$ 0,00</span>
           </div>
 
           <div class="planner-subhead">
-            <span>Essenciais — moradia, contas e obrigações</span>
+            <span>Gastos fixos — repetem todo mês (defina o dia)</span>
             <strong data-planner-sub-essenciais>R$ 0,00</strong>
           </div>
           <div class="planner-rows" data-planner-list="essentials"></div>
           <div class="planner-add">
-            <button class="button" type="button" data-planner-add="essentials">+ Adicionar gasto essencial</button>
+            <button class="button" type="button" data-planner-add="essentials">+ Adicionar gasto fixo</button>
           </div>
 
           <div class="planner-subhead">
-            <span>Não essenciais — conforto e lazer</span>
+            <span>Gastos não fixos — do mês selecionado</span>
             <strong data-planner-sub-nao-essenciais>R$ 0,00</strong>
           </div>
           <div class="planner-rows" data-planner-list="nonEssentials"></div>
           <div class="planner-add">
-            <button class="button" type="button" data-planner-add="nonEssentials">+ Adicionar gasto não essencial</button>
+            <button class="button" type="button" data-planner-add="nonEssentials">+ Adicionar gasto não fixo</button>
           </div>
         </article>
 

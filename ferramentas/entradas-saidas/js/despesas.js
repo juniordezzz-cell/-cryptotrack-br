@@ -11,10 +11,11 @@
   }
 
   function renderCards(state) {
+    const TYPES = FinanceUtils.EXPENSE_TYPES;
     const summary = FinanceUtils.summarizeExpenses(state.expenses);
     FinanceUtils.setText("[data-despesas-total]", FinanceUtils.formatCurrency(summary.total));
-    FinanceUtils.setText("[data-despesas-essenciais]", FinanceUtils.formatCurrency(summary.byType["Essenciais"] || 0));
-    FinanceUtils.setText("[data-despesas-nao-essenciais]", FinanceUtils.formatCurrency(summary.byType["Não essenciais"] || 0));
+    FinanceUtils.setText("[data-despesas-essenciais]", FinanceUtils.formatCurrency(summary.byType[TYPES.fixed] || 0));
+    FinanceUtils.setText("[data-despesas-nao-essenciais]", FinanceUtils.formatCurrency(summary.byType[TYPES.variable] || 0));
     const categorias = Object.values(summary.byCategory);
     FinanceUtils.setText("[data-despesas-maior]", FinanceUtils.formatCurrency(categorias.length ? Math.max(...categorias) : 0));
   }
@@ -40,18 +41,19 @@
   }
 
   function renderCharts(state) {
-    const essentials = state.expenses.filter((item) => item.type === "Essenciais");
-    const nonEssentials = state.expenses.filter((item) => item.type === "Não essenciais");
+    const TYPES = FinanceUtils.EXPENSE_TYPES;
+    const essentials = state.expenses.filter((item) => item.type === TYPES.fixed);
+    const nonEssentials = state.expenses.filter((item) => item.type === TYPES.variable);
     const sorted = [...state.categories].sort((a, b) => b.value - a.value);
 
     FinanceCharts.barChart("#essenciaisChart", {
       labels: essentials.map((item) => item.category),
-      datasets: [{ label: "Essenciais", color: FinanceCharts.colors.red, values: essentials.map((item) => item.value) }]
+      datasets: [{ label: TYPES.fixed, color: FinanceCharts.colors.red, values: essentials.map((item) => item.value) }]
     });
 
     FinanceCharts.barChart("#naoEssenciaisChart", {
       labels: nonEssentials.map((item) => item.category),
-      datasets: [{ label: "Não essenciais", color: "#ff7279", values: nonEssentials.map((item) => item.value) }]
+      datasets: [{ label: TYPES.variable, color: "#ff7279", values: nonEssentials.map((item) => item.value) }]
     });
 
     FinanceCharts.horizontalBars("#topCategoriasChart", {
@@ -174,7 +176,7 @@
               id: FinanceUtils.uid("d"),
               date: today,
               category,
-              type: "Essenciais",
+              type: FinanceUtils.EXPENSE_TYPES.variable,
               description: `Lista de compras: ${item.name}`,
               value: item.value
             });

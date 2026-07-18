@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Controle Financeiro | Entradas</title>
+  <title>Controle Financeiro | Análises</title>
   <link rel="icon" href="../assets/logo/logo.svg">
   <link rel="stylesheet" href="../css/styles.css">
   <link rel="stylesheet" href="../css/sidebar.css">
@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="../css/nexus.css">
   <link rel="stylesheet" href="../css/responsive.css">
 </head>
-<body data-page="entradas">
+<body data-page="analises">
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
@@ -38,51 +38,36 @@
       <header class="topbar">
         <button class="icon-button menu-toggle" type="button" data-menu-toggle aria-label="Abrir menu">☰</button>
         <div class="topbar-title">
-          <h1>Entradas</h1>
-          <p>Receitas recebidas, histórico e cadastro de novas entradas</p>
+          <h1>Análises</h1>
+          <p>Seus gráficos do ano: renda média por mês e gasto por categoria</p>
         </div>
         <div class="topbar-actions">
-          <input class="date-control" type="date" data-current-date aria-label="Data atual">
+          <span class="status-pill" data-analise-ano>—</span>
         </div>
       </header>
 
-      <section class="stats-grid">
-        <article class="card metric-card positive"><div><p class="metric-label">Total recebido</p><p class="metric-value" data-entradas-total>R$ 0,00</p><p class="metric-note">Receitas do período</p></div><span class="metric-icon">↗</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Maior entrada</p><p class="metric-value" data-entradas-maior>R$ 0,00</p><p class="metric-note" data-entradas-maior-nome>—</p></div><span class="metric-icon">★</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Fontes de renda</p><p class="metric-value" data-entradas-fontes>0</p><p class="metric-note">Entradas diferentes no mês</p></div><span class="metric-icon">◫</span></article>
-        <article class="card metric-card positive"><div><p class="metric-label">Média por fonte</p><p class="metric-value" data-entradas-media>R$ 0,00</p><p class="metric-note">Total ÷ fontes</p></div><span class="metric-icon">÷</span></article>
+      <!-- Gráfico fixo: renda mês a mês + média mensal do ano -->
+      <section class="card pad">
+        <div class="chart-head">
+          <h2 class="section-title">Renda mês a mês no ano</h2>
+          <span class="planner-badge green">Média mensal: <strong data-renda-media style="margin-left:6px;">R$ 0,00</strong></span>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="rendaAnualChart" aria-label="Gráfico da renda por mês no ano"></canvas>
+        </div>
       </section>
 
-      <section class="two-column page-grid">
-        <article class="card pad">
-          <h2 class="section-title">Receitas por origem</h2>
-          <div class="canvas-wrap">
-            <canvas id="entradasFonteChart" aria-label="Gráfico de barras das entradas por origem"></canvas>
-          </div>
-        </article>
-
-        <article class="card pad view-hint">
-          <h2 class="section-title">De onde vêm estes números?</h2>
-          <p class="hint-text">Esta página mostra apenas as <strong>entradas</strong> lançadas no seu orçamento. Para adicionar, editar ou remover valores, use a página <strong>Entradas x Saídas</strong> — ela é o único lugar de lançamento, e tudo aqui atualiza sozinho.</p>
-          <a class="button primary" href="entradas-saidas.html">Ir para Entradas x Saídas →</a>
-        </article>
-      </section>
-
-      <section class="card table-card">
-        <div class="table-actions">
-          <h2 class="section-title">Histórico</h2>
-          <div class="toolbar">
-            <input id="entradaSearch" class="input-control" type="search" placeholder="Pesquisar entrada">
-            <select id="entradaMonth" class="select-control" aria-label="Filtro por mês">
-              <option value="all">Todos os meses</option>
-            </select>
+      <!-- Gráfico dinâmico: escolha uma categoria e veja mês a mês -->
+      <section class="card pad" style="margin-top: 14px;">
+        <div class="chart-head">
+          <h2 class="section-title">Gasto por categoria, mês a mês</h2>
+          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <select id="analiseCategoria" class="select-control" aria-label="Escolha o que ver"></select>
+            <span class="planner-badge red">Média: <strong data-cat-media style="margin-left:6px;">R$ 0,00</strong></span>
           </div>
         </div>
-        <div class="table-scroll">
-          <table>
-            <thead><tr><th>Data</th><th>Origem</th><th>Descrição</th><th>Status</th><th>Valor</th></tr></thead>
-            <tbody id="entradasTableBody"></tbody>
-          </table>
+        <div class="canvas-wrap">
+          <canvas id="categoriaChart" aria-label="Gráfico do gasto da categoria por mês"></canvas>
         </div>
       </section>
     </main>
@@ -91,7 +76,7 @@
   <script src="../js/utils.js"></script>
   <script src="../js/charts.js"></script>
   <script src="../js/app.js"></script>
-  <script src="../js/entradas.js"></script>
+  <script src="../js/analises.js"></script>
   <script src="/nexus/nexus-auth.js"></script>
   <script src="../js/pro-gate.js"></script>
   <script src="../js/nexus-intents.js"></script>

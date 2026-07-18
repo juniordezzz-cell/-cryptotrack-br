@@ -107,6 +107,10 @@ body.light-theme .sidebar {
   content: "▤";
 }
 
+.nav-icon.analises::before {
+  content: "▨";
+}
+
 .nav-icon.configuracoes::before {
   content: "⚙";
 }

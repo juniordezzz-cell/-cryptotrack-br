@@ -494,3 +494,89 @@
     width: 100%;
   }
 }
+
+/* ============================================================
+   Motor de recorrência — linhas de renda (com frequência) e
+   de gasto fixo (com dia do mês). Adicionado no item "salário
+   por mês / frequências".
+   ============================================================ */
+
+/* Linha de RENDA: duas fileiras (descrição+valor / frequência) */
+.planner-row.income-row {
+  grid-template-columns: minmax(0, 1fr) 120px 34px;
+  grid-template-areas:
+    "label value remove"
+    "freq  freq  remove";
+  row-gap: 8px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.income-row .row-label { grid-area: label; }
+.income-row .row-value { grid-area: value; }
+.income-row .row-remove { grid-area: remove; align-self: center; }
+
+.income-row .row-freq {
+  grid-area: freq;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.freq-type,
+.freq-param-input {
+  min-height: 34px;
+  font-size: 0.82rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(15, 19, 23, 0.5);
+  color: var(--text);
+  padding: 0 8px;
+  outline: none;
+}
+
+body.light-theme .freq-type,
+body.light-theme .freq-param-input {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.freq-type { flex: 0 0 auto; }
+.freq-type:focus,
+.freq-param-input:focus { border-color: rgba(98, 255, 77, 0.45); }
+
+.income-row .freq-param {
+  flex: 1 1 auto;
+  display: flex;
+  min-width: 0;
+}
+
+.income-row .freq-param-input { width: 100%; }
+
+.freq-note {
+  align-self: center;
+  padding-left: 4px;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+/* Linha de GASTO FIXO: descrição + dia do mês + valor + remover */
+.planner-row.fixed-row {
+  grid-template-columns: minmax(0, 1fr) 58px 108px 34px;
+}
+
+.fixed-row .row-day {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 640px) {
+  .planner-row.income-row {
+    grid-template-columns: minmax(0, 1fr) 96px 30px;
+  }
+
+  .income-row .row-freq { flex-wrap: wrap; }
+
+  .planner-row.fixed-row {
+    grid-template-columns: minmax(0, 1fr) 48px 84px 30px;
+  }
+}
