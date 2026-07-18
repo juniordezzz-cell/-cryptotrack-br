@@ -38,50 +38,41 @@
     });
   }
 
+  let tipoAtivo = "fixed"; // atalho selecionado quando a busca está vazia
+
+  /* Sugestões (datalist) enquanto a pessoa digita */
   function fillCategorias(state) {
-    const select = document.querySelector("#analiseCategoria");
-    if (!select) { return; }
-    const TYPES = FinanceUtils.EXPENSE_TYPES;
-    const cats = [...new Set(state.expenses.map((e) => e.category).filter(Boolean))].sort();
-
-    const options = [
-      `<option value="__fixed__">Todos os gastos fixos</option>`,
-      `<option value="__variable__">Todos os gastos não fixos</option>`,
-      `<option disabled>──────────</option>`,
-      ...cats.map((c) => `<option value="cat:${c}">${c}</option>`)
-    ].join("");
-
-    const current = select.value;
-    select.innerHTML = options;
-    if ([...select.options].some((o) => o.value === current)) {
-      select.value = current;
-    }
+    const datalist = document.querySelector("#analiseCats");
+    if (!datalist) { return; }
+    const termos = [...new Set(
+      state.expenses.flatMap((e) => [e.category, e.description]).filter(Boolean)
+    )].sort();
+    datalist.innerHTML = termos.map((t) => `<option value="${t}"></option>`).join("");
   }
 
   function renderCategoria(state) {
     const TYPES = FinanceUtils.EXPENSE_TYPES;
-    const select = document.querySelector("#analiseCategoria");
-    const choice = select?.value || "__fixed__";
+    const busca = (document.querySelector("#analiseBusca")?.value || "").trim().toLowerCase();
 
     let filterFn;
     let cor = FinanceCharts.colors.red;
-    if (choice === "__fixed__") {
-      filterFn = (r) => r.type === TYPES.fixed;
-    } else if (choice === "__variable__") {
+
+    if (busca) {
+      /* Busca por texto: casa categoria OU descrição */
+      filterFn = (r) => `${r.category || ""} ${r.description || ""}`.toLowerCase().includes(busca);
+      cor = "#ff7279";
+    } else if (tipoAtivo === "variable") {
       filterFn = (r) => r.type === TYPES.variable;
       cor = "#ff7279";
-    } else if (choice.startsWith("cat:")) {
-      const cat = choice.slice(4);
-      filterFn = (r) => r.category === cat;
     } else {
-      filterFn = () => true;
+      filterFn = (r) => r.type === TYPES.fixed;
     }
 
     const valores = byMonth(state.expenses, filterFn);
     FinanceUtils.setText("[data-cat-media]", FinanceUtils.formatCurrency(mediaMensal(valores)));
     FinanceCharts.barChart("#categoriaChart", {
       labels: MONTH_ABBR,
-      datasets: [{ label: "Gasto", color: cor, values: valores }]
+      datasets: [{ label: busca ? busca : (tipoAtivo === "variable" ? "Não fixos" : "Fixos"), color: cor, values: valores }]
     });
   }
 
@@ -97,10 +88,26 @@
   document.addEventListener("DOMContentLoaded", () => {
     if (document.body.dataset.page !== "analises") { return; }
     boot();
-    const select = document.querySelector("#analiseCategoria");
-    if (select) {
-      select.addEventListener("change", () => renderCategoria(FinanceUtils.getState()));
+
+    const busca = document.querySelector("#analiseBusca");
+    if (busca) {
+      busca.addEventListener("input", () => {
+        /* Digitou algo: os atalhos de tipo ficam inativos */
+        const temTexto = busca.value.trim().length > 0;
+        document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("is-active", !temTexto && c.dataset.filtro === tipoAtivo));
+        renderCategoria(FinanceUtils.getState());
+      });
     }
+
+    document.querySelectorAll(".chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        tipoAtivo = chip.dataset.filtro;
+        if (busca) { busca.value = ""; }
+        document.querySelectorAll(".chip").forEach((c) => c.classList.toggle("is-active", c === chip));
+        renderCategoria(FinanceUtils.getState());
+      });
+    });
+
     document.addEventListener("finance-cloud-ready", boot);
   });
 })();

@@ -115,14 +115,34 @@
     return rows.reduce((acc, row) => acc + (Number(row.value) || 0), 0);
   }
 
-  /* Total de ENTRADAS que caem num mês (nº de recebimentos × valor).
-     É aqui que meses com 5 sextas rendem mais, por exemplo. */
+  /* Recebimentos de UMA fonte no período, como [{date, value}].
+     Frequência regular repete o mesmo valor; "custom" usa parcelas
+     avulsas (cada uma com sua data e seu próprio valor). */
+  function incomeEntries(income, startISO, endISO) {
+    if (income.frequency === "custom") {
+      return (income.installments || [])
+        .filter((p) => p.date && p.date >= startISO && p.date <= endISO && (Number(p.value) || 0) > 0)
+        .map((p) => ({ date: p.date, value: Number(p.value) || 0 }));
+    }
+    const v = Number(income.value) || 0;
+    if (v <= 0) { return []; }
+    return payDates(income, startISO, endISO).map((date) => ({ date, value: v }));
+  }
+
+  /* Soma da renda de uma fonte custom (usado pra manter income.value em dia) */
+  function installmentsTotal(income) {
+    return (income.installments || []).reduce((acc, p) => acc + (Number(p.value) || 0), 0);
+  }
+
+  /* Total de ENTRADAS que caem num mês. Para frequência regular, é
+     nº de recebimentos × valor (é aqui que meses com 5 sextas rendem
+     mais). Para custom, é a soma das parcelas daquele mês. */
   function incomeInMonth(planner, mk) {
     return planner.incomes.reduce((acc, income) => {
-      const v = Number(income.value) || 0;
-      if (v <= 0) { return acc; }
-      const hits = payDates(income, RANGE_START, RANGE_END).filter((d) => d.slice(0, 7) === mk).length;
-      return acc + hits * v;
+      const doMes = incomeEntries(income, RANGE_START, RANGE_END)
+        .filter((e) => e.date.slice(0, 7) === mk)
+        .reduce((s, e) => s + e.value, 0);
+      return acc + doMes;
     }, 0);
   }
 
@@ -148,27 +168,60 @@
     if (freq === "firstBusinessDay") {
       return `<span class="freq-note">1º dia útil do mês</span>`;
     }
+    if (freq === "custom") {
+      return `<span class="freq-note">Parcelas avulsas — some as datas abaixo</span>`;
+    }
     return `<input type="number" class="freq-param-input freq-monthday" min="1" max="31" value="${income.monthday || 5}" aria-label="Dia do mês" title="Dia do mês">`;
+  }
+
+  /* Editor de parcelas (só para frequência "Personalizada") */
+  function installmentsBlock(income) {
+    if (income.frequency !== "custom") { return ""; }
+    const parcelas = (income.installments || []);
+    const linhas = parcelas.length
+      ? parcelas.map((p) => `
+          <div class="inst-row" data-inst-id="${p.id}">
+            <input type="date" class="inst-date" value="${p.date || ""}" aria-label="Data da parcela">
+            <input type="number" class="inst-value" value="${p.value || ""}" min="0" step="0.01" placeholder="0,00" inputmode="decimal" aria-label="Valor da parcela">
+            <button class="inst-remove" type="button" title="Remover parcela" aria-label="Remover parcela">✕</button>
+          </div>`).join("")
+      : `<p class="inst-empty">Nenhuma parcela ainda. Ex: recebi 500 no dia 5, 500 no dia 15 e 400 no dia 25.</p>`;
+    return `
+      <div class="installments">
+        <div class="inst-head">
+          <span>Parcelas — data + valor (o total é somado sozinho)</span>
+          <button class="inst-add" type="button" data-inst-add>+ parcela</button>
+        </div>
+        ${linhas}
+      </div>`;
   }
 
   function incomeRow(row) {
     const freq = row.frequency || "monthly";
+    const isCustom = freq === "custom";
     const freqOpts = [
       ["weekly", "Semanal"],
       ["biweekly", "Quinzenal"],
       ["monthly", "Mensal"],
-      ["firstBusinessDay", "1º dia útil"]
+      ["firstBusinessDay", "1º dia útil"],
+      ["custom", "Personalizada"]
     ].map(([v, label]) => `<option value="${v}" ${freq === v ? "selected" : ""}>${label}</option>`).join("");
 
+    /* Quando é personalizada, o valor vira um total calculado (só leitura) */
+    const valorField = isCustom
+      ? `<input type="text" class="row-value row-total" value="${FinanceUtils.formatCurrency(installmentsTotal(row))}" readonly tabindex="-1" aria-label="Total das parcelas" title="Somado das parcelas">`
+      : `<input type="number" class="row-value" value="${row.value || ""}" min="0" step="0.01" placeholder="0,00" inputmode="decimal" aria-label="Valor por recebimento">`;
+
     return `
-      <div class="planner-row income-row" data-row-id="${row.id}">
+      <div class="planner-row income-row${isCustom ? " is-custom" : ""}" data-row-id="${row.id}">
         <input type="text" class="row-label" value="${escapeHtml(row.label)}" placeholder="Descrição" aria-label="Descrição">
-        <input type="number" class="row-value" value="${row.value || ""}" min="0" step="0.01" placeholder="0,00" inputmode="decimal" aria-label="Valor por recebimento">
+        ${valorField}
         <div class="row-freq">
           <select class="freq-type" aria-label="Frequência">${freqOpts}</select>
           <span class="freq-param">${freqParam(row)}</span>
         </div>
         <button class="row-remove" type="button" title="Remover linha" aria-label="Remover linha">✕</button>
+        ${installmentsBlock(row)}
       </div>
     `;
   }
@@ -287,18 +340,17 @@
     const manter = (row) => !String(row.id).startsWith("pl-") && !DEMO_IDS.includes(row.id);
     const TYPES = FinanceUtils.EXPENSE_TYPES;
 
-    /* Entradas: um lançamento por data de recebimento no ano */
+    /* Entradas: um lançamento por recebimento no ano (parcelas custom
+       entram com seus próprios valores) */
     const novasEntradas = [];
-    planner.incomes.forEach((income) => {
-      const v = Number(income.value) || 0;
-      if (v <= 0) { return; }
-      payDates(income, RANGE_START, RANGE_END).forEach((date) => {
+    planner.incomes.forEach((income, idx) => {
+      incomeEntries(income, RANGE_START, RANGE_END).forEach((rec, i) => {
         novasEntradas.push({
-          id: `pl-${income.id}-${date}`,
-          date,
+          id: `pl-${income.id}-${rec.date}-${i}`,
+          date: rec.date,
           source: income.label || "Entrada",
           description: income.label || "Entrada do planejamento",
-          value: v
+          value: rec.value
         });
       });
     });
@@ -364,30 +416,84 @@
         if (!row) { return; }
 
         if (event.target.classList.contains("row-label")) { row.label = event.target.value; }
-        if (event.target.classList.contains("row-value")) { row.value = Number(event.target.value) || 0; }
+        if (event.target.classList.contains("row-value") && !event.target.classList.contains("row-total")) { row.value = Number(event.target.value) || 0; }
         if (event.target.classList.contains("row-day")) { row.monthday = Number(event.target.value) || 1; }
         if (event.target.classList.contains("freq-weekday")) { row.weekday = Number(event.target.value); }
         if (event.target.classList.contains("freq-monthday")) { row.monthday = Number(event.target.value) || 1; }
         if (event.target.classList.contains("freq-start")) { row.startDate = event.target.value; }
 
+        /* Parcelas da renda personalizada */
+        if (event.target.classList.contains("inst-date") || event.target.classList.contains("inst-value")) {
+          const instEl = event.target.closest("[data-inst-id]");
+          const parcela = (row.installments || []).find((p) => p.id === instEl.dataset.instId);
+          if (parcela) {
+            if (event.target.classList.contains("inst-date")) { parcela.date = event.target.value; }
+            if (event.target.classList.contains("inst-value")) { parcela.value = Number(event.target.value) || 0; }
+            row.value = installmentsTotal(row);
+            const totalField = rowElement.querySelector(".row-total");
+            if (totalField) { totalField.value = FinanceUtils.formatCurrency(row.value); }
+          }
+        }
+
         savePlanner(planner);
         renderTotals(planner);
       });
 
-      /* Trocar a frequência re-desenha só o parâmetro daquela linha */
+      /* Trocar a frequência: se envolve "Personalizada", re-desenha a
+         linha toda (muda o campo de valor e mostra/esconde parcelas). */
       container.addEventListener("change", (event) => {
         if (!event.target.classList.contains("freq-type")) { return; }
         const rowElement = event.target.closest("[data-row-id]");
         const row = planner[listName].find((item) => item.id === rowElement.dataset.rowId);
         if (!row) { return; }
+        const eraCustom = row.frequency === "custom";
         row.frequency = event.target.value;
-        const paramSpan = rowElement.querySelector(".freq-param");
-        if (paramSpan) { paramSpan.innerHTML = freqParam(row); }
+        if (row.frequency === "custom" && !Array.isArray(row.installments)) {
+          row.installments = [{ id: FinanceUtils.uid("pc"), date: `${selectedMonth()}-05`, value: 0 }];
+        }
         savePlanner(planner);
+        if (row.frequency === "custom" || eraCustom) {
+          renderLists(planner);
+        } else {
+          const paramSpan = rowElement.querySelector(".freq-param");
+          if (paramSpan) { paramSpan.innerHTML = freqParam(row); }
+        }
         renderTotals(planner);
       });
 
       container.addEventListener("click", (event) => {
+        /* Adicionar parcela numa renda personalizada */
+        const addInst = event.target.closest("[data-inst-add]");
+        if (addInst) {
+          const rowElement = addInst.closest("[data-row-id]");
+          const row = planner[listName].find((item) => item.id === rowElement.dataset.rowId);
+          if (row) {
+            row.installments = row.installments || [];
+            row.installments.push({ id: FinanceUtils.uid("pc"), date: `${selectedMonth()}-05`, value: 0 });
+            savePlanner(planner);
+            renderLists(planner);
+            renderTotals(planner);
+            rowElement.querySelector(".inst-row:last-child .inst-value")?.focus();
+          }
+          return;
+        }
+
+        /* Remover parcela */
+        const rmInst = event.target.closest(".inst-remove");
+        if (rmInst) {
+          const rowElement = rmInst.closest("[data-row-id]");
+          const instEl = rmInst.closest("[data-inst-id]");
+          const row = planner[listName].find((item) => item.id === rowElement.dataset.rowId);
+          if (row) {
+            row.installments = (row.installments || []).filter((p) => p.id !== instEl.dataset.instId);
+            row.value = installmentsTotal(row);
+            savePlanner(planner);
+            renderLists(planner);
+            renderTotals(planner);
+          }
+          return;
+        }
+
         const button = event.target.closest(".row-remove");
         if (!button) { return; }
         const rowElement = button.closest("[data-row-id]");

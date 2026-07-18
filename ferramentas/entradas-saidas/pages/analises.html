@@ -19,6 +19,7 @@
   <div class="app-shell">
     <aside class="sidebar">
       <a class="brand" href="../index.html" aria-label="Controle Financeiro"><img src="../assets/logo/logo.svg" alt="Controle Financeiro"></a>
+      <a class="back-home" href="https://mundodefi.com.br"><span aria-hidden="true">←</span> Voltar ao MundoDeFi</a>
       <nav class="sidebar-nav" aria-label="Menu principal">
         <a class="nav-link" href="../index.html" data-nav="dashboard"><span class="nav-icon dashboard"></span><span>Dashboard</span></a>
         <a class="nav-link" href="entradas-saidas.html" data-nav="comparativo"><span class="nav-icon comparativo"></span><span>Entradas x Saídas</span></a>
@@ -62,7 +63,12 @@
         <div class="chart-head">
           <h2 class="section-title">Gasto por categoria, mês a mês</h2>
           <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-            <select id="analiseCategoria" class="select-control" aria-label="Escolha o que ver"></select>
+            <input id="analiseBusca" class="input-control" type="search" list="analiseCats" placeholder="Digite um gasto: iFood, Luz, Aluguel..." aria-label="Buscar gasto" autocomplete="off" style="min-width:210px;">
+            <datalist id="analiseCats"></datalist>
+            <div class="seg-chips">
+              <button type="button" class="chip is-active" data-filtro="fixed">Fixos</button>
+              <button type="button" class="chip" data-filtro="variable">Não fixos</button>
+            </div>
             <span class="planner-badge red">Média: <strong data-cat-media style="margin-left:6px;">R$ 0,00</strong></span>
           </div>
         </div>

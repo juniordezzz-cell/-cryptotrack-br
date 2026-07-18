@@ -501,12 +501,13 @@
    por mês / frequências".
    ============================================================ */
 
-/* Linha de RENDA: duas fileiras (descrição+valor / frequência) */
+/* Linha de RENDA: fileiras (descrição+valor / frequência / parcelas) */
 .planner-row.income-row {
   grid-template-columns: minmax(0, 1fr) 120px 34px;
   grid-template-areas:
     "label value remove"
-    "freq  freq  remove";
+    "freq  freq  remove"
+    "inst  inst  inst";
   row-gap: 8px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -515,6 +516,100 @@
 .income-row .row-label { grid-area: label; }
 .income-row .row-value { grid-area: value; }
 .income-row .row-remove { grid-area: remove; align-self: center; }
+.income-row .installments { grid-area: inst; }
+
+/* Campo de total (só leitura) da renda personalizada */
+.income-row .row-total {
+  text-align: right;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--green);
+  cursor: default;
+}
+
+/* Editor de parcelas (renda personalizada) */
+.installments {
+  margin-top: 4px;
+  padding: 10px 12px;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(98, 255, 77, 0.04);
+  display: grid;
+  gap: 8px;
+}
+
+.inst-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+.inst-add {
+  min-height: 30px;
+  padding: 0 10px;
+  font-size: 0.8rem;
+  border: 1px solid rgba(98, 255, 77, 0.3);
+  border-radius: var(--radius-sm);
+  background: rgba(98, 255, 77, 0.1);
+  color: var(--green);
+}
+
+.inst-add:hover { background: rgba(98, 255, 77, 0.18); }
+
+.inst-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 110px 30px;
+  gap: 8px;
+  align-items: center;
+}
+
+.inst-date,
+.inst-value {
+  min-height: 34px;
+  font-size: 0.84rem;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: rgba(15, 19, 23, 0.6);
+  color: var(--text);
+  padding: 0 10px;
+  outline: none;
+}
+
+body.light-theme .inst-date,
+body.light-theme .inst-value { background: rgba(255, 255, 255, 0.86); }
+
+.inst-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.inst-date:focus,
+.inst-value:focus { border-color: rgba(98, 255, 77, 0.45); }
+
+.inst-remove {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted-2);
+  font-size: 0.95rem;
+}
+
+.inst-remove:hover { color: var(--red); background: rgba(255, 71, 80, 0.1); }
+
+.inst-empty {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--muted-2);
+  line-height: 1.4;
+}
 
 .income-row .row-freq {
   grid-area: freq;
@@ -579,4 +674,26 @@ body.light-theme .freq-param-input {
   .planner-row.fixed-row {
     grid-template-columns: minmax(0, 1fr) 48px 84px 30px;
   }
+}
+
+/* Chips de atalho (Fixos / Não fixos) na aba Análises */
+.seg-chips { display: flex; gap: 6px; }
+
+.seg-chips .chip {
+  min-height: 38px;
+  padding: 0 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  font-size: 0.84rem;
+  transition: color 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.seg-chips .chip:hover { color: var(--text); }
+
+.seg-chips .chip.is-active {
+  background: rgba(255, 71, 80, 0.14);
+  color: var(--red);
+  border-color: rgba(255, 71, 80, 0.35);
 }
