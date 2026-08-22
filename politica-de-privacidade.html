@@ -13,12 +13,14 @@
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <style>
 :root{
-  --bg:#05060c;--bg2:#0a0b14;--bg3:#10111c;
+  /* Superfícies e texto de /mundodefi-tokens.css. */
+  --bg:var(--mdf-bg);--bg2:var(--mdf-surface);--bg3:var(--mdf-surface-2);
   --border:rgba(255,255,255,0.05);--border2:rgba(255,255,255,0.09);
-  --text:#eef0f6;--muted:#5a5e70;--muted2:#8b8fa3;
+  /* nomenclatura invertida aqui também: --muted era o mais escuro */
+  --text:var(--mdf-text);--muted:var(--mdf-text-3);--muted2:var(--mdf-text-2);
   --display:'Syne',sans-serif;--font:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   --r:10px;--rl:14px;
 }

@@ -4,12 +4,17 @@
   --font:'Space Grotesk',system-ui,sans-serif;
   --mono:'Space Mono',ui-monospace,monospace;
   --r:8px;--rl:14px;--rxl:20px;--sidebar:236px;
-  --bgp:#060B16;               /* fundo navy profundo */
+  /* Base de /mundodefi-tokens.css. A identidade própria do portfólio —
+     navy com azul neon — continua nas camadas v3/v4 mais abaixo: é área
+     de aplicação, e pode ter um clima distinto do site de marketing.
+     O que vem do sistema é a base de texto, para o contraste ser o mesmo
+     em todo lugar. */
+  --bgp:var(--mdf-bg);
   --line:rgba(122,162,247,.10);--line2:rgba(122,162,247,.20);
   --panel:#0B1322;--panel2:#101A2E;
-  --txt:#EDF2FA;--mut:#8C97AF;--mut2:#5D6880;
-  --purple-soft:rgba(153,69,255,.13);--green-soft:rgba(20,241,149,.11);
-  --cyan-soft:rgba(0,229,255,.10);--gold-soft:rgba(245,182,20,.12);--red-soft:rgba(255,77,106,.12);
+  --txt:var(--mdf-text);--mut:var(--mdf-text-2);--mut2:var(--mdf-text-3);
+  --purple-soft:var(--mdf-purple-soft);--green-soft:var(--mdf-green-soft);
+  --cyan-soft:var(--mdf-cyan-soft);--gold-soft:var(--mdf-gold-soft);--red-soft:var(--mdf-red-soft);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bgp) radial-gradient(1000px 500px at 85% -10%,rgba(0,229,255,.06),transparent 60%);background-attachment:fixed;color:var(--txt);font-family:var(--font);font-size:14.5px;line-height:1.5;-webkit-font-smoothing:antialiased}

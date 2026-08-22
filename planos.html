@@ -12,16 +12,19 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <style>
 :root{
-  --bg:#06040c;--bg2:#0c0916;--bg3:#130e20;--bg4:#1a142b;
-  --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-  --text:#efedf7;--muted:#4d4961;--muted2:#8f8aa8;
+  /* Cores vêm de /mundodefi-tokens.css. --muted era #4d4961 e servia de
+     cor de TEXTO nos títulos dos grupos de features, com contraste de
+     2,37:1 — reprovado. Agora aponta para um nível que passa em AA. */
+  --bg:var(--mdf-bg);--bg2:var(--mdf-surface);--bg3:var(--mdf-surface-2);--bg4:var(--mdf-surface-3);
+  --border:var(--mdf-line);--border2:var(--mdf-line-2);
+  --text:var(--mdf-text);--muted:var(--mdf-text-3);--muted2:var(--mdf-text-2);
   --purple-soft:rgba(153,69,255,.14);--purple-line:rgba(153,69,255,.38);
   --green-soft:rgba(20,241,149,.11);--green-line:rgba(20,241,149,.32);
   --gold-soft:rgba(245,182,20,.12);--gold-line:rgba(245,182,20,.38);
-  --r:10px;--rl:16px;--rxl:24px;
+  --r:var(--mdf-r-sm);--rl:var(--mdf-r-lg);--rxl:var(--mdf-r-xl);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -75,7 +78,10 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 .back-link:hover{color:var(--text);border-color:var(--purple-line)}
 
 /* ============ HERO ============ */
-.hero{text-align:center;padding:2.5rem 0 3.5rem;position:relative}
+/* overflow:hidden porque a .orbit-wrap decorativa tem 1200px de largura
+   fixa e empurrava a pagina inteira para 820px numa tela de 360px,
+   fazendo tudo rolar de lado. */
+.hero{text-align:center;padding:2.5rem 0 3.5rem;position:relative;overflow:hidden}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:99px;border:1px solid var(--purple-line);background:var(--purple-soft);color:#c9a3ff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.4rem}
 .hero h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.045em;line-height:1.08;margin-bottom:1.1rem}
 .hero h1 span{background:linear-gradient(120deg,var(--purple) 10%,#c084fc 45%,var(--green) 95%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
@@ -229,6 +235,9 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
   .orbit-wrap{width:760px;height:560px;top:-120px}
   .compare-table th,.compare-table td{padding:.6rem .6rem;font-size:11.5px}
   .guarantee{flex-direction:column;text-align:center}
+}
+@media(max-width:560px){
+  .orbit-wrap{display:none}
 }
 </style>
 </head>

@@ -23,16 +23,19 @@
   --vermelho: var(--red,    #ff5470);
   --dourado:  var(--gold,   #f5b614);
 
-  /* superfícies e texto — dark premium */
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --border:#26262e;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
+  /* Superfícies e texto vêm de /mundodefi-tokens.css. Este arquivo é
+     compartilhado por 6 ferramentas, então unificar aqui alinha todas
+     de uma vez — antes elas usavam #0a0a0a, um cinza puro que destoava
+     do azulado do resto do site. */
+  --bg:var(--mdf-bg);
+  --bg2:var(--mdf-surface);
+  --card:var(--mdf-surface-2);
+  --border:var(--mdf-line-2);
+  --text:var(--mdf-text);
+  --muted:var(--mdf-text-2);
 
-  --radius:14px;
-  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --radius:var(--mdf-r-lg);
+  --mono:var(--mdf-mono);
 }
 
 /* ── 1. BASE ────────────────────────────────────────────────────────── */

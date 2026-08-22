@@ -19,20 +19,23 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<script src="/mundodefi-api.js"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
+<script src="/mundodefi-api.js?v=2026-08-3"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
 :root{
-  --font:'Space Grotesk',system-ui,sans-serif;
-  --mono:'Space Mono',ui-monospace,monospace;
-  --r:8px;--rl:14px;--rxl:20px;
-  --line:rgba(255,255,255,.07);--line2:rgba(255,255,255,.12);
+  /* Tudo vem de /mundodefi-tokens.css. --bg nunca foi definido aqui: o
+     body usava var(--bg,#070A12) e vivia do fallback. */
+  --font:var(--mdf-font);
+  --mono:var(--mdf-mono);
+  --r:var(--mdf-r-sm);--rl:var(--mdf-r);--rxl:var(--mdf-r-xl);
+  --bg:var(--mdf-bg);
+  --line:var(--mdf-line);--line2:var(--mdf-line-2);
   --panel:rgba(255,255,255,.025);--panel2:rgba(255,255,255,.05);
-  --txt:#EDF0F7;--mut:#8B93A7;--mut2:#5C6478;
-  --purple-soft:rgba(153,69,255,.13);--green-soft:rgba(20,241,149,.11);
-  --cyan-soft:rgba(0,229,255,.10);--gold-soft:rgba(245,182,20,.12);--red-soft:rgba(255,77,106,.12);
+  --txt:var(--mdf-text);--mut:var(--mdf-text-2);--mut2:var(--mdf-text-3);
+  --purple-soft:var(--mdf-purple-soft);--green-soft:var(--mdf-green-soft);
+  --cyan-soft:var(--mdf-cyan-soft);--gold-soft:var(--mdf-gold-soft);--red-soft:var(--mdf-red-soft);
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:86px}

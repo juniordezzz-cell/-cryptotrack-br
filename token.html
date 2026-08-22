@@ -9,20 +9,26 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <script src="/nexus/nexus-auth.js"></script>
-<script src="/mundodefi-cta.js"></script>
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<script src="/mundodefi-cta.js?v=2026-08-3"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <style>
 :root{
-  --bg:#05060b;--bg2:#0a0b12;--bg3:#0f1018;--bg4:#141520;
-  --border:rgba(255,255,255,.05);--border2:rgba(255,255,255,.09);--border3:rgba(255,255,255,.14);
-  --gold2:rgba(245,166,35,.1);--gold3:rgba(245,166,35,.05);--gold4:rgba(245,166,35,.22);
-  --green2:rgba(0,229,160,.1);--green3:#00c488;
-  --red2:rgba(255,61,90,.1);
-  --blue2:rgba(61,139,255,.1);
-  --text:#f0f0fa;--muted:#3a3c52;--muted2:#7a7c96;
-  --font:'Space Grotesk',sans-serif;--display:'Bebas Neue',sans-serif;--mono:'JetBrains Mono',monospace;
-  --r:8px;--rl:12px;--nav-h:54px;
-  --glow-gold:0 0 20px rgba(245,166,35,.15);--glow-green:0 0 20px rgba(0,229,160,.15);
+  /* Cores vêm de /mundodefi-tokens.css. Os nomes locais viram apelidos
+     para os tokens do sistema, então nenhum seletor precisou mudar.
+     --muted era #3a3c52 e servia de cor de TEXTO em 15 trechos, com
+     contraste de 1,88:1 — ilegível. Agora aponta para um nível que
+     passa em AA. --muted2 era o mais claro dos dois: a nomenclatura
+     estava invertida em relação ao resto do site. */
+  --bg:var(--mdf-bg);--bg2:var(--mdf-surface);--bg3:var(--mdf-surface-2);--bg4:var(--mdf-surface-3);
+  --border:var(--mdf-line);--border2:var(--mdf-line-2);--border3:var(--mdf-line-3);
+  --gold2:var(--mdf-gold-soft);--gold3:rgba(245,182,20,.05);--gold4:rgba(245,182,20,.22);
+  --green2:var(--mdf-green-soft);--green3:#00c488;
+  --red2:var(--mdf-red-soft);
+  --blue2:var(--mdf-blue-soft);
+  --text:var(--mdf-text);--muted:var(--mdf-text-3);--muted2:var(--mdf-text-2);
+  --font:var(--mdf-font);--display:'Bebas Neue',var(--mdf-font);--mono:var(--mdf-mono);
+  --r:var(--mdf-r-sm);--rl:var(--mdf-r);--nav-h:54px;
+  --glow-gold:0 0 20px rgba(245,182,20,.15);--glow-green:var(--mdf-glow-green);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;font-size:14px}
@@ -247,7 +253,21 @@ nav{position:sticky;top:0;z-index:300;background:rgba(5,6,11,.96);backdrop-filte
 
 footer{background:var(--bg2);border-top:1px solid var(--border);padding:1.2rem;text-align:center;font-size:11px;color:var(--muted2)}
 footer a{color:var(--muted2);text-decoration:none}footer a:hover{color:var(--text)}
-@media(max-width:768px){.hero-price{font-size:2rem}.hero-name{font-size:1.5rem}.chg-bar{grid-template-columns:repeat(3,1fr)}.hero,.chg-bar{padding-left:1rem;padding-right:1rem}.page-cols{padding:0 1rem 4rem}}
+@media(max-width:768px){.hero-price{font-size:2rem}.hero-name{font-size:1.5rem}.chg-bar{grid-template-columns:repeat(3,1fr)}.hero,.chg-bar{padding-left:1rem;padding-right:1rem}.page-cols{padding:0 1rem 4rem}
+  /* O nav nunca teve tratamento mobile: os links e a busca de 210px fixos
+     empurravam a barra para ~925px numa tela de 360px, e a pagina inteira
+     rolava de lado. Abaixo de 768px os links de texto saem e a busca passa
+     a ser fluida — em telefone, buscar ativo importa mais que os atalhos. */
+  .nav-links{display:none}
+  .nav-inner{gap:10px}
+  .nav-right{flex:1;justify-content:flex-end;min-width:0}
+  .nav-sw{flex:1;min-width:0}
+  .nav-si{width:100%}
+}
+@media(max-width:420px){
+  .nav-logo-text{display:none}
+  .nav-si{font-size:12.5px;padding-left:30px}
+}
 </style>
 </head>
 <body>

@@ -12,17 +12,20 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-3">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0a;--surface:#111114;--surface2:#15151a;--surface3:#1a1a20;
-  --border:#26262e;--border2:#33333d;
-  --gold:#f5b614;--gold2:#d4920f;--cyan:#00e5ff;--purple:#9945ff;
-  --green:#14f195;--red:#ff5470;--blue:#4d9fff;
-  --text:#f2f2f5;--text-muted:#9b9ba6;--text-dim:#b8b8c4;
-  --font:'Space Grotesk',sans-serif;--display:'Space Grotesk',sans-serif;--mono:'JetBrains Mono',monospace;
+  /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
+     o porquê. As cores de marca NÃO são redefinidas aqui: antes este bloco
+     sobrescrevia --red com #ff5470 enquanto a marca usa #FF4D6A, e o mesmo
+     vermelho aparecia diferente conforme a página. */
+  --bg:var(--mdf-bg);--surface:var(--mdf-surface);--surface2:var(--mdf-surface-2);--surface3:var(--mdf-surface-3);
+  --border:var(--mdf-line-2);--border2:var(--mdf-line-3);
+  --gold2:#d4920f;
+  --text:var(--mdf-text);--text-muted:var(--mdf-text-2);--text-dim:var(--mdf-text-2);
+  --font:var(--mdf-font);--display:var(--mdf-font);--mono:var(--mdf-mono);
 }
 html,body{width:100%;min-height:100vh;overflow-x:hidden}
 body{font-family:var(--font);background:var(--bg);color:var(--text);position:relative}

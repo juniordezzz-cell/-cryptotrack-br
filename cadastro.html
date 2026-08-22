@@ -7,12 +7,15 @@
 <meta name="description" content="Crie sua conta gratuita no MundoDeFi: ferramentas DeFi e portfólio cripto em português.">
 <meta name="robots" content="noindex">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <style>
 :root{
-  --bg:#06040c;--bg2:#0c0916;--bg3:#130e20;--bg4:#1a142b;
+  /* Superfícies e texto de /mundodefi-tokens.css. */
+  --bg:var(--mdf-bg);--bg2:var(--mdf-surface);--bg3:var(--mdf-surface-2);--bg4:var(--mdf-surface-3);
   --border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.13);
-  --text:#efedf7;--muted:#4d4961;--muted2:#8f8aa8;
+  /* --muted era #4d4961 (2,37:1) e era usado como texto. Nomenclatura
+     invertida: --muted era o mais escuro dos dois. */
+  --text:var(--mdf-text);--muted:var(--mdf-text-3);--muted2:var(--mdf-text-2);
   --purple-soft:rgba(153,69,255,.14);--purple-line:rgba(153,69,255,.38);
   --green-soft:rgba(20,241,149,.11);--green-line:rgba(20,241,149,.32);
   --red-soft:rgba(255,92,122,.12);

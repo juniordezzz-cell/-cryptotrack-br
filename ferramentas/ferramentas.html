@@ -14,20 +14,24 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --card2:#1b1b22;
-  --border:#26262e;
-  --border2:#33333d;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
-  --text-dim:#b4b4bd;
-  --text-muted:#7a7a86;
+  /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
+     o porquê. As cores de marca NÃO são redefinidas aqui: antes este bloco
+     sobrescrevia --red com #ff5470 enquanto a marca usa #FF4D6A, e o mesmo
+     vermelho aparecia diferente conforme a página. */
+  --bg:var(--mdf-bg);
+  --bg2:var(--mdf-surface);
+  --card:var(--mdf-surface-2);
+  --card2:var(--mdf-surface-3);
+  --border:var(--mdf-line-2);
+  --border2:var(--mdf-line-3);
+  --text:var(--mdf-text);
+  --muted:var(--mdf-text-2);
+  --text-dim:var(--mdf-text-2);
+  --text-muted:var(--mdf-text-3);
   --roxo:var(--purple);
   --verde:var(--green);
   --vermelho:var(--red);
