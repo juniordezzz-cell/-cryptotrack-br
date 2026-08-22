@@ -79,12 +79,12 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 .hero-badge{display:inline-flex;align-items:center;gap:8px;padding:6px 18px;border-radius:99px;border:1px solid var(--purple-line);background:var(--purple-soft);color:#c9a3ff;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.4rem}
 .hero h1{font-size:clamp(2.2rem,5vw,3.4rem);font-weight:800;letter-spacing:-.045em;line-height:1.08;margin-bottom:1.1rem}
 .hero h1 span{background:linear-gradient(120deg,var(--purple) 10%,#c084fc 45%,var(--green) 95%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero p{font-size:1.08rem;color:var(--muted2);max-width:580px;margin:0 auto;line-height:1.65}
+.hero p{font-size:1.08rem;color:#aba6bf;max-width:620px;margin:0 auto;line-height:1.68}
 .hero p b{color:var(--text)}
 
 /* ============ CARDS DE PLANO ============ */
 .plans{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-bottom:2.2rem;align-items:stretch}
-.plan-card{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:2rem 1.7rem;position:relative;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
+.plan-card{background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--bg2);border:1px solid var(--border);border-radius:var(--rxl);padding:2.15rem 1.75rem;position:relative;display:flex;flex-direction:column;transition:transform .25s,border-color .25s,box-shadow .25s}
 .plan-card:hover{transform:translateY(-5px)}
 .plan-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
 
@@ -147,11 +147,11 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 .flock .ftext{color:var(--muted2)}
 .lock-tag{font-size:9.5px;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:99px;margin-left:5px;background:var(--gold-soft);color:var(--gold);border:1px solid rgba(245,182,20,.25)}
 
-.plan-btn{display:block;width:100%;padding:14px;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;border:none;letter-spacing:.01em;text-align:center;text-decoration:none;color:var(--text)}
+.plan-btn{display:block;width:100%;padding:14px;border-radius:12px;font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;border:none;letter-spacing:.01em;text-align:center;text-decoration:none;color:var(--text);min-height:49px}
 .btn-free{background:var(--bg3);border:1px solid var(--border2)}
 .btn-free:hover{border-color:var(--green-line);color:var(--green)}
 .btn-pro{background:linear-gradient(120deg,var(--purple),#7b2ff7);color:#fff;box-shadow:0 8px 28px rgba(153,69,255,.32)}
-.btn-pro:hover{transform:scale(1.02);box-shadow:0 10px 34px rgba(153,69,255,.45)}
+.btn-pro:hover{transform:translateY(-1px) scale(1.02);box-shadow:0 10px 34px rgba(153,69,255,.45)}
 .btn-prem{background:linear-gradient(120deg,var(--gold),#ffd95e);color:#1a1200;box-shadow:0 8px 28px rgba(245,182,20,.25)}
 .btn-prem:hover{transform:scale(1.02);box-shadow:0 10px 34px rgba(245,182,20,.4)}
 .btn-sub{font-size:11px;color:var(--muted2);text-align:center;margin-top:9px}
@@ -287,7 +287,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
           <div class="feature"><div class="fcheck">✓</div><div class="ftext">Carteira HOLD <span class="fhl hl-green">até 10 ativos</span></div></div>
         </div>
       </div>
-      <a class="plan-btn btn-free" href="/cadastro.html">Começar grátis</a>
+      <a class="plan-btn btn-free" href="/cadastro.html" data-cta="planos-free-card">Começar grátis</a>
       <div class="btn-sub">Crie sua conta em 1 minuto</div>
     </div>
 
@@ -312,7 +312,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
           <div class="feature"><div class="fcheck">✓</div><div class="ftext">Portfólio completo <span class="fhl hl-purple">HOLD + DeFi + Trade</span></div></div>
           <div class="feature"><div class="fcheck">✓</div><div class="ftext">Ativos, pools e trades <b>ilimitados</b></div></div>
           <div class="feature"><div class="fcheck">✓</div><div class="ftext">Tracking de pools com impermanent loss</div></div>
-          <div class="feature"><div class="fcheck">✓</div><div class="ftext">Histórico completo + exportação para o IR</div></div>
+          <div class="feature"><div class="fcheck">✓</div><div class="ftext">Histórico completo + exportação em CSV</div></div>
         </div>
         <div class="fgroup">
           <div class="fgroup-title">Disponível no Premium</div>
@@ -321,7 +321,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
           <div class="flock"><div class="fcheck">🔒</div><div class="ftext">Mentoria individual <span class="lock-tag">PREMIUM</span></div></div>
         </div>
       </div>
-      <a class="plan-btn btn-pro" href="https://pay.kiwify.com.br/0kkXg3k" target="_blank" rel="noopener">Assinar PRO →</a>
+      <a class="plan-btn btn-pro" href="https://pay.kiwify.com.br/0kkXg3k" target="_blank" rel="noopener noreferrer" data-cta="planos-pro-card">Assinar PRO →</a>
       <div class="btn-sub">PIX, cartão ou boleto · garantia de 7 dias</div>
     </div>
 
@@ -398,8 +398,8 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
           <tr><td>Mentoria individual (1 encontro/mês)</td><td><span class="cn">—</span></td><td><span class="cn">—</span></td><td><span class="cy-o">✓ 15 vagas</span></td></tr>
           <tr>
             <td></td>
-            <td><a class="plan-btn btn-free" style="padding:9px 14px;font-size:12.5px" href="/cadastro.html">Começar</a></td>
-            <td><a class="plan-btn btn-pro" style="padding:9px 14px;font-size:12.5px" href="https://pay.kiwify.com.br/rccq9iS" target="_blank" rel="noopener">Assinar PRO</a></td>
+            <td><a class="plan-btn btn-free" style="padding:9px 14px;font-size:12.5px" href="/cadastro.html" data-cta="planos-free-table">Começar</a></td>
+            <td><a class="plan-btn btn-pro" style="padding:9px 14px;font-size:12.5px" href="https://pay.kiwify.com.br/rccq9iS" target="_blank" rel="noopener noreferrer" data-cta="planos-pro-table">Assinar PRO</a></td>
             <td><span class="plan-btn btn-prem" style="padding:9px 14px;font-size:12.5px;opacity:.55;cursor:default;pointer-events:none">Em breve</span></td>
           </tr>
         </tbody>
@@ -430,7 +430,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
     </div>
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q">Qual a diferença entre PRO e Premium? <span class="faq-arrow">▼</span></div>
-      <div class="faq-a"><b>PRO</b> é a plataforma completa: portfólio ilimitado (HOLD + DeFi + Trade), tracking de pools e exportação para o IR. <b>Premium</b> é a plataforma + eu: as teses operacionais de DeFi e Trade Avançado, relatório mensal e a mentoria individual. Em resumo: PRO organiza, Premium acompanha.</div>
+      <div class="faq-a"><b>PRO</b> é a plataforma completa: portfólio ilimitado (HOLD + DeFi + Trade), tracking de pools e exportação dos seus dados em CSV. <b>Premium</b> é a plataforma + eu: as teses operacionais de DeFi e Trade Avançado, relatório mensal e a mentoria individual. Em resumo: PRO organiza, Premium acompanha.</div>
     </div>
     <div class="faq-item" onclick="toggleFaq(this)">
       <div class="faq-q">Posso cancelar a qualquer momento? <span class="faq-arrow">▼</span></div>
@@ -455,8 +455,8 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
     <h2>Comece grátis. Evolua quando fizer sentido.</h2>
     <p>Sem pressão: as ferramentas são suas para sempre.<br>Os planos pagos existem para quando você quiser ir mais fundo.</p>
     <div class="final-cta-btns">
-      <a class="plan-btn btn-free" href="/cadastro.html">Criar conta grátis</a>
-      <a class="plan-btn btn-pro" href="https://pay.kiwify.com.br/rccq9iS" target="_blank" rel="noopener">Assinar PRO — R$ 19,90/mês</a>
+      <a class="plan-btn btn-free" href="/cadastro.html" data-cta="planos-final-free">Criar conta grátis</a>
+      <a class="plan-btn btn-pro" href="https://pay.kiwify.com.br/rccq9iS" target="_blank" rel="noopener noreferrer" data-cta="planos-final-pro">Assinar PRO — R$ 19,90/mês</a>
     </div>
   </div>
 

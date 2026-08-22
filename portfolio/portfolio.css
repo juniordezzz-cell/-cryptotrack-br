@@ -4,7 +4,7 @@
   --font:'Space Grotesk',system-ui,sans-serif;
   --mono:'Space Mono',ui-monospace,monospace;
   --r:8px;--rl:14px;--rxl:20px;--sidebar:236px;
-  --bgp:#060B16;               /* fundo navy profundo (estilo Atlas) */
+  --bgp:#060B16;               /* fundo navy profundo */
   --line:rgba(122,162,247,.10);--line2:rgba(122,162,247,.20);
   --panel:#0B1322;--panel2:#101A2E;
   --txt:#EDF2FA;--mut:#8C97AF;--mut2:#5D6880;
@@ -32,13 +32,13 @@ button{font-family:var(--font);cursor:pointer}
 .sb-item.active{color:var(--txt);background:linear-gradient(90deg,rgba(0,229,255,.12),rgba(0,229,255,.02));border-left:2px solid var(--cyan,#00E5FF);box-shadow:inset 0 0 0 1px rgba(0,229,255,.08)}
 .sb-item .ico{width:20px;text-align:center;font-size:15px}
 .sb-foot{margin-top:auto;display:flex;flex-direction:column;gap:8px;padding-top:1rem;border-top:1px solid var(--line)}
-.sb-plan{display:flex;align-items:center;gap:10px;background:linear-gradient(120deg,rgba(245,182,20,.10),rgba(245,182,20,.03));border:1px solid rgba(245,182,20,.35);border-radius:var(--rl);padding:.65rem .75rem;margin-top:6px}
+.sb-plan{display:flex;align-items:center;gap:10px;background:linear-gradient(120deg,rgba(153,69,255,.10),rgba(153,69,255,.03));border:1px solid rgba(153,69,255,.30);border-radius:var(--rl);padding:.65rem .75rem;margin-top:6px}
 .sb-plan-ico{font-size:16px;flex-shrink:0}
 .sb-plan-bd{flex:1;min-width:0}
-.sb-plan-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold,#F5B614);margin-bottom:4px}
-.sb-plan select{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(245,182,20,.3);border-radius:8px;color:var(--txt);font-family:var(--font);font-size:12px;font-weight:600;padding:5px 7px}
-.sb-atlas{display:flex;align-items:center;gap:9px;padding:.65rem .8rem;border-radius:var(--rl);background:linear-gradient(120deg,rgba(245,182,20,.10),rgba(153,69,255,.08));border:1px solid rgba(245,182,20,.25);font-size:12px;color:var(--mut)}
-.sb-atlas b{color:var(--gold,#F5B614);font-size:12.5px}
+.sb-plan-lbl{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.sb-plan-val{font-family:var(--font);font-size:13.5px;font-weight:700;color:var(--txt);line-height:1.2}
+.sb-plan-cta{flex-shrink:0;font-size:11px;font-weight:700;padding:5px 11px;border-radius:99px;background:var(--purple-soft);border:1px solid rgba(153,69,255,.4);color:var(--purple,#9945FF);transition:all .14s}
+.sb-plan-cta:hover{background:var(--purple,#9945FF);color:#fff}
 .sb-link{font-size:11.5px;color:var(--mut2);padding:2px 6px}
 .sb-link:hover{color:var(--cyan,#00E5FF)}
 .main{min-width:0;width:100%;max-width:1320px;margin:0 auto;padding:1.6rem 2.2rem 3rem}
@@ -102,7 +102,6 @@ td.mono,.num{font-family:var(--mono)}
 /* badges & tags */
 .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 7px;border-radius:4px;white-space:nowrap}
 .b-pro{background:var(--purple-soft);color:var(--purple,#9945FF)}
-.b-prem{background:var(--gold-soft);color:var(--gold,#F5B614)}
 .b-open{background:var(--green-soft);color:var(--green,#14F195)}
 .b-closed{background:var(--panel2);color:var(--mut)}
 .tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--panel2);border:1px solid var(--line);white-space:nowrap}
@@ -191,7 +190,7 @@ td.mono,.num{font-family:var(--mono)}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 /* ═══ ADIÇÕES v1 ═══ */
-.lockbtn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:99px;border:1px dashed rgba(245,182,20,.45);background:var(--gold-soft);color:var(--gold,#F5B614);font-size:12px;font-weight:700;transition:all .14s}
+.lockbtn{display:inline-flex;align-items:center;gap:7px;padding:7px 14px;border-radius:99px;border:1px dashed rgba(153,69,255,.5);background:var(--purple-soft);color:var(--purple,#9945FF);font-size:12px;font-weight:700;transition:all .14s}
 .lockbtn:hover{border-style:solid;filter:brightness(1.1)}
 .lockbtn.lp{border-color:rgba(153,69,255,.5);background:var(--purple-soft);color:var(--purple,#9945FF)}
 .up-hero{text-align:center;padding:.6rem 0 .2rem}
@@ -205,11 +204,6 @@ td.mono,.num{font-family:var(--mono)}
 .wchip b{color:var(--txt)}
 .lockrow td{text-align:center;padding:.8rem;color:var(--gold,#F5B614);font-size:12px;font-weight:700;cursor:pointer;background:var(--gold-soft)}
 .lockrow:hover td{filter:brightness(1.15)}
-.atlas-card{background:linear-gradient(130deg,rgba(245,182,20,.10),rgba(153,69,255,.08));border:1px solid rgba(245,182,20,.3);border-radius:var(--rl);padding:1.15rem;display:flex;align-items:center;gap:14px;margin-bottom:1.3rem;flex-wrap:wrap}
-.atlas-card .ico{width:44px;height:44px;border-radius:12px;background:var(--gold-soft);display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0}
-.atlas-card b{font-size:14px}
-.atlas-card p{font-size:12px;color:var(--mut);margin-top:2px}
-.atlas-card .right{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
 .subtabs{display:flex;gap:6px;margin:.2rem 0 1rem;flex-wrap:wrap}
 .notice{background:var(--panel);border:1px dashed var(--line2);border-radius:var(--rl);padding:.8rem 1rem;font-size:12.5px;color:var(--mut);margin-bottom:1rem}
 .tok-line{font-family:var(--mono);font-size:11.5px;color:var(--cyan,#00E5FF)}
@@ -247,46 +241,8 @@ body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;bac
 .mini-note{font-size:11px;color:var(--mut2);margin-top:.5rem}
 @media(prefers-reduced-motion:reduce){body::before{display:none}}
 
-/* ═══ SKIN ATLAS (premium — visual mais elegante) ═══ */
-body.atlas{--acc:var(--gold,#F5B614)}
-body.atlas::before{background:
- radial-gradient(760px 480px at 12% -8%,rgba(245,182,20,.13),transparent 64%),
- radial-gradient(680px 460px at 100% 8%,rgba(153,69,255,.10),transparent 60%),
- radial-gradient(600px 460px at 84% 104%,rgba(0,229,255,.06),transparent 62%)}
-body.atlas .sb{background:linear-gradient(180deg,rgba(245,182,20,.05),rgba(10,14,24,.6));border-right-color:rgba(245,182,20,.14)}
-body.atlas .sb-item.active{border-left-color:var(--gold,#F5B614);background:linear-gradient(90deg,rgba(245,182,20,.12),transparent)}
-body.atlas .mc,body.atlas .card{border-color:rgba(245,182,20,.14);box-shadow:0 4px 24px rgba(0,0,0,.3)}
-body.atlas .mc:hover{border-color:rgba(245,182,20,.4);box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 26px rgba(245,182,20,.12)}
-body.atlas .top h1::after{background:var(--gold,#F5B614);box-shadow:0 0 14px rgba(245,182,20,.6)}
-.atlas-hd{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,rgba(245,182,20,.14),rgba(153,69,255,.10));border:1px solid rgba(245,182,20,.34);border-radius:var(--rxl);padding:1.3rem 1.5rem;margin-bottom:1.4rem}
-.atlas-hd .orb{width:52px;height:52px;border-radius:15px;background:linear-gradient(135deg,#FFD44F,var(--gold,#F5B614));display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 0 20px rgba(245,182,20,.5);flex-shrink:0}
-.atlas-hd h2{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
-.atlas-hd p{font-size:13px;color:var(--mut);margin-top:3px}
-.crown{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 10px;border-radius:6px;background:var(--gold-soft);color:var(--gold,#F5B614)}
-/* Oráculo */
-.orac{background:linear-gradient(160deg,rgba(153,69,255,.08),var(--panel));border:1px solid rgba(153,69,255,.28);border-radius:var(--rxl);overflow:hidden;margin-bottom:1.4rem}
-.orac-hd{display:flex;align-items:center;gap:11px;padding:1rem 1.3rem;border-bottom:1px solid var(--line)}
-.orac-hd .orb2{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--purple,#9945FF),var(--cyan,#00E5FF));display:flex;align-items:center;justify-content:center;font-size:17px}
-.orac-body{padding:1.2rem 1.3rem;min-height:120px}
-.orac-msg{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:.9rem 1.1rem;font-size:13.5px;line-height:1.6;margin-bottom:.8rem}
-.orac-msg b{color:var(--cyan,#00E5FF)}
-.orac-q{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
-.orac-chip{font-size:12px;font-weight:600;padding:7px 14px;border-radius:99px;border:1px solid var(--line2);background:var(--panel);color:var(--mut);cursor:pointer;transition:all .13s}
-.orac-chip:hover{border-color:var(--purple,#9945FF);color:var(--purple,#9945FF)}
-.orac-in{display:flex;gap:8px}
-.orac-in input{flex:1;background:var(--panel2);border:1px solid var(--line2);border-radius:10px;color:var(--txt);font-family:var(--font);font-size:13.5px;padding:10px 13px;outline:none}
-.orac-in input:focus{border-color:var(--purple,#9945FF)}
-.orac-note{font-size:11px;color:var(--mut2);margin-top:.7rem;line-height:1.5}
-.ins-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:1.4rem}
-.ins{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);padding:1rem 1.15rem;display:flex;gap:11px}
-.ins .i{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.ins b{font-size:13px;display:block;margin-bottom:2px}
-.ins p{font-size:12px;color:var(--mut);line-height:1.5}
-.adv-btn{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;border-radius:10px;border:1px solid rgba(245,182,20,.4);background:var(--gold-soft);color:var(--gold,#F5B614);font-size:12.5px;font-weight:700;transition:all .14s}
-.adv-btn:hover{filter:brightness(1.1);border-style:solid}
-@media(max-width:960px){.ins-grid{grid-template-columns:1fr}}
 
-/* ═══════════════ REFORMA VISUAL v3 (menos quadrado, mais premium) ═══════════════ */
+/* ═══════════════ REFORMA VISUAL v3 — cantos e sombras ═══════════════ */
 /* cantos mais arredondados em tudo */
 :root{--r:10px;--rl:18px;--rxl:24px}
 .mc,.card,.pool-card{border-radius:20px;border-color:rgba(255,255,255,.05)}
@@ -302,7 +258,6 @@ body.atlas .top h1::after{background:var(--gold,#F5B614);box-shadow:0 0 14px rgb
 body::after{content:'';position:fixed;left:0;right:0;bottom:0;height:52vh;pointer-events:none;z-index:0;
  background:linear-gradient(180deg,transparent,rgba(153,69,255,.05) 46%,rgba(0,229,255,.045) 72%,rgba(153,69,255,.10));
  -webkit-mask:linear-gradient(180deg,transparent,#000 60%);mask:linear-gradient(180deg,transparent,#000 60%)}
-body.atlas::after{background:linear-gradient(180deg,transparent,rgba(245,182,20,.05) 46%,rgba(153,69,255,.05) 72%,rgba(245,182,20,.10))}
 
 /* topo com números-chave respirando */
 .top h1{font-size:1.6rem}
@@ -312,32 +267,21 @@ body.atlas::after{background:linear-gradient(180deg,transparent,rgba(245,182,20,
 /* seletor de plano — fonte do site (Space Grotesk), mais bonito */
 .sb-plan{background:linear-gradient(150deg,rgba(153,69,255,.10),rgba(255,255,255,.02));border-color:rgba(153,69,255,.2);border-radius:14px}
 .sb-plan-lbl{font-family:var(--font);font-weight:700;letter-spacing:.04em;text-transform:none;font-size:11px;color:var(--mut)}
-.sb-plan select{font-family:var(--font);font-weight:600;font-size:13.5px;border-radius:9px;cursor:pointer}
 
-/* tag do Oráculo no banner do Atlas */
-.orac-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:6px 12px;border-radius:99px;background:linear-gradient(120deg,rgba(153,69,255,.18),rgba(0,229,255,.12));border:1px solid rgba(153,69,255,.3);color:#c9b6ff;white-space:nowrap}
-.atlas-card{border-radius:20px}
-.atlas-card b .crown{margin-left:6px}
-
-/* bloco PRO/PREMIUM antes do rodapé */
-.plans-cta{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:1.8rem;padding-top:1.6rem;border-top:1px solid rgba(255,255,255,.05)}
+/* bloco PRO antes do rodapé */
+.plans-cta{display:grid;grid-template-columns:1fr;max-width:460px;gap:14px;margin-top:1.8rem;padding-top:1.6rem;border-top:1px solid rgba(255,255,255,.05)}
 .pc-card{position:relative;border-radius:20px;padding:1.4rem 1.5rem;display:flex;flex-direction:column;gap:.5rem}
 .pc-pro{background:linear-gradient(160deg,rgba(153,69,255,.14),rgba(255,255,255,.015));border:1px solid rgba(153,69,255,.35)}
-.pc-prem{background:linear-gradient(160deg,rgba(245,182,20,.12),rgba(255,255,255,.015));border:1px solid rgba(245,182,20,.4)}
 .pc-tag{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--purple,#9945FF)}
 .pc-price{font-family:var(--mono);font-size:1.7rem;font-weight:700;letter-spacing:-.02em}
 .pc-price small{font-size:12px;color:var(--mut);font-weight:400}
 .pc-card p{font-size:12.5px;color:var(--mut);line-height:1.55;flex:1;margin-bottom:.3rem}
-.pc-pill{position:absolute;top:-11px;right:16px;background:var(--gold,#F5B614);color:#181203;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:4px 12px;border-radius:99px}
-.btn-gold{background:linear-gradient(120deg,var(--gold,#F5B614),#e0a30a);color:#181203}
-.btn-gold:hover{filter:brightness(1.08)}
-@media(max-width:640px){.plans-cta{grid-template-columns:1fr}}
 
 /* tira o "quadrado" das tabelas: cantos e hover mais suaves */
 .card .tblw{border-radius:0 0 20px 20px}
 .pool-card{border-radius:18px}
 
-/* ═══════════════ v4 — AZUL NEON + DOURADO (premium) ═══════════════
+/* ═══════════════ v4 — AZUL NEON + DOURADO ═══════════════
    Comando visual: azul neon (#2E9CFF) + dourado (#F5B614) como cores principais.
    Verde/vermelho ficam SÓ em ganho/perda (função). Bloco aditivo — não remove nada acima. */
 :root{--azul:#2E9CFF;--azulb:#5FD0FF;--azul-soft:rgba(46,156,255,.12)}
@@ -377,14 +321,80 @@ body::after{background:linear-gradient(180deg,transparent,rgba(46,156,255,.05) 4
 .mc:hover{border-color:rgba(46,156,255,.4);box-shadow:0 8px 30px rgba(0,0,0,.4),0 0 24px rgba(46,156,255,.12);transform:translateY(-2px)}
 .pool-card:hover{border-color:rgba(46,156,255,.45);box-shadow:0 8px 28px rgba(0,0,0,.35),0 0 24px rgba(46,156,255,.12)}
 
-/* botões, tabs, pools, oráculo → azul (dourado nos planos premium fica) */
+/* botões, tabs e pools → azul */
 .btn-p{background:var(--azul);color:#04121f}
 .btn-g:hover{border-color:var(--azul);color:var(--azul)}
 .tab.on{background:var(--azul-soft);border-color:rgba(46,156,255,.4);color:var(--azulb)}
 .strat-res{background:linear-gradient(120deg,var(--azul-soft),transparent);border-color:rgba(46,156,255,.22)}
-.orac{background:linear-gradient(160deg,rgba(46,156,255,.08),var(--panel));border-color:rgba(46,156,255,.28)}
-.orac-hd .orb2{background:linear-gradient(135deg,var(--azul),var(--azulb))}
-.orac-msg b,.d-item b,.tok-line{color:var(--azulb)}
-.orac-chip:hover,.sb-link:hover{border-color:var(--azul);color:var(--azul)}
-.orac-in input:focus,.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--azul)}
+.d-item b,.tok-line{color:var(--azulb)}
+.sb-link:hover{border-color:var(--azul);color:var(--azul)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--azul)}
 .pb-p,.b-pro{background:var(--azul-soft);color:var(--azulb)}
+
+/* ═══════════════ v5 — MODELO DE EVENTOS ═══════════════
+   Componentes introduzidos junto com o núcleo de cálculo novo:
+   estado vazio, barra de resumo, avisos de dado velho e status de sync. */
+
+/* ── estado vazio: substitui os dados falsos do v1 ── */
+.zero{text-align:center;padding:3rem 1.5rem;max-width:520px;margin:0 auto}
+.zero-ico{font-size:38px;line-height:1;color:var(--mut2);margin-bottom:1rem;opacity:.7}
+.zero h3{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem}
+.zero p{font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:1.4rem}
+.zero-acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.zero-note{font-size:11.5px;color:var(--mut2);margin-top:1rem;line-height:1.5}
+.card-bd .zero{padding:2rem 1rem}
+
+/* ── barra de resumo sob os cards ── */
+.resumo-bar{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:1.3rem}
+.resumo-bar.resumo-4{grid-template-columns:repeat(4,1fr)}
+.resumo-bar>div{background:var(--panel);padding:.9rem 1.1rem;display:flex;flex-direction:column;gap:2px}
+.rb-lbl{font-size:11px;color:var(--mut);display:flex;align-items:center;gap:5px}
+.resumo-bar b{font-family:var(--mono);font-size:1.15rem;font-weight:700;letter-spacing:-.02em}
+.resumo-bar b.mut{color:var(--mut2)}
+.resumo-bar small{font-size:10.5px;color:var(--mut2)}
+.rb-acts{display:flex;gap:6px;margin-top:3px;flex-wrap:wrap}
+
+/* ── tooltip de explicação das métricas ── */
+.hint{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;
+  border-radius:50%;border:1px solid var(--line2);color:var(--mut2);font-size:9px;font-style:normal;
+  font-weight:700;cursor:help;flex-shrink:0}
+.hint:hover{border-color:var(--cyan,#00E5FF);color:var(--cyan,#00E5FF)}
+
+/* ── avisos de dado velho / falha de cotação ── */
+.warn{background:rgba(245,182,20,.08);border:1px solid rgba(245,182,20,.28);border-radius:var(--r);
+  padding:.7rem 1rem;font-size:12.5px;color:var(--gold,#F5B614);margin-bottom:1.1rem;line-height:1.5}
+.pool-stale{font-size:11px;color:var(--gold,#F5B614);margin-top:.5rem;padding-top:.5rem;
+  border-top:1px dashed rgba(245,182,20,.25)}
+
+/* ── status de sincronização na sidebar ── */
+.sb-sync{padding:.5rem .6rem;margin-bottom:.3rem}
+.sync{font-size:11px;font-weight:600;display:inline-flex;align-items:center;gap:5px;color:var(--mut2)}
+.sync.ok{color:var(--green,#14F195)}
+.sync.err{color:var(--red,#FF4D6A)}
+.sync.warn-s{color:var(--mut)}
+
+/* ── cards compactos (detalhe de pool) ── */
+.mgrid-6{grid-template-columns:repeat(6,1fr)}
+.mc.sm{padding:.7rem .8rem}
+.mc.sm .mc-val{font-size:1rem}
+.mc-pct{display:block;font-size:10px;font-weight:400;color:var(--mut2);margin-top:1px}
+
+/* ── diversos ── */
+.tk-ic.dim{opacity:.45}
+.mut{color:var(--mut2)}
+small.blk{display:block;font-size:10px;color:var(--mut2)}
+.btn-x{background:none;border:none;color:var(--mut2);font-size:17px;line-height:1;padding:2px 7px;
+  border-radius:6px;transition:all .13s}
+.btn-x:hover{background:var(--red-soft);color:var(--red,#FF4D6A)}
+.res-pill small{opacity:.75;font-weight:400}
+
+@media(max-width:960px){
+  .mgrid-6{grid-template-columns:repeat(3,1fr)}
+  .resumo-bar,.resumo-bar.resumo-4{grid-template-columns:repeat(2,1fr)}
+}
+@media(max-width:560px){
+  .mgrid-6{grid-template-columns:repeat(2,1fr)}
+  .resumo-bar,.resumo-bar.resumo-4{grid-template-columns:1fr}
+  .zero{padding:2rem 1rem}
+}
