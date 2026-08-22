@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MundoDeFi — Cotações, DeFi, Pools de Liquidez, Calculadoras e Portfólio Cripto</title>
-<meta name="description" content="Pesquise qualquer criptomoeda e descubra cotação, fundamentos, pools de liquidez, rendimento DeFi e oportunidades. Mais de 8 ferramentas grátis, rankings e portfólio — em português.">
+<title>MundoDeFi — As melhores ferramentas de cripto do Brasil</title>
+<meta name="description" content="11 ferramentas para investir em cripto com números: impermanent loss, staking, juros compostos, simulador de trade, comparador e portfólio completo. Em português, a maioria gratuita.">
 <link rel="canonical" href="https://mundodefi.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MundoDeFi">
-<meta property="og:title" content="MundoDeFi — Todo o mercado cripto em um só lugar">
-<meta property="og:description" content="Cotações, pools de liquidez, rendimento DeFi, mais de 8 ferramentas grátis, rankings e portfólio cripto em português.">
+<meta property="og:title" content="MundoDeFi — As melhores ferramentas de cripto do Brasil">
+<meta property="og:description" content="Calcule impermanent loss, projete staking e acompanhe seu patrimônio. 11 ferramentas em português, a maioria gratuita.">
 <meta property="og:url" content="https://mundodefi.com.br/">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebSite","name":"MundoDeFi","url":"https://mundodefi.com.br/","inLanguage":"pt-BR","description":"Plataforma brasileira de dados, ferramentas e educação em criptomoedas e DeFi."}
+{"@context":"https://schema.org","@type":"WebSite","name":"MundoDeFi","url":"https://mundodefi.com.br/","inLanguage":"pt-BR","description":"Plataforma brasileira de ferramentas para investidores de criptomoedas e DeFi."}
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -96,16 +96,7 @@ nav{position:sticky;top:0;z-index:500;background:rgba(7,10,18,.86);backdrop-filt
 .btn-pro:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .burger{display:none;width:38px;height:38px;border-radius:var(--r);border:1px solid var(--line2);background:transparent;color:var(--txt);font-size:17px;align-items:center;justify-content:center}
 
-/* ═══ HERO com MATRIX ═══ */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
-#mx{position:absolute;inset:0;width:100%;height:100%;opacity:.30}
-.hero-shade{position:absolute;inset:0;background:radial-gradient(900px 420px at 50% 30%,rgba(7,10,18,.25),rgba(7,10,18,.88) 78%),linear-gradient(180deg,rgba(7,10,18,.45),rgba(7,10,18,.2) 40%,rgba(7,10,18,.85))}
-.hero-in{position:relative;text-align:center;padding:3.1rem 22px 2.5rem;max-width:1220px;margin:0 auto}
-.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan,#00E5FF);border:1px solid rgba(0,229,255,.25);background:rgba(7,10,18,.6);padding:5px 13px;border-radius:99px;margin-bottom:1rem}
-.hero h1{font-size:clamp(1.95rem,4.6vw,3.35rem);font-weight:700;letter-spacing:-.035em;line-height:1.08;max-width:900px;margin:0 auto .8rem;text-shadow:0 2px 24px rgba(7,10,18,.9)}
-.hero h1 em{font-style:normal;background:linear-gradient(120deg,var(--purple,#9945FF),var(--cyan,#00E5FF));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.hero-sub{color:#c6cde0;font-size:16.5px;max-width:700px;margin:0 auto 1.7rem;line-height:1.68;text-shadow:0 1px 12px rgba(7,10,18,.9)}
-.searchbox{max-width:700px;margin:0 auto;position:relative}
+.searchbox{max-width:700px;position:relative}
 .search-row{display:flex;align-items:center;gap:10px;background:rgba(10,14,24,.92);border:1px solid var(--line2);border-radius:16px;padding:8px 8px 8px 20px;transition:border-color .2s,box-shadow .2s;box-shadow:0 18px 50px rgba(0,0,0,.5)}
 .search-row:focus-within{border-color:var(--purple,#9945FF);box-shadow:0 0 0 4px rgba(153,69,255,.16),0 18px 50px rgba(0,0,0,.55)}
 .search-row svg{width:19px;height:19px;stroke:var(--mut);flex-shrink:0}
@@ -263,6 +254,42 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 .foot-bottom{border-top:1px solid var(--line);padding-top:1.4rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;font-size:12px;color:var(--mut2)}
 .foot-disc{font-size:11.5px;color:var(--mut2);line-height:1.6;margin-bottom:1.4rem;border:1px solid var(--line);border-radius:var(--rl);padding:.9rem 1.1rem;background:var(--panel)}
 
+
+/* ═══ HERO ═══
+   A home nao tinha hero nenhum: abria direto numa grade de ferramentas, sem
+   dizer o que o MundoDeFi e nem para quem serve. */
+.hero{padding:4.5rem 0 3.2rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(680px 380px at 18% -20%,var(--purple-soft),transparent 62%),
+             radial-gradient(560px 340px at 88% 0%,var(--cyan-soft),transparent 60%)}
+.hero-in{position:relative;z-index:1;max-width:760px}
+.hero-h1{font-size:clamp(2.1rem,5.4vw,3.4rem);font-weight:700;letter-spacing:-.035em;line-height:1.08;
+  text-wrap:balance;margin-bottom:1.1rem}
+.hero-p{font-size:clamp(14.5px,1.6vw,17px);line-height:1.65;color:var(--mut);max-width:56ch;margin-bottom:1.9rem}
+.hero-p b{color:var(--txt);font-weight:600}
+.hero-cta{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:2.6rem}
+.btn-big{padding:13px 26px;font-size:14.5px}
+.hero-nums{display:flex;gap:2.2rem;flex-wrap:wrap}
+.hn{display:flex;align-items:baseline;gap:7px}
+.hn b{font-family:var(--mono);font-size:1.5rem;font-weight:700;letter-spacing:-.02em}
+.hn span{font-size:12.5px;color:var(--mut2)}
+@media(max-width:640px){
+  .hero{padding:3rem 0 2.2rem}
+  .hero-cta .btn-big{flex:1;text-align:center;justify-content:center}
+  .hero-nums{gap:1.4rem}
+}
+
+/* ═══ SEÇÃO DO PORTFÓLIO ═══ */
+.pf-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.pf-item{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);padding:1.15rem 1.3rem}
+.pf-item b{font-size:14px;font-weight:700;display:block;margin-bottom:.4rem;letter-spacing:-.01em}
+.pf-item p{font-size:12.5px;color:var(--mut);line-height:1.6}
+@media(max-width:760px){.pf-grid{grid-template-columns:1fr}}
+
+/* a esteira agora vive dentro da seção de mercado, no fim da página */
+#mercado .ticker{margin-top:1.6rem;border-radius:var(--rl);overflow:hidden}
+#mercado .stats{margin-top:1.4rem}
+
 /* ═══ RESPONSIVO ═══ */
 @media(max-width:1080px){
   .mkt-grid{grid-template-columns:repeat(3,1fr)}
@@ -300,7 +327,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   .ticker-track{animation:none}
   *{transition:none!important}
   html{scroll-behavior:auto}
-  #mx{display:none}
 }
 /* ===== CHIP DO USUÁRIO LOGADO ===== */
 .user-chip{position:relative}
@@ -402,14 +428,27 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   </div>
 </nav>
 
-<!-- ═══ ESTEIRA DE COTAÇÕES ═══ -->
-<div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 
-<!-- ═══ FERRAMENTAS (primeira coisa da home) ═══ -->
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="wrap hero-in">
+    <h1 class="hero-h1">As melhores ferramentas<br>de cripto do Brasil</h1>
+    <p class="hero-p">Calcule impermanent loss, projete staking, descubra se aquela operação
+      valeu a pena e acompanhe todo o seu patrimônio. <b>11 ferramentas em português</b>,
+      a maioria gratuita e sem cadastro.</p>
+    <div class="hero-cta">
+      <a href="#ferramentas" class="btn btn-p btn-big">Ver as ferramentas</a>
+      <a href="/portfolio/index.html" class="btn btn-ghost btn-big">Montar meu portfólio</a>
+    </div>
+    <div class="hero-nums" id="heroNums"></div>
+  </div>
+</section>
+
+<!-- ═══ FERRAMENTAS ═══ -->
 <section id="ferramentas">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="sec-eyebrow">◉ Bem-vindo ao MundoDeFi</div><div class="sec-title">Aqui estão as melhores ferramentas do mercado cripto</div></div>
+      <div><div class="sec-eyebrow">O que você pode fazer aqui</div><div class="sec-title">Ferramentas</div></div>
       <a href="/ferramentas/ferramentas.html" class="sec-link">Ver todas →</a>
     </div>
     <!-- As cartas vêm de /mundodefi-catalogo.js + /mundodefi-previas.js.
@@ -419,68 +458,46 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   </div>
 </section>
 
-<!-- ═══ RÉGUA DE MERCADO (movida para baixo das ferramentas) ═══ -->
-<div class="stats" aria-label="Resumo do mercado">
-  <div class="st"><span class="st-lbl">Bitcoin</span><b class="st-val" id="sBTC">—</b><span class="st-sub" id="sBTCv"></span></div>
-  <div class="st"><span class="st-lbl">Ethereum</span><b class="st-val" id="sETH">—</b><span class="st-sub" id="sETHv"></span></div>
-  <div class="st"><span class="st-lbl">Solana</span><b class="st-val" id="sSOL">—</b><span class="st-sub" id="sSOLv"></span></div>
-  <div class="st"><span class="st-lbl">Market Cap</span><b class="st-val" id="sCap">—</b><span class="st-sub" id="sCapv"></span></div>
-  <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
-  <div class="st"><span class="st-lbl">Dólar USD</span><b class="st-val" id="sBrl">—</b><span class="st-sub">BRL</span></div>
-  <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
-  <div class="st"><span class="st-lbl">Volume 24h</span><b class="st-val" id="sVol">—</b><span class="st-sub">USD</span></div>
-  <div class="st"><span class="st-lbl">Ativos</span><b class="st-val" id="sAtv">—</b><span class="st-sub">Listados</span></div>
-</div>
-
-<!-- ═══ BUSCA DE ATIVOS (movida para baixo das ferramentas) ═══ -->
-<section id="busca-ativos">
+<!-- ═══ PORTFÓLIO ═══ -->
+<section id="portfolio-cta">
   <div class="wrap">
-    <div class="sec-head" style="justify-content:center;text-align:center">
-      <div><div class="sec-eyebrow">Consulta rápida</div><div class="sec-title">Pesquise qualquer ativo</div></div>
+    <div class="sec-head">
+      <div><div class="sec-eyebrow">O produto principal</div><div class="sec-title">Seu patrimônio, com as contas certas</div></div>
+      <a href="/portfolio/index.html" class="sec-link">Abrir portfólio →</a>
     </div>
-    <div class="searchbox" style="max-width:680px;margin:0 auto">
+    <div class="pf-grid">
+      <div class="pf-item"><b>Preço médio de verdade</b><p>Custo médio ponderado, com as taxas entrando no cálculo — não a média simples que a planilha faz.</p></div>
+      <div class="pf-item"><b>Realizado e não realizado, separados</b><p>Quanto você já materializou e quanto ainda está no papel. São coisas diferentes e quase todo tracker mistura.</p></div>
+      <div class="pf-item"><b>Retorno anualizado (XIRR)</b><p>Considera quando cada aporte entrou. Quem comprou na baixa não aparece igual a quem comprou no topo.</p></div>
+      <div class="pf-item"><b>Pools com APR realizado</b><p>O que as suas taxas de fato renderam sobre o capital, anualizado — não o APR anunciado pela plataforma.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ MERCADO (compacto, perto do fim) ═══ -->
+<section id="mercado">
+  <div class="wrap">
+    <div class="sec-head">
+      <div><div class="sec-eyebrow">Consulta rápida</div><div class="sec-title">Mercado</div></div>
+    </div>
+    <div class="searchbox" style="max-width:640px">
       <div class="search-row">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="busca" type="text" autocomplete="off" spellcheck="false" placeholder="Pesquise BTC, ETH, SOL, PEPE, AAVE…" aria-label="Pesquisar criptomoeda">
+        <input id="busca" type="text" autocomplete="off" spellcheck="false" placeholder="Pesquise BTC, ETH, SOL…" aria-label="Pesquisar criptomoeda">
         <button class="search-btn" type="button" onclick="submitBusca()">Pesquisar</button>
       </div>
       <div class="sugg" id="sugg" role="listbox"></div>
     </div>
-    <div class="chips" style="justify-content:center">
-      <span class="chips-lbl">Mais buscados:</span>
-      <button class="chip" onclick="location.href='/token.html?id=bitcoin'">BTC</button>
-      <button class="chip" onclick="location.href='/token.html?id=ethereum'">ETH</button>
-      <button class="chip" onclick="location.href='/token.html?id=solana'">SOL</button>
-      <button class="chip" onclick="location.href='/token.html?id=pepe'">PEPE</button>
-      <button class="chip" onclick="location.href='/token.html?id=aave'">AAVE</button>
+    <div class="stats" aria-label="Resumo do mercado">
+      <div class="st"><span class="st-lbl">Bitcoin</span><b class="st-val" id="sBTC">—</b><span class="st-sub" id="sBTCv"></span></div>
+      <div class="st"><span class="st-lbl">Ethereum</span><b class="st-val" id="sETH">—</b><span class="st-sub" id="sETHv"></span></div>
+      <div class="st"><span class="st-lbl">Solana</span><b class="st-val" id="sSOL">—</b><span class="st-sub" id="sSOLv"></span></div>
+      <div class="st"><span class="st-lbl">Market Cap</span><b class="st-val" id="sCap">—</b><span class="st-sub" id="sCapv"></span></div>
+      <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
+      <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
     </div>
   </div>
-</section>
-
-<!-- ═══ VISÃO DE MERCADO ═══ -->
-<section id="mercado">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><div class="sec-eyebrow">Mercado agora</div><div class="sec-title">Visão de Mercado</div></div>
-      <a href="#rankings" class="sec-link">Ver rankings →</a>
-    </div>
-    <div class="mkt-grid" id="mktGrid"><div class="skel">Carregando cotações…</div></div>
-  </div>
-</section>
-
-<!-- ═══ RANKINGS ═══ -->
-<section id="rankings">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><div class="sec-eyebrow">Últimas 24 horas</div><div class="sec-title">Rankings do Mercado</div></div>
-    </div>
-    <div class="rank-grid">
-      <div class="rank-card"><div class="rank-hd"><span class="dot" style="background:var(--green,#14F195)"></span>Maiores Altas</div><div id="rkAltas"><div class="skel">Carregando…</div></div></div>
-      <div class="rank-card"><div class="rank-hd"><span class="dot" style="background:var(--red,#FF4D6A)"></span>Maiores Quedas</div><div id="rkQuedas"><div class="skel">Carregando…</div></div></div>
-      <div class="rank-card"><div class="rank-hd"><span class="dot" style="background:var(--cyan,#00E5FF)"></span>Maior Volume</div><div id="rkVolume"><div class="skel">Carregando…</div></div></div>
-      <div class="rank-card"><div class="rank-hd"><span class="dot" style="background:var(--purple,#9945FF)"></span>Mais Pesquisadas</div><div id="rkTrend"><div class="skel">Carregando…</div></div></div>
-    </div>
-  </div>
+  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 </section>
 
 <!-- ═══ PLANOS (padrão do site) ═══ -->
@@ -553,41 +570,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 var CG='https://api.coingecko.com/api/v3';
 document.getElementById('ano').textContent=new Date().getFullYear();
 
-/* ── MATRIX (só no hero, atrás da busca) ── */
-(function(){
-  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var cv=document.getElementById('mx');if(!cv)return;
-  var ctx=cv.getContext('2d');
-  var chars='アイウエオカキクケコサシスセソタチツテト0123456789₿ΞSOLDEFI$%';
-  var drops=[],fs=15,cols=0,timer=null;
-  function size(){
-    var hero=cv.parentElement;
-    cv.width=hero.offsetWidth;cv.height=hero.offsetHeight;
-    cols=Math.floor(cv.width/fs);
-    drops=[];for(var i=0;i<cols;i++)drops[i]=Math.floor(Math.random()*-40);
-  }
-  function draw(){
-    ctx.fillStyle='rgba(7,10,18,0.16)';
-    ctx.fillRect(0,0,cv.width,cv.height);
-    ctx.font=fs+'px "Space Mono",monospace';
-    for(var i=0;i<cols;i++){
-      var ch=chars[Math.floor(Math.random()*chars.length)];
-      var r=Math.random();
-      ctx.fillStyle=r>0.94?'#00E5FF':(r>0.55?'#14F195':'#9945FF');
-      ctx.globalAlpha=r>0.9?0.9:0.55;
-      ctx.fillText(ch,i*fs,drops[i]*fs);
-      ctx.globalAlpha=1;
-      if(drops[i]*fs>cv.height&&Math.random()>0.975)drops[i]=Math.floor(Math.random()*-20);
-      drops[i]++;
-    }
-  }
-  size();timer=setInterval(draw,66);
-  window.addEventListener('resize',size);
-  document.addEventListener('visibilitychange',function(){
-    if(document.hidden){clearInterval(timer);timer=null;}
-    else if(!timer){timer=setInterval(draw,66);}
-  });
-})();
 
 /* ── cache com TTL ── */
 function cget(k){try{var o=JSON.parse(localStorage.getItem(k));if(o&&(Date.now()-o.t)<o.ttl)return o.d;}catch(e){}return null;}
@@ -633,43 +615,16 @@ function loadMarkets(){
   return MDF_API.get(ROTA_MKTS, 5*60*1000);
 }
 function renderMarket(list){
+  /* Restou a esteira. A grade de 6 cotacoes e os 4 cards de ranking sairam
+     junto com o reposicionamento: eram navegacao entre ativos, terreno que
+     o site nao disputa. */
   var tk=list.slice(0,20).map(function(c){
     var v=c.price_change_percentage_24h;
     return '<span class="tk-item"><a href="/token.html?id='+esc(c.id)+'"><b>'+esc((c.symbol||'').toUpperCase())+'</b> '+fPrice(c.current_price)+' <span class="'+pcls(v)+'">'+fPct(v)+'</span></a></span>';
   }).join('');
   document.getElementById('ticker').innerHTML=tk+tk;
-
-  var byId={};list.forEach(function(c){byId[c.id]=c;});
-  document.getElementById('mktGrid').innerHTML=OVERVIEW_IDS.map(function(id){
-    var c=byId[id];if(!c)return'';
-    var v=c.price_change_percentage_24h;
-    return '<a class="mkt-card" href="/token.html?id='+esc(c.id)+'">'
-      +'<div class="mkt-top"><img src="'+esc(c.image)+'" alt="" loading="lazy"><div><div class="mkt-sym">'+esc((c.symbol||'').toUpperCase())+'</div><div class="mkt-name">'+esc(c.name)+'</div></div></div>'
-      +'<div class="mkt-price">'+fPrice(c.current_price)+'</div>'
-      +'<div class="mkt-var '+pcls(v)+'">'+fPct(v)+' <small style="color:var(--mut2);font-weight:400">24h</small></div>'
-      +'<div class="mkt-meta"><span>Cap. <b>'+fBig(c.market_cap)+'</b></span><span>Vol. <b>'+fBig(c.total_volume)+'</b></span></div>'
-      +'</a>';
-  }).join('');
-
-  var liquid=list.filter(function(c){return c.total_volume>1e7&&c.price_change_percentage_24h!=null;});
-  function rows(arr,val){
-    return arr.map(function(c,i){
-      return '<a class="rank-row" href="/token.html?id='+esc(c.id)+'">'
-        +'<span class="rank-pos">'+(i+1)+'</span><img src="'+esc(c.image)+'" alt="" loading="lazy">'
-        +'<span class="rank-name">'+esc(c.name)+'<small>'+esc((c.symbol||'').toUpperCase())+'</small></span>'
-        +val(c)+'</a>';
-    }).join('');
-  }
-  var altas=liquid.slice().sort(function(a,b){return b.price_change_percentage_24h-a.price_change_percentage_24h;}).slice(0,5);
-  var quedas=liquid.slice().sort(function(a,b){return a.price_change_percentage_24h-b.price_change_percentage_24h;}).slice(0,5);
-  var vol=liquid.slice().sort(function(a,b){return b.total_volume-a.total_volume;}).slice(0,5);
-  document.getElementById('rkAltas').innerHTML=rows(altas,function(c){return '<span class="rank-val up">'+fPct(c.price_change_percentage_24h)+'</span>';});
-  document.getElementById('rkQuedas').innerHTML=rows(quedas,function(c){return '<span class="rank-val down">'+fPct(c.price_change_percentage_24h)+'</span>';});
-  document.getElementById('rkVolume').innerHTML=rows(vol,function(c){return '<span class="rank-val">'+fBig(c.total_volume)+'</span>';});
 }
-loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){
-  document.getElementById('mktGrid').innerHTML='<div class="skel">Não foi possível carregar as cotações agora. Recarregue a página em instantes.</div>';
-});
+loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
 /* Antes: setInterval fixo que apagava o cache e refazia a chamada mesmo
    com a aba escondida. Agora só atualiza quando a aba está visível. */
 MDF_API.repetir(function(){
@@ -677,24 +632,6 @@ MDF_API.repetir(function(){
   loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
 }, 5*60*1000+5000);
 
-/* ═══ MAIS PESQUISADAS — lazy ═══ */
-function loadTrending(){
-  var c=cget('mdf.home.trend');
-  var p=c?Promise.resolve(c):MDF_API.get('/search/trending',10*60*1000).then(function(d){
-    var slim=(d.coins||[]).slice(0,5).map(function(x){return{id:x.item.id,n:x.item.name,s:x.item.symbol,img:x.item.small};});
-    cset('mdf.home.trend',slim,10*60*1000);return slim;
-  });
-  p.then(function(t){
-    document.getElementById('rkTrend').innerHTML=t.map(function(c,i){
-      return '<a class="rank-row" href="/token.html?id='+esc(c.id)+'">'
-        +'<span class="rank-pos">'+(i+1)+'</span><img src="'+esc(c.img)+'" alt="" loading="lazy">'
-        +'<span class="rank-name">'+esc(c.n)+'<small>'+esc((c.s||'').toUpperCase())+'</small></span>'
-        +'<span class="rank-val" style="color:var(--purple,#9945FF)">🔥</span></a>';
-    }).join('');
-  }).catch(function(){
-    document.getElementById('rkTrend').innerHTML='<div class="skel">Indisponível no momento.</div>';
-  });
-}
 
 
 /* ═══ BARRA DE ESTATÍSTICAS (base do hero) ═══ */
@@ -719,18 +656,7 @@ function loadGlobalStats(){
   p.then(function(g){
     setTxt('sCap',fBig(g.cap));
     if(g.capv!=null)setTxt('sCapv',fPct(g.capv));
-    setTxt('sVol',fBig(g.vol));
     if(g.dom!=null)setTxt('sDom',g.dom.toFixed(1));
-    if(g.atv!=null)setTxt('sAtv',Number(g.atv).toLocaleString('pt-BR'));
-  }).catch(function(){});
-}
-function loadBrl(){
-  var c=cget('mdf.home.brl');
-  var p=c?Promise.resolve(c):MDF_API.get('/simple/price?ids=tether&vs_currencies=brl',10*60*1000,2).then(function(d){
-    var v=d.tether&&d.tether.brl;cset('mdf.home.brl',v,10*60*1000);return v;
-  });
-  p.then(function(v){
-    if(v)setTxt('sBrl','R$'+Number(v).toLocaleString('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:4}));
   }).catch(function(){});
 }
 function loadFng(){
@@ -746,23 +672,8 @@ function loadFng(){
     setTxt('sFngT',tr[f.t]||f.t||'');
   }).catch(function(){});
 }
-loadGlobalStats();loadBrl();loadFng();
+loadGlobalStats();loadFng();
 
-/* ═══ LAZY-LOAD por seção ═══ */
-if('IntersectionObserver' in window){
-  var seen={};
-  var io=new IntersectionObserver(function(es){
-    es.forEach(function(en){
-      if(!en.isIntersecting)return;
-      var id=en.target.id;
-      if(seen[id])return;seen[id]=1;io.unobserve(en.target);
-      if(id==='rankings')loadTrending();
-    });
-  },{rootMargin:'400px 0px'});
-  ['rankings'].forEach(function(id){
-    var el=document.getElementById(id);if(el)io.observe(el);
-  });
-}else{loadTrending();}
 
 /* ═══ BUSCA COM AUTOCOMPLETE ═══ */
 var busca=document.getElementById('busca'),sugg=document.getElementById('sugg');
@@ -934,6 +845,15 @@ document.getElementById('navMenu').addEventListener('click',function(e){
     g.itens.forEach(function(i){ if(!vistos[i.slug]) html+=carta(i,false); });
   });
   alvo.innerHTML=html;
+
+  /* Números do hero: saem do catálogo, então nunca desatualizam. */
+  var nums=document.getElementById('heroNums');
+  if(nums){
+    var gratis=MDF_CATALOGO.gratuitas().length;
+    nums.innerHTML=[[MDF_CATALOGO.total,'ferramentas'],[gratis,'gratuitas'],
+                    [MDF_CATALOGO.categorias.length,'categorias']]
+      .map(function(x){return '<div class="hn"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>';}).join('');
+  }
 
   /* Mega-menu: uma coluna por categoria, mesma fonte de dados. */
   var menu=document.getElementById('mega-ferramentas');
