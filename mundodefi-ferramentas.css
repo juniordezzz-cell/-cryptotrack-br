@@ -418,3 +418,15 @@ footer a:hover{color:var(--text)}
   *{transition:none!important;animation:none!important}
   html{scroll-behavior:auto}
 }
+
+/* ═══ NAV EM TELA ESTREITA ═══
+   Os links de texto e o botão PRO não cabiam abaixo de ~420px e faziam a
+   página inteira rolar de lado por poucos pixels — o tipo de defeito que
+   ninguém reporta mas todo mundo sente. */
+@media(max-width:520px){
+  header .nav-links{gap:12px;font-size:.82rem}
+  header .btn-pro{padding:6px 11px;font-size:.78rem}
+}
+@media(max-width:400px){
+  header .nav-links a:not(.btn-pro){display:none}
+}

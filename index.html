@@ -21,6 +21,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <script src="/mundodefi-api.js?v=2026-08-3"></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-3"></script>
+<script src="/mundodefi-previas.js?v=2026-08-3"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -344,28 +346,9 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       </div>
       <div class="nav-item">
         <button class="nav-link" type="button">Ferramentas <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega">
-          <div class="mega-col">
-            <div class="mega-title">Calculadoras</div>
-            <a href="/ferramentas/entradas-saidas/" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">💰</div><div><div class="mega-name">Entradas e Saídas<span class="badge b-pro">PRO</span></div><div class="mega-desc">Controle financeiro com o Nexus</div></div></a>
-            <a href="/ferramentas/juros-compostos.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">📈</div><div><div class="mega-name">Juros Compostos</div><div class="mega-desc">Simule crescimento com aportes</div></div></a>
-            <a href="/ferramentas/lucro-cripto.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">🪙</div><div><div class="mega-name">Lucro Cripto</div><div class="mega-desc">Lucro líquido depois das taxas</div></div></a>
-            <a href="/ferramentas/pool-liquidez.html" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">💧</div><div><div class="mega-name">Pool de Liquidez</div><div class="mega-desc">Retorno e impermanent loss</div></div></a>
-            <a href="/ferramentas/staking.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">🔒</div><div><div class="mega-name">Staking</div><div class="mega-desc">Projete rendimentos de staking</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-title">Conversores &amp; Simuladores</div>
-            <a href="/ferramentas/conversor.html" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">🔄</div><div><div class="mega-name">Conversor Cripto</div><div class="mega-desc">Cripto ⇄ Real ⇄ Dólar</div></div></a>
-            <a href="/ferramentas/cambio.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">💵</div><div><div class="mega-name">Câmbio</div><div class="mega-desc">Moedas fiduciárias ao vivo</div></div></a>
-            <a href="/ferramentas/simulador-de-trade.html" class="mega-link"><div class="mega-ico" style="background:var(--red-soft)">⚡</div><div><div class="mega-name">Simulador de Trade</div><div class="mega-desc">Gestão de banca e alavancagem</div></div></a>
-            <a href="/ferramentas/comparador-de-ativos.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">⚖️</div><div><div class="mega-name">Comparador de Ativos</div><div class="mega-desc">BTC vs ETH vs bolsa vs CDI</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-title">Diagnóstico</div>
-            <a href="/ferramentas/imd/" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">🧭</div><div><div class="mega-name">Índice Mundo DeFi<span class="badge b-new">Novo</span></div><div class="mega-desc">Sua nota como investidor cripto em 5 minutos</div></div></a>
-            <a href="/ferramentas/ferramentas.html" class="mega-link"><div class="mega-ico">🧰</div><div><div class="mega-name">Todas as ferramentas</div><div class="mega-desc">Central completa e gratuita</div></div></a>
-          </div>
-        </div>
+        <!-- Colunas vêm de /mundodefi-catalogo.js — este era o terceiro
+             inventário escrito à mão, com 12 itens contra 11 da home e 9 do hub. -->
+        <div class="mega" id="mega-ferramentas"></div>
       </div>
       <div class="nav-item">
         <button class="nav-link" type="button">DeFi <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
@@ -429,240 +412,10 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       <div><div class="sec-eyebrow">◉ Bem-vindo ao MundoDeFi</div><div class="sec-title">Aqui estão as melhores ferramentas do mercado cripto</div></div>
       <a href="/ferramentas/ferramentas.html" class="sec-link">Ver todas →</a>
     </div>
-    <div class="tools-grid">
-
-      <a href="/ferramentas/imd/" class="tool-card tool-feat">
-        <div class="tool-vis">
-          <svg viewBox="0 0 340 130" role="img" aria-label="Prévia do IMD">
-            <circle cx="65" cy="65" r="44" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="9"/>
-            <circle cx="65" cy="65" r="44" fill="none" stroke="var(--purple,#9945FF)" stroke-width="9" stroke-linecap="round" stroke-dasharray="199 277" transform="rotate(-90 65 65)"/>
-            <text x="65" y="62" text-anchor="middle" style="font-family:var(--mono);font-size:24px;font-weight:700;fill:#EDF0F7">72</text>
-            <text x="65" y="80" text-anchor="middle" class="svg-lbl">IMD / 100</text>
-            <text x="150" y="26" class="svg-lbl2">Segurança</text><rect x="228" y="18" width="86" height="6" rx="3" fill="rgba(255,255,255,.08)"/><rect x="228" y="18" width="72" height="6" rx="3" fill="var(--green,#14F195)"/>
-            <text x="150" y="56" class="svg-lbl2">Fundamentos</text><rect x="228" y="48" width="86" height="6" rx="3" fill="rgba(255,255,255,.08)"/><rect x="228" y="48" width="58" height="6" rx="3" fill="var(--cyan,#00E5FF)"/>
-            <text x="150" y="86" class="svg-lbl2">DeFi</text><rect x="228" y="78" width="86" height="6" rx="3" fill="rgba(255,255,255,.08)"/><rect x="228" y="78" width="64" height="6" rx="3" fill="var(--purple,#9945FF)"/>
-            <text x="150" y="116" class="svg-lbl2">Autonomia</text><rect x="228" y="108" width="86" height="6" rx="3" fill="rgba(255,255,255,.08)"/><rect x="228" y="108" width="44" height="6" rx="3" fill="var(--gold,#F5B614)"/>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--purple-soft)">🧭</span>IMD — Índice Mundo DeFi <span class="badge b-new">Novo</span></div>
-          <div class="tool-ds">Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e um plano do que estudar primeiro — em ~5 minutos.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/portfolio/index.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia do portfólio">
-            <circle cx="60" cy="60" r="38" fill="none" stroke="var(--gold,#F5B614)" stroke-width="11" stroke-dasharray="119 239" transform="rotate(-90 60 60)"/>
-            <circle cx="60" cy="60" r="38" fill="none" stroke="var(--green,#14F195)" stroke-width="11" stroke-dasharray="72 239" stroke-dashoffset="-119" transform="rotate(-90 60 60)"/>
-            <circle cx="60" cy="60" r="38" fill="none" stroke="var(--cyan,#00E5FF)" stroke-width="11" stroke-dasharray="48 239" stroke-dashoffset="-191" transform="rotate(-90 60 60)"/>
-            <text x="60" y="58" text-anchor="middle" style="font-family:var(--mono);font-size:15px;font-weight:700;fill:#EDF0F7">$24.8K</text>
-            <text x="60" y="74" text-anchor="middle" class="svg-lbl">patrimônio</text>
-            <rect x="130" y="18" width="8" height="8" rx="2" fill="var(--gold,#F5B614)"/><text x="144" y="26" class="svg-lbl2">HOLD 50%</text>
-            <rect x="130" y="38" width="8" height="8" rx="2" fill="var(--green,#14F195)"/><text x="144" y="46" class="svg-lbl2">DeFi 30%</text>
-            <rect x="130" y="58" width="8" height="8" rx="2" fill="var(--cyan,#00E5FF)"/><text x="144" y="66" class="svg-lbl2">Trade 20%</text>
-            <rect x="132" y="92" width="14" height="22" rx="2" fill="var(--gold,#F5B614)" opacity=".8"/><rect x="152" y="84" width="14" height="30" rx="2" fill="var(--gold,#F5B614)" opacity=".55"/><rect x="172" y="98" width="14" height="16" rx="2" fill="var(--gold,#F5B614)" opacity=".8"/><rect x="192" y="78" width="14" height="36" rx="2" fill="var(--gold,#F5B614)" opacity=".55"/>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">📊</span>Monte seu portfólio aqui</div>
-          <div class="tool-ds">Rastreie HOLD, DeFi e Trade em tempo real com gráficos e histórico completo.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/juros-compostos.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia juros compostos">
-            <line x1="14" y1="110" x2="206" y2="110" stroke="rgba(255,255,255,.1)"/>
-            <line x1="14" y1="75" x2="206" y2="75" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <line x1="14" y1="40" x2="206" y2="40" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <path d="M14 108 C 70 104, 120 92, 160 62 S 200 24, 206 20 L206 110 L14 110 Z" fill="rgba(245,182,20,.12)"/>
-            <path d="M14 108 C 70 104, 120 92, 160 62 S 200 24, 206 20" fill="none" stroke="var(--gold,#F5B614)" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M14 108 C 80 106, 140 100, 206 88" fill="none" stroke="var(--cyan,#00E5FF)" stroke-width="1.8" opacity=".7"/>
-            <rect x="128" y="8" width="78" height="18" rx="9" fill="rgba(245,182,20,.15)" stroke="rgba(245,182,20,.4)"/>
-            <text x="167" y="21" text-anchor="middle" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--gold,#F5B614)">R$ 98.420</text>
-            <text x="16" y="124" class="svg-lbl">24 meses · aportes mensais</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--green-soft)">📈</span>Juros Compostos</div>
-          <div class="tool-ds">Simule crescimento com aportes mensais e taxas cripto, em BRL e USD.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/lucro-cripto.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia lucro cripto">
-            <rect x="10" y="6" width="200" height="20" rx="6" fill="rgba(255,255,255,.04)"/>
-            <text x="18" y="20" class="svg-lbl2">Lucro Cripto — BTC</text>
-            <rect x="152" y="9" width="52" height="14" rx="7" fill="var(--green-soft)"/><text x="178" y="19" text-anchor="middle" style="font-family:var(--mono);font-size:9px;font-weight:700;fill:var(--green,#14F195)">+49,5%</text>
-            <rect x="22" y="66" width="30" height="46" rx="3" fill="#3D7BFF" opacity=".85"/><text x="37" y="60" text-anchor="middle" class="svg-lbl">$9.500</text>
-            <rect x="70" y="44" width="30" height="68" rx="3" fill="var(--green,#14F195)" opacity=".9"/><text x="85" y="38" text-anchor="middle" class="svg-lbl">$14.300</text>
-            <rect x="118" y="96" width="30" height="16" rx="3" fill="var(--red,#FF4D6A)" opacity=".85"/><text x="133" y="90" text-anchor="middle" class="svg-lbl">taxas</text>
-            <rect x="166" y="58" width="30" height="54" rx="3" fill="var(--green,#14F195)"/><text x="181" y="52" text-anchor="middle" class="svg-lbl">+$4.700</text>
-            <line x1="14" y1="112" x2="206" y2="112" stroke="rgba(255,255,255,.1)"/>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">🪙</span>Lucro Cripto</div>
-          <div class="tool-ds">Lucro líquido real com preço de entrada, saída e taxas de exchange.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/pool-liquidez.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia pool de liquidez">
-            <ellipse cx="120" cy="112" rx="80" ry="10" fill="rgba(20,241,149,.08)"/>
-            <path d="M14 84 C 50 70, 80 96, 116 78 S 180 52, 206 46" fill="none" stroke="var(--cyan,#00E5FF)" stroke-width="2.2" stroke-linecap="round"/>
-            <path d="M14 94 C 60 90, 100 74, 140 82 S 190 74, 206 70" fill="none" stroke="var(--gold,#F5B614)" stroke-width="2" opacity=".8"/>
-            <circle cx="164" cy="60" r="4" fill="var(--cyan,#00E5FF)"/>
-            <rect x="118" y="10" width="90" height="30" rx="8" fill="rgba(0,229,255,.1)" stroke="rgba(0,229,255,.35)"/>
-            <text x="163" y="23" text-anchor="middle" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--cyan,#00E5FF)">APY 38,5%</text>
-            <text x="163" y="35" text-anchor="middle" class="svg-lbl">IL: -2,3%</text>
-            <text x="16" y="20" class="svg-lbl2">ETH 50%</text>
-            <text x="16" y="34" class="svg-lbl2">USDC 50%</text>
-            <text x="16" y="124" class="svg-lbl">retorno esperado vs hold</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--cyan-soft)">💧</span>Pool de Liquidez</div>
-          <div class="tool-ds">Calcule impermanent loss, APY real e retorno esperado de pools DeFi.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/conversor.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia conversor">
-            <rect x="24" y="18" width="172" height="30" rx="9" fill="rgba(255,255,255,.045)" stroke="rgba(255,255,255,.12)"/>
-            <text x="34" y="37" class="svg-lbl2">De</text>
-            <text x="186" y="38" text-anchor="end" class="svg-val">1 BTC</text>
-            <circle cx="110" cy="64" r="13" fill="rgba(20,241,149,.12)" stroke="rgba(20,241,149,.45)"/>
-            <text x="110" y="69" text-anchor="middle" style="font-size:12px;fill:var(--green,#14F195)">⇅</text>
-            <rect x="24" y="82" width="172" height="30" rx="9" fill="rgba(20,241,149,.06)" stroke="rgba(20,241,149,.4)"/>
-            <text x="34" y="101" class="svg-lbl2">Para</text>
-            <text x="186" y="102" text-anchor="end" style="font-family:var(--mono);font-size:12px;font-weight:700;fill:var(--green,#14F195)">R$ 95.000</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--cyan-soft)">🔄</span>Conversor Cripto</div>
-          <div class="tool-ds">Converta entre cripto, BRL, USD e EUR com cotação ao vivo.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/cambio.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia câmbio">
-            <rect x="24" y="18" width="172" height="30" rx="9" fill="rgba(255,255,255,.045)" stroke="rgba(255,255,255,.12)"/>
-            <text x="34" y="37" class="svg-lbl2">De</text>
-            <text x="186" y="38" text-anchor="end" class="svg-val">R$ 100,00</text>
-            <circle cx="110" cy="64" r="13" fill="rgba(0,229,255,.12)" stroke="rgba(0,229,255,.45)"/>
-            <text x="110" y="69" text-anchor="middle" style="font-size:12px;fill:var(--cyan,#00E5FF)">⇅</text>
-            <rect x="24" y="82" width="172" height="30" rx="9" fill="rgba(0,229,255,.06)" stroke="rgba(0,229,255,.4)"/>
-            <text x="34" y="101" class="svg-lbl2">Para</text>
-            <text x="186" y="102" text-anchor="end" style="font-family:var(--mono);font-size:12px;font-weight:700;fill:var(--cyan,#00E5FF)">US$ 18,15</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--green-soft)">💵</span>Calculadora de Câmbio</div>
-          <div class="tool-ds">Converta entre Real, Dólar, Euro e stablecoins (USDT, USDC) ao vivo.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/staking.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia staking">
-            <circle cx="58" cy="65" r="36" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="8"/>
-            <circle cx="58" cy="65" r="36" fill="none" stroke="var(--cyan,#00E5FF)" stroke-width="8" stroke-linecap="round" stroke-dasharray="64 226" transform="rotate(-90 58 65)"/>
-            <text x="58" y="62" text-anchor="middle" style="font-family:var(--mono);font-size:14px;font-weight:700;fill:#EDF0F7">4,2%</text>
-            <text x="58" y="78" text-anchor="middle" class="svg-lbl">APY/ano</text>
-            <text x="58" y="90" text-anchor="middle" class="svg-lbl">ETH Staking</text>
-            <rect x="112" y="18" width="96" height="94" rx="10" fill="rgba(255,255,255,.035)" stroke="rgba(255,255,255,.1)"/>
-            <text x="122" y="34" class="svg-lbl">Stake 10 ETH · 4,2%</text>
-            <text x="122" y="54" class="svg-lbl2">1 mês</text><text x="198" y="54" text-anchor="end" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--green,#14F195)">+$118</text>
-            <text x="122" y="72" class="svg-lbl2">6 meses</text><text x="198" y="72" text-anchor="end" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--green,#14F195)">+$714</text>
-            <text x="122" y="90" class="svg-lbl2">12 meses</text><text x="198" y="90" text-anchor="end" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--green,#14F195)">+$1.458</text>
-            <text x="122" y="108" class="svg-lbl2">24 meses</text><text x="198" y="108" text-anchor="end" style="font-family:var(--mono);font-size:10px;font-weight:700;fill:var(--green,#14F195)">+$2.980</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--purple-soft)">🔒</span>Simulador de Staking</div>
-          <div class="tool-ds">Projete rendimentos de staking ao longo do tempo, mês a mês.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/comparador-de-ativos.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia comparador">
-            <line x1="14" y1="110" x2="206" y2="110" stroke="rgba(255,255,255,.1)"/>
-            <line x1="14" y1="72" x2="206" y2="72" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <line x1="14" y1="36" x2="206" y2="36" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <path d="M14 100 C 60 96, 90 78, 120 60 S 180 26, 206 18" fill="none" stroke="var(--cyan,#00E5FF)" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M14 102 C 70 100, 120 92, 160 84 S 196 76, 206 74" fill="none" stroke="var(--gold,#F5B614)" stroke-width="2" stroke-linecap="round"/>
-            <rect x="18" y="12" width="8" height="3.5" rx="1.5" fill="var(--cyan,#00E5FF)"/><text x="32" y="17" class="svg-lbl2">BTC</text>
-            <rect x="66" y="12" width="8" height="3.5" rx="1.5" fill="var(--gold,#F5B614)"/><text x="80" y="17" class="svg-lbl2">Ouro</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">⚖️</span>Comparador de Ativos</div>
-          <div class="tool-ds">Compare cripto com ouro, ações, índices e CDI lado a lado.</div>
-          <div class="tool-ft"><span class="tsel tsel-free">GRATUITO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/simulador-de-trade.html" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia simulador de trade">
-            <rect x="10" y="6" width="200" height="20" rx="6" fill="rgba(255,255,255,.04)"/>
-            <text x="18" y="20" class="svg-lbl2">Gestão de banca · 10x</text>
-            <rect x="146" y="9" width="58" height="14" rx="7" fill="var(--green-soft)"/><text x="175" y="19" text-anchor="middle" style="font-family:var(--mono);font-size:9px;font-weight:700;fill:var(--green,#14F195)">+18% / op</text>
-            <rect x="20" y="92" width="24" height="20" rx="3" fill="var(--green,#14F195)" opacity=".45"/>
-            <rect x="54" y="84" width="24" height="28" rx="3" fill="var(--green,#14F195)" opacity=".6"/>
-            <rect x="88" y="74" width="24" height="38" rx="3" fill="var(--green,#14F195)" opacity=".75"/>
-            <rect x="122" y="60" width="24" height="52" rx="3" fill="var(--green,#14F195)" opacity=".88"/>
-            <rect x="156" y="42" width="24" height="70" rx="3" fill="var(--green,#14F195)"/>
-            <text x="168" y="36" text-anchor="middle" class="svg-val">$92</text>
-            <text x="32" y="88" text-anchor="middle" class="svg-lbl">$50</text>
-            <line x1="14" y1="112" x2="206" y2="112" stroke="rgba(255,255,255,.1)"/>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">⚡</span>Simulador de Trade</div>
-          <div class="tool-ds">Long e short com alavancagem, preço de liquidação e sua banca crescendo após cada puxada.</div>
-          <div class="tool-ft"><span class="tsel tsel-pro">PRO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-      <a href="/ferramentas/entradas-saidas/" class="tool-card">
-        <div class="tool-vis">
-          <svg viewBox="0 0 220 130" role="img" aria-label="Prévia entradas e saídas">
-            <line x1="14" y1="110" x2="206" y2="110" stroke="rgba(255,255,255,.1)"/>
-            <line x1="14" y1="72" x2="206" y2="72" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <line x1="14" y1="36" x2="206" y2="36" stroke="rgba(255,255,255,.05)" stroke-dasharray="3 4"/>
-            <path d="M14 100 C 60 94, 100 76, 140 58 S 190 30, 206 24" fill="none" stroke="var(--green,#14F195)" stroke-width="2.4" stroke-linecap="round"/>
-            <path d="M14 104 C 70 102, 120 96, 160 90 S 196 84, 206 82" fill="none" stroke="#ff5470" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="206" cy="24" r="3.5" fill="var(--green,#14F195)"/>
-            <rect x="122" y="12" width="84" height="18" rx="5" fill="rgba(20,241,149,.08)" stroke="rgba(20,241,149,.35)"/>
-            <text x="164" y="24" text-anchor="middle" style="font-family:var(--mono);font-size:9px;font-weight:700;fill:var(--green,#14F195)">Sobrou R$ 190</text>
-            <rect x="18" y="12" width="8" height="3.5" rx="1.5" fill="var(--green,#14F195)"/><text x="32" y="17" class="svg-lbl2">Entradas</text>
-            <rect x="70" y="12" width="8" height="3.5" rx="1.5" fill="#ff5470"/><text x="84" y="17" class="svg-lbl2">Saídas</text>
-          </svg>
-        </div>
-        <div class="tool-bd">
-          <div class="tool-tt"><span class="ti" style="background:var(--gold-soft)">💰</span>Entradas e Saídas</div>
-          <div class="tool-ds">Controle financeiro completo: fluxo de caixa, investimentos e o Nexus.</div>
-          <div class="tool-ft"><span class="tsel tsel-pro">PRO</span><span class="tool-arrow">→</span></div>
-        </div>
-      </a>
-
-    </div>
+    <!-- As cartas vêm de /mundodefi-catalogo.js + /mundodefi-previas.js.
+         Antes eram 11 <a> escritos à mão aqui — 19 KB que divergiam do hub
+         (9 itens) e do mega-menu (12). -->
+    <div class="tools-grid" id="home-catalogo"></div>
   </div>
 </section>
 
@@ -1152,6 +905,55 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 
   document.addEventListener('nexus-auth-changed', pintar);
   pintar(); // caso o auth já esteja pronto
+})();
+</script>
+<script>
+/* Grade de ferramentas da home. Destaques primeiro (card largo com prévia),
+   depois o resto na ordem das categorias. */
+(function(){
+  var alvo=document.getElementById('home-catalogo');
+  if(!alvo||!window.MDF_CATALOGO)return;
+  var P=window.MDF_PREVIAS||{};
+  function esc(t){return String(t==null?'':t).replace(/[<>&"]/g,function(c){
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+  function carta(i,largo){
+    var selo=i.plano==='pro'
+      ? '<span class="tsel tsel-pro">PRO</span>'
+      : '<span class="tsel tsel-free">GRATUITO</span>';
+    return '<a href="'+i.url+'" class="tool-card'+(largo?' tool-feat':'')+'">'
+      +(P[i.slug]?'<div class="tool-vis">'+P[i.slug]+'</div>':'')
+      +'<div class="tool-bd">'
+        +'<div class="tool-tt"><span class="ti">'+i.icone+'</span>'+esc(i.nome)+'</div>'
+        +'<div class="tool-ds">'+esc(i.resumo)+'</div>'
+        +'<div class="tool-ft">'+selo+'<span class="tool-arrow">→</span></div>'
+      +'</div></a>';
+  }
+  var vistos={}, html='';
+  MDF_CATALOGO.destaques().forEach(function(i){vistos[i.slug]=1;html+=carta(i,true);});
+  MDF_CATALOGO.agrupado().forEach(function(g){
+    g.itens.forEach(function(i){ if(!vistos[i.slug]) html+=carta(i,false); });
+  });
+  alvo.innerHTML=html;
+
+  /* Mega-menu: uma coluna por categoria, mesma fonte de dados. */
+  var menu=document.getElementById('mega-ferramentas');
+  if(menu){
+    menu.innerHTML = MDF_CATALOGO.agrupado().map(function(g){
+      return '<div class="mega-col">'
+        +'<div class="mega-title">'+esc(g.categoria.nome)+'</div>'
+        + g.itens.map(function(i){
+            return '<a href="'+i.url+'" class="mega-link">'
+              +'<div class="mega-ico">'+i.icone+'</div>'
+              +'<div><div class="mega-name">'+esc(i.nome)
+              +(i.plano==='pro'?'<span class="badge b-pro">PRO</span>':'')+'</div>'
+              +'<div class="mega-desc">'+esc(i.curto||i.resumo)+'</div></div></a>';
+          }).join('')
+        +'</div>';
+    }).join('') + '<div class="mega-col"><div class="mega-title">Tudo</div>'
+      +'<a href="/ferramentas/ferramentas.html" class="mega-link"><div class="mega-ico">🧰</div>'
+      +'<div><div class="mega-name">Todas as ferramentas</div>'
+      +'<div class="mega-desc">As '+MDF_CATALOGO.total+' em uma página</div></div></a></div>';
+  }
 })();
 </script>
 </body>

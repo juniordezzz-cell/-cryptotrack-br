@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ferramentas Cripto Grátis | MundoDeFi</title>
-<meta name="description" content="Ferramentas cripto gratuitas em português: simulador de trade com gestão de banca, juros compostos, staking, pool de liquidez, conversor e câmbio em tempo real, lucro líquido e comparador de ativos.">
+<title>Ferramentas Cripto em Português | MundoDeFi</title>
+<meta name="description" content="11 ferramentas para investir em cripto com números: portfólio, impermanent loss, juros compostos, staking, simulador de trade, conversor e comparador de ativos. A maioria gratuita, em português.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/ferramentas.html">
 <meta property="og:title" content="Ferramentas Cripto Grátis | MundoDeFi">
-<meta property="og:description" content="Ferramentas cripto gratuitas em português: simulador de trade, juros compostos, staking, pool de liquidez, conversor, câmbio, lucro líquido e comparador de ativos.">
+<meta property="og:description" content="11 ferramentas para investir em cripto com números. A maioria gratuita, sem cadastro, em português.">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/ferramentas.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
@@ -63,6 +63,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-f
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}
 .btn-pro{background:linear-gradient(135deg,var(--roxo),#6c2bd9);color:#fff;padding:7px 16px;border-radius:8px;font-weight:600}
+/* mesma correção do mundodefi-ferramentas.css: o nav estourava a
+   viewport por poucos pixels em tela estreita. */
+@media(max-width:520px){.nav-links{gap:12px;font-size:.82rem}.btn-pro{padding:6px 11px;font-size:.78rem}}
+@media(max-width:400px){.nav-links a:not(.btn-pro){display:none}}
 .btn-pro:hover{opacity:.9;text-decoration:none}
 
 /* ===== Page ===== */
@@ -75,6 +79,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-f
 /* ===== HUB ===== */
 .hub-wrap{max-width:1080px;margin:0 auto}
 .hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:2.2rem}
+/* Secoes por categoria: a pergunta que a pessoa esta fazendo vira o
+   subtitulo, porque e assim que ela procura — nao por tipo de artefato. */
+.hub-sec{margin-bottom:2.6rem}
+.hub-sec-hd{display:flex;align-items:baseline;gap:12px;margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
+.hub-sec-ico{font-size:1.1rem}
+.hub-sec-nome{font-family:var(--display);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.hub-sec-perg{font-size:.8rem;color:var(--muted)}
+.hub-sec-n{margin-left:auto;font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+@media(max-width:600px){.hub-sec-perg{display:none}}
 @media(max-width:920px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.hub-grid{grid-template-columns:1fr}}
 .hub-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-decoration:none;color:var(--text);transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
@@ -132,24 +145,16 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 <main class="page">
   <div class="container">
     <div class="page-header">
-      <h1>Ferramentas Cripto <span>Gratuitas</span></h1>
-      <p>Calculadoras e simuladores profissionais para decidir com números, não com achismo.<br>Sem cadastro, sem limite de uso, em português.</p>
+      <h1>Ferramentas <span>para investir melhor</span></h1>
+      <p>Calculadoras e simuladores para decidir com números, não com achismo.<br>A maioria é gratuita, sem cadastro e sem limite de uso — em português.</p>
     </div>
 
     <div class="hub-wrap">
-      <div class="hub-grid">
-<!-- ===== GRATUITAS (primeiro) ===== -->
-<a class="hub-card" style="--ac:#8b5cf6" href="/ferramentas/juros-compostos.html"><span class="hub-free">Grátis</span><div class="hub-ico">📈</div><div class="hub-name">Juros Compostos</div><div class="hub-desc">Simule o crescimento do seu patrimônio com aportes mensais, gráfico interativo e tabela mês a mês — em Real, Dólar ou Euro.</div><div class="hub-tags"><span class="hub-tag">Gráfico + tabela</span><span class="hub-tag">3 moedas</span><span class="hub-tag">Retiradas mensais</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#f5a623" href="/ferramentas/lucro-cripto.html"><span class="hub-free">Grátis</span><div class="hub-ico">🪙</div><div class="hub-name">Lucro Cripto</div><div class="hub-desc">Descubra seu lucro líquido real: busca o preço ao vivo de qualquer token e desconta as taxas da exchange.</div><div class="hub-tags"><span class="hub-tag">Preço ao vivo</span><span class="hub-tag">Taxas de exchange</span><span class="hub-tag">Qualquer token</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#22d3ee" href="/ferramentas/pool-liquidez.html"><span class="hub-free">Grátis</span><div class="hub-ico">💧</div><div class="hub-name">Pool de Liquidez</div><div class="hub-desc">A pergunta de todo provedor de liquidez: as taxas compensam o impermanent loss? Simule pools 50/50, 80/20 e stable e compare com HOLD.</div><div class="hub-tags"><span class="hub-tag">Impermanent loss</span><span class="hub-tag">Compara com HOLD</span><span class="hub-tag">Análise de risco</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#4b96ff" href="/ferramentas/staking.html"><span class="hub-free">Grátis</span><div class="hub-ico">🔒</div><div class="hub-name">Simulador de Staking</div><div class="hub-desc">Quanto rendem seus tokens em staking? APY composto de ETH, SOL, BNB, MATIC e ADA com preço atual e resultado em tokens, USD e BRL.</div><div class="hub-tags"><span class="hub-tag">APY composto</span><span class="hub-tag">Preço ao vivo</span><span class="hub-tag">Rend. diário</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#10b981" href="/ferramentas/conversor.html"><span class="hub-free">Grátis</span><div class="hub-ico">💱</div><div class="hub-name">Conversor Cripto</div><div class="hub-desc">BTC, ETH, SOL e mais convertidos para Real, Dólar e Euro em tempo real, com variação 24h e market cap via CoinGecko.</div><div class="hub-tags"><span class="hub-tag">Tempo real</span><span class="hub-tag">BRL · USD · EUR</span><span class="hub-tag">Market cap</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#2dd4bf" href="/ferramentas/cambio.html"><span class="hub-free">Grátis</span><div class="hub-ico">💵</div><div class="hub-name">Câmbio Cripto</div><div class="hub-desc">Converta Real, Dólar, Euro e Libra entre si usando a cotação do mercado cripto ao vivo, via stablecoins USDT e USDC.</div><div class="hub-tags"><span class="hub-tag">BRL · USD · EUR · GBP</span><span class="hub-tag">USDT · USDC</span><span class="hub-tag">Cotação ao vivo</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#f97316" href="/ferramentas/comparador-de-ativos.html"><span class="hub-free">Grátis</span><div class="hub-ico">⚖️</div><div class="hub-name">Comparador de Ativos</div><div class="hub-desc">Compare a rentabilidade de cripto, ações e renda fixa lado a lado — qualquer ativo contra o CDI, com dados ao vivo de CoinGecko, BACEN e mercado tradicional.</div><div class="hub-tags"><span class="hub-tag">Cripto · ações · CDI</span><span class="hub-tag">Dados ao vivo</span><span class="hub-tag">Lado a lado</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<!-- ===== PRO (depois das gratuitas) ===== -->
-<a class="hub-card" style="--ac:#9945FF" href="/ferramentas/entradas-saidas/"><span class="hub-pro">👑 PRO</span><div class="hub-ico">💰</div><div class="hub-name">Entradas e Saídas</div><div class="hub-desc">Controle financeiro completo: registre entradas, despesas e investimentos, veja gráficos do seu fluxo de caixa e converse com o Nexus, seu analista financeiro.</div><div class="hub-tags"><span class="hub-tag">Fluxo de caixa</span><span class="hub-tag">Gráficos + relatórios</span><span class="hub-tag">Nexus IA</span></div><span class="hub-open">Ver a ferramenta →</span></a>
-<a class="hub-card" style="--ac:#9945FF" href="/ferramentas/simulador-de-trade.html"><span class="hub-pro">👑 PRO</span><div class="hub-ico">📊</div><div class="hub-name">Simulador de Trade</div><div class="hub-desc">Simule operações long e short com alavancagem, veja lucro, prejuízo e preço de liquidação — e acompanhe sua banca crescer entrada após entrada.</div><div class="hub-tags"><span class="hub-tag">Long e short</span><span class="hub-tag">Gestão de banca</span><span class="hub-tag">Liquidação</span></div><span class="hub-open">Ver a ferramenta →</span></a>
-      </div>
+      <!-- As cartas vem de /mundodefi-catalogo.js. Antes eram 9 <a> escritos
+           a mao aqui, enquanto a home tinha 11 e o menu 12 — a pagina chamada
+           "todas as ferramentas" era justamente a que tinha menos. -->
+      <div id="hub-catalogo"></div>
+
 
       <div class="page-header" style="margin-top:3.5rem">
         <h1 style="font-size:1.5rem">Pronto para o próximo nível?</h1>
@@ -187,5 +192,35 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
   </div>
 </footer>
 
+<script src="/mundodefi-catalogo.js?v=2026-08-3"></script>
+<script>
+(function(){
+  var alvo=document.getElementById('hub-catalogo');
+  if(!alvo||!window.MDF_CATALOGO)return;
+  function esc(t){return String(t==null?'':t).replace(/[<>&"]/g,function(c){
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+  alvo.innerHTML = MDF_CATALOGO.agrupado().map(function(g){
+    return '<section class="hub-sec">'
+      +'<div class="hub-sec-hd">'
+        +'<span class="hub-sec-ico">'+g.categoria.icone+'</span>'
+        +'<span class="hub-sec-nome">'+esc(g.categoria.nome)+'</span>'
+        +'<span class="hub-sec-perg">'+esc(g.categoria.pergunta)+'</span>'
+        +'<span class="hub-sec-n">'+g.itens.length+'</span>'
+      +'</div>'
+      +'<div class="hub-grid" style="margin-bottom:0">'
+      + g.itens.map(function(i){
+          return '<a class="hub-card" style="--ac:'+g.categoria.cor+'" href="'+i.url+'">'
+            +(i.plano==='pro'?'<span class="hub-pro">PRO</span>':'<span class="hub-free">Grátis</span>')
+            +'<div class="hub-ico">'+i.icone+'</div>'
+            +'<div class="hub-name">'+esc(i.nome)+'</div>'
+            +'<div class="hub-desc">'+esc(i.resumo)+'</div>'
+            +'<div class="hub-tags">'+(i.tags||[]).map(function(t){
+                return '<span class="hub-tag">'+esc(t)+'</span>';}).join('')+'</div>'
+            +'<span class="hub-open">Abrir ferramenta →</span></a>';
+        }).join('')
+      +'</div></section>';
+  }).join('');
+})();
+</script>
 </body>
 </html>
