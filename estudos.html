@@ -349,13 +349,23 @@ function renderCards(){
 function abrir(slug){
   var a = AULAS.find(function(x){ return x.slug===slug; });
   if(!a) return;
+  var destino = '/estudos/' + slug + '.html';
+  function abrirSeExistir(){
+    fetch(destino, { method:'HEAD' })
+      .then(function(r){
+        if(r && r.ok) window.location.href = destino;
+        else toast('📚 Esta aula será publicada em breve. Enquanto isso, continue sua trilha aqui no Centro de Estudos.');
+      })
+      .catch(function(){
+        toast('📚 Esta aula será publicada em breve. Enquanto isso, continue sua trilha aqui no Centro de Estudos.');
+      });
+  }
   if(a.status==='ready'){
-    // página individual (a criar depois). Caminho final: /estudos/<slug>.html
-    window.location.href = '/estudos/'+slug+'.html';
+    abrirSeExistir();
   } else if(a.status==='soon'){
     toast('🚧 Conteúdo em produção — em breve!');
   } else if(a.status==='premium'){
-    if(isPremium()) window.location.href = '/estudos/'+slug+'.html';
+    if(isPremium()) abrirSeExistir();
     else window.location.href = '/planos.html';
   }
 }

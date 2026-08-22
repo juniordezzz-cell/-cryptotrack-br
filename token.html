@@ -1026,12 +1026,16 @@ function renderPage(bin,cg){
       var tv=t.converted_volume&&t.converted_volume.usd?t.converted_volume.usd:0;
       var tp=t.converted_last&&t.converted_last.usd?fmtP(t.converted_last.usd):'—';
       var exImg='https://assets.coingecko.com/markets/images/'+t.market.identifier+'/small/'+t.market.identifier+'.png';
+      var tradeUrl = t.trade_url || '';
+      var acao = tradeUrl
+        ? '<a href="'+tradeUrl+'" target="_blank" rel="noopener" class="buy-btn">Comprar ↗</a>'
+        : '<span class="buy-btn" style="opacity:.45;pointer-events:none" aria-disabled="true">Indisponível</span>';
       H+='<tr><td style="font-family:var(--mono);font-size:11px;color:var(--muted)">'+(i+1)+'</td>'
         +'<td><img class="ex-logo" src="'+exImg+'" loading="lazy" onerror="this.style.display=\'none\'"><span style="font-weight:600;font-size:12px">'+t.market.name+'</span></td>'
         +'<td><span class="pair-badge">'+t.base+'/'+t.target+'</span></td>'
         +'<td style="font-family:var(--mono);font-size:12px;font-weight:600">'+tp+'</td>'
         +'<td style="font-family:var(--mono);font-size:11px">'+fmtB(tv)+'</td>'
-        +'<td><a href="'+(t.trade_url||'#')+'" target="_blank" class="buy-btn">Comprar ↗</a></td></tr>';
+        +'<td>'+acao+'</td></tr>';
     });
     H+='</tbody></table></div>';
   }else{H+='<div style="padding:1.5rem;text-align:center;color:var(--muted2);font-size:12px">Dados de exchange indisponíveis.</div>';}
