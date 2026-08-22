@@ -20,6 +20,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/mundodefi-tokens.css">
+<script src="/mundodefi-api.js"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -783,7 +784,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
     <div class="foot-disc">⚠️ O MundoDeFi é uma plataforma de dados e educação. Nada aqui é recomendação de compra ou venda de ativos. Criptomoedas envolvem alto risco — estude, faça sua própria análise e nunca invista o que não pode perder.</div>
     <div class="foot-bottom">
       <span>© <span id="ano"></span> MundoDeFi · mundodefi.com.br</span>
-      <span>@mundodefi</span>
+      <span><a href="/politica-de-privacidade.html">Política de Privacidade</a> · @mundodefi</span>
     </div>
   </div>
 </footer>
@@ -871,11 +872,9 @@ function esc(s){return String(s||'').replace(/[<>&"']/g,function(c){return{'<':'
 
 /* ═══ MERCADO: ticker + overview + rankings (1 chamada) ═══ */
 var OVERVIEW_IDS=['bitcoin','ethereum','solana','binancecoin','ripple','dogecoin'];
+var ROTA_MKTS='/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h';
 function loadMarkets(){
-  var c=cget('mdf.home.mkts');
-  if(c)return Promise.resolve(c);
-  return jfetch(CG+'/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h')
-    .then(function(d){cset('mdf.home.mkts',d,5*60*1000);return d;});
+  return MDF_API.get(ROTA_MKTS, 5*60*1000);
 }
 function renderMarket(list){
   var tk=list.slice(0,20).map(function(c){
@@ -915,15 +914,17 @@ function renderMarket(list){
 loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){
   document.getElementById('mktGrid').innerHTML='<div class="skel">Não foi possível carregar as cotações agora. Recarregue a página em instantes.</div>';
 });
-setInterval(function(){
-  try{localStorage.removeItem('mdf.home.mkts');}catch(e){}
+/* Antes: setInterval fixo que apagava o cache e refazia a chamada mesmo
+   com a aba escondida. Agora só atualiza quando a aba está visível. */
+MDF_API.repetir(function(){
+  MDF_API.invalidar(ROTA_MKTS);
   loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
-},5*60*1000+5000);
+}, 5*60*1000+5000);
 
 /* ═══ MAIS PESQUISADAS — lazy ═══ */
 function loadTrending(){
   var c=cget('mdf.home.trend');
-  var p=c?Promise.resolve(c):jfetch(CG+'/search/trending').then(function(d){
+  var p=c?Promise.resolve(c):MDF_API.get('/search/trending',10*60*1000).then(function(d){
     var slim=(d.coins||[]).slice(0,5).map(function(x){return{id:x.item.id,n:x.item.name,s:x.item.symbol,img:x.item.small};});
     cset('mdf.home.trend',slim,10*60*1000);return slim;
   });
@@ -953,7 +954,7 @@ function fillCoinStats(list){
 }
 function loadGlobalStats(){
   var c=cget('mdf.home.glob');
-  var p=c?Promise.resolve(c):jfetch(CG+'/global',2).then(function(d){
+  var p=c?Promise.resolve(c):MDF_API.get('/global',10*60*1000,2).then(function(d){
     var g=d.data||{};
     var slim={cap:g.total_market_cap&&g.total_market_cap.usd,capv:g.market_cap_change_percentage_24h_usd,
       vol:g.total_volume&&g.total_volume.usd,dom:g.market_cap_percentage&&g.market_cap_percentage.btc,atv:g.active_cryptocurrencies};
@@ -969,7 +970,7 @@ function loadGlobalStats(){
 }
 function loadBrl(){
   var c=cget('mdf.home.brl');
-  var p=c?Promise.resolve(c):jfetch(CG+'/simple/price?ids=tether&vs_currencies=brl',2).then(function(d){
+  var p=c?Promise.resolve(c):MDF_API.get('/simple/price?ids=tether&vs_currencies=brl',10*60*1000,2).then(function(d){
     var v=d.tether&&d.tether.brl;cset('mdf.home.brl',v,10*60*1000);return v;
   });
   p.then(function(v){
@@ -1024,7 +1025,7 @@ function renderSugg(items){
 }
 function doSearch(q){
   if(memo[q]){renderSugg(memo[q]);return;}
-  jfetch(CG+'/search?query='+encodeURIComponent(q),2).then(function(d){
+  MDF_API.get('/search?query='+encodeURIComponent(q),10*60*1000,2).then(function(d){
     var items=(d.coins||[]).slice(0,7);
     memo[q]=items;
     if(busca.value.trim().toLowerCase()===q)renderSugg(items);
@@ -1056,7 +1057,7 @@ window.submitBusca=function(){
   var q=busca.value.trim();
   if(!q)return busca.focus();
   if(curItems.length)return void(location.href='/token.html?id='+encodeURIComponent(curItems[0].id));
-  jfetch(CG+'/search?query='+encodeURIComponent(q),2).then(function(d){
+  MDF_API.get('/search?query='+encodeURIComponent(q),10*60*1000,2).then(function(d){
     var c=(d.coins||[])[0];
     if(c)location.href='/token.html?id='+encodeURIComponent(c.id);
   }).catch(function(){});

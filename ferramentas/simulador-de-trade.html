@@ -572,7 +572,7 @@ body.mdf-locked [data-mdf-lock-zone]::after{
       <a href="https://mundodefi.com.br/portfolio/">Portfólio</a>
       <a href="https://mundodefi.com.br/planos.html">Planos PRO</a>
     </div>
-    <p class="f-copy">© 2026 MundoDeFi · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinGecko / Binance</p>
+    <p class="f-copy">© 2026 MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinGecko / Binance</p>
   </div>
 </footer>
 
@@ -584,6 +584,23 @@ body.mdf-locked [data-mdf-lock-zone]::after{
 ══════════════════════════════════════ */
 let dir = 'long';
 let banca = { inicial: 50, atual: 50, entradas: [] };
+/* ── MARGEM DE MANUTENCAO ──────────────────────────────────────────
+   A liquidacao NAO acontece quando voce perde 100% da margem: acontece
+   antes, quando o patrimonio da posicao cai abaixo da margem de
+   manutencao exigida pela corretora. Ignorar isso fazia o simulador
+   dizer que voce tinha mais folga do que realmente tem — erro que
+   aponta para o lado perigoso.
+
+   0,5% e a taxa tipica de pares majoritarios em alavancagem baixa
+   (Binance/Bybit). Ela sobe conforme o tamanho da posicao e a
+   alavancagem, entao trate o resultado como otimista, nao exato.
+   Taxas de corretagem e funding tambem nao entram na conta.          */
+const MMR = 0.005;
+
+/* Perda percentual da margem em que a posicao e liquidada.
+   equity <= notional * MMR  =>  pnlPct <= (lev*MMR - 1) * 100        */
+function limiteLiquidacao(lev){ return (lev * MMR - 1) * 100; }
+
 let ultimoLiquido = 0;       // resultado projetado do take profit (no alvo)
 let ultimoLiquidado = false;
 let ultimoPnlSaidaPct = 0;   // retorno alavancado (%) no take profit
@@ -847,15 +864,16 @@ function atualizarPreview(assetMov, lev){
   }
 
   let pnlPct = assetMov * lev;
-  ultimoLiquidado = pnlPct <= -100;
+  ultimoLiquidado = pnlPct <= limiteLiquidacao(lev);
   ultimoLiquido = ultimoLiquidado ? -M : M * (pnlPct/100);
 
   const proj = banca.atual + ultimoLiquido;
   const pctTrade = banca.atual > 0 ? (ultimoLiquido / banca.atual) * 100 : 0;
 
   if(ultimoLiquidado){
-    box.innerHTML = `<span class="vermelho">⚠ LIQUIDADO</span> — perda de <b>${fmt(M)}</b> (-100%).<br>
-      Banca <b>${fmt(banca.atual)}</b> → <b class="vermelho">${fmt(proj)}</b>`;
+    box.innerHTML = `<span class="vermelho">⚠ LIQUIDADO</span> — perda de <b>${fmt(M)}</b> (margem inteira).<br>
+      Banca <b>${fmt(banca.atual)}</b> → <b class="vermelho">${fmt(proj)}</b><br>
+      <span style="font-size:.72rem;opacity:.75">Liquidação estimada com margem de manutenção de ${(MMR*100).toFixed(1)}%. Taxas e funding não entram na conta.</span>`;
     return;
   }
   const cls = ultimoLiquido >= 0 ? 'verde' : 'vermelho';
@@ -887,7 +905,9 @@ function calcular(){
   el('card-mov').textContent = (assetMov>=0?'+':'') + assetMov.toFixed(2) + '%';
   el('card-mov').className = assetMov>=0 ? 'verde' : 'vermelho';
 
-  let liq = dir==='long' ? entrada*(1-(1/lev)) : entrada*(1+(1/lev));
+  /* long:  entrada * (1 - 1/lev + MMR)   short: entrada * (1 + 1/lev - MMR)
+     O termo MMR aproxima a liquidacao da entrada — e menos folga, nao mais. */
+  let liq = dir==='long' ? entrada*(1-(1/lev)+MMR) : entrada*(1+(1/lev)-MMR);
   if(liq < 0) liq = 0;
   el('card-liq').textContent = fmt(liq);
 
@@ -895,7 +915,7 @@ function calcular(){
   if(sl > 0){
     const slMov = dir==='long' ? ((sl-entrada)/entrada)*100 : ((entrada-sl)/entrada)*100;
     const slPnlPct = slMov * lev;
-    const slLiquidado = slPnlPct <= -100;
+    const slLiquidado = slPnlPct <= limiteLiquidacao(lev);
     const slResultado = slLiquidado ? -M : M * (slPnlPct/100);
     slInfo = { mov: slMov, pnlPct: slPnlPct, resultado: slResultado, liquidado: slLiquidado };
     el('card-sl').textContent = signed(slResultado);

@@ -168,6 +168,7 @@ select option{background:var(--surface2);color:var(--text)}
 .range-wrap input[type=range]{flex:1;accent-color:var(--gold);cursor:pointer}
 .range-val{font-family:var(--mono);font-size:.8rem;color:var(--gold);min-width:38px;text-align:right}
 .res-box.cyan .res-val{color:var(--cyan)}
+.res-sub{font-size:.68rem;color:var(--text-muted);margin-top:6px;line-height:1.4}
 .res-val.green{color:var(--green)!important}.res-val.red{color:var(--red)!important}
 .risk-badge{display:inline-block;font-size:.7rem;font-weight:700;padding:4px 14px;border-radius:99px}
 .risk-low{background:rgba(16,185,129,.12);color:var(--green);border:1px solid rgba(16,185,129,.3)}
@@ -217,7 +218,7 @@ select option{background:var(--surface2);color:var(--text)}
     <div class="card">
       <div class="card-title">Dados da pool</div>
       <div class="grid2">
-        <div class="field"><label>Token A (volátil)</label><div class="input-wrap"><input type="text" id="pool-tokA" value="ETH" placeholder="ETH" /></div></div><div class="field"><label>Token B (par)</label><div class="input-wrap"><input type="text" id="pool-tokB" value="USDC" placeholder="USDC" /></div></div><div class="field"><label>Preço inicial do Token A</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-precoA-ini" value="3000" placeholder="3000" /></div></div><div class="field"><label>Preço final do Token A</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-precoA-fim" value="4500" placeholder="4500" /></div></div><div class="field"><label>Valor depositado</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-deposito" value="10000" placeholder="10000" /></div></div><div class="field"><label>APR da pool</label><div class="input-wrap"><span class="prefix">%</span><input type="number" id="pool-apr" value="18" step="0.1" placeholder="18" /></div></div><div class="field"><label>Período (dias)</label><div class="input-wrap"><input type="number" id="pool-dias" value="365" placeholder="365" /></div></div><div class="field"><label>Tipo de pool</label><div class="input-wrap"><select class="full" id="pool-tipo" ><option value="50/50" selected>50/50 (Uniswap V2 / Raydium)</option><option value="80/20">80/20 (Balancer)</option><option value="stable">Stable (Curve — baixo IL)</option></select></div></div>
+        <div class="field"><label>Token A (volátil)</label><div class="input-wrap"><input type="text" id="pool-tokA" value="ETH" placeholder="ETH" /></div></div><div class="field"><label>Token B (par)</label><div class="input-wrap"><input type="text" id="pool-tokB" value="USDC" placeholder="USDC" /></div></div><div class="field"><label>Preço inicial do Token A</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-precoA-ini" value="3000" placeholder="3000" /></div></div><div class="field"><label>Preço final do Token A</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-precoA-fim" value="4500" placeholder="4500" /></div></div><div class="field"><label>Valor depositado</label><div class="input-wrap"><span class="prefix">$</span><input type="number" id="pool-deposito" value="10000" placeholder="10000" /></div></div><div class="field"><label>APR da pool</label><div class="input-wrap"><span class="prefix">%</span><input type="number" id="pool-apr" value="18" step="0.1" placeholder="18" /></div></div><div class="field"><label>Período (dias)</label><div class="input-wrap"><input type="number" id="pool-dias" value="365" placeholder="365" /></div></div><div class="field"><label>Tipo de pool</label><div class="input-wrap"><select class="full" id="pool-tipo" ><option value="50/50" selected>50/50 (Uniswap V2, Raydium, Orca)</option><option value="80/20">80/20 (Balancer)</option><option value="stable">Stable (Curve, par de stablecoins)</option></select></div></div>
       </div>
       <div class="actions"><button class="btn-calc" onclick="calcPool()">Calcular pool</button></div>
     </div>
@@ -227,7 +228,7 @@ select option{background:var(--surface2);color:var(--text)}
         <div class="results-grid"><div class="res-box "><div class="res-label">Valor se HOLD</div><div class="res-val" id="pool-hold">—</div></div><div class="res-box destaque"><div class="res-label">Valor na pool</div><div class="res-val" id="pool-valor-pool">—</div></div><div class="res-box red"><div class="res-label">Impermanent Loss</div><div class="res-val" id="pool-il">—</div></div></div>
         <div class="results-grid"><div class="res-box green"><div class="res-label">Taxas coletadas</div><div class="res-val" id="pool-taxas">—</div></div><div class="res-box green"><div class="res-label">Resultado final</div><div class="res-val" id="pool-final">—</div></div><div class="res-box cyan"><div class="res-label">ROI real</div><div class="res-val" id="pool-roi">—</div></div></div>
         <div class="results-grid" style="grid-template-columns:1fr 1fr">
-          <div class="res-box "><div class="res-label">IL compensa?</div><div class="res-val" id="pool-compensa">—</div></div>
+          <div class="res-box "><div class="res-label">Pool rendeu mais que HOLD?</div><div class="res-val" id="pool-compensa">—</div><div class="res-sub" id="pool-vshold"></div></div>
           <div class="res-box"><div class="res-label">Risco estimado</div><div id="pool-risco-badge" style="margin-top:4px">—</div></div>
         </div>
         <div class="fee-notice" id="pool-note">Simulação usando a fórmula AMM x·y=k.</div>
@@ -290,19 +291,42 @@ function calcPool(){
   var tokA=document.getElementById('pool-tokA').value||'A';
   var tokB=document.getElementById('pool-tokB').value||'B';
   var r=precoFim/precoIni;
-  var IL_pct;
-  if(tipo==='stable'){IL_pct=-Math.abs(r-1)*0.001*100;}
-  else if(tipo==='80/20'){var w1=0.8,w2=0.2;IL_pct=-(1-(Math.pow(r,w1)*Math.pow(1/r,w2)/(w1*r+w2)))*100*0.3;}
-  else {IL_pct=-((2*Math.sqrt(r)/(1+r))-1)*100;}
-  IL_pct=-Math.abs(IL_pct);
-  var valorHold=deposito/2*(precoFim/precoIni)+deposito/2;
-  var valorPool=deposito*(1+IL_pct/100);
-  if(tipo==='50/50'||tipo==='80/20'){valorPool=valorHold*(1+IL_pct/100);}
+
+  /* ── IMPERMANENT LOSS ─────────────────────────────────────────────
+     Uma formula so, valida para qualquer proporcao de pesos:
+
+         IL = r^w1 / (w1*r + w2) - 1
+
+     onde w1 e o peso do token volatil, w2 = 1 - w1 e r a razao de
+     preco final/inicial. O caso 50/50 cai fora dela naturalmente:
+     r^0.5/(0.5r+0.5) = 2*sqrt(r)/(1+r), que e a formula classica.
+
+     Pools estaveis NAO precisam de formula propria: dentro do peg,
+     r ~ 1 e o IL sai proximo de zero sozinho. Fora do peg, a mesma
+     conta mostra a perda de verdade. (O modo stable usa 50/50 como
+     estimativa CONSERVADORA: pools tipo Curve concentram liquidez
+     perto do peg e costumam ter IL menor que o exibido aqui. Errar
+     para o lado de mostrar mais risco e o lado seguro.)              */
+  var w1 = tipo==='80/20' ? 0.8 : 0.5;
+  var w2 = 1 - w1;
+  var IL_pct = (Math.pow(r,w1)/(w1*r+w2) - 1) * 100;
+  if(IL_pct>0) IL_pct=0;   /* IL nunca e ganho; r=1 pode dar +1e-15 */
+
+  /* O benchmark de HOLD respeita os mesmos pesos. Antes assumia 50/50
+     inclusive no modo 80/20, o que deslocava a comparacao inteira. */
+  var valorHold = deposito*(w1*r + w2);
+  var valorPool = valorHold*(1 + IL_pct/100);
   var taxas=deposito*apr*(dias/365);
   var final=valorPool+taxas;
   var roi=((final/deposito)-1)*100;
   var ilPerda=valorHold-valorPool;
-  var ilCompensa=taxas>ilPerda;
+  /* A pergunta util nao e "as taxas cobrem o IL" no vacuo — e "eu teria
+     ficado melhor fornecendo liquidez ou apenas segurando os tokens?".
+     Comparar final contra valorHold responde exatamente isso e evita o
+     caso em que o ativo despenca: o IL fica coberto pelas taxas, mas o
+     ROI e negativo porque o par caiu, nao porque a pool falhou. */
+  var vsHold=final-valorHold;
+  var ilCompensa=vsHold>0;
   document.getElementById('pool-hold').textContent='$'+fm(valorHold);
   document.getElementById('pool-valor-pool').textContent='$'+fm(valorPool);
   document.getElementById('pool-il').textContent=fmd(IL_pct,2)+'%';
@@ -312,12 +336,23 @@ function calcPool(){
   var comp=document.getElementById('pool-compensa');
   comp.textContent=ilCompensa?'✅ Sim':'❌ Não';
   comp.className='res-val '+(ilCompensa?'green':'red');
+  document.getElementById('pool-vshold').textContent=
+    (vsHold>=0?'+':'−')+'$'+fm(Math.abs(vsHold))+' vs segurar os tokens'
+    +' · taxas $'+fm(taxas)+' contra IL de $'+fm(ilPerda);
   var absIL=Math.abs(IL_pct);
   var riskEl=document.getElementById('pool-risco-badge');
   if(absIL<3) riskEl.innerHTML='<span class="risk-badge risk-low">🟢 Baixo</span>';
   else if(absIL<15) riskEl.innerHTML='<span class="risk-badge risk-med">🟡 Médio</span>';
   else riskEl.innerHTML='<span class="risk-badge risk-high">🔴 Alto</span>';
-  document.getElementById('pool-note').textContent='💡 Pool '+tipo+' com '+tokA+'/'+tokB+'. Variação de preço: '+fmd((r-1)*100)+'%. IL estimado: '+fmd(IL_pct,2)+'% (perda de $'+fm(ilPerda)+' vs HOLD). Taxas geradas em '+dias+' dias: $'+fm(taxas)+'.';
+  var nota='💡 Pool '+tipo+' com '+tokA+'/'+tokB+'. Variação de preço: '+fmd((r-1)*100)+'%. '
+  +'IL estimado: '+fmd(IL_pct,2)+'% ('+(ilPerda>=0?'perda':'ganho')+' de $'+fm(Math.abs(ilPerda))+' vs HOLD). '
+  +'Taxas geradas em '+dias+' dias: $'+fm(taxas)+'.';
+if(tipo==='stable'){
+  nota+=' Em par de stablecoins dentro do peg a razão de preço fica perto de 1 e o IL some sozinho — '
+    +'é por isso que o número acima aparece próximo de zero. Fora do peg, esta é uma estimativa conservadora: '
+    +'pools tipo Curve concentram liquidez perto de $1 e tendem a perder menos do que o mostrado.';
+}
+document.getElementById('pool-note').textContent=nota;
   showResult('pool-result');
 }
 
