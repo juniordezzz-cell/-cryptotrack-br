@@ -1,18 +1,30 @@
-# Proxy de análise — MundoDeFi
+# Proxy de IA — não está em uso
 
-Worker que serve a análise dos tokens em `token.html`.
+> **Nenhuma página chama isto hoje.**
+>
+> Foi escrito para a análise de tokens, que depois saiu do produto. Fica
+> como implementação de referência para o dia em que o Nexus ganhar uma
+> camada de IA opcional.
 
-## Por que existe
+## O "espaço para API" do Nexus não é este Worker
 
-O `token.html` chamava `api.anthropic.com` direto do navegador, sem chave e
-sem header de versão. A requisição falhava em CORS antes mesmo da
-autenticação, então **todo visitante via "⚠️ Análise indisponível"** — na
-página de maior tráfego do site.
+É o `nexus-core.js`:
 
-A correção não é colar uma chave no HTML. Chave de LLM é computação que
-alguém paga: bots varrem HTML público atrás disso, e a cota gratuita de
-5.000 buscas/mês vira zero numa tarde. Aqui a chave é um secret do Worker
-e nunca chega ao cliente.
+```js
+NEXUS_CORE_CONFIG.mode = "api";
+NEXUS_CORE_CONFIG.api.endpoint = "https://...";
+```
+
+O chat envia `POST { question, context }` e espera `{ answer }`. O contexto
+já vai com os fatos completos do portfólio (`NexusMotor.fatos()`). Se a API
+falhar, cai sozinho no motor de regras local.
+
+O Nexus é determinístico **por escolha**: para dinheiro, regra auditável
+ganha de texto gerado — responde igual toda vez, não inventa número e cada
+afirmação é rastreável até a conta. Uma eventual IA seria camada extra,
+nunca substituta do motor.
+
+## Se um dia for ligar
 
 ## Deploy
 

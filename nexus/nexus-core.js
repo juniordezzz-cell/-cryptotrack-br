@@ -13,10 +13,16 @@
        - não logado  → convite para entrar com Google
        - plano grátis → tela "recurso PRO" com CTA /planos.html
        - PRO/Premium → chat liberado
-   • ESPAÇO PARA A IA DE VERDADE: troque NEXUS_CORE_CONFIG.mode
-     para "api" e aponte o endpoint. O chat envia
-     POST { question, context } e espera { answer }. Se a API
-     falhar, cai no modo local sozinho.
+   • O Nexus é DETERMINÍSTICO por escolha: as respostas saem de
+     regras declaradas em nexus-regras.json avaliadas contra os
+     números reais do portfólio. Não é modelo de linguagem — e
+     para dinheiro isso é vantagem: responde igual toda vez, não
+     inventa número, e cada afirmação é rastreável até a conta.
+   • ESPAÇO PARA API DEPOIS: troque NEXUS_CORE_CONFIG.mode para
+     "api" e aponte o endpoint. O chat envia POST
+     { question, context } e espera { answer }; o contexto já vai
+     com os fatos prontos (NexusMotor.fatos()). Se a API falhar,
+     cai no modo local sozinho.
    ============================================================ */
 
 (function () {
@@ -37,13 +43,11 @@
 
   /* ---------- provedor de respostas (local hoje, API amanhã) ---------- */
   var Provider = {
+    /* Payload de contexto para o modo "api". São os mesmos fatos que o
+       motor usa localmente — objeto plano e serializável, pronto para ir
+       no corpo do POST no dia em que houver um endpoint. */
     contexto: function () {
-      try {
-        if (window.P && P.st) {
-          var T = P.totais();
-          return { patrimonio: T.pat, lucro: T.lucro, rentabilidade: T.rent, hold: T.hold, defi: T.defi, trade: T.trade, taxas: T.tax };
-        }
-      } catch (e) {}
+      try { if (window.NexusMotor) return NexusMotor.fatos(); } catch (e) {}
       return {};
     },
     local: function (question) {
@@ -155,10 +159,14 @@
     var input = form.querySelector("input");
     var history = loadHistory();
 
+    /* Mensagem do BOT entra como HTML — o Nexus responde em blocos
+       formatados, e todo valor interpolado já é escapado na origem
+       (nexus-portfolio-kb.js). Mensagem do USUÁRIO entra como texto puro
+       e nunca como HTML: é entrada de terceiro. */
     function addMessage(role, text, persist) {
       var el = document.createElement("div");
       el.className = "nexus-msg " + role;
-      el.textContent = text;
+      if (role === "bot") el.innerHTML = text; else el.textContent = text;
       messages.appendChild(el);
       messages.scrollTop = messages.scrollHeight;
       if (persist !== false) {
@@ -169,8 +177,16 @@
 
     if (history.length) {
       history.forEach(function (m) { addMessage(m.role, m.text, false); });
-    } else {
-      addMessage("bot", pick(KB.saudacoes));
+    } else if (KB.abertura) {
+      /* Abre já dizendo o que viu, em vez de "olá, como posso ajudar". */
+      var carregando = document.createElement("div");
+      carregando.className = "nexus-msg bot nexus-typing";
+      carregando.innerHTML = "<span></span><span></span><span></span>";
+      messages.appendChild(carregando);
+      KB.abertura().then(function (html) {
+        carregando.remove();
+        addMessage("bot", html);
+      });
     }
 
     KB.sugestoes.forEach(function (s) {

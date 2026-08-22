@@ -1,27 +1,28 @@
 /* ╔══════════════════════════════════════════════════════════════════════╗
-   ║  MUNDODEFI · PROXY DE ANÁLISE (Cloudflare Worker)                    ║
+   ║  MUNDODEFI · PROXY DE IA — NÃO ESTÁ EM USO                           ║
    ║                                                                      ║
-   ║  POR QUE ISTO EXISTE                                                 ║
-   ║  O token.html chamava api.anthropic.com direto do navegador, sem     ║
-   ║  chave e sem header de versão. Falhava em CORS antes mesmo da        ║
-   ║  autenticação, então TODO visitante via "Análise indisponível".      ║
+   ║  ⚠ NENHUMA PÁGINA CHAMA ISTO HOJE.                                   ║
    ║                                                                      ║
-   ║  A correção não é colar uma chave no HTML. Chave de LLM é            ║
-   ║  computação que alguém paga: bots varrem HTML público atrás disso    ║
-   ║  e a cota de 5.000 buscas/mês vira zero numa tarde. A chave mora     ║
-   ║  aqui, como secret do Worker, e nunca chega ao cliente.              ║
+   ║  Foi escrito para a análise de tokens, que depois foi removida do    ║
+   ║  produto. Fica aqui como implementação de referência para o dia em   ║
+   ║  que o Nexus ganhar uma camada de IA opcional.                       ║
    ║                                                                      ║
-   ║  ── DEPLOY (uma vez) ────────────────────────────────────────────    ║
-   ║   1. aistudio.google.com/apikey        → cria a chave (grátis)       ║
-   ║   2. npm install -g wrangler                                         ║
-   ║   3. wrangler login                                                  ║
-   ║   4. wrangler kv namespace create CACHE                              ║
-   ║      (cole o id devolvido no wrangler.toml)                          ║
-   ║   5. wrangler secret put GEMINI_API_KEY                              ║
-   ║   6. wrangler deploy                                                 ║
+   ║  ── O "ESPAÇO PARA API" DO NEXUS NÃO É ESTE ARQUIVO ─────────────    ║
+   ║  É o nexus-core.js:                                                  ║
+   ║      NEXUS_CORE_CONFIG.mode = "api"                                  ║
+   ║      NEXUS_CORE_CONFIG.api.endpoint = "https://..."                  ║
+   ║  O chat envia POST { question, context } e espera { answer }. O       ║
+   ║  contexto já vai com os fatos completos (NexusMotor.fatos()). Se a   ║
+   ║  API falhar, cai sozinho no motor de regras local.                   ║
    ║                                                                      ║
-   ║  Depois é só apontar MDF_ANALISE_URL no token.html para a URL do     ║
-   ║  Worker. Detalhes em api/README.md.                                  ║
+   ║  O Nexus é determinístico por escolha, não por falta de opção: para  ║
+   ║  dinheiro, regra auditável ganha de texto gerado. Uma eventual IA    ║
+   ║  aqui seria camada extra — nunca substituta do motor de regras.      ║
+   ║                                                                      ║
+   ║  ── SE UM DIA FOR LIGAR ─────────────────────────────────────────    ║
+   ║  A chave NUNCA vai para o cliente: chave de LLM é computação que     ║
+   ║  alguém paga, e bots varrem HTML público atrás disso. Ela mora aqui  ║
+   ║  como secret do Worker. Deploy em api/README.md.                     ║
    ╚══════════════════════════════════════════════════════════════════════╝ */
 
 /* Flash é o que fica no tier gratuito — Pro saiu do free em abril/2026. */
