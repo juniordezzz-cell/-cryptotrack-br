@@ -109,7 +109,7 @@
 
 .dot.green {
   background: var(--green);
-  box-shadow: 0 0 8px rgba(98, 255, 77, 0.55);
+  box-shadow: 0 0 8px rgba(20, 241, 149, 0.55);
 }
 
 .dot.red {
@@ -217,7 +217,7 @@
 }
 
 .metric-card.positive .metric-icon {
-  box-shadow: 0 0 18px rgba(98, 255, 77, 0.18);
+  box-shadow: 0 0 18px rgba(20, 241, 149, 0.18);
 }
 
 .metric-card.negative .metric-icon {

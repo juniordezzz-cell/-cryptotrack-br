@@ -8,13 +8,13 @@
   border-right: 1px solid var(--line);
   background:
     linear-gradient(180deg, rgba(10, 14, 15, 0.96), rgba(5, 7, 8, 0.98)),
-    radial-gradient(circle at 50% 110%, rgba(98, 255, 77, 0.08), transparent 13rem);
+    radial-gradient(circle at 50% 110%, rgba(20, 241, 149, 0.08), transparent 13rem);
 }
 
 body.light-theme .sidebar {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(237, 243, 241, 0.98)),
-    radial-gradient(circle at 50% 110%, rgba(98, 255, 77, 0.12), transparent 13rem);
+    radial-gradient(circle at 50% 110%, rgba(20, 241, 149, 0.12), transparent 13rem);
 }
 
 .brand {
@@ -26,7 +26,7 @@ body.light-theme .sidebar {
 .brand img {
   width: 64px;
   height: 64px;
-  filter: drop-shadow(0 0 18px rgba(98, 255, 77, 0.18));
+  filter: drop-shadow(0 0 18px rgba(20, 241, 149, 0.18));
 }
 
 .sidebar-nav,
@@ -58,7 +58,7 @@ body.light-theme .sidebar {
 .nav-link:hover,
 .nav-link.is-active {
   color: var(--text);
-  background: linear-gradient(90deg, rgba(98, 255, 77, 0.18), rgba(98, 255, 77, 0.05));
+  background: linear-gradient(90deg, rgba(20, 241, 149, 0.18), rgba(20, 241, 149, 0.05));
   border-left-color: var(--green);
 }
 
@@ -137,8 +137,8 @@ body.light-theme .sidebar {
 
 .back-home:hover {
   color: var(--green);
-  border-color: rgba(98, 255, 77, 0.4);
-  background: rgba(98, 255, 77, 0.08);
+  border-color: rgba(20, 241, 149, 0.4);
+  background: rgba(20, 241, 149, 0.08);
 }
 
 .back-home span { font-size: 1rem; line-height: 1; }

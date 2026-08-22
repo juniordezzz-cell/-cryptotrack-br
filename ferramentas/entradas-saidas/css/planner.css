@@ -55,7 +55,7 @@
 }
 
 .planner-card.incomes .planner-head {
-  background: linear-gradient(90deg, rgba(98, 255, 77, 0.14), transparent 70%);
+  background: linear-gradient(90deg, rgba(20, 241, 149, 0.14), transparent 70%);
   border-left: 3px solid var(--green);
 }
 
@@ -72,8 +72,8 @@
 
 .planner-badge.green {
   color: var(--green);
-  background: rgba(98, 255, 77, 0.12);
-  border: 1px solid rgba(98, 255, 77, 0.3);
+  background: rgba(20, 241, 149, 0.12);
+  border: 1px solid rgba(20, 241, 149, 0.3);
 }
 
 .planner-badge.red {
@@ -143,7 +143,7 @@
 }
 
 .planner-row input:focus {
-  border-color: rgba(98, 255, 77, 0.45);
+  border-color: rgba(20, 241, 149, 0.45);
   background: rgba(15, 19, 23, 0.72);
 }
 
@@ -223,8 +223,8 @@
 }
 
 .result-line.highlight {
-  border-color: rgba(98, 255, 77, 0.35);
-  background: linear-gradient(135deg, rgba(98, 255, 77, 0.08), transparent 60%);
+  border-color: rgba(20, 241, 149, 0.35);
+  background: linear-gradient(135deg, rgba(20, 241, 149, 0.08), transparent 60%);
 }
 
 .result-line.highlight.negative {
@@ -292,7 +292,7 @@
 }
 
 .shopping-form input:focus {
-  border-color: rgba(98, 255, 77, 0.5);
+  border-color: rgba(20, 241, 149, 0.5);
 }
 
 .shopping-form .button {
@@ -533,7 +533,7 @@
   padding: 10px 12px;
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius-sm);
-  background: rgba(98, 255, 77, 0.04);
+  background: rgba(20, 241, 149, 0.04);
   display: grid;
   gap: 8px;
 }
@@ -551,13 +551,13 @@
   min-height: 30px;
   padding: 0 10px;
   font-size: 0.8rem;
-  border: 1px solid rgba(98, 255, 77, 0.3);
+  border: 1px solid rgba(20, 241, 149, 0.3);
   border-radius: var(--radius-sm);
-  background: rgba(98, 255, 77, 0.1);
+  background: rgba(20, 241, 149, 0.1);
   color: var(--green);
 }
 
-.inst-add:hover { background: rgba(98, 255, 77, 0.18); }
+.inst-add:hover { background: rgba(20, 241, 149, 0.18); }
 
 .inst-row {
   display: grid;
@@ -587,7 +587,7 @@ body.light-theme .inst-value { background: rgba(255, 255, 255, 0.86); }
 }
 
 .inst-date:focus,
-.inst-value:focus { border-color: rgba(98, 255, 77, 0.45); }
+.inst-value:focus { border-color: rgba(20, 241, 149, 0.45); }
 
 .inst-remove {
   width: 28px;
@@ -637,7 +637,7 @@ body.light-theme .freq-param-input {
 
 .freq-type { flex: 0 0 auto; }
 .freq-type:focus,
-.freq-param-input:focus { border-color: rgba(98, 255, 77, 0.45); }
+.freq-param-input:focus { border-color: rgba(20, 241, 149, 0.45); }
 
 .income-row .freq-param {
   flex: 1 1 auto;

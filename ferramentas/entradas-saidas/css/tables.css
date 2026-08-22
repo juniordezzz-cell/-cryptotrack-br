@@ -67,7 +67,7 @@ th:last-child {
 
 .tag.green {
   color: var(--green);
-  background: rgba(98, 255, 77, 0.12);
+  background: rgba(20, 241, 149, 0.12);
 }
 
 .tag.red {

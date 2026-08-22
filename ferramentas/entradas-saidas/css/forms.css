@@ -73,7 +73,7 @@ body.light-theme .field textarea {
 }
 
 .segmented button.is-active {
-  background: rgba(98, 255, 77, 0.16);
+  background: rgba(20, 241, 149, 0.16);
   color: var(--green);
 }
 
