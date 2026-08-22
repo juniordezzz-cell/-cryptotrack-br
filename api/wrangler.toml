@@ -1,0 +1,12 @@
+name = "mundodefi-analise"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+# Criado com:  wrangler kv namespace create CACHE
+# Cole o id devolvido pelo comando aqui embaixo.
+[[kv_namespaces]]
+binding = "CACHE"
+id = "COLE_O_ID_DO_KV_AQUI"
+
+# A chave NÃO vai neste arquivo — ele vai para o git.
+# Use:  wrangler secret put GEMINI_API_KEY

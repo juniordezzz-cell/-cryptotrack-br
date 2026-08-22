@@ -425,7 +425,7 @@ var PERIOD_MAP={
 // ═══════════════════════════════════
 var _coinId='',_sym='',_usdBRL=5.7,_btcPrice=null;
 var _chart=null,_period='7d',_ws=null;
-var _aiPT='',_aiEN='',_aiLang='pt',_aiLoaded=false,_aiParams=null;
+var _aiPT='',_aiFontes=[],_aiEm=null,_aiLoaded=false,_aiParams=null;
 var _sentBull=62,_sentBear=38,_voteState=null;
 var _alerts=[],_searchTO=null;
 
@@ -788,36 +788,72 @@ function renderAlerts(){
 // ═══════════════════════════════════
 // AI ANALYSIS
 // ═══════════════════════════════════
+/* Endereço do proxy (api/worker.js). Enquanto estiver vazio, a aba de
+   análise nem aparece — melhor não oferecer do que oferecer quebrado.
+   Depois do `wrangler deploy`, cole aqui a URL que o comando imprimir. */
+var MDF_ANALISE_URL = '';
+
+function temAnalise(){ return !!MDF_ANALISE_URL; }
+
+function aiErro(msg, dica){
+  var w=document.getElementById('ai-content'); if(!w) return;
+  w.innerHTML='<div style="padding:1.4rem;text-align:center">'
+    +'<div style="font-size:1.6rem;margin-bottom:.5rem">😕</div>'
+    +'<div style="font-size:13px;color:var(--muted);line-height:1.7">'+msg+'</div>'
+    +(dica?'<div style="font-size:11.5px;color:var(--muted2);margin-top:.6rem">'+dica+'</div>':'')
+    +'</div>';
+}
+
 async function runAI(p){
-  var wrap=document.getElementById('ai-content');if(!wrap)return;
+  var wrap=document.getElementById('ai-content'); if(!wrap) return;
+  if(!temAnalise()){ _aiLoaded=false; return; }
   wrap.innerHTML='<div class="ai-skel" style="width:100%"></div><div class="ai-skel" style="width:86%"></div><div class="ai-skel" style="width:92%"></div><div class="ai-skel" style="width:79%"></div><div class="ai-skel" style="width:88%"></div>';
-  var prompt='Você é analista cripto do MundoDeFi. Análise técnica + fundamentalista em PT-BR, máximo 480 palavras.\n\nToken: '+p.name+' ('+p.sym+')\nPreço: '+p.price+'\n24h: '+p.chg24+' | 7d: '+p.chg7+'\nMCap: '+p.mcap+' (#'+p.rank+')\nVol 24h: '+p.vol+'\n\n1. **📊 Cenário Atual** — contexto macro e ciclo\n2. **📈 Técnica** — tendência, suportes, RSI, MACD\n3. **🏗️ Fundamentos** — projeto, volume, ecossistema\n4. **🎯 Níveis** — entrada, stop sugerido, alvo\n5. **⚡ Sinal** — Bull 🟢 ou Bear 🔴, convicção 1-10\n6. **⚠️ Riscos** — 2-3 específicos';
   try{
-    var c=new AbortController();setTimeout(function(){c.abort();},30000);
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',signal:c.signal,headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})});
+    var c=new AbortController(); var t=setTimeout(function(){c.abort();},45000);
+    var r=await fetch(MDF_ANALISE_URL,{
+      method:'POST', signal:c.signal,
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        id:(_aiParams&&_aiParams.id)||p.id||'', nome:p.name, simbolo:p.sym,
+        preco:p.price, var24h:p.chg24, var7d:p.chg7,
+        mcap:p.mcap, rank:p.rank, volume:p.vol
+      })
+    });
+    clearTimeout(t);
     var j=await r.json();
-    _aiPT=(j.content&&j.content[0]&&j.content[0].text)?j.content[0].text:'Análise indisponível.';
-    _aiEN=_aiPT;
+    if(!r.ok){
+      _aiLoaded=false;
+      return aiErro(j.erro||'Não foi possível gerar a análise agora.',
+                    j.cota?'A cota diária de análises acabou. Amanhã volta ao normal.':'Tente novamente em instantes.');
+    }
+    _aiPT=j.texto||''; _aiFontes=j.fontes||[]; _aiEm=j.em||null;
     renderAI(_aiPT);
-    fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:800,messages:[{role:'user',content:'Translate to English, keep structure and emojis:\n\n'+_aiPT}]})})
-      .then(function(r2){return r2.json();}).then(function(j2){if(j2.content&&j2.content[0])_aiEN=j2.content[0].text;}).catch(function(){});
-  }catch(e){var w=document.getElementById('ai-content');if(w)w.innerHTML='<div style="padding:1rem;font-size:12px;color:var(--muted2)">⚠️ Análise indisponível. Tente novamente.</div>';}
+  }catch(e){
+    _aiLoaded=false;
+    aiErro(e&&e.name==='AbortError'
+      ? 'A análise demorou mais que o esperado.'
+      : 'Não foi possível gerar a análise agora.','Tente novamente em instantes.');
+  }
 }
+
 function renderAI(text){
-  var w=document.getElementById('ai-content');if(!w)return;
-  w.innerHTML='<div class="ai-body" style="padding-bottom:.6rem">'+text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')+'</div>';
-}
-function toggleAILang(){
-  _aiLang=_aiLang==='pt'?'en':'pt';
-  renderAI(_aiLang==='pt'?_aiPT:_aiEN);
-  var b=document.getElementById('ai-lang-btn');if(b)b.textContent=_aiLang==='pt'?'🇺🇸 EN':'🇧🇷 PT';
-}
-async function translateDesc(text){
-  if(!text)return text;
-  try{
-    var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:600,messages:[{role:'user',content:'Traduza para PT-BR de forma natural. Só a tradução:\n\n'+text.substring(0,1000)}]})});
-    var j=await r.json();return(j.content&&j.content[0])?j.content[0].text.trim():text;
-  }catch(e){return text;}
+  var w=document.getElementById('ai-content'); if(!w) return;
+  var corpo=text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  var html='<div class="ai-body" style="padding-bottom:.6rem">'+corpo+'</div>';
+  /* As fontes são o que separa "a IA disse" de "isto veio de algum lugar".
+     Sempre visíveis, nunca escondidas atrás de um clique. */
+  if(_aiFontes && _aiFontes.length){
+    html+='<div style="margin-top:1rem;padding-top:.9rem;border-top:1px solid var(--border)">'
+      +'<div style="font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted2);margin-bottom:.5rem">Fontes consultadas</div>'
+      +_aiFontes.map(function(f){
+         return '<a href="'+f.url+'" target="_blank" rel="noopener nofollow" style="display:block;font-size:11.5px;color:var(--muted);margin-bottom:4px;text-decoration:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">↗ '+(f.titulo||f.url)+'</a>';
+       }).join('')
+      +'</div>';
+  }
+  html+='<div style="margin-top:.9rem;font-size:10.5px;color:var(--muted2);line-height:1.6">'
+    +'Conteúdo educacional gerado automaticamente. Não é recomendação de compra ou venda.'
+    +(_aiEm?' · Gerado em '+new Date(_aiEm).toLocaleDateString('pt-BR'):'')+'</div>';
+  w.innerHTML=html;
 }
 
 // ═══════════════════════════════════
@@ -976,7 +1012,13 @@ function renderPage(bin,cg){
   H+='<div class="col-center">';
   // tabs
   H+='<div class="tabs-row">';
-  [['grafico','📈 Gráfico'],['analise','🤖 IA'],['mercados','🏪 Mercados'],['calculadora','🧮 Calc.'],['comparar','⚖️ Comparar'],['alertas','🔔 Alertas'],['sobre','📋 Sobre'],['holders','🏦 Holders']].forEach(function(t,i){
+  /* A aba de análise só aparece se o proxy estiver configurado. Sem isso a
+     pessoa clicaria e nada aconteceria — foi exatamente o estado da página
+     enquanto a chamada direta à API estava morta. */
+  var abas=[['grafico','📈 Gráfico']];
+  if(temAnalise()) abas.push(['analise','🔍 Análise']);
+  abas.push(['mercados','🏪 Mercados'],['calculadora','🧮 Calc.'],['comparar','⚖️ Comparar'],['alertas','🔔 Alertas'],['sobre','📋 Sobre'],['holders','🏦 Holders']);
+  abas.forEach(function(t,i){
     H+='<button class="tab-btn'+(i===0?' active':'')+'" data-tab="'+t[0]+'" onclick="switchTab(\''+t[0]+'\')">'+t[1]+'</button>';
   });
   H+='</div>';
@@ -999,13 +1041,14 @@ function renderPage(bin,cg){
   });
   H+='</div></div></div>';// end grafico tab
 
-  // ─ TAB ANÁLISE IA ─
+  // ─ TAB ANÁLISE ─
+  if(temAnalise()){
   H+='<div class="tab-panel" data-panel="analise">';
-  H+='<div class="card"><div class="card-hdr"><span class="ai-badge"><span class="ai-pulse"></span>Análise IA — Claude</span><button class="ai-lang-btn" id="ai-lang-btn" onclick="toggleAILang()">🇺🇸 EN</button></div>'
+  H+='<div class="card"><div class="card-hdr"><span class="ai-badge"><span class="ai-pulse"></span>Análise automática</span></div>'
     +'<div style="padding:1rem 1.1rem"><div id="ai-content">'
     +'<div style="text-align:center;padding:1.4rem"><div style="font-size:2.2rem;margin-bottom:.6rem">🤖</div>'
-    +'<div style="font-family:var(--display);font-size:1.2rem;letter-spacing:.06em;margin-bottom:.4rem">ANÁLISE DE IA</div>'
-    +'<div style="font-size:12px;color:var(--muted2);margin-bottom:1.2rem;line-height:1.7">Análise técnica + fundamentalista gerada pelo Claude.<br>Leva cerca de 10 segundos.</div>'
+    +'<div style="font-family:var(--display);font-size:1.2rem;letter-spacing:.06em;margin-bottom:.4rem">ANÁLISE DO ATIVO</div>'
+    +'<div style="font-size:12px;color:var(--muted2);margin-bottom:1.2rem;line-height:1.7">Cenário, fundamentos e riscos do ativo, com busca de notícias recentes.<br>Leva alguns segundos e mostra as fontes consultadas.</div>'
     +'<button onclick="if(!_aiLoaded&&_aiParams){_aiLoaded=true;runAI(_aiParams);}" style="background:linear-gradient(135deg,rgba(155,89,245,.2),rgba(61,139,255,.12));border:1px solid rgba(155,89,245,.4);color:#c084fc;padding:10px 24px;border-radius:99px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);letter-spacing:.04em">✨ Gerar Análise</button>'
     +'</div></div></div></div>';
   H+='<div class="card"><div class="card-hdr"><span class="card-ttl">Sentimento</span></div>'
@@ -1016,6 +1059,8 @@ function renderPage(bin,cg){
     +'<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--muted2);margin-bottom:.85rem"><span>🟢 Bullish</span><span>🔴 Bearish</span></div>'
     +'<div style="display:flex;gap:8px"><button class="vote-btn bull" id="vote-bull" onclick="voteS(\'bull\')">🟢 Bullish</button><button class="vote-btn bear" id="vote-bear" onclick="voteS(\'bear\')">🔴 Bearish</button></div>'
     +'</div></div></div>';
+
+  }
 
   // ─ TAB MERCADOS ─
   H+='<div class="tab-panel" data-panel="mercados">';
@@ -1156,7 +1201,6 @@ function renderPage(bin,cg){
     fetchFG();
     // Translate description if in English
     if(desc){
-      translateDesc(desc).then(function(pt){var el=document.getElementById('about-desc');if(el&&pt)el.innerHTML=pt;}).catch(function(){});
     }
   },100);
 
@@ -1227,7 +1271,6 @@ async function init(){
     }
     // Atualiza descrição
     if(cg.description&&cg.description.en){
-      translateDesc(cg.description.en).then(function(pt){var el=document.getElementById('about-desc');if(el&&pt)el.innerHTML=pt;}).catch(function(){});
     }
     // Atualiza exchanges
     if(cg.tickers&&cg.tickers.length){/* dados já na aba mercados se recarregar */}
