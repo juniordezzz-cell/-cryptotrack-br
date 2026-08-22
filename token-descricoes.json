@@ -1,0 +1,163 @@
+{
+  "_leiaMe": "Explicações em português para a página de token. Chave = id do CoinGecko. Para adicionar um ativo, copie um bloco e troque o conteúdo. Quem não estiver aqui recebe um texto montado automaticamente a partir das categorias e do ranking — nunca fica sem nada. Escreva para quem está começando: sem jargão não explicado, sem promessa de retorno, sem 'vai valorizar'.",
+
+  "bitcoin": {
+    "titulo": "O que é o Bitcoin?",
+    "texto": "O Bitcoin é a primeira criptomoeda, criada em 2009 por alguém sob o pseudônimo Satoshi Nakamoto. Ele funciona como dinheiro digital que não depende de banco nem de governo: as transações são registradas numa rede pública mantida por milhares de computadores espalhados pelo mundo.\n\nA característica mais citada é o limite de 21 milhões de unidades, definido no código e nunca alterado. É isso que faz muita gente compará-lo ao ouro — a ideia de um ativo que ninguém pode emitir a mais. Por outro lado, o preço oscila muito: quedas de 50% ou mais já aconteceram várias vezes na história dele.",
+    "pontos": [
+      "Rede aberta, sem empresa ou país no controle",
+      "Emissão limitada a 21 milhões de unidades",
+      "Alta volatilidade — oscilações fortes são normais aqui"
+    ]
+  },
+
+  "ethereum": {
+    "titulo": "O que é o Ethereum?",
+    "texto": "O Ethereum é uma rede que vai além de transferir dinheiro: ela executa programas, chamados de contratos inteligentes. Na prática, é uma plataforma onde outras pessoas constroem aplicações — empréstimos, trocas de tokens, jogos, marketplaces — sem precisar de uma empresa no meio.\n\nO ETH é a moeda usada para pagar essas operações. Toda ação na rede custa uma taxa em ETH, chamada de gas. É por isso que o Ethereum costuma ser descrito menos como 'moeda' e mais como a infraestrutura onde boa parte do mundo DeFi acontece.",
+    "pontos": [
+      "Plataforma para contratos inteligentes e aplicações",
+      "ETH paga as taxas de uso da rede (gas)",
+      "Base de grande parte do ecossistema DeFi"
+    ]
+  },
+
+  "solana": {
+    "titulo": "O que é a Solana?",
+    "texto": "A Solana é uma rede criada com foco em velocidade e taxas baixas. Enquanto outras redes processam poucas transações por segundo e cobram caro em momentos de congestionamento, a Solana foi desenhada para suportar volume alto com custo de centavos.\n\nIsso a tornou popular para aplicações que exigem muitas operações: corretoras descentralizadas, pools de liquidez e negociação de tokens em geral. O contraponto histórico é a estabilidade — a rede já passou por interrupções que deixaram tudo fora do ar por horas.",
+    "pontos": [
+      "Taxas muito baixas e alta capacidade de transações",
+      "Ecossistema forte em DeFi e negociação",
+      "Já teve episódios de instabilidade da rede"
+    ]
+  },
+
+  "tether": {
+    "titulo": "O que é o USDT?",
+    "texto": "O USDT, ou Tether, é uma stablecoin: uma criptomoeda feita para valer sempre perto de um dólar. Ela não existe para valorizar, e sim para servir de referência estável dentro do mercado cripto — é onde muita gente 'estaciona' o dinheiro entre uma operação e outra.\n\nO valor se mantém porque a empresa emissora afirma manter reservas equivalentes em dólares e títulos. Esse é justamente o ponto de atenção: você está confiando numa empresa e nas reservas que ela declara ter, não em um código aberto.",
+    "pontos": [
+      "Feita para valer sempre cerca de US$ 1",
+      "Usada como caixa dentro do mercado cripto",
+      "Depende da confiança nas reservas do emissor"
+    ]
+  },
+
+  "usd-coin": {
+    "titulo": "O que é o USDC?",
+    "texto": "O USDC é uma stablecoin atrelada ao dólar, emitida pela Circle. Como o USDT, ela não foi feita para subir de preço: serve como dinheiro estável dentro do ecossistema cripto, para quem quer sair da volatilidade sem converter para reais.\n\nA diferença mais citada em relação ao USDT é a transparência das reservas — a Circle publica relatórios auditados com regularidade e opera sob regulação nos Estados Unidos. Ainda assim, vale a mesma ressalva: é confiança numa empresa.",
+    "pontos": [
+      "Stablecoin atrelada ao dólar, emitida pela Circle",
+      "Reservas auditadas e publicadas periodicamente",
+      "Muito usada em pools de liquidez e lending"
+    ]
+  },
+
+  "binancecoin": {
+    "titulo": "O que é o BNB?",
+    "texto": "O BNB nasceu como o token da corretora Binance, dando desconto em taxas para quem o utilizava. Com o tempo virou também a moeda da BNB Chain, uma rede própria com contratos inteligentes e um ecossistema grande de aplicações.\n\nA ligação com a Binance é a força e o risco do ativo ao mesmo tempo: ele se beneficia do tamanho da maior corretora do mundo, e sente diretamente qualquer problema regulatório que ela enfrente.",
+    "pontos": [
+      "Token da Binance e moeda da BNB Chain",
+      "Dá desconto em taxas na corretora",
+      "Muito ligado ao desempenho e à situação da Binance"
+    ]
+  },
+
+  "ripple": {
+    "titulo": "O que é o XRP?",
+    "texto": "O XRP é o ativo da rede XRP Ledger, criada para transferências internacionais rápidas e baratas. A proposta é servir de ponte entre moedas: em vez de um banco manter contas em vários países, ele converteria valores usando XRP em segundos.\n\nO ativo é conhecido pela longa disputa judicial entre a empresa Ripple e o regulador americano, que dominou a história recente do preço. É também um dos casos em que uma empresa tem papel central — diferente do Bitcoin, que não tem dono.",
+    "pontos": [
+      "Focado em transferências internacionais rápidas",
+      "Empresa Ripple tem papel central no projeto",
+      "Histórico marcado por disputas regulatórias"
+    ]
+  },
+
+  "cardano": {
+    "titulo": "O que é a Cardano?",
+    "texto": "A Cardano é uma rede de contratos inteligentes que se diferencia pelo método de desenvolvimento: mudanças passam por revisão acadêmica antes de irem para o código. Isso deixa a evolução mais lenta e previsível, o que é elogiado por uns e criticado por outros.\n\nO ADA é a moeda da rede, usada para taxas e para staking. O ecossistema de aplicações é menor que o do Ethereum ou da Solana, algo que costuma aparecer nas críticas ao projeto.",
+    "pontos": [
+      "Desenvolvimento com revisão acadêmica",
+      "ADA usado para taxas e staking",
+      "Ecossistema de aplicações menor que o dos concorrentes"
+    ]
+  },
+
+  "dogecoin": {
+    "titulo": "O que é o Dogecoin?",
+    "texto": "O Dogecoin começou em 2013 como piada, usando o meme de um cachorro da raça Shiba Inu. Não tinha pretensão técnica: foi criado em poucas horas a partir do código de outra moeda.\n\nApesar disso, virou uma das maiores criptomoedas por valor de mercado, impulsionado principalmente por comunidade e por menções de personalidades públicas. É o exemplo mais claro de um ativo cujo preço responde a atenção, não a fundamento técnico — o que também significa que pode cair na mesma velocidade.",
+    "pontos": [
+      "Criado em 2013 como brincadeira",
+      "Preço muito sensível a redes sociais e celebridades",
+      "Sem limite de emissão — novas moedas são criadas sempre"
+    ]
+  },
+
+  "chainlink": {
+    "titulo": "O que é o Chainlink?",
+    "texto": "O Chainlink resolve um problema específico: contratos inteligentes não conseguem, sozinhos, saber o que acontece fora da blockchain. Eles não sabem a cotação do dólar, o resultado de um jogo ou a temperatura de uma cidade.\n\nO Chainlink é a ponte que leva esses dados para dentro das redes, através de uma estrutura chamada oráculo. Boa parte das aplicações DeFi depende dele para saber preços — é uma peça de infraestrutura mais do que uma moeda de uso cotidiano.",
+    "pontos": [
+      "Leva dados do mundo real para dentro das blockchains",
+      "Infraestrutura usada por muitas aplicações DeFi",
+      "LINK paga os provedores de dados da rede"
+    ]
+  },
+
+  "avalanche-2": {
+    "titulo": "O que é a Avalanche?",
+    "texto": "A Avalanche é uma rede de contratos inteligentes que aposta em confirmação rápida e na possibilidade de criar sub-redes próprias. Uma empresa ou projeto pode montar sua própria blockchain com regras específicas, aproveitando a segurança da rede principal.\n\nO AVAX é usado para taxas e staking. A rede é compatível com as ferramentas do Ethereum, o que facilita a vida de quem já desenvolve nesse ambiente.",
+    "pontos": [
+      "Confirmação rápida de transações",
+      "Permite criar sub-redes personalizadas",
+      "Compatível com as ferramentas do Ethereum"
+    ]
+  },
+
+  "polkadot": {
+    "titulo": "O que é o Polkadot?",
+    "texto": "O Polkadot foi criado para resolver a incomunicabilidade entre blockchains: hoje, redes diferentes têm dificuldade de trocar informação e valor entre si. O Polkadot funciona como uma central que conecta várias redes independentes, chamadas de parachains.\n\nO DOT é usado para governança, staking e para disputar as vagas de parachain. É um projeto de infraestrutura, com foco em conectar ecossistemas em vez de competir por usuários finais.",
+    "pontos": [
+      "Conecta blockchains diferentes entre si",
+      "DOT usado em governança e staking",
+      "Foco em infraestrutura, não em aplicação final"
+    ]
+  },
+
+  "uniswap": {
+    "titulo": "O que é o Uniswap?",
+    "texto": "O Uniswap é uma corretora descentralizada: você troca um token por outro direto da sua carteira, sem depositar em empresa nenhuma. Não existe livro de ofertas com compradores e vendedores — os preços saem de uma fórmula matemática aplicada a reservas de tokens, as chamadas pools de liquidez.\n\nQualquer pessoa pode depositar tokens numa pool e receber parte das taxas de quem negocia. É esse mecanismo que está por trás de boa parte do DeFi, e é também onde aparece o impermanent loss.",
+    "pontos": [
+      "Troca de tokens direto da carteira, sem intermediário",
+      "Preços definidos por fórmula, não por livro de ofertas",
+      "Qualquer um pode fornecer liquidez e receber taxas"
+    ]
+  },
+
+  "aave": {
+    "titulo": "O que é o Aave?",
+    "texto": "O Aave é um protocolo de empréstimos sem banco. Quem tem cripto parada pode depositar e receber juros; quem precisa de liquidez pode pegar emprestado deixando outro ativo como garantia.\n\nTudo é executado por contratos inteligentes, com as taxas variando conforme a oferta e a demanda de cada token. O risco principal não é calote — a garantia cobre isso — e sim liquidação: se o valor da sua garantia cair demais, ela é vendida automaticamente.",
+    "pontos": [
+      "Empréstimos e depósitos sem intermediário",
+      "Juros variam conforme oferta e demanda",
+      "Risco de liquidação se a garantia desvalorizar"
+    ]
+  },
+
+  "shiba-inu": {
+    "titulo": "O que é o Shiba Inu?",
+    "texto": "O Shiba Inu é um token criado em 2020 inspirado no Dogecoin, também usando o meme do cachorro. Foi lançado com uma quantidade enorme de unidades em circulação, o que explica o preço com muitas casas decimais.\n\nÉ um ativo movido a comunidade e especulação, sem uso prático que justifique o valor de mercado. Ganhos expressivos aconteceram, mas o padrão desse tipo de token é subir rápido em ondas de atenção e devolver a maior parte depois.",
+    "pontos": [
+      "Token de meme, sem utilidade técnica central",
+      "Quantidade gigantesca de unidades em circulação",
+      "Preço movido por atenção e especulação"
+    ]
+  },
+
+  "litecoin": {
+    "titulo": "O que é o Litecoin?",
+    "texto": "O Litecoin foi criado em 2011 como uma versão mais leve e rápida do Bitcoin. A proposta era ser usado no dia a dia: confirmações em cerca de 2 minutos, contra 10 do Bitcoin, e taxas menores.\n\nÉ um dos projetos mais antigos ainda ativos, com histórico longo e sem grandes sobressaltos. Justamente por não ter mudado muito, costuma ser descrito como conservador dentro do universo cripto.",
+    "pontos": [
+      "Criado em 2011, um dos mais antigos em atividade",
+      "Confirmações mais rápidas que as do Bitcoin",
+      "Proposta de uso como meio de pagamento"
+    ]
+  }
+}
