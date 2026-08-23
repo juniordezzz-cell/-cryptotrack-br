@@ -1032,7 +1032,7 @@ P.dLend = function (id) { return P.st.lend.filter(function (l) { return l.id ===
 P.CG_POR_TICKER = {
   BTC: 'bitcoin', WBTC: 'wrapped-bitcoin', ETH: 'ethereum', WETH: 'weth', STETH: 'staked-ether',
   SOL: 'solana', JITOSOL: 'jito-staked-sol', BNB: 'binancecoin', ADA: 'cardano', XRP: 'ripple',
-  AVAX: 'avalanche-2', DOT: 'polkadot', LINK: 'chainlink', MATIC: 'matic-network', POL: 'matic-network',
+  AVAX: 'avalanche-2', DOT: 'polkadot', LINK: 'chainlink', MATIC: 'polygon-ecosystem-token', POL: 'polygon-ecosystem-token',
   ATOM: 'cosmos', NEAR: 'near', SUI: 'sui', APT: 'aptos', ARB: 'arbitrum', OP: 'optimism',
   TIA: 'celestia', SEI: 'sei-network', INJ: 'injective-protocol', JUP: 'jupiter-exchange-solana',
   ORCA: 'orca', RAY: 'raydium', UNI: 'uniswap', AAVE: 'aave', CRV: 'curve-dao-token',
