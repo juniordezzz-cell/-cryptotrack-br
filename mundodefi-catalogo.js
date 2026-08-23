@@ -23,7 +23,9 @@
   'use strict';
 
   var CATEGORIAS = [
-    { id: 'gerenciar',   nome: 'Gerenciar',    pergunta: 'Onde está meu dinheiro?',    icone: '📊', cor: 'var(--purple,#9945FF)' },
+    /* Estas cores viram texto ("Abrir ferramenta →"), não só borda:
+       por isso o roxo aqui é a variante clara, que passa em contraste AA. */
+    { id: 'gerenciar',   nome: 'Gerenciar',    pergunta: 'Onde está meu dinheiro?',    icone: '📊', cor: 'var(--purple-txt,#A96BFF)' },
     { id: 'projetar',    nome: 'Projetar',     pergunta: 'Quanto isso rende?',         icone: '📈', cor: 'var(--green,#14F195)' },
     { id: 'decidir',     nome: 'Decidir',      pergunta: 'Vale a pena?',               icone: '⚖️', cor: 'var(--gold,#F5B614)' },
     { id: 'converter',   nome: 'Converter',    pergunta: 'Quanto dá em reais?',        icone: '🔄', cor: 'var(--cyan,#00E5FF)' },

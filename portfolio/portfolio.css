@@ -89,7 +89,7 @@ button{font-family:var(--font);cursor:pointer}
   font-weight:700;font-size:15px;color:#fff;
 }
 .sb-logo-text{font-size:16px;font-weight:700;letter-spacing:-.02em}
-.sb-logo-text em{font-style:normal;color:var(--purple,#9945FF)}
+.sb-logo-text em{font-style:normal;color:var(--purple-txt,#A96BFF)}
 .sb-sec{
   font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;
   text-transform:uppercase;color:var(--mut2);padding:.9rem .6rem .45rem;
@@ -123,7 +123,7 @@ button{font-family:var(--font);cursor:pointer}
   background:var(--panel2);border:1px solid var(--line);
   border-radius:var(--rl);padding:.7rem .8rem;
 }
-.sb-plan-ico{font-size:14px;flex-shrink:0;color:var(--purple,#9945FF)}
+.sb-plan-ico{font-size:14px;flex-shrink:0;color:var(--purple-txt,#A96BFF)}
 .sb-plan-bd{flex:1;min-width:0}
 .sb-plan-lbl{font-size:10px;color:var(--mut2);letter-spacing:.04em;margin-bottom:2px}
 .sb-plan-val{font-size:13px;font-weight:700;line-height:1.2}
@@ -169,7 +169,7 @@ button{font-family:var(--font);cursor:pointer}
 .btn-p:hover{filter:brightness(1.12)}
 /* secundária: contorno */
 .btn-g{background:var(--panel2);border-color:var(--line2);color:var(--txt)}
-.btn-g:hover{border-color:var(--purple,#9945FF);color:var(--purple,#9945FF)}
+.btn-g:hover{border-color:var(--purple,#9945FF);color:var(--purple-txt,#A96BFF)}
 /* destrutiva */
 .btn-red{background:transparent;border-color:rgba(255,77,106,.4);color:var(--red,#FF4D6A)}
 .btn-red:hover{background:var(--red-soft)}
@@ -336,7 +336,7 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
 }
 .b-open{background:var(--green-soft);color:var(--green,#14F195)}
 .b-closed{background:var(--panel3);color:var(--mut2)}
-.b-pro{background:var(--purple-soft);color:var(--purple,#9945FF)}
+.b-pro{background:var(--purple-soft);color:var(--purple-txt,#A96BFF)}
 .tag,.chain-tag{
   display:inline-block;font-size:10.5px;font-weight:600;
   padding:2px 9px;border-radius:99px;
@@ -354,7 +354,7 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
   border:1px solid var(--line2);color:var(--mut2);
   font-size:9px;font-style:normal;font-weight:700;cursor:help;flex-shrink:0;
 }
-.hint:hover{border-color:var(--purple,#9945FF);color:var(--purple,#9945FF)}
+.hint:hover{border-color:var(--purple,#9945FF);color:var(--purple-txt,#A96BFF)}
 
 /* ══════════════════════════════════════════════════════════════════
    CONCENTRAÇÃO — onde está meu risco
@@ -417,6 +417,15 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
   margin-top:.6rem;padding-top:.6rem;border-top:1px dashed rgba(245,182,20,.25);
 }
 .tok-line{font-family:var(--mono);font-size:11px;color:var(--mut2);margin-top:.6rem}
+.pool-il{
+  font-size:11px;font-weight:600;
+  margin-top:.6rem;padding-top:.6rem;border-top:1px dashed var(--line);
+  display:flex;align-items:center;gap:6px;
+}
+.pool-il b{font-family:var(--mono);font-weight:700;margin-left:auto}
+.pool-il.ok{color:var(--green,#14F195)}
+.pool-il.bad{color:var(--gold,#F5B614)}
+
 
 /* diário estratégico */
 .diario{display:flex;flex-direction:column;gap:9px}
@@ -543,7 +552,7 @@ a.up-item:hover{border-color:var(--purple,#9945FF)}
 }
 .pc-tag{
   font-family:var(--mono);font-size:11.5px;font-weight:700;
-  letter-spacing:.08em;text-transform:uppercase;color:var(--purple,#9945FF);
+  letter-spacing:.08em;text-transform:uppercase;color:var(--purple-txt,#A96BFF);
 }
 .pc-price{font-family:var(--mono);font-size:1.6rem;font-weight:700;letter-spacing:-.02em}
 .pc-price small{font-size:12px;color:var(--mut2);font-weight:400}

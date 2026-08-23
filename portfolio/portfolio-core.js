@@ -390,6 +390,93 @@
   };
 
 
+
+  /* ═══════════════════ IMPERMANENT LOSS ═══════════════════
+     Mesma fórmula da calculadora de pool, agora aplicada à pool que a
+     pessoa realmente tem. Vale para qualquer proporção de pesos:
+
+         IL = r^w1 / (w1·r + w2) − 1
+
+     `r` é o desempenho RELATIVO entre os dois tokens do par, não a
+     variação de um só:
+
+         r = (pxA_agora / pxA_abertura) / (pxB_agora / pxB_abertura)
+
+     Isso importa: num par SOL/ETH, se os dois dobram, r = 1 e não há IL
+     nenhum — o que uma conta feita só sobre o SOL erraria feio. Com
+     stablecoin do outro lado, pxB fica em 1 e r vira a variação de A,
+     que é o caso simples.
+
+     A pergunta que o número responde não é "tive IL?" — sempre se tem.
+     É "as taxas que eu coletei cobriram o IL?". Por isso devolvemos
+     também a comparação com simplesmente ter segurado os tokens. */
+  C.ilPct = function (r, w1) {
+    if (!(r > 0)) return 0;
+    w1 = (w1 == null ? 0.5 : w1);
+    var w2 = 1 - w1;
+    var v = (Math.pow(r, w1) / (w1 * r + w2) - 1) * 100;
+    return v > 0 ? 0 : v;   /* IL nunca é ganho; r=1 pode dar +1e-15 */
+  };
+
+  /* Devolve null quando a pool não tem os dados de IL preenchidos —
+     mostrar um IL inventado seria pior que não mostrar nada. */
+  C.poolIL = function (st, pool, precos) {
+    var il = pool.il;
+    if (!il || !il.a || !il.b) return null;
+    var pa0 = num(il.a.px0), pb0 = num(il.b.px0);
+    if (!(pa0 > 0) || !(pb0 > 0)) return null;
+
+    var pa = num(precos && precos[il.a.cg]) || num(il.a.pxAtual);
+    var pb = num(precos && precos[il.b.cg]) || num(il.b.pxAtual);
+    /* stablecoin sem cotação: assume o peg, que é o comportamento normal */
+    if (!(pa > 0) && C.ehStable(il.a.sym)) pa = pa0;
+    if (!(pb > 0) && C.ehStable(il.b.sym)) pb = pb0;
+    if (!(pa > 0) || !(pb > 0)) return null;
+
+    var w1 = num(il.w) || 0.5;
+    var r = (pa / pa0) / (pb / pb0);
+    var pct = C.ilPct(r, w1);
+
+    var R = C.poolResultado(st, pool);
+    var capital = Math.max(0, R.dep - R.ret);
+    /* Quanto o mesmo depósito valeria se você tivesse só segurado os
+       dois tokens, nas mesmas proporções. */
+    var valorHold = capital * (w1 * r + (1 - w1));
+    var valorPool = valorHold * (1 + pct / 100);
+    var perda = valorHold - valorPool;
+
+    /* `valorPool` é o que a fórmula diz. `valorReal` é o que a pessoa
+       de fato tem: o valor que ela informou para a posição mais as taxas
+       que já coletou. É esse que vale a comparação com o HOLD — a fórmula
+       serve para explicar QUANTO da diferença é custo estrutural do AMM.
+       Quando os dois se afastam muito, quase sempre é o valor informado
+       que está velho; por isso devolvemos também há quantos dias ele é. */
+    var valorReal = R.atual + R.fees;
+
+    return {
+      pct: pct,
+      r: r,
+      w1: w1,
+      variacaoPar: (r - 1) * 100,
+      capital: capital,
+      valorHold: valorHold,
+      valorPool: valorPool,
+      perdaUsd: perda,
+      taxas: R.fees,
+      /* a pergunta que importa, respondida com o dado real */
+      valorAtual: R.atual,
+      valorReal: valorReal,
+      vsHold: valorReal - valorHold,
+      vsHoldPct: valorHold > 0 ? (valorReal / valorHold - 1) * 100 : 0,
+      bateuHold: valorReal >= valorHold,
+      valorDesatualizado: R.valorDesatualizado,
+      /* e a mesma pergunta em cima só da fórmula, como diagnóstico */
+      taxasCobrem: R.fees >= perda,
+      saldo: R.fees - perda,
+      simbolos: il.a.sym + '/' + il.b.sym
+    };
+  };
+
   /* ═══════════════════ CONCENTRAÇÃO DE RISCO ═══════════════════
      A pergunta "estou concentrado?" não se responde com "quantos ativos
      eu tenho". Dez ativos com um deles valendo 80% é uma carteira

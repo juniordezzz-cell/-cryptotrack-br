@@ -394,6 +394,121 @@ var cVz = C.contribuicao(C.novoEstado(), {}, 'all');
 eqv('sem linhas', cVz.linhas.length, 0);
 eqv('sem melhor', cVz.melhor, null);
 
+/* ══════════════════════════════════════════════════════════════
+   10. IMPERMANENT LOSS
+   ══════════════════════════════════════════════════════════════ */
+sec('IL: formula bate com os valores canonicos (50/50)');
+[[1.25,-0.62],[1.5,-2.02],[2,-5.72],[3,-13.40],[4,-20.00],[5,-25.46],[0.5,-5.72]].forEach(function(c){
+  eq('r='+c[0], C.ilPct(c[0],0.5), c[1], 0.01);
+});
+eq('r=1 nao tem IL', C.ilPct(1,0.5), 0);
+eq('r invalido devolve 0', C.ilPct(0,0.5), 0);
+
+sec('IL: 80/20 perde menos que 50/50');
+[1.5,2,3,4].forEach(function(r){
+  var a=C.ilPct(r,0.8), b=C.ilPct(r,0.5);
+  eqv('r='+r+': 80/20 ('+a.toFixed(2)+') melhor que 50/50 ('+b.toFixed(2)+')', a>b, true);
+});
+eq('80/20 em r=1.5', C.ilPct(1.5,0.8), -1.20, 0.01);
+
+sec('IL: o par importa, nao um token so');
+/* SOL e ETH dobram os dois: r=1, IL zero. Uma conta feita so sobre o
+   SOL diria -5,72% — erro grosseiro. */
+function poolPar(a,b,pa0,pb0,w,dep){
+  var st=C.novoEstado();
+  st.pools.push({id:'p',par:a+'/'+b,cart:'c1',st:'a',ab:'2026-01-01',
+    cur:{usd:dep},
+    il:{a:{cg:a.toLowerCase(),sym:a,px0:pa0},b:{cg:b.toLowerCase(),sym:b,px0:pb0},w:w}});
+  C.addMov(st,{tipo:'pool_dep',ref:'p',usd:dep,dt:'2026-01-01'});
+  return st;
+}
+var stPar=poolPar('SOL','ETH',100,2000,0.5,10000);
+var ilPar=C.poolIL(stPar, stPar.pools[0], {sol:200, eth:4000});   // os dois dobram
+eq('os dois dobrando: r = 1', ilPar.r, 1);
+eq('IL zero', ilPar.pct, 0);
+eq('variacao do par = 0%', ilPar.variacaoPar, 0);
+
+var stSo=poolPar('SOL','ETH',100,2000,0.5,10000);
+var ilSo=C.poolIL(stSo, stSo.pools[0], {sol:200, eth:2000});      // so o SOL dobra
+eq('so o SOL dobrando: r = 2', ilSo.r, 2);
+eq('IL de -5,72%', ilSo.pct, -5.72, 0.01);
+
+sec('IL: par com stablecoin');
+var stStb=poolPar('SOL','USDC',100,1,0.5,10000);
+var ilStb=C.poolIL(stStb, stStb.pools[0], {sol:150, usdc:1});
+eq('r = variacao do SOL', ilStb.r, 1.5);
+eq('IL -2,02%', ilStb.pct, -2.02, 0.01);
+eq('valor se HOLD (10000 * 1.25)', ilStb.valorHold, 12500);
+eq('valor na pool (10000 * sqrt(1.5))', ilStb.valorPool, 12247.45, 0.5);
+eq('perda vs HOLD', ilStb.perdaUsd, 252.55, 0.5);
+
+sec('IL: stablecoin sem cotacao assume o peg');
+var ilSemPreco=C.poolIL(stStb, stStb.pools[0], {sol:150});   // sem preco do USDC
+eqv('mesmo assim calcula', ilSemPreco !== null, true);
+eq('mesmo r', ilSemPreco.r, 1.5);
+
+sec('IL: as taxas cobrem a perda?');
+var stTx=poolPar('SOL','USDC',100,1,0.5,10000);
+C.addMov(stTx,{tipo:'pool_fee',ref:'p',usd:400,dt:'2026-06-01'});
+var ilTx=C.poolIL(stTx, stTx.pools[0], {sol:150, usdc:1});
+eq('taxas coletadas', ilTx.taxas, 400);
+eqv('400 > 252 de IL: cobrem', ilTx.taxasCobrem, true);
+eq('saldo a favor', ilTx.saldo, 400-252.55, 0.5);
+
+var stTx2=poolPar('SOL','USDC',100,1,0.5,10000);
+C.addMov(stTx2,{tipo:'pool_fee',ref:'p',usd:100,dt:'2026-06-01'});
+var ilTx2=C.poolIL(stTx2, stTx2.pools[0], {sol:150, usdc:1});
+eqv('100 < 252: nao cobrem', ilTx2.taxasCobrem, false);
+eqv('saldo negativo', ilTx2.saldo < 0, true);
+
+sec('IL: pool sem os dados devolve null, nao numero inventado');
+var stSem=C.novoEstado();
+stSem.pools.push({id:'p',par:'X/Y',cart:'c1',st:'a',ab:'2026-01-01',cur:{usd:100}});
+eqv('sem bloco il', C.poolIL(stSem, stSem.pools[0], {}), null);
+stSem.pools[0].il={a:{cg:'x',sym:'X',px0:0},b:{cg:'y',sym:'Y',px0:1},w:0.5};
+eqv('preco de abertura zerado', C.poolIL(stSem, stSem.pools[0], {x:2,y:1}), null);
+stSem.pools[0].il={a:{cg:'x',sym:'X',px0:1},b:{cg:'y',sym:'Y',px0:1},w:0.5};
+eqv('sem cotacao atual e sem ser stable', C.poolIL(stSem, stSem.pools[0], {}), null);
+
+sec('IL: retirada parcial reduz o capital comparado');
+var stRet=poolPar('SOL','USDC',100,1,0.5,10000);
+C.addMov(stRet,{tipo:'pool_ret',ref:'p',usd:4000,dt:'2026-03-01'});
+var ilRet=C.poolIL(stRet, stRet.pools[0], {sol:150, usdc:1});
+eq('capital = 10000 - 4000', ilRet.capital, 6000);
+eq('hold sobre o capital restante', ilRet.valorHold, 7500);
+
+sec('IL: a comparacao que vale usa o valor informado, nao a formula');
+/* poolPar deixa cur.usd = deposito. Aqui a pessoa informa o valor de hoje. */
+var stReal=poolPar('SOL','USDC',100,1,0.5,10000);
+stReal.pools[0].cur={usd:12400, at:'2026-06-01'};
+C.addMov(stReal,{tipo:'pool_fee',ref:'p',usd:300,dt:'2026-06-01'});
+var ilReal=C.poolIL(stReal, stReal.pools[0], {sol:150, usdc:1});
+eq('valor informado', ilReal.valorAtual, 12400);
+eq('valor real = informado + taxas', ilReal.valorReal, 12700);
+eq('hold seria 12500', ilReal.valorHold, 12500);
+eq('a pool esta 200 a frente', ilReal.vsHold, 200);
+eqv('bateu o hold', ilReal.bateuHold, true);
+eq('vsHold em %', ilReal.vsHoldPct, 1.6, 0.001);
+
+/* mesma pool, mesmo IL teorico, mas o valor informado esta pior */
+var stAtras=poolPar('SOL','USDC',100,1,0.5,10000);
+stAtras.pools[0].cur={usd:11900, at:'2026-06-01'};
+C.addMov(stAtras,{tipo:'pool_fee',ref:'p',usd:300,dt:'2026-06-01'});
+var ilAtras=C.poolIL(stAtras, stAtras.pools[0], {sol:150, usdc:1});
+eqv('nao bateu o hold', ilAtras.bateuHold, false);
+eq('300 atras', ilAtras.vsHold, -300);
+/* o diagnostico da formula continua dizendo que as taxas cobrem o IL:
+   os dois numeros respondem perguntas diferentes e podem divergir. */
+eqv('taxas (300) cobrem o IL teorico (252)', ilAtras.taxasCobrem, true);
+
+sec('IL: pool encerrada tem valor atual zero');
+var stEnc=poolPar('SOL','USDC',100,1,0.5,10000);
+stEnc.pools[0].st='e';
+C.addMov(stEnc,{tipo:'pool_fee',ref:'p',usd:300,dt:'2026-06-01'});
+var ilEnc=C.poolIL(stEnc, stEnc.pools[0], {sol:150, usdc:1});
+eq('valor atual zerado', ilEnc.valorAtual, 0);
+eq('valorReal e so as taxas', ilEnc.valorReal, 300);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

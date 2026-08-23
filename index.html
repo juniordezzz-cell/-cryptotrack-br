@@ -19,10 +19,10 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-6">
-<script src="/mundodefi-api.js?v=2026-08-6"></script>
-<script src="/mundodefi-catalogo.js?v=2026-08-6"></script>
-<script src="/mundodefi-previas.js?v=2026-08-6"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-9">
+<script src="/mundodefi-api.js?v=2026-08-9"></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-9"></script>
+<script src="/mundodefi-previas.js?v=2026-08-9"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -76,8 +76,8 @@ nav{position:sticky;top:0;z-index:500;background:rgba(7,10,18,.86);backdrop-filt
 .mega-soon{opacity:.45;cursor:default}
 .mega-soon:hover{background:transparent}
 .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:2px 6px;border-radius:4px;margin-left:6px;vertical-align:middle;white-space:nowrap}
-.b-new{background:var(--purple-soft);color:var(--purple,#9945FF)}
-.b-pro{background:var(--purple-soft);color:var(--purple,#9945FF)}
+.b-new{background:var(--purple-soft);color:var(--purple-txt,#A96BFF)}
+.b-pro{background:var(--purple-soft);color:var(--purple-txt,#A96BFF)}
 .b-soon{background:var(--panel2);color:var(--mut)}
 .b-free{background:var(--gold-soft);color:var(--gold,#F5B614)}
 /* ===== SELOS DOS CARDS DE FERRAMENTA ===== */
@@ -230,7 +230,7 @@ section{padding:3.5rem 0}
 .plan-prem{background:linear-gradient(160deg,rgba(245,182,20,.12),var(--panel));border:1px solid rgba(245,182,20,.5)}
 .plan-pill{position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold,#F5B614);color:#181203;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:5px 16px;border-radius:99px;white-space:nowrap}
 .plan-tag{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase}
-.plan-pro .plan-tag{color:var(--purple,#9945FF)}
+.plan-pro .plan-tag{color:var(--purple-txt,#A96BFF)}
 .plan-prem .plan-tag{color:var(--gold,#F5B614)}
 .plan-price{font-family:var(--mono);font-size:2rem;font-weight:700;letter-spacing:-.02em}
 .plan-price small{font-size:12px;color:var(--mut);font-weight:400}
@@ -760,8 +760,8 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 </script>
 
 <!-- ═══ AUTH: a home passa a reconhecer quem está logado ═══ -->
-<script src="/nexus/nexus-auth.js?v=2026-08-6"></script>
-<script src="/mdf-avatars.js?v=2026-08-6"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-9"></script>
+<script src="/mdf-avatars.js?v=2026-08-9"></script>
 <script>
 (function(){
   var criarConta = document.getElementById('btnCriarConta');

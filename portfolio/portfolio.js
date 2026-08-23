@@ -83,10 +83,24 @@ P.money = function (v, dec) {
   var brl = P.st.cfg.moeda === 'brl';
   var x = brl ? v * P.rate : v;
   if (dec == null) dec = Math.abs(x) >= 1000 ? 0 : 2;
-  return (brl ? 'R$ ' : '$') + x.toLocaleString(brl ? 'pt-BR' : 'en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  /* o sinal vem antes do símbolo: -$526, e não $-526 */
+  return (x < 0 ? '-' : '') + (brl ? 'R$ ' : '$')
+    + Math.abs(x).toLocaleString(brl ? 'pt-BR' : 'en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
 };
-P.pct = function (v) { if (v == null || isNaN(v)) return '—'; return (v >= 0 ? '+' : '') + v.toFixed(2) + '%'; };
+/* O separador decimal acompanha a moeda escolhida. "R$ 3.742,11" ao lado de
+   "-1.99%" é o tipo de detalhe que faz um número certo parecer errado. */
+P.pct = function (v) {
+  if (v == null || isNaN(v)) return '—';
+  var t = (v >= 0 ? '+' : '') + v.toFixed(2) + '%';
+  return (P.st && P.st.cfg.moeda === 'brl') ? t.replace('.', ',') : t;
+};
 P.cls = function (v) { return v >= 0 ? 'up' : 'down'; };
+P.quandoInformado = function (d) {
+  if (d == null) return '';
+  if (d <= 0) return ', informado hoje';
+  if (d === 1) return ', informado ontem';
+  return ', informado há ' + d + ' dias';
+};
 P.rt = function () { return P.st.cfg.moeda === 'brl' ? P.rate : 1; };
 P.loadRate = function () {
   if (P.st.cfg.moeda !== 'brl') return Promise.resolve();
@@ -101,6 +115,14 @@ P.loadRate = function () {
 P.loadPrices = function () {
   var ids = [];
   P.st.ativos.forEach(function (a) { if (a.cg && ids.indexOf(a.cg) < 0) ids.push(a.cg); });
+  /* Os tokens das pools também precisam de cotação: sem eles não dá para
+     calcular impermanent loss. */
+  P.st.pools.forEach(function (x) {
+    if (!x.il) return;
+    [x.il.a, x.il.b].forEach(function (t) {
+      if (t && t.cg && ids.indexOf(t.cg) < 0) ids.push(t.cg);
+    });
+  });
   if (!ids.length) return Promise.resolve();
   var k = 'mdf.px.' + ids.slice().sort().join(',');
   var c = cget(k);
@@ -113,6 +135,11 @@ P.loadPrices = function () {
       cset(k, { px: px, em: P.precosEm }, 5 * 60 * 1000);
       /* espelha no ativo para servir de última cotação conhecida offline */
       P.st.ativos.forEach(function (a) { if (px[a.cg]) { a.last = px[a.cg]; a.lastAt = P.precosEm; } });
+      /* idem para os tokens das pools: sem isso o IL some quando a API falha */
+      P.st.pools.forEach(function (x) {
+        if (!x.il) return;
+        [x.il.a, x.il.b].forEach(function (t) { if (t && px[t.cg]) t.pxAtual = px[t.cg]; });
+      });
       P.save();
     })
     .catch(function () { P.precosFalhou = true; });
@@ -999,6 +1026,103 @@ P.dTab = 'pools';
 P.dPool = function (id) { return P.st.pools.filter(function (p) { return p.id === id; })[0]; };
 P.dLend = function (id) { return P.st.lend.filter(function (l) { return l.id === id; })[0]; };
 
+/* Tickers comuns → id do CoinGecko. Poupa o usuário de descobrir que MATIC
+   virou "matic-network" e que USDC é "usd-coin". Quem não estiver na lista
+   digita o id à mão. */
+P.CG_POR_TICKER = {
+  BTC: 'bitcoin', WBTC: 'wrapped-bitcoin', ETH: 'ethereum', WETH: 'weth', STETH: 'staked-ether',
+  SOL: 'solana', JITOSOL: 'jito-staked-sol', BNB: 'binancecoin', ADA: 'cardano', XRP: 'ripple',
+  AVAX: 'avalanche-2', DOT: 'polkadot', LINK: 'chainlink', MATIC: 'matic-network', POL: 'matic-network',
+  ATOM: 'cosmos', NEAR: 'near', SUI: 'sui', APT: 'aptos', ARB: 'arbitrum', OP: 'optimism',
+  TIA: 'celestia', SEI: 'sei-network', INJ: 'injective-protocol', JUP: 'jupiter-exchange-solana',
+  ORCA: 'orca', RAY: 'raydium', UNI: 'uniswap', AAVE: 'aave', CRV: 'curve-dao-token',
+  LDO: 'lido-dao', MKR: 'maker', DOGE: 'dogecoin', PEPE: 'pepe', SHIB: 'shiba-inu',
+  LTC: 'litecoin', BCH: 'bitcoin-cash', TRX: 'tron', TON: 'the-open-network', HYPE: 'hyperliquid',
+  USDT: 'tether', USDC: 'usd-coin', DAI: 'dai', FDUSD: 'first-digital-usd',
+  TUSD: 'true-usd', PYUSD: 'paypal-usd', USDE: 'ethena-usde'
+};
+P.cgDoTicker = function (tk) { return P.CG_POR_TICKER[String(tk || '').toUpperCase()] || ''; };
+
+/* "SOL/USDC" → ['SOL','USDC']. Aceita barra, hífen ou espaço. */
+P.partesDoPar = function (par) {
+  var p = String(par || '').toUpperCase().split(/[\/\-\s]+/).filter(Boolean);
+  return [p[0] || '', p[1] || ''];
+};
+
+P.optPesos = function (sel) {
+  return ['0.5|50 / 50', '0.8|80 / 20', '0.7|70 / 30', '0.6|60 / 40'].map(function (o) {
+    var v = o.split('|');
+    return '<option value="' + v[0] + '"' + (String(sel || 0.5) === v[0] ? ' selected' : '') + '>' + v[1] + '</option>';
+  }).join('');
+};
+
+/* Bloco de IL reaproveitado pelo formulário de criação e pelo de edição. */
+P.ilCampos = function (simA, simB, il) {
+  il = il || {}; var a = il.a || {}, b = il.b || {};
+  var nomeA = simA || 'Token A', nomeB = simB || 'Token B';
+  return '<div class="frow"><div class="fg"><label id="lbA">' + P.esc(nomeA) + ' — id CoinGecko</label>'
+      + '<input id="fCgA" placeholder="solana" value="' + P.esc(a.cg || P.cgDoTicker(simA)) + '"></div>'
+    + '<div class="fg"><label id="lbAp">Preço de ' + P.esc(nomeA) + ' na abertura (US$)</label>'
+      + '<input id="fPxA" type="number" step="any" inputmode="decimal" value="' + (a.px0 || '') + '"></div></div>'
+    + '<div class="frow"><div class="fg"><label id="lbB">' + P.esc(nomeB) + ' — id CoinGecko</label>'
+      + '<input id="fCgB" placeholder="usd-coin" value="' + P.esc(b.cg || P.cgDoTicker(simB)) + '"></div>'
+    + '<div class="fg"><label id="lbBp">Preço de ' + P.esc(nomeB) + ' na abertura (US$)</label>'
+      + '<input id="fPxB" type="number" step="any" inputmode="decimal" value="'
+      + (b.px0 || (C.ehStable(simB) ? 1 : '')) + '"></div></div>'
+    + '<div class="frow"><div class="fg"><label>Proporção da pool</label><select id="fW">' + P.optPesos(il.w) + '</select></div>'
+    + '<div class="fg"><label>&nbsp;</label><button type="button" class="btn btn-g" id="btnHoje" style="width:100%;padding:9px 12px;font-size:12.5px">Usar cotação de hoje</button></div></div>'
+    + '<div class="fhint" id="ilAviso" style="margin-top:.2rem"></div>';
+};
+
+/* Liga o botão "usar cotação de hoje" e, quando `elPar` existe, faz o campo
+   do par preencher sozinho os ids e os rótulos. */
+P.ilLigar = function (elPar, dataAbertura) {
+  function aviso(t) { var el = document.getElementById('ilAviso'); if (el) el.textContent = t; }
+
+  if (elPar) {
+    ['fCgA', 'fCgB'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', function () { this.dataset.tocado = '1'; });
+    });
+    elPar.addEventListener('input', function () {
+      var pp = P.partesDoPar(elPar.value);
+      [['A', pp[0]], ['B', pp[1]]].forEach(function (x) {
+        if (!x[1]) return;
+        document.getElementById('lb' + x[0]).textContent = x[1] + ' — id CoinGecko';
+        document.getElementById('lb' + x[0] + 'p').textContent = 'Preço de ' + x[1] + ' na abertura (US$)';
+        var cg = document.getElementById('fCg' + x[0]);
+        if (!cg.dataset.tocado) cg.value = P.cgDoTicker(x[1]);
+      });
+      var pxB = document.getElementById('fPxB');
+      if (!pxB.value && C.ehStable(pp[1])) pxB.value = '1';
+    });
+  }
+
+  document.getElementById('btnHoje').onclick = function () {
+    var a = P.val('fCgA'), b = P.val('fCgB');
+    if (!a && !b) return aviso('Preencha os ids do CoinGecko primeiro.');
+    aviso('Buscando cotação…');
+    jfetch(CG + '/simple/price?ids=' + encodeURIComponent([a, b].filter(Boolean).join(',')) + '&vs_currencies=usd', 2)
+      .then(function (d) {
+        var achou = 0;
+        if (a && d[a] && d[a].usd) { document.getElementById('fPxA').value = d[a].usd; achou++; }
+        if (b && d[b] && d[b].usd) { document.getElementById('fPxB').value = d[b].usd; achou++; }
+        if (!achou) return aviso('O CoinGecko não conhece esses ids. Confira na página do token, no fim da URL.');
+        aviso('Cotação de hoje preenchida. Se a pool foi aberta em ' + P.dBR(dataAbertura) + ', ajuste para o preço daquele dia — senão o IL sai errado.');
+      })
+      .catch(function () { aviso('Não consegui buscar a cotação agora. Preencha à mão.'); });
+  };
+};
+
+/* Lê os 4 campos. Devolve null se estiverem incompletos: meio preenchido
+   geraria número errado, que é pior que número nenhum. */
+P.ilLer = function (simA, simB) {
+  var cgA = P.val('fCgA'), cgB = P.val('fCgB'), pxA = P.num('fPxA'), pxB = P.num('fPxB');
+  if (!cgA || !cgB || !(pxA > 0) || !(pxB > 0)) return null;
+  return { a: { cg: cgA, sym: simA || cgA.toUpperCase(), px0: pxA },
+           b: { cg: cgB, sym: simB || cgB.toUpperCase(), px0: pxB },
+           w: parseFloat(P.val('fW')) || 0.5 };
+};
+
 P.formPool = function () {
   if (P.precisaCarteira(P.formPool)) return;
   P.modal('Nova pool de liquidez',
@@ -1009,6 +1133,9 @@ P.formPool = function () {
     + '<div class="fg"><label>Depósito inicial (US$)</label><input id="fDep" type="number" step="any" inputmode="decimal"></div>'
     + '<div class="fg"><label>Data de abertura</label><input id="fDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div></div>'
     + '<div class="fg"><label>Tokens depositados</label><input id="fTok" placeholder="Ex: 20 SOL + 1.400 USDC"></div>'
+    + '<div class="sb-sec" style="padding-left:0">💧 Impermanent loss <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
+    + '<div class="fhint">Com o preço dos dois tokens no dia da abertura, o MundoDeFi calcula quanto a pool rendeu a menos do que simplesmente ter segurado os tokens — e se as taxas coletadas cobriram essa diferença. Dá para preencher depois.</div>'
+    + P.ilCampos('', '', null)
     + '<div class="sb-sec" style="padding-left:0">📓 Diário estratégico <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
     + '<div class="fg"><label>Objetivo</label><input id="dObj"></div>'
     + '<div class="fg"><label>Motivo da entrada</label><input id="dMot"></div>'
@@ -1016,10 +1143,13 @@ P.formPool = function () {
     + '<div class="fg"><label>Critério de saída</label><input id="dSai"></div>',
     { wide: true, footer: '<button class="btn btn-p" id="okPool">Criar pool</button>' });
 
+  P.ilLigar(document.getElementById('fPar'), P.val('fDt'));
+
   document.getElementById('okPool').onclick = function () {
     var par = P.val('fPar').toUpperCase(); if (!par) return alert('Informe o par da pool.');
     var dep = P.num('fDep'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
+    var pp = P.partesDoPar(par);
     var p = {
       id: C.uid(), par: par, proto: P.val('fProto') || '—', chain: P.val('fChain') || '—',
       cart: cart, st: 'a', ab: dt, en: null,
@@ -1027,9 +1157,33 @@ P.formPool = function () {
       di: { obj: P.val('dObj'), mot: P.val('dMot'), pa: P.val('dPa'), pb: P.val('dPb'), sai: P.val('dSai') },
       notas: [], reb: []
     };
+    var il = P.ilLer(pp[0], pp[1]);
+    if (il) p.il = il;
     P.st.pools.push(p);
     if (dep) C.addMov(P.st, { tipo: 'pool_dep', ref: p.id, cart: cart, usd: dep, dt: dt, nota: P.val('fTok') });
     P.save(); P.closeModal(); P.render();
+    if (il) P.loadPrices().then(P.render);
+  };
+};
+
+/* Pools criadas antes deste campo não têm o bloco de IL. Este formulário
+   existe para preenchê-lo sem ter que recriar a pool. */
+P.formPoolIL = function (p) {
+  var pp = P.partesDoPar(p.par);
+  P.modal('Impermanent loss — ' + P.esc(p.par),
+    '<div class="fhint" style="margin-top:0">Informe o preço dos dois tokens <b>no dia em que você abriu a pool</b> (' + P.dBR(p.ab) + '). '
+    + 'É a partir daí que dá para comparar a pool com a alternativa de ter só segurado os tokens.</div>'
+    + P.ilCampos(pp[0], pp[1], p.il),
+    { footer: '<button class="btn btn-p" id="okIL">Salvar</button>' });
+
+  P.ilLigar(null, p.ab);
+
+  document.getElementById('okIL').onclick = function () {
+    var il = P.ilLer(pp[0], pp[1]);
+    if (!il) { document.getElementById('ilAviso').textContent = 'Preencha os quatro campos — sem os dois preços de abertura o cálculo sairia errado.'; return; }
+    p.il = il;
+    P.save(); P.closeModal(); P.render();
+    P.loadPrices().then(function () { P.render(); P.poolDetalhe(p.id); });
   };
 };
 
@@ -1122,6 +1276,44 @@ P.poolDetalhe = function (id) {
     + '<div class="mc sm"><div class="mc-lbl">APR das taxas <i class="hint" title="Só as taxas coletadas, anualizadas sobre o capital depositado. Não inclui valorização do par.">?</i></div><div class="mc-val" style="color:var(--green,#14F195)">' + R.aprFees.toFixed(1) + '%</div></div>'
     + '</div>';
 
+  /* ── A pool bateu o HOLD? ──────────────────────────────────────
+     A pergunta que decide se a pool valeu a pena não é "quanto rendeu",
+     é "rendeu mais do que se eu tivesse só segurado os dois tokens?".
+     Sem os preços de abertura não dá para responder — e um IL inventado
+     seria pior que nenhum, então a gente pede o dado. */
+  /* Só para pool aberta: numa encerrada faltaria o preço do dia do
+     encerramento, e o resultado dela já está realizado no extrato. */
+  var IL = R.aberta ? C.poolIL(P.st, p, P.precos) : null;
+  if (R.aberta) body += '<div class="sb-sec" style="padding-left:0">💧 A pool bateu o HOLD?</div>';
+  if (R.aberta && !IL) {
+    body += '<div class="notice">Faltam os preços dos dois tokens no dia da abertura ('
+      + P.dBR(p.ab) + '). Com eles o MundoDeFi calcula o impermanent loss desta pool e diz se as taxas coletadas cobriram a perda. '
+      + '<button class="btn btn-p btn-sm" data-a="il" style="margin-top:.6rem">Preencher agora</button></div>';
+  } else if (IL) {
+    var pares = e(IL.simbolos);
+    body += '<div class="mgrid" style="margin-bottom:.7rem">'
+      + '<div class="mc sm"><div class="mc-lbl">Se tivesse só segurado</div><div class="mc-val">' + P.money(IL.valorHold)
+      + '<small class="mc-pct">' + pares + ' parados na carteira</small></div></div>'
+      + '<div class="mc sm"><div class="mc-lbl">Sua pool hoje</div><div class="mc-val">' + P.money(IL.valorReal)
+      + '<small class="mc-pct">valor informado + taxas</small></div></div>'
+      + '<div class="mc sm"><div class="mc-lbl">Diferença</div><div class="mc-val ' + P.cls(IL.vsHold) + '">' + P.money(IL.vsHold)
+      + '<small class="mc-pct">' + P.pct(IL.vsHoldPct) + '</small></div></div>'
+      + '<div class="mc sm"><div class="mc-lbl">Impermanent loss <i class="hint" title="Custo estrutural de estar numa pool: o AMM rebalanceia sozinho e você acaba com mais do token que caiu. Só desaparece se o par voltar à proporção de preços da abertura.">?</i></div>'
+      + '<div class="mc-val ' + (IL.pct < 0 ? 'down' : '') + '">' + P.pct(IL.pct)
+      + '<small class="mc-pct">' + P.money(IL.perdaUsd) + ' do capital</small></div></div>'
+      + '</div>';
+    body += '<div class="' + (IL.bateuHold ? 'notice' : 'warn') + '">'
+      + (IL.bateuHold
+          ? '✅ <b>A pool está ' + P.money(IL.vsHold) + ' à frente do HOLD.</b> As taxas coletadas mais que compensaram o impermanent loss de ' + P.money(IL.perdaUsd) + '.'
+          : '⚠ <b>A pool está ' + P.money(-IL.vsHold) + ' atrás do HOLD.</b> Até aqui teria sido melhor deixar ' + pares + ' parado na carteira.')
+      + '</div>';
+    body += '<div class="fhint" style="margin-top:-.4rem">'
+      + 'O impermanent loss explica ' + P.money(IL.perdaUsd) + ' dessa conta — o resto vem do valor que você informou para a posição ('
+      + P.money(IL.valorAtual) + P.quandoInformado(IL.valorDesatualizado) + '). '
+      + pares + ' se moveram ' + P.pct(IL.variacaoPar) + ' um contra o outro desde a abertura; cálculo sobre o capital líquido de '
+      + P.money(IL.capital) + ', proporção ' + Math.round(IL.w1 * 100) + '/' + Math.round((1 - IL.w1) * 100) + '.</div>';
+  }
+
   if (R.aberta && p.cur.tok) body += '<div class="notice">Tokens atuais: <span class="tok-line">' + e(p.cur.tok) + '</span></div>';
   if (R.aberta) body += '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.2rem">'
     + '<button class="btn btn-green btn-sm" data-a="fee">+ Taxas</button>'
@@ -1130,6 +1322,7 @@ P.poolDetalhe = function (id) {
     + '<button class="btn btn-g btn-sm" data-a="cur">✎ Atualizar valor</button>'
     + '<button class="btn btn-g btn-sm" data-a="reb">↔ Rebalanceamento</button>'
     + '<button class="btn btn-g btn-sm" data-a="nota">📝 Nota</button>'
+    + (IL ? '<button class="btn btn-g btn-sm" data-a="il">💧 Editar IL</button>' : '')
     + '<button class="btn btn-red btn-sm" data-a="end" style="margin-left:auto">Encerrar pool</button></div>';
 
   body += '<div class="grid2b"><div><div class="sb-sec" style="padding-left:0">📓 Diário estratégico</div><div class="diario">' + (diH || '<div class="empty">Diário vazio</div>') + '</div></div>'
@@ -1139,7 +1332,12 @@ P.poolDetalhe = function (id) {
 
   P.modal(e(p.par) + ' <span style="color:var(--mut2);font-weight:400;font-size:12px">' + e(p.proto) + '</span>', body, { wide: true });
   document.querySelectorAll('[data-a]').forEach(function (b) {
-    b.onclick = function () { var a = b.dataset.a; if (a === 'end') return P.poolEncerrar(p); P.poolAcao(p, a); };
+    b.onclick = function () {
+      var a = b.dataset.a;
+      if (a === 'end') return P.poolEncerrar(p);
+      if (a === 'il') { P.closeModal(); return P.formPoolIL(p); }
+      P.poolAcao(p, a);
+    };
   });
 };
 
@@ -1197,6 +1395,7 @@ P.lendEncerrar = function (l) {
 
 P.poolCard = function (p) {
   var e = P.esc, R = C.poolResultado(P.st, p);
+  var IL = R.aberta ? C.poolIL(P.st, p, P.precos) : null;
   var velho = R.valorDesatualizado != null && R.valorDesatualizado > 14;
   return '<div class="pool-card" data-p="' + p.id + '"><div class="pool-hd"><div><div class="pool-par">' + e(p.par) + '</div>'
     + '<div class="pool-proto">' + e(p.proto) + ' · ' + e(p.chain) + '</div></div>'
@@ -1207,6 +1406,9 @@ P.poolCard = function (p) {
     + '<div><span>Resultado</span><b class="' + P.cls(R.resultado) + '">' + P.money(R.resultado) + ' <small>' + P.pct(R.resultadoPct) + '</small></b></div>'
     + '</div>'
     + (velho ? '<div class="pool-stale">⚠ valor de ' + R.valorDesatualizado + ' dias atrás</div>' : '')
+    + (IL ? '<div class="pool-il ' + (IL.bateuHold ? 'ok' : 'bad') + '">'
+        + (IL.bateuHold ? '✅ à frente do HOLD' : '⚠ atrás do HOLD')
+        + ' <b>' + P.pct(IL.vsHoldPct) + '</b></div>' : '')
     + (R.aberta && p.cur.tok ? '<div class="tok-line">' + e(p.cur.tok) + '</div>' : '') + '</div>';
 };
 
@@ -1487,7 +1689,8 @@ P.carregarExemplo = function () {
   var p1 = { id: C.uid(), par: 'SOL/USDC', proto: 'Orca', chain: 'Solana', cart: c1.id, st: 'e', ab: m(10), en: m(7),
              cur: { usd: 0, tok: '', at: m(7) }, di: { obj: 'Renda em dólar com par líquido' }, notas: [], reb: [] };
   var p2 = { id: C.uid(), par: 'SOL/USDC', proto: 'Orca', chain: 'Solana', cart: c1.id, st: 'a', ab: m(2), en: null,
-             cur: { usd: 3120, tok: '21,4 SOL + 1.310 USDC', at: C.hoje() }, di: { obj: 'Range médio' }, notas: [], reb: [] };
+             cur: { usd: 3120, tok: '21,4 SOL + 1.310 USDC', at: C.hoje() }, di: { obj: 'Range médio' }, notas: [], reb: [],
+             il: { a: { cg: 'solana', sym: 'SOL', px0: 112 }, b: { cg: 'usd-coin', sym: 'USDC', px0: 1 }, w: 0.5 } };
   st.pools.push(p1, p2);
   C.addMov(st, { tipo: 'pool_dep', ref: p1.id, cart: c1.id, usd: 2000, dt: m(10) });
   C.addMov(st, { tipo: 'pool_fee', ref: p1.id, cart: c1.id, usd: 133, dt: m(8) });
