@@ -48,7 +48,7 @@
       tag:   '⚡ PRO',
       preco: 'R$ 19,90',
       ciclo: '/mês',
-      desc:  'Portfólio completo e ilimitado: HOLD, DeFi e Trade, com preço médio, lucro realizado e exportação em CSV.',
+      desc:  'Carteiras ilimitadas, o Nexus respondendo sobre o seu portfólio, Entradas e Saídas e exportação em CSV.',
       cta:   'Assinar PRO',
       link:  '/planos.html',
     },

@@ -25,9 +25,9 @@
   var PERIODO = '/mês';
 
   var PADRAO = {
-    titulo: 'Acompanhe tudo isso no seu portfólio',
-    texto: 'Registre suas compras e o MundoDeFi calcula preço médio, lucro realizado e não realizado, e o retorno anualizado de verdade — com cotação ao vivo.',
-    itens: ['Carteiras ilimitadas', 'Pools, staking e trade num lugar só', 'Exportação dos seus dados em CSV'],
+    titulo: 'Uma carteira é grátis. E quando forem quatro?',
+    texto: 'O portfólio do MundoDeFi — HOLD, DeFi e Trade — é grátis com uma carteira. O PRO entra quando você precisa separar exchange, cold wallet e DeFi, e quer perguntar ao Nexus onde está o seu risco.',
+    itens: ['Carteiras ilimitadas, cada uma com seu resultado', 'Nexus — responde sobre o SEU portfólio', 'Exportação em CSV: seus dados são seus'],
     origem: 'generico'
   };
 
