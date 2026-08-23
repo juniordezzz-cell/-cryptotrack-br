@@ -1,233 +1,693 @@
 {
   "versao": 1,
   "_leiaMe": "Regras do Nexus. Isto é DADO, não código — dá para editar sem tocar em JS. Cada regra tem: quando (todas as condições precisam bater), titulo e texto (aceitam {fato} e {fato|formato}). Formatos: money, pct, pct0, pct1, num, num2. Prioridade maior aparece primeiro. Os fatos disponíveis estão em nexus-motor.js, na função fatos().",
-
   "mensagens": {
     "semDados": "Seu portfólio ainda está vazio. Registre a primeira compra e eu passo a ler seus números — patrimônio, preço médio, concentração, resultado realizado e o que mais der para calcular.",
     "naoEntendi": "Não consegui identificar o assunto. Eu leio os seus números e falo sobre estes temas:",
     "semAchado": "Olhei seus números e não encontrei nada que mereça destaque nesse assunto agora. Isso costuma ser boa notícia."
   },
-
   "assuntos": [
     {
       "id": "patrimonio",
       "label": "Como está meu patrimônio?",
-      "palavras": ["patrimonio", "quanto tenho", "total", "carteira", "saldo", "quanto eu tenho", "resumo"],
-      "grupos": ["patrimonio", "desempenho"],
+      "palavras": [
+        "patrimonio",
+        "quanto tenho",
+        "total",
+        "carteira",
+        "saldo",
+        "quanto eu tenho",
+        "resumo"
+      ],
+      "grupos": [
+        "patrimonio",
+        "desempenho"
+      ],
       "max": 4,
       "semAchado": "Seu patrimônio é {patrimonio|money}, com {investido|money} de capital investido. Sem nada de anormal para apontar."
     },
     {
       "id": "risco",
       "label": "Tenho risco de concentração?",
-      "palavras": ["risco", "concentracao", "concentrado", "diversificacao", "diversificado", "exposicao", "perigo"],
-      "grupos": ["risco"],
+      "palavras": [
+        "risco",
+        "concentracao",
+        "concentrado",
+        "diversificacao",
+        "diversificado",
+        "exposicao",
+        "perigo"
+      ],
+      "grupos": [
+        "risco"
+      ],
       "max": 4,
       "semAchado": "Sua maior posição é {maiorAtivoTk}, com {maiorAtivoPct|pct0} do patrimônio. Nesse nível eu não vejo concentração preocupante."
     },
     {
       "id": "resultado",
       "label": "Estou ganhando ou perdendo?",
-      "palavras": ["ganhando", "perdendo", "lucro", "prejuizo", "resultado", "rentabilidade", "retorno", "rende"],
-      "grupos": ["desempenho"],
+      "palavras": [
+        "ganhando",
+        "perdendo",
+        "lucro",
+        "prejuizo",
+        "resultado",
+        "rentabilidade",
+        "retorno",
+        "rende"
+      ],
+      "grupos": [
+        "desempenho"
+      ],
       "max": 4,
       "semAchado": "Seu resultado total é {resultadoTotal|money}: {naoRealizado|money} em aberto e {realizado|money} já realizado."
     },
     {
       "id": "defi",
       "label": "Como estão minhas pools?",
-      "palavras": ["pool", "pools", "liquidez", "defi", "taxas", "apr", "apy", "yield", "lending"],
-      "grupos": ["defi"],
-      "max": 4,
+      "palavras": [
+        "pool",
+        "pools",
+        "liquidez",
+        "defi",
+        "taxas",
+        "apr",
+        "apy",
+        "yield",
+        "lending",
+        "impermanent",
+        "impermanent loss",
+        "il",
+        "hold"
+      ],
+      "grupos": [
+        "defi"
+      ],
+      "max": 5,
       "semAchado": "Você tem {nPoolsAbertas|num} pool(s) aberta(s) com {capitalEmPools|money} aplicados, rendendo {aprMedioPools|pct1} ao ano em taxas. Nada fora do lugar."
     },
     {
       "id": "trade",
       "label": "Como vai meu trade?",
-      "palavras": ["trade", "trades", "operacao", "operacoes", "banca", "win rate", "winrate", "alavancagem"],
-      "grupos": ["trade"],
+      "palavras": [
+        "trade",
+        "trades",
+        "operacao",
+        "operacoes",
+        "banca",
+        "win rate",
+        "winrate",
+        "alavancagem"
+      ],
+      "grupos": [
+        "trade"
+      ],
       "max": 5,
       "semAchado": "Você registrou {nOps|num} operações, com resultado de {resultadoTrade|money} sobre {aportadoTrade|money} aportados."
     },
     {
       "id": "dados",
       "label": "Meus dados estão em dia?",
-      "palavras": ["dados", "atualizado", "desatualizado", "em dia", "faltando", "higiene", "corrigir"],
-      "grupos": ["higiene"],
+      "palavras": [
+        "dados",
+        "atualizado",
+        "desatualizado",
+        "em dia",
+        "faltando",
+        "higiene",
+        "corrigir"
+      ],
+      "grupos": [
+        "higiene"
+      ],
       "max": 5,
       "semAchado": "Seus dados estão em ordem: nada desatualizado nem faltando que eu consiga detectar."
     }
   ],
-
   "regras": [
-
-    { "id": "sem-diversificacao",
-      "grupo": "risco", "prioridade": 100, "severidade": "alerta",
-      "quando": [{"fato": "maiorAtivoPct", "op": ">=", "valor": 60}, {"fato": "nAtivosAbertos", "op": ">=", "valor": 2}],
+    {
+      "id": "sem-diversificacao",
+      "grupo": "risco",
+      "prioridade": 100,
+      "severidade": "alerta",
+      "quando": [
+        {
+          "fato": "maiorAtivoPct",
+          "op": ">=",
+          "valor": 60
+        },
+        {
+          "fato": "nAtivosAbertos",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
       "titulo": "{maiorAtivoTk} é {maiorAtivoPct|pct0} de tudo que você tem",
-      "texto": "Concentração nesse nível significa que o seu patrimônio praticamente É esse ativo. Uma queda de 50% nele derruba {maiorAtivoPct|pct0} da sua carteira pela metade. Não existe número certo de concentração — existe o quanto você aguenta ver na tela sem tomar decisão no susto." },
-
-    { "id": "concentracao-alta",
-      "grupo": "risco", "prioridade": 90, "severidade": "atencao",
-      "quando": [{"fato": "maiorAtivoPct", "op": "entre", "valor": [40, 59.99]}, {"fato": "nAtivosAbertos", "op": ">=", "valor": 2}],
+      "texto": "Concentração nesse nível significa que o seu patrimônio praticamente É esse ativo. Uma queda de 50% nele derruba {maiorAtivoPct|pct0} da sua carteira pela metade. Não existe número certo de concentração — existe o quanto você aguenta ver na tela sem tomar decisão no susto."
+    },
+    {
+      "id": "concentracao-alta",
+      "grupo": "risco",
+      "prioridade": 90,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "maiorAtivoPct",
+          "op": "entre",
+          "valor": [
+            40,
+            59.99
+          ]
+        },
+        {
+          "fato": "nAtivosAbertos",
+          "op": ">=",
+          "valor": 2
+        }
+      ],
       "titulo": "{maiorAtivoTk} concentra {maiorAtivoPct|pct0} da carteira",
-      "texto": "É uma posição dominante. Se foi escolha consciente, tudo bem — muita gente concentra em BTC de propósito. Se foi acidente de valorização, vale decidir se você rebalancearia hoje sabendo o que sabe." },
-
-    { "id": "carteira-unica",
-      "grupo": "risco", "prioridade": 95, "severidade": "info",
-      "quando": [{"fato": "nAtivosAbertos", "op": "==", "valor": 1}],
+      "texto": "É uma posição dominante. Se foi escolha consciente, tudo bem — muita gente concentra em BTC de propósito. Se foi acidente de valorização, vale decidir se você rebalancearia hoje sabendo o que sabe."
+    },
+    {
+      "id": "carteira-unica",
+      "grupo": "risco",
+      "prioridade": 95,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "nAtivosAbertos",
+          "op": "==",
+          "valor": 1
+        }
+      ],
       "titulo": "Você tem um ativo só: {maiorAtivoTk}",
-      "texto": "Com uma posição única, seu resultado é o resultado dela. Não é necessariamente errado — só significa que qualquer conversa sobre diversificação ainda não se aplica aqui." },
-
-    { "id": "hhi-concentrado",
-      "grupo": "risco", "prioridade": 70, "severidade": "atencao",
-      "quando": [{"fato": "hhi", "op": ">=", "valor": 2500}, {"fato": "nAtivosAbertos", "op": ">=", "valor": 3}, {"fato": "maiorAtivoPct", "op": "<", "valor": 40}],
+      "texto": "Com uma posição única, seu resultado é o resultado dela. Não é necessariamente errado — só significa que qualquer conversa sobre diversificação ainda não se aplica aqui."
+    },
+    {
+      "id": "hhi-concentrado",
+      "grupo": "risco",
+      "prioridade": 70,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "hhi",
+          "op": ">=",
+          "valor": 2500
+        },
+        {
+          "fato": "nAtivosAbertos",
+          "op": ">=",
+          "valor": 3
+        },
+        {
+          "fato": "maiorAtivoPct",
+          "op": "<",
+          "valor": 40
+        }
+      ],
       "titulo": "Suas {nAtivosAbertos|num} posições estão mais concentradas do que parecem",
-      "texto": "Nenhum ativo isolado domina, mas o peso está mal distribuído: o top 3 soma {top3Pct|pct0}. Contar quantos ativos você tem engana — o que vale é quanto cada um pesa." },
-
-    { "id": "sem-caixa",
-      "grupo": "risco", "prioridade": 60, "severidade": "info",
-      "quando": [{"fato": "pctStable", "op": "<", "valor": 5}, {"fato": "patrimonio", "op": ">", "valor": 0}],
+      "texto": "Nenhum ativo isolado domina, mas o peso está mal distribuído: o top 3 soma {top3Pct|pct0}. Contar quantos ativos você tem engana — o que vale é quanto cada um pesa."
+    },
+    {
+      "id": "sem-caixa",
+      "grupo": "risco",
+      "prioridade": 60,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "pctStable",
+          "op": "<",
+          "valor": 5
+        },
+        {
+          "fato": "patrimonio",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Você está praticamente sem caixa",
-      "texto": "Stablecoins são {pctStable|pct1} do seu patrimônio. Sem caixa, aproveitar uma queda exige vender outra coisa — normalmente no pior momento para vender. Não é erro, mas é uma escolha que vale ser consciente." },
-
-    { "id": "caixa-alto",
-      "grupo": "risco", "prioridade": 40, "severidade": "info",
-      "quando": [{"fato": "pctStable", "op": ">", "valor": 50}],
+      "texto": "Stablecoins são {pctStable|pct1} do seu patrimônio. Sem caixa, aproveitar uma queda exige vender outra coisa — normalmente no pior momento para vender. Não é erro, mas é uma escolha que vale ser consciente."
+    },
+    {
+      "id": "caixa-alto",
+      "grupo": "risco",
+      "prioridade": 40,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "pctStable",
+          "op": ">",
+          "valor": 50
+        }
+      ],
       "titulo": "Metade da carteira está em stablecoin",
-      "texto": "{pctStable|pct0} do patrimônio está parado em stable. Isso protege de queda e custa alta. Se é espera por oportunidade, vale ter escrito o que faria você entrar — senão o caixa vira permanente por indecisão." },
-
-    { "id": "resultado-realizado",
-      "grupo": "desempenho", "prioridade": 85, "severidade": "info",
-      "quando": [{"fato": "realizado", "op": ">", "valor": 0}],
+      "texto": "{pctStable|pct0} do patrimônio está parado em stable. Isso protege de queda e custa alta. Se é espera por oportunidade, vale ter escrito o que faria você entrar — senão o caixa vira permanente por indecisão."
+    },
+    {
+      "id": "resultado-realizado",
+      "grupo": "desempenho",
+      "prioridade": 85,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "realizado",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Você já realizou {realizado|money}",
-      "texto": "Esse é lucro que saiu do papel: vendas fechadas, pools encerradas, trades liquidados. Ele não depende mais do mercado. O que ainda está sujeito a oscilação é {naoRealizado|money}." },
-
-    { "id": "so-nao-realizado",
-      "grupo": "desempenho", "prioridade": 80, "severidade": "info",
-      "quando": [{"fato": "realizado", "op": "==", "valor": 0}, {"fato": "naoRealizado", "op": ">", "valor": 0}],
+      "texto": "Esse é lucro que saiu do papel: vendas fechadas, pools encerradas, trades liquidados. Ele não depende mais do mercado. O que ainda está sujeito a oscilação é {naoRealizado|money}."
+    },
+    {
+      "id": "so-nao-realizado",
+      "grupo": "desempenho",
+      "prioridade": 80,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "realizado",
+          "op": "==",
+          "valor": 0
+        },
+        {
+          "fato": "naoRealizado",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Todo o seu ganho ainda é no papel",
-      "texto": "São {naoRealizado|money} de resultado não realizado e nada realizado ainda. Lucro no papel some sozinho — não é seu até virar venda." },
-
-    { "id": "prejuizo-aberto",
-      "grupo": "desempenho", "prioridade": 88, "severidade": "atencao",
-      "quando": [{"fato": "naoRealizado", "op": "<", "valor": 0}],
+      "texto": "São {naoRealizado|money} de resultado não realizado e nada realizado ainda. Lucro no papel some sozinho — não é seu até virar venda."
+    },
+    {
+      "id": "prejuizo-aberto",
+      "grupo": "desempenho",
+      "prioridade": 88,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "naoRealizado",
+          "op": "<",
+          "valor": 0
+        }
+      ],
       "titulo": "Suas posições abertas acumulam {naoRealizado|money}",
-      "texto": "Está {rentAberta|pct} abaixo do que custaram. Prejuízo não realizado é informação, não sentença: a pergunta útil é se você compraria hoje, nesse preço, cada uma dessas posições." },
-
-    { "id": "xirr",
-      "grupo": "desempenho", "prioridade": 75, "severidade": "info",
-      "quando": [{"fato": "temXirr", "op": "==", "valor": true}, {"fato": "temHistorico", "op": "==", "valor": true}],
+      "texto": "Está {rentAberta|pct} abaixo do que custaram. Prejuízo não realizado é informação, não sentença: a pergunta útil é se você compraria hoje, nesse preço, cada uma dessas posições."
+    },
+    {
+      "id": "xirr",
+      "grupo": "desempenho",
+      "prioridade": 75,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "temXirr",
+          "op": "==",
+          "valor": true
+        }
+      ],
       "titulo": "Seu retorno anualizado é {xirr|pct}",
-      "texto": "Isso é XIRR: considera quando cada aporte entrou, não só quanto entrou. É a métrica honesta quando você aporta em datas diferentes — quem comprou na baixa e quem comprou na alta não podem aparecer com o mesmo retorno." },
-
-    { "id": "melhor-pior",
-      "grupo": "desempenho", "prioridade": 65, "severidade": "info",
-      "quando": [{"fato": "temRanking", "op": "==", "valor": true}],
+      "texto": "Isso é XIRR: considera quando cada aporte entrou, não só quanto entrou. É a métrica honesta quando você aporta em datas diferentes — quem comprou na baixa e quem comprou na alta não podem aparecer com o mesmo retorno."
+    },
+    {
+      "id": "melhor-pior",
+      "grupo": "desempenho",
+      "prioridade": 65,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "temRanking",
+          "op": "==",
+          "valor": true
+        }
+      ],
       "titulo": "{melhorAtivoTk} lidera, {piorAtivoTk} fica atrás",
-      "texto": "{melhorAtivoTk} está {melhorAtivoPct|pct} sobre o custo e {piorAtivoTk}, {piorAtivoPct|pct}. Vale olhar se o que está atrás continua fazendo sentido pela tese original ou só está sendo carregado por inércia." },
-
-    { "id": "apr-pools",
-      "grupo": "defi", "prioridade": 90, "severidade": "info",
-      "quando": [{"fato": "nPoolsAbertas", "op": ">=", "valor": 1}, {"fato": "aprMedioPools", "op": ">", "valor": 0}],
+      "texto": "{melhorAtivoTk} está {melhorAtivoPct|pct} sobre o custo e {piorAtivoTk}, {piorAtivoPct|pct}. Vale olhar se o que está atrás continua fazendo sentido pela tese original ou só está sendo carregado por inércia."
+    },
+    {
+      "id": "apr-pools",
+      "grupo": "defi",
+      "prioridade": 90,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "nPoolsAbertas",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "aprMedioPools",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Suas pools rendem {aprMedioPools|pct1} ao ano em taxas",
-      "texto": "É o APR realizado: taxas efetivamente coletadas sobre o capital aplicado, anualizado. Não é o APR anunciado pela plataforma — é o que você de fato recebeu. Já são {taxasDeFi|money} coletados no total." },
-
-    { "id": "comparar-pools",
-      "grupo": "defi", "prioridade": 80, "severidade": "info",
-      "quando": [{"fato": "temVariasPools", "op": "==", "valor": true}],
+      "texto": "É o APR realizado: taxas efetivamente coletadas sobre o capital aplicado, anualizado. Não é o APR anunciado pela plataforma — é o que você de fato recebeu. Já são {taxasDeFi|money} coletados no total."
+    },
+    {
+      "id": "comparar-pools",
+      "grupo": "defi",
+      "prioridade": 80,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "temVariasPools",
+          "op": "==",
+          "valor": true
+        }
+      ],
       "titulo": "{melhorPoolPar} rende mais que {piorPoolPar}",
-      "texto": "{melhorPoolPar} está em {melhorPoolApr|pct1} ao ano contra {piorPoolApr|pct1} de {piorPoolPar}. Se as duas têm risco parecido, a diferença é motivo para realocar. Se não têm, a de maior retorno provavelmente está cobrando isso em risco." },
-
-    { "id": "pool-fraca",
-      "grupo": "defi", "prioridade": 85, "severidade": "atencao",
-      "quando": [{"fato": "nPoolsAbertas", "op": ">=", "valor": 1}, {"fato": "aprMedioPools", "op": "<", "valor": 5}],
+      "texto": "{melhorPoolPar} está em {melhorPoolApr|pct1} ao ano contra {piorPoolApr|pct1} de {piorPoolPar}. Se as duas têm risco parecido, a diferença é motivo para realocar. Se não têm, a de maior retorno provavelmente está cobrando isso em risco."
+    },
+    {
+      "id": "pool-fraca",
+      "grupo": "defi",
+      "prioridade": 85,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "nPoolsAbertas",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "aprMedioPools",
+          "op": "<",
+          "valor": 5
+        }
+      ],
       "titulo": "Suas pools rendem pouco: {aprMedioPools|pct1} ao ano",
-      "texto": "Abaixo de 5% ao ano em taxas, uma pool precisa de um bom motivo para existir — porque você está aceitando impermanent loss e risco de contrato em troca de pouco. Vale comparar com o que um lending simples pagaria." },
-
-    { "id": "juros-lending",
-      "grupo": "defi", "prioridade": 60, "severidade": "info",
-      "quando": [{"fato": "jurosLend", "op": ">", "valor": 0}],
+      "texto": "Abaixo de 5% ao ano em taxas, uma pool precisa de um bom motivo para existir — porque você está aceitando impermanent loss e risco de contrato em troca de pouco. Vale comparar com o que um lending simples pagaria."
+    },
+    {
+      "id": "juros-lending",
+      "grupo": "defi",
+      "prioridade": 60,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "jurosLend",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Seu lending já rendeu {jurosLend|money}",
-      "texto": "São juros efetivamente recebidos e registrados, em {nLendAbertos|num} posição(ões) aberta(s). Diferente do APY anunciado, isso é o que entrou." },
-
-    { "id": "trade-amostra-pequena",
-      "grupo": "trade", "prioridade": 100, "severidade": "atencao",
-      "quando": [{"fato": "amostraTradePequena", "op": "==", "valor": true}],
+      "texto": "São juros efetivamente recebidos e registrados, em {nLendAbertos|num} posição(ões) aberta(s). Diferente do APY anunciado, isso é o que entrou."
+    },
+    {
+      "id": "trade-amostra-pequena",
+      "grupo": "trade",
+      "prioridade": 100,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "amostraTradePequena",
+          "op": "==",
+          "valor": true
+        }
+      ],
       "titulo": "{nOps|num} operações é pouco para concluir qualquer coisa",
-      "texto": "Win rate, profit factor e expectativa só começam a significar algo por volta de 30 a 50 operações. Abaixo disso, o número que você vê é principalmente sorte — para os dois lados. Continue registrando antes de tirar conclusões sobre o seu sistema." },
-
-    { "id": "profit-factor-bom",
-      "grupo": "trade", "prioridade": 85, "severidade": "positivo",
-      "quando": [{"fato": "profitFactor", "op": ">=", "valor": 1.5}, {"fato": "nOps", "op": ">=", "valor": 30}],
+      "texto": "Win rate, profit factor e expectativa só começam a significar algo por volta de 30 a 50 operações. Abaixo disso, o número que você vê é principalmente sorte — para os dois lados. Continue registrando antes de tirar conclusões sobre o seu sistema."
+    },
+    {
+      "id": "profit-factor-bom",
+      "grupo": "trade",
+      "prioridade": 85,
+      "severidade": "positivo",
+      "quando": [
+        {
+          "fato": "profitFactor",
+          "op": ">=",
+          "valor": 1.5
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 30
+        }
+      ],
       "titulo": "Profit factor de {profitFactor|num2}: seu sistema é ganhador",
-      "texto": "Você ganha {profitFactor|num2} vezes o que perde. Acima de 1,5 com amostra relevante é sinal de vantagem real, não de sorte. Ganho médio de {mediaGanho|money} contra perda média de {mediaPerda|money}." },
-
-    { "id": "profit-factor-ruim",
-      "grupo": "trade", "prioridade": 95, "severidade": "alerta",
-      "quando": [{"fato": "profitFactor", "op": "<", "valor": 1}, {"fato": "nOps", "op": ">=", "valor": 15}],
+      "texto": "Você ganha {profitFactor|num2} vezes o que perde. Acima de 1,5 com amostra relevante é sinal de vantagem real, não de sorte. Ganho médio de {mediaGanho|money} contra perda média de {mediaPerda|money}."
+    },
+    {
+      "id": "profit-factor-ruim",
+      "grupo": "trade",
+      "prioridade": 95,
+      "severidade": "alerta",
+      "quando": [
+        {
+          "fato": "profitFactor",
+          "op": "<",
+          "valor": 1
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 15
+        }
+      ],
       "titulo": "Profit factor de {profitFactor|num2}: você está perdendo dinheiro",
-      "texto": "Suas perdas somam mais que seus ganhos, em {nOps|num} operações. Isso não se resolve acertando mais — se resolve perdendo menos por operação errada. Sua perda média é {mediaPerda|money} contra ganho médio de {mediaGanho|money}." },
-
-    { "id": "win-rate-enganoso",
-      "grupo": "trade", "prioridade": 90, "severidade": "atencao",
-      "quando": [{"fato": "winRate", "op": ">=", "valor": 60}, {"fato": "profitFactor", "op": "<", "valor": 1}, {"fato": "nOps", "op": ">=", "valor": 15}],
+      "texto": "Suas perdas somam mais que seus ganhos, em {nOps|num} operações. Isso não se resolve acertando mais — se resolve perdendo menos por operação errada. Sua perda média é {mediaPerda|money} contra ganho médio de {mediaGanho|money}."
+    },
+    {
+      "id": "win-rate-enganoso",
+      "grupo": "trade",
+      "prioridade": 90,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "winRate",
+          "op": ">=",
+          "valor": 60
+        },
+        {
+          "fato": "profitFactor",
+          "op": "<",
+          "valor": 1
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 15
+        }
+      ],
       "titulo": "Você acerta {winRate|pct0} das vezes e mesmo assim perde",
-      "texto": "É o caso clássico: muitos acertos pequenos e poucas perdas grandes. Sua perda média ({mediaPerda|money}) é maior que o ganho médio ({mediaGanho|money}). Win rate alto sem controle de perda é a métrica mais enganosa do trade." },
-
-    { "id": "payoff-baixo",
-      "grupo": "trade", "prioridade": 70, "severidade": "atencao",
-      "quando": [{"fato": "payoff", "op": "<", "valor": 1}, {"fato": "nOps", "op": ">=", "valor": 15}, {"fato": "winRate", "op": "<", "valor": 60}],
+      "texto": "É o caso clássico: muitos acertos pequenos e poucas perdas grandes. Sua perda média ({mediaPerda|money}) é maior que o ganho médio ({mediaGanho|money}). Win rate alto sem controle de perda é a métrica mais enganosa do trade."
+    },
+    {
+      "id": "payoff-baixo",
+      "grupo": "trade",
+      "prioridade": 70,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "payoff",
+          "op": "<",
+          "valor": 1
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 15
+        },
+        {
+          "fato": "winRate",
+          "op": "<",
+          "valor": 60
+        }
+      ],
       "titulo": "Payoff de {payoff|num2} com {winRate|pct0} de acerto",
-      "texto": "Você ganha menos por acerto do que perde por erro, e não acerta o suficiente para compensar. Uma das duas pontas precisa mudar: ou os alvos ficam maiores, ou os stops ficam menores." },
-
-    { "id": "drawdown-alto",
-      "grupo": "trade", "prioridade": 88, "severidade": "alerta",
-      "quando": [{"fato": "drawdownMax", "op": ">=", "valor": 30}, {"fato": "nOps", "op": ">=", "valor": 5}],
+      "texto": "Você ganha menos por acerto do que perde por erro, e não acerta o suficiente para compensar. Uma das duas pontas precisa mudar: ou os alvos ficam maiores, ou os stops ficam menores."
+    },
+    {
+      "id": "drawdown-alto",
+      "grupo": "trade",
+      "prioridade": 88,
+      "severidade": "alerta",
+      "quando": [
+        {
+          "fato": "drawdownMax",
+          "op": ">=",
+          "valor": 30
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 5
+        }
+      ],
       "titulo": "Sua banca já caiu {drawdownMax|pct1} do topo",
-      "texto": "Esse foi o pior momento que você atravessou. Recuperar {drawdownMax|pct1} exige ganhar mais que isso — cair 50% pede 100% de alta para voltar ao mesmo lugar. Drawdown grande costuma ser sinal de posição grande demais, não de análise ruim." },
-
-    { "id": "expectativa-negativa",
-      "grupo": "trade", "prioridade": 92, "severidade": "alerta",
-      "quando": [{"fato": "expectativa", "op": "<", "valor": 0}, {"fato": "nOps", "op": ">=", "valor": 15}],
+      "texto": "Esse foi o pior momento que você atravessou. Recuperar {drawdownMax|pct1} exige ganhar mais que isso — cair 50% pede 100% de alta para voltar ao mesmo lugar. Drawdown grande costuma ser sinal de posição grande demais, não de análise ruim."
+    },
+    {
+      "id": "expectativa-negativa",
+      "grupo": "trade",
+      "prioridade": 92,
+      "severidade": "alerta",
+      "quando": [
+        {
+          "fato": "expectativa",
+          "op": "<",
+          "valor": 0
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 15
+        }
+      ],
       "titulo": "Sua expectativa por operação é {expectativa|money}",
-      "texto": "Em média, cada operação que você abre tem resultado esperado negativo. Aumentar frequência com expectativa negativa só acelera a perda. Vale parar de operar até entender o que muda esse número." },
-
-    { "id": "trade-peso-alto",
-      "grupo": "trade", "prioridade": 75, "severidade": "atencao",
-      "quando": [{"fato": "pctTrade", "op": ">", "valor": 25}],
+      "texto": "Em média, cada operação que você abre tem resultado esperado negativo. Aumentar frequência com expectativa negativa só acelera a perda. Vale parar de operar até entender o que muda esse número."
+    },
+    {
+      "id": "trade-peso-alto",
+      "grupo": "trade",
+      "prioridade": 75,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "pctTrade",
+          "op": ">",
+          "valor": 25
+        }
+      ],
       "titulo": "Trade é {pctTrade|pct0} do seu patrimônio",
-      "texto": "É uma fatia grande para a parte mais volátil e mais dependente de execução. A banca de trade costuma ser dimensionada pelo que você aguenta perder inteiro, não pelo que você quer ganhar." },
-
-    { "id": "pools-desatualizadas",
-      "grupo": "higiene", "prioridade": 100, "severidade": "atencao",
-      "quando": [{"fato": "poolsDesatualizadas", "op": ">=", "valor": 1}],
+      "texto": "É uma fatia grande para a parte mais volátil e mais dependente de execução. A banca de trade costuma ser dimensionada pelo que você aguenta perder inteiro, não pelo que você quer ganhar."
+    },
+    {
+      "id": "pools-desatualizadas",
+      "grupo": "higiene",
+      "prioridade": 100,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "poolsDesatualizadas",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
       "titulo": "{poolsDesatualizadas|num} pool(s) com valor desatualizado",
-      "texto": "O valor atual dessas pools foi informado há mais de duas semanas. Enquanto não for atualizado, o resultado delas — e o seu patrimônio total — está errado. É o dado que mais envelhece rápido no portfólio." },
-
-    { "id": "ativos-sem-preco",
-      "grupo": "higiene", "prioridade": 90, "severidade": "atencao",
-      "quando": [{"fato": "ativosSemPrecoAuto", "op": ">=", "valor": 1}],
+      "texto": "O valor atual dessas pools foi informado há mais de duas semanas. Enquanto não for atualizado, o resultado delas — e o seu patrimônio total — está errado. É o dado que mais envelhece rápido no portfólio."
+    },
+    {
+      "id": "ativos-sem-preco",
+      "grupo": "higiene",
+      "prioridade": 90,
+      "severidade": "atencao",
+      "quando": [
+        {
+          "fato": "ativosSemPrecoAuto",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
       "titulo": "{ativosSemPrecoAuto|num} ativo(s) sem atualização automática de preço",
-      "texto": "Eles ficaram sem o id do CoinGecko, então o preço não atualiza sozinho e o valor deles congela no último informado. Editar o ativo e preencher o id resolve." },
-
-    { "id": "sem-historico",
-      "grupo": "higiene", "prioridade": 70, "severidade": "info",
-      "quando": [{"fato": "temHistorico", "op": "==", "valor": false}],
+      "texto": "Eles ficaram sem o id do CoinGecko, então o preço não atualiza sozinho e o valor deles congela no último informado. Editar o ativo e preencher o id resolve."
+    },
+    {
+      "id": "sem-historico",
+      "grupo": "higiene",
+      "prioridade": 70,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "temHistorico",
+          "op": "==",
+          "valor": false
+        }
+      ],
       "titulo": "Seu gráfico de evolução ainda está se formando",
-      "texto": "Eu gravo um ponto por dia, e por enquanto há {diasDeHistorico|num}. A curva de patrimônio aparece a partir do segundo dia — e ela é medida de verdade, não estimada." },
-
-    { "id": "carteira-unica-organizacao",
-      "grupo": "higiene", "prioridade": 40, "severidade": "info",
-      "quando": [{"fato": "nCarteiras", "op": "==", "valor": 1}, {"fato": "nMovimentacoes", "op": ">=", "valor": 15}],
+      "texto": "Eu gravo um ponto por dia. A curva de patrimônio aparece a partir do segundo dia — e ela é medida de verdade, não estimada a partir do saldo de hoje."
+    },
+    {
+      "id": "carteira-unica-organizacao",
+      "grupo": "higiene",
+      "prioridade": 40,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "nCarteiras",
+          "op": "==",
+          "valor": 1
+        },
+        {
+          "fato": "nMovimentacoes",
+          "op": ">=",
+          "valor": 15
+        }
+      ],
       "titulo": "Tudo está numa carteira só",
-      "texto": "Com {nMovimentacoes|num} movimentações registradas, separar por origem (exchange, hardware wallet, DeFi) faz o filtro por carteira começar a valer a pena — dá para ver onde está cada parte do patrimônio." },
-
-    { "id": "panorama-base",
-      "grupo": "patrimonio", "prioridade": 50, "severidade": "info",
-      "quando": [{"fato": "patrimonio", "op": ">", "valor": 0}],
+      "texto": "Com {nMovimentacoes|num} movimentações registradas, separar por origem (exchange, hardware wallet, DeFi) faz o filtro por carteira começar a valer a pena — dá para ver onde está cada parte do patrimônio."
+    },
+    {
+      "id": "panorama-base",
+      "grupo": "patrimonio",
+      "prioridade": 50,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "patrimonio",
+          "op": ">",
+          "valor": 0
+        }
+      ],
       "titulo": "Patrimônio de {patrimonio|money}",
-      "texto": "Distribuído em HOLD ({pctHold|pct0}), DeFi ({pctDefi|pct0}) e Trade ({pctTrade|pct0}). Você tem {investido|money} de capital investido e {resultadoTotal|money} de resultado total." }
-
+      "texto": "Distribuído em HOLD ({pctHold|pct0}), DeFi ({pctDefi|pct0}) e Trade ({pctTrade|pct0}). Você tem {investido|money} de capital investido e {resultadoTotal|money} de resultado total."
+    },
+    {
+      "id": "pool-atras-do-hold",
+      "grupo": "defi",
+      "prioridade": 98,
+      "severidade": "alerta",
+      "quando": [
+        {
+          "fato": "poolsAtrasDoHold",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "poolsComIL",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
+      "titulo": "{poolsAtrasDoHold|num} pool(s) rendendo menos que ter só segurado",
+      "texto": "A pior é {piorILPar}: está {piorILAtras|money} atrás de quem só segurou os dois tokens, mesmo com {piorILTaxas|money} de taxas coletadas. Isso é impermanent loss — o AMM rebalanceia sozinho e você acaba com mais do token que caiu. Ele só desaparece se o par voltar à proporção de preços da abertura; até lá, taxa alta que não cobre a perda é só barulho."
+    },
+    {
+      "id": "pool-bateu-hold",
+      "grupo": "defi",
+      "prioridade": 82,
+      "severidade": "positivo",
+      "quando": [
+        {
+          "fato": "poolsComIL",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "poolsAtrasDoHold",
+          "op": "==",
+          "valor": 0
+        }
+      ],
+      "titulo": "Suas pools estão {ilSaldoTotal|money} à frente do HOLD",
+      "texto": "As taxas coletadas mais que compensaram o impermanent loss de {ilPerdaTotal|money}. É a única conta que responde se valeu a pena fornecer liquidez: render em dólar não basta se segurar os tokens parados renderia mais."
+    },
+    {
+      "id": "pool-sem-dados-il",
+      "grupo": "defi",
+      "prioridade": 55,
+      "severidade": "info",
+      "quando": [
+        {
+          "fato": "poolsSemDadosIL",
+          "op": ">=",
+          "valor": 1
+        }
+      ],
+      "titulo": "{poolsSemDadosIL|num} pool(s) sem cálculo de impermanent loss",
+      "texto": "Falta o preço dos dois tokens no dia em que você abriu a pool. Com esse dado eu consigo dizer se ela está ganhando ou perdendo de simplesmente ter segurado o par — que é a pergunta que decide se a pool vale a pena. Dá para preencher no detalhe da pool, em DeFi."
+    }
   ]
 }

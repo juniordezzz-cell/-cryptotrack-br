@@ -91,6 +91,19 @@
      ╚══════════════════════════════════════════════════════════════════╝ */
   API.fonte = 'paprika';
 
+  /* A versão sai do próprio <script src="...?v=">: assim o JSON acompanha
+     o cache busting do JS que o carrega, sem ter que lembrar de bumpar dois
+     lugares. Sem isto, editar o arquivo não chegava em quem já tinha
+     visitado o site — e o dado ficava congelado no navegador dele. */
+  var VERSAO = (function () {
+    try {
+      var s = document.currentScript && document.currentScript.src;
+      var m = s && s.match(/[?&]v=([^&#]+)/);
+      return m ? m[1] : '';
+    } catch (e) { return ''; }
+  })();
+  function versionado(caminho) { return VERSAO ? caminho + '?v=' + VERSAO : caminho; }
+
   var PAPRIKA = 'https://api.coinpaprika.com/v1';
   var LOGO = 'https://static.coinpaprika.com/coin/';
 
@@ -100,7 +113,7 @@
   function mapa() {
     if (cgDePk) return Promise.resolve(cgDePk);
     if (mapaEmVoo) return mapaEmVoo;
-    mapaEmVoo = fetch('/mundodefi-ids.json')
+    mapaEmVoo = fetch(versionado('/mundodefi-ids.json'))
       .then(function (r) { if (!r.ok) throw new Error('mapa ' + r.status); return r.json(); })
       .then(function (d) {
         var rev = {};

@@ -28,7 +28,20 @@
 
   var M = {};
   var REGRAS = null;
-  var CAMINHO = '/nexus/nexus-regras.json';
+  /* A versão sai do próprio <script src="...?v=">: assim o JSON acompanha
+     o cache busting do JS que o carrega, sem ter que lembrar de bumpar dois
+     lugares. Sem isto, editar o arquivo não chegava em quem já tinha
+     visitado o site — e o dado ficava congelado no navegador dele. */
+  var VERSAO = (function () {
+    try {
+      var s = document.currentScript && document.currentScript.src;
+      var m = s && s.match(/[?&]v=([^&#]+)/);
+      return m ? m[1] : '';
+    } catch (e) { return ''; }
+  })();
+  function versionado(caminho) { return VERSAO ? caminho + '?v=' + VERSAO : caminho; }
+
+  var CAMINHO = versionado('/nexus/nexus-regras.json');
 
   /* Tickers tratados como caixa. Stablecoin não é "investimento parado":
      é a posição que define quanto você aguenta de queda sem vender nada. */
@@ -113,6 +126,12 @@
     var abertas = pools.filter(function (p) { return p.st === 'a'; });
     var capital = 0, aprPond = 0, desatualizadas = 0;
     var melhorPool = null, piorPool = null;
+    /* Impermanent loss: a pergunta que decide se a pool valeu a pena não é
+       "quanto rendeu", é "rendeu mais do que ter só segurado os tokens?".
+       Só entra na conta a pool que tem os preços de abertura preenchidos —
+       sem eles o cálculo não existe, e inventar seria pior. */
+    var comIL = 0, semIL = 0, atrasDoHold = 0, ilPerdaTotal = 0, ilSaldoTotal = 0;
+    var piorIL = null;
     abertas.forEach(function (p) {
       var R = C.poolResultado(st, p);
       var cap = Math.max(0, R.dep - R.ret);
@@ -121,6 +140,16 @@
       if (R.valorDesatualizado != null && R.valorDesatualizado > 14) desatualizadas++;
       if (!melhorPool || R.aprFees > melhorPool.apr) melhorPool = { par: p.par, apr: R.aprFees };
       if (!piorPool || R.aprFees < piorPool.apr) piorPool = { par: p.par, apr: R.aprFees };
+
+      var IL = C.poolIL ? C.poolIL(st, p, precos) : null;
+      if (!IL) { semIL++; return; }
+      comIL++;
+      ilPerdaTotal += IL.perdaUsd;
+      ilSaldoTotal += IL.vsHold;
+      if (!IL.bateuHold) atrasDoHold++;
+      if (!piorIL || IL.vsHold < piorIL.vsHold) {
+        piorIL = { par: p.par, vsHold: IL.vsHold, pct: IL.pct, taxas: IL.taxas, perda: IL.perdaUsd };
+      }
     });
     f.nPools = pools.length;
     f.nPoolsAbertas = abertas.length;
@@ -133,6 +162,22 @@
     f.melhorPoolApr = melhorPool ? melhorPool.apr : 0;
     f.piorPoolPar   = piorPool ? piorPool.par : '—';
     f.piorPoolApr   = piorPool ? piorPool.apr : 0;
+
+    /* impermanent loss */
+    f.poolsComIL = comIL;
+    f.poolsSemDadosIL = semIL;
+    f.poolsAtrasDoHold = atrasDoHold;
+    f.poolsBateramHold = comIL - atrasDoHold;
+    f.ilPerdaTotal = ilPerdaTotal;
+    f.ilSaldoTotal = ilSaldoTotal;
+    f.ilTaxasCobrem = comIL > 0 && ilSaldoTotal >= 0;
+    f.piorILPar = piorIL ? piorIL.par : '—';
+    f.piorILvsHold = piorIL ? piorIL.vsHold : 0;
+    /* mesmo número em valor absoluto: "está $2.838 atrás" lê melhor
+       que "está -$2.838 em relação a" */
+    f.piorILAtras = piorIL ? Math.abs(Math.min(0, piorIL.vsHold)) : 0;
+    f.piorILPct = piorIL ? piorIL.pct : 0;
+    f.piorILTaxas = piorIL ? piorIL.taxas : 0;
 
     var lends = st.lend.filter(function (l) { return cart === 'all' || l.cart === cart; });
     var jurosLend = 0, lendAbertos = 0;
