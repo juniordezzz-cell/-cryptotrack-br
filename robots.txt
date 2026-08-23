@@ -1,5 +1,15 @@
 User-agent: *
 Allow: /
+
+# O portfolio fica de fora do indice de proposito, e nao por ser pago --
+# ele e' gratis. E que as quatro paginas de /portfolio/ sao cascas de
+# JavaScript: o HTML servido tem menos de 40 caracteres de texto e a
+# interface inteira e' montada por portfolio.js depois. Indexa-las hoje
+# poria quatro paginas vazias no Google com a nossa assinatura.
+#
+# Para liberar, primeiro e' preciso escrever conteudo de verdade no HTML
+# (o que a ferramenta faz, para quem serve, como comeca) que apareca antes
+# do JS rodar. So depois vale tirar o Disallow daqui.
 Disallow: /portfolio/
 
 Sitemap: https://mundodefi.com.br/sitemap.xml

@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-17"></script>
+<script src="/mundodefi-api.js?v=2026-08-21"></script>
 <title id="page-title">Token — MundoDeFi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-<script src="/nexus/nexus-auth.js?v=2026-08-17"></script>
-<script src="/mundodefi-catalogo.js?v=2026-08-17"></script>
-<script src="/mundodefi-cta.js?v=2026-08-17"></script>
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-17">
+<script src="/nexus/nexus-auth.js?v=2026-08-21"></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-21"></script>
+<script src="/mundodefi-cta.js?v=2026-08-21"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-21">
 <style>
 :root{
   /* Cores vêm de /mundodefi-tokens.css. Os nomes locais viram apelidos
@@ -649,7 +649,7 @@ function layerInfo(id){
 var _descCache=null;
 function carregarDescricoes(){
   if(_descCache)return Promise.resolve(_descCache);
-  return fetch('/token-descricoes.json?v=2026-08-17').then(function(r){return r.json();})
+  return fetch('/token-descricoes.json?v=2026-08-21').then(function(r){return r.json();})
     .then(function(j){_descCache=j;return j;}).catch(function(){return {};});
 }
 
@@ -725,6 +725,10 @@ function explicarAtivo(nome,sym,cg){
   if(!card)return;
   carregarDescricoes().then(function(dic){
     var d=dic[_coinId];
+    /* Agora que o texto curado chegou, a description da busca pode deixar
+       de ser a genérica: descrição única por token vale mais no resultado
+       do Google do que a mesma frase repetida em todas as páginas. */
+    aplicarSEO(_coinId, nome, sym, (cg && cg.image && (cg.image.large||cg.image.small)) || '');
     var ttl=document.getElementById('explica-ttl');
     var body=document.getElementById('explica-body');
     var html;
@@ -745,7 +749,12 @@ function explicarAtivo(nome,sym,cg){
   });
 }
 
-function showError(msg){document.getElementById('app').innerHTML='<div class="err-state"><div style="font-size:3rem">🔍</div><div class="err-ttl">TOKEN NÃO ENCONTRADO</div><p class="err-sub">'+msg+'</p><a href="/index.html" class="back-btn">← Voltar</a></div>';}
+function showError(msg){
+  /* Token que não resolve não pode se declarar canonical: qualquer bot
+     batendo em ?id=<qualquer-coisa> viraria uma página indexavel, e o site
+     encheria o índice do Google de lixo com a nossa assinatura. */
+  naoIndexar();
+  document.getElementById('app').innerHTML='<div class="err-state"><div style="font-size:3rem">🔍</div><div class="err-ttl">TOKEN NÃO ENCONTRADO</div><p class="err-sub">'+msg+'</p><a href="/index.html" class="back-btn">← Voltar</a></div>';}
 
 // ═══════════════════════════════════
 // RENDER PAGE
@@ -789,7 +798,7 @@ function renderPage(bin,cg){
   if(links.repos_url&&links.repos_url.github&&links.repos_url.github[0])lnks.push({ico:'⚙️',name:'GitHub',url:links.repos_url.github[0]});
   if(links.blockchain_site&&links.blockchain_site[0]&&links.blockchain_site[0].length>5)lnks.push({ico:'🔍',name:'Explorer',url:links.blockchain_site[0]});
 
-  document.title=name+' ('+_sym+') — MundoDeFi';
+  aplicarSEO(_coinId, name, _sym, (typeof _logo!=='undefined'?_logo:''));
 
   var H='';
 
@@ -892,12 +901,134 @@ function renderPage(bin,cg){
 }
 
 // ═══════════════════════════════════
+// SEO DA PÁGINA DE TOKEN
+//
+// Esta página serve dezenas de URLs (?id=bitcoin, ?id=solana...) a partir
+// do MESMO HTML. Sem canonical, o Google vê o mesmo documento repetido e
+// tem que adivinhar qual indexar. Sem description, ele inventa o resumo do
+// resultado de busca. E sem og:, o link colado no WhatsApp — que no Brasil
+// é metade do compartilhamento — aparece pelado.
+//
+// O sitemap já manda o Google para seis dessas URLs, então isso não era
+// detalhe: era mandar visita para uma página que não sabe se apresentar.
+//
+// Roda em dois momentos: primeiro só com o id da URL, para o canonical
+// nascer certo; depois de novo com nome, símbolo e logo, quando chegam.
+// ═══════════════════════════════════
+var SITE = 'https://mundodefi.com.br';
+
+function metaTag(seletor, criar) {
+  var el = document.head.querySelector(seletor);
+  if (!el) { el = criar(); document.head.appendChild(el); }
+  return el;
+}
+function setMeta(nome, valor) {
+  if (!valor) return;
+  metaTag('meta[name="' + nome + '"]', function () {
+    var m = document.createElement('meta'); m.setAttribute('name', nome); return m;
+  }).setAttribute('content', valor);
+}
+function setOG(prop, valor) {
+  if (!valor) return;
+  metaTag('meta[property="' + prop + '"]', function () {
+    var m = document.createElement('meta'); m.setAttribute('property', prop); return m;
+  }).setAttribute('content', valor);
+}
+function setLink(rel, href) {
+  if (!href) return;
+  metaTag('link[rel="' + rel + '"]', function () {
+    var l = document.createElement('link'); l.setAttribute('rel', rel); return l;
+  }).setAttribute('href', href);
+}
+
+function tituloDeBusca(nome, sym) {
+  /* O que o brasileiro digita é "cotação do bitcoin", não "bitcoin token
+     page". O título fala a língua da busca sem prometer o que a página não
+     entrega — ela tem gráfico, explicação e as ferramentas. */
+  return nome + (sym ? ' (' + sym + ')' : '') + ' — cotação hoje em real e dólar | MundoDeFi';
+}
+
+function descricaoDeBusca(id, nome, sym) {
+  var curada = (typeof _descCache !== 'undefined' && _descCache) ? _descCache[id] : null;
+  var base = curada && curada.texto
+    ? String(curada.texto).replace(/\s+/g, ' ').trim()
+    : '';
+  if (base) {
+    /* Junta frases inteiras até perto de 155 caracteres. Cortar na primeira
+       frase deixava descrição de 60 caracteres, curta demais para o
+       resultado de busca; cortar no caractere 155 partia palavra ao meio. */
+    var frases = base.split(/(?<=\.)\s+/), texto = '';
+    for (var i = 0; i < frases.length; i++) {
+      if (texto && (texto + ' ' + frases[i]).length > 158) break;
+      texto = texto ? texto + ' ' + frases[i] : frases[i];
+    }
+    if (texto.length > 158) texto = texto.slice(0, 155).replace(/\s+\S*$/, '') + '…';
+    /* Quando a primeira frase é curta e a segunda não cabe, sobra uma
+       description de 60 caracteres — espaço desperdiçado no resultado de
+       busca. Completa com o que a página de fato entrega. */
+    if (texto.length < 100) {
+      var extra = ' Veja a cotação ao vivo em real e dólar, gráfico e ferramentas.';
+      if ((texto + extra).length <= 158) texto += extra;
+    }
+    return texto;
+  }
+  return 'Cotação de ' + nome + (sym ? ' (' + sym + ')' : '') + ' ao vivo em real e dólar, com gráfico '
+       + 'e as ferramentas do MundoDeFi para calcular lucro, staking e pool de liquidez.';
+}
+
+var _seoNome = '', _seoLogo = '';
+function naoIndexar() {
+  setMeta('robots', 'noindex,follow');
+  var c = document.head.querySelector('link[rel="canonical"]');
+  if (c) c.remove();
+  var o = document.head.querySelector('meta[property="og:url"]');
+  if (o) o.remove();
+}
+
+function aplicarSEO(id, nome, sym, logo) {
+  if (!id) return;
+  id = String(id).toLowerCase().trim();
+  sym = (sym || '').toUpperCase();
+
+  /* A função é chamada em três momentos e nem todos conhecem o nome bom:
+     um deles passa o próprio símbolo. Guardamos o melhor visto até agora
+     para o título nunca piorar de "Solana (SOL)" para "SOL (SOL)". */
+  nome = String(nome || '').trim();
+  if (nome && nome.toUpperCase() !== sym && nome.length > _seoNome.length) _seoNome = nome;
+  nome = _seoNome || (id.charAt(0).toUpperCase() + id.slice(1)).replace(/-/g, ' ');
+  if (logo) _seoLogo = logo;
+  logo = _seoLogo;
+
+  var url = SITE + '/token.html?id=' + encodeURIComponent(id);
+  var titulo = tituloDeBusca(nome, sym);
+  var desc = descricaoDeBusca(id, nome, sym);
+
+  document.title = titulo;
+  setLink('canonical', url);
+  setMeta('description', desc);
+  setOG('og:type', 'website');
+  setOG('og:locale', 'pt_BR');
+  setOG('og:site_name', 'MundoDeFi');
+  setOG('og:url', url);
+  setOG('og:title', titulo);
+  setOG('og:description', desc);
+  if (logo) setOG('og:image', logo);
+  setMeta('twitter:card', logo ? 'summary' : 'summary');
+  setMeta('twitter:title', titulo);
+  setMeta('twitter:description', desc);
+  if (logo) setMeta('twitter:image', logo);
+}
+
+// ═══════════════════════════════════
 // INIT — Fase 1: Binance (<200ms), Fase 2: CoinGecko lazy
 // ═══════════════════════════════════
 async function init(){
   _coinId=new URLSearchParams(window.location.search).get('id')||'';
   if(!_coinId){showError('Nenhum token especificado. Use <strong>?id=bitcoin</strong>');return;}
   _coinId=_coinId.toLowerCase().trim();
+  /* canonical e og:url antes de qualquer chamada: se a API demorar ou
+     falhar, a página já sabe quem ela é */
+  aplicarSEO(_coinId);
   var sym=getBinanceSym(_coinId);
 
   // Stablecoin ou sem symbol: vai direto ao CoinGecko
@@ -940,7 +1071,7 @@ async function init(){
     if(cg.name){
       var hn=document.getElementById('hero-name');if(hn)hn.textContent=cg.name.toUpperCase();
       var pn=document.getElementById('pc-tname');if(pn)pn.textContent=cg.name;
-      document.title=cg.name+' ('+_sym+') — MundoDeFi';
+      aplicarSEO(_coinId, cg.name, _sym, (cg.image&&(cg.image.large||cg.image.small))||'');
     }
     // Atualiza rank e mcap
     if(cg.market_cap_rank){
