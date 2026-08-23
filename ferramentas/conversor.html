@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-11"></script>
+<script src="/mundodefi-api.js?v=2026-08-12"></script>
 <title>Conversor Fiat → Cripto — Real, Dólar e Euro para 500 criptomoedas | MundoDeFi</title>
 <meta name="description" content="Conversor Fiat → Cripto: converta Real (BRL), Dólar (USD) e Euro (EUR) para as 500 maiores criptomoedas com cotação ao vivo, gráfico e tabelas. Grátis e em português.">
 <meta name="keywords" content="conversor fiat cripto, real para cripto, dolar para cripto, brl para sol, brl para btc, real para bitcoin, dolar para bitcoin, euro para cripto, cotação cripto brl">
@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-11">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-11">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-12">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-12">
 </head>
 <body>
 
@@ -212,9 +212,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-11" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-11" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-11" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-12" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-12" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-12" defer></script>
 
 <script>
 /* =========================================================
@@ -226,12 +226,11 @@
 const API = 'https://api.coingecko.com/api/v3';
 
 /* ----------------------------------------------------------
-   CHAVE DEMO DA COINGECKO (opcional, mas recomendada)
-   Pegue grátis em https://www.coingecko.com/en/developers/dashboard
-   e cole entre as aspas abaixo. Vazio = usa o acesso público
-   (funciona, mas com limite menor).
+   A CHAVE DA COINGECKO MORA EM UM LUGAR SÓ: /mundodefi-api.js
+   Aqui existia um segundo campo para colar. Quem preenchesse só um
+   dos dois ficava com metade do site sem chave e sem entender por quê.
    ---------------------------------------------------------- */
-const COINGECKO_KEY = '';
+const COINGECKO_KEY = (window.MDF_API && window.MDF_API.chave) || '';
 
 // fetch com cabeçalho da chave (se houver) + retry com espera crescente
 async function cgFetch(url, tentativas = 3) {
