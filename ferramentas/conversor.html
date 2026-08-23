@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-12"></script>
-<title>Conversor Fiat → Cripto — Real, Dólar e Euro para 500 criptomoedas | MundoDeFi</title>
-<meta name="description" content="Conversor Fiat → Cripto: converta Real (BRL), Dólar (USD) e Euro (EUR) para as 500 maiores criptomoedas com cotação ao vivo, gráfico e tabelas. Grátis e em português.">
+<script src="/mundodefi-api.js?v=2026-08-15"></script>
+<title>Conversor Fiat → Cripto — Real, Dólar e Euro para criptomoedas | MundoDeFi</title>
+<meta name="description" content="Conversor Fiat → Cripto: converta Real (BRL), Dólar (USD) e Euro (EUR) para as maiores criptomoedas do mercado, com cotação ao vivo, gráfico e tabelas. Grátis e em português.">
 <meta name="keywords" content="conversor fiat cripto, real para cripto, dolar para cripto, brl para sol, brl para btc, real para bitcoin, dolar para bitcoin, euro para cripto, cotação cripto brl">
-<meta property="og:title" content="Conversor Fiat → Cripto — BRL, USD e EUR para 500 tokens | MundoDeFi">
-<meta property="og:description" content="Cotação ao vivo, gráfico e tabelas de conversão de Real, Dólar e Euro para as 500 maiores criptos.">
+<meta property="og:title" content="Conversor Fiat → Cripto — BRL, USD e EUR para as maiores criptos | MundoDeFi">
+<meta property="og:description" content="Cotação ao vivo, gráfico e tabelas de conversão de Real, Dólar e Euro para as maiores criptos do mercado.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/conversor.html">
 <meta property="og:locale" content="pt_BR">
@@ -16,8 +16,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-12">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-12">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-15">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-15">
 </head>
 <body>
 
@@ -28,7 +28,7 @@
 
   <!-- ===== HERO + TAXA AO VIVO ===== -->
   <div class="hero">
-    <span class="eyebrow">Conversor Fiat → Cripto · cotação ao vivo · 500 moedas</span>
+    <span class="eyebrow">Conversor Fiat → Cripto · cotação ao vivo · as maiores do mercado</span>
     <h1>Converter <span class="par" id="h1-fiat">Real (BRL)</span> em <span class="par" id="h1-moeda">Bitcoin (BTC)</span></h1>
     <p class="taxa-viva">1 <span id="taxa-sym">BTC</span> vale agora <strong id="taxa-valor">—</strong>
       <span class="variacao" id="taxa-var"></span></p>
@@ -72,7 +72,7 @@
           <div class="busca-wrap">
             <div class="busca-token" id="busca-token">
               <img id="token-img" src="" alt="" style="display:none">
-              <input type="text" id="input-busca" placeholder="Buscar entre 500 tokens…"
+              <input type="text" id="input-busca" placeholder="Buscar token por nome ou sigla…"
                      autocomplete="off" aria-label="Buscar criptomoeda">
             </div>
             <div class="dropdown" id="dropdown" role="listbox"></div>
@@ -173,7 +173,7 @@
     </details>
     <details>
       <summary>Quantas criptomoedas estão disponíveis?</summary>
-      <p>As <strong>500 maiores criptomoedas por valor de mercado</strong>, atualizadas direto da CoinGecko. Use a busca do conversor digitando o nome ou a sigla — por exemplo, "sol", "bitcoin" ou "pepe".</p>
+      <p>As <strong>maiores criptomoedas por valor de mercado</strong>, com cotação ao vivo. Use a busca do conversor digitando o nome ou a sigla — por exemplo, "sol", "bitcoin" ou "pepe".</p>
     </details>
     <details>
       <summary>Como inverto a direção da conversão?</summary>
@@ -202,7 +202,7 @@
   <!-- planos PRO / Premium (bloco injetado) -->
   <div data-mdf="pro"></div>
 <p class="aviso">
-    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e podem apresentar
+    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e pela CoinPaprika, e podem apresentar
     pequenas diferenças em relação aos preços praticados por exchanges. O MundoDeFi não realiza intermediação de
     compra ou venda de ativos e nada nesta página constitui recomendação de investimento. Cripto envolve risco.
   </p>
@@ -212,14 +212,14 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-12" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-12" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-12" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-15" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-15" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-15" defer></script>
 
 <script>
 /* =========================================================
    MundoDeFi — Conversor v2
-   BRL / USD / EUR ⇄ Top 500 criptos (CoinGecko)
+   BRL / USD / EUR ⇄ as maiores criptos do mercado
    Estilo tradutor: inverte direção com ⇄
    ========================================================= */
 
@@ -264,7 +264,7 @@ const POPULARES_SYM = { bitcoin:'BTC', ethereum:'ETH', solana:'SOL', ripple:'XRP
 const QUANTIDADES = [1, 5, 10, 50, 100, 500, 1000];
 
 // ---------- estado ----------
-let LISTA = [];            // top 500: {id, sym, nome, img, rank}
+let LISTA = [];            // maiores por market cap: {id, sym, nome, img, rank}
 let fiatAtual = 'brl';
 let moedaAtual = { id:'bitcoin', sym:'BTC', nome:'Bitcoin', img:'' };
 let precosFiat = null;     // { brl, usd, eur } — preço de 1 token
@@ -354,7 +354,7 @@ function abrirDropdown(filtro = '') {
   if (!LISTA.length) {
     dropdown.innerHTML = '<div class="vazio">Carregando lista de tokens…</div>';
   } else if (!resultados.length) {
-    dropdown.innerHTML = '<div class="vazio">Nenhum token encontrado entre os 500 maiores.</div>';
+    dropdown.innerHTML = '<div class="vazio">Nenhum token encontrado.</div>';
   } else {
     dropdown.innerHTML =
       (!termo ? '<div class="populares">Mais buscados:</div>' : '') +
@@ -631,7 +631,7 @@ async function iniciar() {
   document.getElementById('erro-api').style.display = 'none';
   try {
     // Apenas 3 chamadas no início: preço + estatísticas + gráfico.
-    // A lista dos 500 tokens carrega sob demanda (ao focar na busca),
+    // A lista de tokens carrega sob demanda (ao focar na busca),
     // evitando o bloqueio por excesso de requisições da CoinGecko grátis.
     await carregarDados();
     await carregarGrafico();
@@ -675,12 +675,12 @@ setInterval(() => { if (LISTA.length) carregarDados().catch(() => {}); }, 60000)
     {
       "@type": "Question",
       "name": "Posso converter de Dólar e de Euro além de Real?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Sim. O conversor do MundoDeFi aceita Real (BRL), Dólar americano (USD) e Euro (EUR) para as 500 maiores criptomoedas, com cotação ao vivo." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Sim. O conversor do MundoDeFi aceita Real (BRL), Dólar americano (USD) e Euro (EUR) para as maiores criptomoedas do mercado, com cotação ao vivo." }
     },
     {
       "@type": "Question",
       "name": "Quantas criptomoedas o conversor aceita?",
-      "acceptedAnswer": { "@type": "Answer", "text": "As 500 maiores criptomoedas por valor de mercado, com dados ao vivo da CoinGecko e busca por nome ou sigla." }
+      "acceptedAnswer": { "@type": "Answer", "text": "As maiores criptomoedas por valor de mercado, com cotação ao vivo e busca por nome ou sigla." }
     },
     {
       "@type": "Question",
