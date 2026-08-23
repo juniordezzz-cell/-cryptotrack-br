@@ -14,7 +14,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-3">
@@ -390,6 +390,17 @@ window.addEventListener('paste',function(e){var items=(e.clipboardData||{}).item
 loadFx();
 fetchPrice('SOL');
 calcular();
+
+/* ── ?token=SOL vindo da pagina do ativo ── */
+(function(){
+  var t=new URLSearchParams(location.search).get('token');
+  if(!t)return;
+  t=t.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+  var el=document.getElementById('tokenSym'); if(!el||!t)return;
+  el.value=t;
+  var pr=document.getElementById('inPreco'); if(pr)pr.dataset.touched='';
+  if(typeof fetchPrice==='function')fetchPrice(t);
+})();
 </script>
 </body>
 </html>

@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://mundodefi.com.br/comparador-de-ativos.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-3">
@@ -843,9 +843,20 @@ async function init(){
   renderTdNotice();
   await loadFx();
   loadTicker(); setInterval(loadTicker,60000);
-  setPrimary("bitcoin");
+  /* ?token= vindo da pagina do ativo. Precisa ser AQUI: setPrimary roda
+     depois de um await, entao qualquer bloco externo era sobrescrito. */
+  setPrimary(ativoInicial());
+}
+function ativoInicial(){
+  var t=(new URLSearchParams(location.search).get('token')||'').toLowerCase();
+  if(!t) return 'bitcoin';
+  if(ASSETS[t]) return t;
+  var k=Object.keys(ASSETS).find(function(k){
+    return (ASSETS[k].sym||'').toLowerCase()===t || (ASSETS[k].cg||'')===t;});
+  return k||'bitcoin';
 }
 init();
+
 </script>
 </body>
 </html>

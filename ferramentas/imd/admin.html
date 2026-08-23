@@ -7,15 +7,17 @@
   <title>Painel IMD · Resultados dos Diagnósticos</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
   <style>
     :root{
-      --bg:#06070c; --panel:#10131c; --panel2:#151a26;
-      --line:rgba(255,255,255,.08); --text:#f5f7fb; --muted:#aab1c4;
+      /* de /mundodefi-tokens.css — ultima pagina que tinha paleta propria */
+      --bg:var(--mdf-bg); --panel:var(--mdf-surface); --panel2:var(--mdf-surface-2);
+      --line:var(--mdf-line-2); --text:var(--mdf-text); --muted:var(--mdf-text-2);
       --purple:#9b5cff; --green:#28d7b7; --blue:#5aa7ff; --gold:#f4c44f; --danger:#ff6e8f;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 10%, rgba(155,92,255,.16), transparent 25%), linear-gradient(180deg,#05060b 0%, #090b13 100%); color:var(--text); font-family:Inter, system-ui, sans-serif;}
+    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 10%, rgba(155,92,255,.16), transparent 25%), linear-gradient(180deg,#05060b 0%, #090b13 100%); color:var(--text); font-family:var(--mdf-font);}
     .shell{max-width:1240px;margin:0 auto;padding:24px 18px 60px}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:20px}
     .brand{display:flex;align-items:center;gap:10px;font-weight:800}

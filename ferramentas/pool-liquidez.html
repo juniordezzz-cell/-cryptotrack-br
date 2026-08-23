@@ -11,7 +11,7 @@
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/pool-liquidez.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-3">
 <link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-3">
 <style>
@@ -359,6 +359,17 @@ document.getElementById('pool-note').textContent=nota;
   showResult('pool-result');
 }
 
+/* ── ?token=SOL vindo da pagina do ativo ──
+   Fecha o ciclo busca organica -> pagina de token -> ferramenta preenchida.
+   Antes o usuario chegava aqui e digitava o ticker de novo. */
+(function(){
+  var t=new URLSearchParams(location.search).get('token');
+  if(!t)return;
+  t=t.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+  if(!t)return;
+  var a=document.getElementById('pool-tokA'); if(a)a.value=t;
+  if(typeof calcPool==='function')calcPool();
+})();
 </script>
 </body>
 </html>

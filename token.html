@@ -6,7 +6,7 @@
 <title id="page-title">Token — MundoDeFi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
 <script src="/nexus/nexus-auth.js"></script>
 <script src="/mundodefi-catalogo.js?v=2026-08-3"></script>
@@ -245,10 +245,9 @@ footer a{color:var(--muted2);text-decoration:none}footer a:hover{color:var(--tex
       <span class="nav-logo-text">Mundo<span>DeFi</span></span>
     </a>
     <div class="nav-links">
-      <a href="/index.html#mercado" class="nav-link">Mercado</a>
-      <a href="/index.html#rankings" class="nav-link">Rankings</a>
       <a href="/ferramentas/ferramentas.html" class="nav-link">Ferramentas</a>
-      <a href="/ferramentas/calculadoras.html" class="nav-link">Calculadoras</a>
+      <a href="/portfolio/index.html" class="nav-link">Portfólio</a>
+      <a href="/planos.html" class="nav-link">Planos</a>
     </div>
     <div class="nav-right">
       <div class="nav-sw">
@@ -702,11 +701,14 @@ function ferramentasDoAtivo(sym,id){
   var html=quero.map(function(slug){
     var f=MDF_CATALOGO.porSlug(slug); if(!f)return '';
     var url=f.url, desc=f.curto;
+    /* Cada ferramenta ja chega preenchida com o ativo aberto. Sem isso o
+       usuario clicava e tinha que digitar o ticker de novo — o ciclo
+       busca -> pagina de token -> ferramenta quebrava no ultimo passo. */
     if(slug==='conversor'){url+='?cripto='+encodeURIComponent(id); desc='Quanto vale '+sym+' em reais';}
-    if(slug==='lucro-cripto') desc='Seu lucro real em '+sym+', com taxas';
-    if(slug==='staking')      desc='Quanto rende '+sym+' em staking';
-    if(slug==='pool-liquidez')desc='Pool com '+sym+': as taxas compensam?';
-    if(slug==='comparador-de-ativos') desc=sym+' contra ações, ouro e CDI';
+    if(slug==='lucro-cripto'){url+='?token='+encodeURIComponent(id); desc='Seu lucro real em '+sym+', com taxas';}
+    if(slug==='staking'){url+='?token='+encodeURIComponent(sym); desc='Quanto rende '+sym+' em staking';}
+    if(slug==='pool-liquidez'){url+='?token='+encodeURIComponent(sym); desc='Pool com '+sym+': as taxas compensam?';}
+    if(slug==='comparador-de-ativos'){url+='?token='+encodeURIComponent(id); desc=sym+' contra ações, ouro e CDI';}
     if(slug==='portfolio')    desc='Registre seu '+sym+' e acompanhe';
     return '<a class="ta" href="'+url+'">'
       +'<span class="ta-ico">'+f.icone+'</span>'
@@ -792,7 +794,7 @@ function renderPage(bin,cg){
 
   // HERO
   H+='<div class="hero">'
-    +'<div class="breadcrumb"><a href="/index.html">Início</a><span class="bc-sep"> › </span><a href="/index.html#rankings">Rankings</a><span class="bc-sep"> › </span><span style="color:var(--text);font-weight:600">'+name+'</span></div>'
+    +'<div class="breadcrumb"><a href="/index.html">Início</a><span class="bc-sep"> › </span><a href="/index.html#mercado">Mercado</a><span class="bc-sep"> › </span><span style="color:var(--text);font-weight:600">'+name+'</span></div>'
     +'<div class="hero-row">'
     +'<div class="hero-l">';
   if(logo)H+='<img class="hero-logo" id="hero-logo" src="'+logo+'" alt="'+name+'" onerror="this.style.display=\'none\'">';

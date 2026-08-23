@@ -9,7 +9,6 @@
   <url><loc>https://mundodefi.com.br/ferramentas/lucro-cripto.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mundodefi.com.br/ferramentas/pool-liquidez.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mundodefi.com.br/ferramentas/staking.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://mundodefi.com.br/ferramentas/liquidacao.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mundodefi.com.br/ferramentas/conversor.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mundodefi.com.br/ferramentas/cambio.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://mundodefi.com.br/ferramentas/comparador-de-ativos.html</loc><lastmod>2026-07-01</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -25,6 +24,11 @@
   <url><loc>https://mundodefi.com.br/token.html?id=dogecoin</loc><lastmod>2026-07-01</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 
   <!-- Conteúdo e conversão -->
+  <url>
+    <loc>https://mundodefi.com.br/estudos.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
   <url><loc>https://mundodefi.com.br/planos.html</loc><lastmod>2026-07-01</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://mundodefi.com.br/cadastro.html</loc><lastmod>2026-07-01</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
   <url><loc>https://mundodefi.com.br/politica-de-privacidade.html</loc><lastmod>2026-07-01</lastmod><changefreq>yearly</changefreq><priority>0.3</priority></url>
