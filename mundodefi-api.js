@@ -95,5 +95,52 @@
     try { localStorage.removeItem('mdf.api.' + caminho); } catch (e) {}
   };
 
+  /* ╔═ PARA A CHAVE VALER NO SITE INTEIRO ═══════════════════╗
+     Onze arquivos batem na CoinGecko com fetch() próprio — cada um com o
+     seu cache, o seu retry e, em dois casos, AbortController. Reescrever
+     os onze para MDF_API.get seria o certo em arquitetura, mas mexeria em
+     código de produção que funciona, em ferramentas com estilos
+     diferentes, sem nenhum ganho para quem usa o site.
+
+     Então aqui a gente só carimba a saída: se a URL é da CoinGecko e
+     existe chave, o cabeçalho vai junto. Nada mais muda — nem o cache de
+     cada página, nem o retry, nem o sinal de aborto.
+
+     SEM CHAVE CONFIGURADA ISTO NÃO FAZ NADA: o fetch original fica
+     intacto. Por isso o arquivo pode ser carregado em todo lugar desde
+     já, e o dia em que a chave entrar, o site inteiro passa a usá-la.
+
+     Custo conhecido: um cabeçalho fora da lista segura do CORS obriga o
+     navegador a mandar um OPTIONS antes de cada chamada. A CoinGecko
+     aceita também a chave em query string (x_cg_demo_api_key), que evita
+     esse ida-e-volta — em troca de deixar a chave em histórico e log de
+     proxy. Ficou no cabeçalho, que é o padrão mais limpo.
+     ╚═════════════════════════════════════════════════════════════════╝ */
+  function carimbarChave() {
+    if (!API.chave) return;
+    if (typeof window.fetch !== 'function' || typeof Headers !== 'function') return;
+    if (window.fetch.__mdfChave) return;          /* não empilha em recarga */
+
+    var original = window.fetch.bind(window);
+
+    var carimbado = function (entrada, init) {
+      var url = typeof entrada === 'string' ? entrada
+              : (entrada && entrada.url) ? entrada.url : '';
+      if (url.indexOf('api.coingecko.com') < 0) return original(entrada, init);
+
+      var opts = {};
+      if (init) for (var k in init) {
+        if (Object.prototype.hasOwnProperty.call(init, k)) opts[k] = init[k];
+      }
+      var h = new Headers((init && init.headers) || (entrada && entrada.headers) || {});
+      if (!h.has('x-cg-demo-api-key')) h.set('x-cg-demo-api-key', API.chave);
+      opts.headers = h;
+      return original(entrada, opts);
+    };
+    carimbado.__mdfChave = true;
+    window.fetch = carimbado;
+  }
+  carimbarChave();
+
   window.MDF_API = API;
 })();
