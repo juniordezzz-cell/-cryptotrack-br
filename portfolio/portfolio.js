@@ -376,7 +376,7 @@ P.boot = function (active, renderFn) {
 P.planosCTA = function () {
   if (!P.isFree()) return '';
   return '<div class="plans-cta">'
-    + '<div class="pc-card pc-pro"><div class="pc-tag">⚡ PRO</div><div class="pc-price">R$ 19,90 <small>/mês</small></div>'
+    + '<div class="pc-card"><div class="pc-tag">⚡ PRO</div><div class="pc-price">R$ 19,90 <small>/mês</small></div>'
     + '<p>Carteiras ilimitadas, gráficos avançados e exportação dos seus dados.</p>'
     + '<a href="/planos.html" class="btn btn-p" style="width:100%">Assinar PRO</a></div>'
     + '</div>';
