@@ -173,9 +173,9 @@
       categoria: 'diagnosticar',
       plano: 'gratis',
       icone: '🧭',
-      resumo: 'Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e um plano do que estudar primeiro.',
+      resumo: 'Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e onde estão suas maiores lacunas.',
       curto: 'Sua nota como investidor cripto, de 0 a 100',
-      tags: ['~5 minutos', 'Perfil de risco', 'Plano de estudo'],
+      tags: ['~5 minutos', 'Perfil de risco', 'Onde melhorar'],
       busca: ['imd', 'indice', 'diagnostico', 'nivel', 'teste', 'avaliacao', 'quiz'],
       destaque: true
     }

@@ -101,7 +101,7 @@ Regras que você não pode quebrar:
 - Não preveja preço futuro.
 - Se a busca não trouxer nada relevante e recente, diga que não há novidades no período em vez de inventar.
 - Nada de linguagem de hype ("vai explodir", "oportunidade única").
-- Escreva para quem está aprendendo: explique o jargão que usar.`;
+- Explique o jargão que usar: escreva para quem é novo no assunto.`;
 }
 
 /* ═══════════════ Gemini ═══════════════ */

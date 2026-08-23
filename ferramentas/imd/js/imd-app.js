@@ -397,7 +397,7 @@
 
     host.innerHTML = lista.map(function (c) {
       var pi = pilarInfo(c.pilar);
-      var rotulo = c.valor < 50 ? "Quero aprender" :
+      var rotulo = c.valor < 50 ? "Ponto fraco" :
                    c.valor < 80 ? "Posso melhorar" : "Já domino";
       return '<div class="tl-item">' +
         '<span style="color:' + pi.cor + '">' + App.escapar(c.nome) + "</span>" +
