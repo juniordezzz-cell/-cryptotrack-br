@@ -389,6 +389,130 @@
     };
   };
 
+
+  /* ═══════════════════ CONCENTRAÇÃO DE RISCO ═══════════════════
+     A pergunta "estou concentrado?" não se responde com "quantos ativos
+     eu tenho". Dez ativos com um deles valendo 80% é uma carteira
+     concentrada. Por isso, além da maior posição, calculamos o HHI —
+     soma dos quadrados das participações:
+
+       10 ativos de 10% cada  →  10 × 10²  = 1.000   (bem distribuída)
+        1 ativo de 100%       →  1  × 100² = 10.000  (tudo num só)
+
+     As faixas seguem a convenção antitruste, que é onde o índice nasceu.
+
+     Stablecoin entra separada de propósito: não é "posição parada", é a
+     reserva que define quanto de queda você aguenta sem vender nada. */
+  C.STABLES = ['USDT','USDC','DAI','BUSD','TUSD','FDUSD','USDE','PYUSD','BRZ','USDP','EURC','GUSD'];
+  C.ehStable = function (tk) { return C.STABLES.indexOf(String(tk||'').toUpperCase()) >= 0; };
+
+  C.concentracao = function (st, precos, cart) {
+    var T = C.totais(st, precos, cart);
+    var pos = C.posicoes(st, precos, cart).filter(function (p) { return p.qtd > 0; });
+
+    /* Pools e banca de trade também ocupam espaço na carteira: ignorá-las
+       faria a concentração em HOLD parecer maior do que é. */
+    var linhas = pos.map(function (p) {
+      return { tipo: 'ativo', id: p.id, nome: p.tk, valor: p.valor, stable: C.ehStable(p.tk) };
+    });
+    st.pools.filter(function (x) { return (!cart || cart === 'all' || x.cart === cart) && x.st === 'a'; })
+      .forEach(function (x) {
+        var r = C.poolResultado(st, x);
+        if (r.atual > 0) linhas.push({ tipo: 'pool', id: x.id, nome: x.par, valor: r.atual, stable: false });
+      });
+    if (T.trade.valor > 0) linhas.push({ tipo: 'trade', id: 'trade', nome: 'Banca de trade', valor: T.trade.valor, stable: false });
+
+    var total = linhas.reduce(function (s2, l) { return s2 + l.valor; }, 0);
+    linhas.forEach(function (l) { l.pct = total > 0 ? l.valor / total * 100 : 0; });
+    linhas.sort(function (a, b) { return b.valor - a.valor; });
+
+    var hhi = linhas.reduce(function (s2, l) { return s2 + l.pct * l.pct; }, 0);
+    var stableVal = linhas.filter(function (l) { return l.stable; })
+                          .reduce(function (s2, l) { return s2 + l.valor; }, 0);
+
+    function soma(n) { return linhas.slice(0, n).reduce(function (s2, l) { return s2 + l.pct; }, 0); }
+
+    var maior = linhas[0] || null;
+    var nivel = 'baixa';
+    if (linhas.length <= 1) nivel = 'unica';
+    else if (hhi >= 5000 || (maior && maior.pct >= 60)) nivel = 'critica';
+    else if (hhi >= 2500 || (maior && maior.pct >= 40)) nivel = 'alta';
+    else if (hhi >= 1500) nivel = 'media';
+
+    return {
+      linhas: linhas,
+      total: total,
+      maior: maior,
+      top3Pct: soma(3),
+      top5Pct: soma(5),
+      hhi: hhi,
+      nivel: nivel,
+      n: linhas.length,
+      stableValor: stableVal,
+      stablePct: total > 0 ? stableVal / total * 100 : 0
+    };
+  };
+
+  /* ═══════════════════ CONTRIBUIÇÃO PARA O RESULTADO ═══════════════════
+     "Onde estou ganhando dinheiro?" é outra pergunta que a alocação não
+     responde: o ativo que mais PESA não é necessariamente o que mais
+     RENDEU. Aqui cada linha traz quanto contribuiu para o resultado
+     total — realizado mais não realizado, somados.
+
+     O percentual usa a soma dos ABSOLUTOS como base. Se um ativo ganhou
+     100 e outro perdeu 100, o resultado é zero: dividir por zero não diz
+     nada, e dividir pelo líquido daria percentuais sem sentido. */
+  C.contribuicao = function (st, precos, cart) {
+    var T = C.totais(st, precos, cart);
+    var linhas = [];
+
+    C.posicoes(st, precos, cart).forEach(function (p) {
+      var t = p.realizado + p.naoRealizado;
+      if (t === 0 && p.qtd === 0) return;
+      linhas.push({ tipo: 'ativo', id: p.id, nome: p.tk, grupo: 'HOLD',
+                    realizado: p.realizado, naoRealizado: p.naoRealizado, total: t });
+    });
+
+    st.pools.filter(function (x) { return !cart || cart === 'all' || x.cart === cart; })
+      .forEach(function (x) {
+        var r = C.poolResultado(st, x);
+        if (r.resultado === 0) return;
+        linhas.push({ tipo: 'pool', id: x.id, nome: x.par, grupo: 'DeFi',
+                      realizado: r.aberta ? r.fees : r.resultado,
+                      naoRealizado: r.aberta ? r.resultado - r.fees : 0,
+                      total: r.resultado });
+      });
+
+    st.lend.filter(function (x) { return !cart || cart === 'all' || x.cart === cart; })
+      .forEach(function (x) {
+        var r = C.lendResultado(st, x);
+        if (r.resultado === 0) return;
+        linhas.push({ tipo: 'lend', id: x.id, nome: x.plat + ' · ' + x.tk, grupo: 'DeFi',
+                      realizado: r.resultado, naoRealizado: 0, total: r.resultado });
+      });
+
+    if (T.trade.realizado !== 0) {
+      linhas.push({ tipo: 'trade', id: 'trade', nome: 'Trade', grupo: 'Trade',
+                    realizado: T.trade.realizado, naoRealizado: 0, total: T.trade.realizado });
+    }
+
+    var absTotal = linhas.reduce(function (s2, l) { return s2 + Math.abs(l.total); }, 0);
+    linhas.forEach(function (l) { l.pct = absTotal > 0 ? Math.abs(l.total) / absTotal * 100 : 0; });
+    linhas.sort(function (a, b) { return b.total - a.total; });
+
+    var grupos = {};
+    linhas.forEach(function (l) { grupos[l.grupo] = (grupos[l.grupo] || 0) + l.total; });
+
+    return {
+      linhas: linhas,
+      grupos: Object.keys(grupos).map(function (g) { return { nome: g, total: grupos[g] }; })
+                    .sort(function (a, b) { return b.total - a.total; }),
+      melhor: linhas.length ? linhas[0] : null,
+      pior: linhas.length ? linhas[linhas.length - 1] : null,
+      resultadoTotal: T.resultadoTotal
+    };
+  };
+
   /* ═══════════════════ RETORNO PONDERADO PELO DINHEIRO (XIRR) ═══════════════════
      Rentabilidade simples mente quando há aportes ao longo do tempo:
      quem aportou tudo no fundo do poço "rende" igual a quem aportou no topo.

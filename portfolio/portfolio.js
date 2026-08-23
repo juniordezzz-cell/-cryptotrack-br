@@ -438,69 +438,81 @@ P.vDash = function () {
     return;
   }
 
+  var C = window.PCore;
+  var conc = C.concentracao(P.st, P.precos, P.cart());
+  var contrib = C.contribuicao(P.st, P.precos, P.cart());
+  var xirr = P.xirr();
+  var serie = C.serie(P.st, P.periodo);
   var html = P.avisoPrecos();
 
-  /* ─── bloco principal: patrimônio + resultado ─── */
-  var xirr = P.xirr();
+  /* ═══ BLOCO PRINCIPAL: patrimônio e resultado juntos ═══
+     Separar "quanto eu tenho" de "quanto eu ganhei" obriga o olho a
+     cruzar informação entre dois cantos da tela. */
   html += '<div class="mgrid">'
     + P.cardNeutro('Patrimônio total', P.money(T.patrimonio), 'var(--purple,#9945FF)',
         'HOLD + DeFi + Trade', T.patrimonio)
     + P.cardNeutro('Investido', P.money(T.investido), 'var(--mut2,#5D6880)',
         'custo das posições abertas', T.investido)
-    + P.card('Resultado não realizado', P.money(T.naoRealizado), 'var(--cyan,#00E5FF)',
+    + P.card('Não realizado', P.money(T.naoRealizado), 'var(--cyan,#00E5FF)',
         '<span class="' + P.cls(T.rentAberta) + '">' + P.pct(T.rentAberta) + '</span> sobre o investido', T.naoRealizado)
-    + P.card('Resultado realizado', P.money(T.realizado), 'var(--green,#14F195)',
+    + P.card('Realizado', P.money(T.realizado), 'var(--green,#14F195)',
         'lucro que você já materializou', T.realizado)
     + '</div>';
 
-  /* linha de resumo: total e retorno anualizado */
   html += '<div class="resumo-bar">'
     + '<div><span class="rb-lbl">Resultado total</span><b class="' + P.cls(T.resultadoTotal) + '">' + P.money(T.resultadoTotal) + '</b>'
     + '<small>realizado + não realizado</small></div>'
-    + '<div><span class="rb-lbl">Retorno anualizado <i class="hint" title="XIRR: o retorno que considera quando cada aporte entrou. É a métrica honesta quando você aporta em datas diferentes.">?</i></span>'
+    + '<div><span class="rb-lbl">Retorno anualizado <i class="hint" title="XIRR: considera quando cada aporte entrou. É a métrica honesta quando você aporta em datas diferentes — quem comprou na baixa não aparece igual a quem comprou no topo.">?</i></span>'
     + (xirr == null ? '<b class="mut">—</b><small>precisa de mais histórico</small>'
                     : '<b class="' + P.cls(xirr) + '">' + P.pct(xirr) + '</b><small>ao ano, ponderado pelo tempo</small>') + '</div>'
     + '<div><span class="rb-lbl">Taxas DeFi coletadas</span><b style="color:var(--cyan,#00E5FF)">' + P.money(T.taxasDeFi) + '</b>'
     + '<small>já incluídas no realizado</small></div>'
     + '</div>';
 
-  /* ─── evolução + distribuição ─── */
+  /* ═══ EVOLUÇÃO ═══ */
   var per = [['7d', '7D'], ['30d', '30D'], ['90d', '90D'], ['ytd', 'YTD'], ['1a', '1A'], ['tudo', 'Tudo']];
   var segs = '<div class="seg seg-sm">' + per.map(function (p) {
     return '<button data-per="' + p[0] + '" class="' + (P.periodo === p[0] ? 'on' : '') + '">' + p[1] + '</button>';
   }).join('') + '</div>';
 
-  var serie = C.serie(P.st, P.periodo);
-  html += '<div class="grid2">'
-    + (serie.suficiente
-        ? P.grafCard('chEvo', 'Evolução do patrimônio', false, segs)
-        : '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div><div class="right">' + segs + '</div></div>'
-          + '<div class="card-bd">' + P.vazio('Ainda não há histórico',
-              'O gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.',
-              '') + '</div></div>')
-    + P.grafCard('chPz', 'Distribuição por área', true)
-    + '</div>';
+  var varTxt = serie.suficiente
+    ? '<span class="' + P.cls(serie.variacao) + '">' + P.money(serie.variacao) + ' (' + P.pct(serie.variacaoPct) + ')</span> no período'
+    : '';
+  html += (serie.suficiente
+    ? '<div class="card"><div class="card-hd"><div><div class="card-title">Evolução do patrimônio</div>'
+      + (varTxt ? '<div class="card-sub">' + varTxt + '</div>' : '')
+      + '</div><div class="right">' + segs + '</div></div>'
+      + '<div class="card-bd"><div class="chart-box"><canvas id="chEvo"></canvas></div></div></div>'
+    : '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div><div class="right">' + segs + '</div></div>'
+      + '<div class="card-bd">' + P.vazio('Ainda não há histórico',
+          'O gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.', '')
+      + '</div></div>');
 
-  /* ─── carteiras + movimentações ─── */
+  /* ═══ ONDE ESTÁ MEU RISCO ═══
+     Barra empilhada no lugar do donut: com 8 posições o donut vira um
+     anel de fatias finas que ninguém compara. A barra mantém a leitura. */
+  html += '<div class="grid2b">' + P.blocoConcentracao(conc) + P.blocoContribuicao(contrib) + '</div>';
+
+  /* ═══ carteiras + movimentações ═══ */
   var carts = P.st.carteiras.map(function (c) {
     var t = C.totais(P.st, P.precos, c.id);
     return '<div class="rank-row" style="padding:.7rem 1.1rem"><span style="font-size:15px">👛</span>'
       + '<span class="rank-name">' + e(c.nome) + '</span><span class="rank-val">' + P.money(t.patrimonio) + '</span></div>';
   }).join('');
 
-  var ev = P.eventos(), lim = Math.min(P.histLim(), 10);
+  var ev = P.eventos(), lim = Math.min(P.histLim(), 8);
   var evH = ev.slice(0, lim).map(function (x) {
     return '<div class="tl-item"><span class="tl-date">' + P.dBR(x.dt) + '</span><span class="tl-txt">' + x.txt + '</span></div>';
   }).join('');
-  if (ev.length > lim) evH += '<div class="tl-item"><span class="tl-date">…</span><span class="tl-txt mut">e mais ' + (ev.length - lim) + ' movimentações</span></div>';
 
   html += '<div class="grid2b">'
     + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div><div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
     + (carts || '<div class="empty">Nenhuma carteira ainda</div>') + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div></div><div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div>'
+    + '<div class="right"><button class="btn btn-g btn-sm" id="btnExtrato">Ver extrato →</button></div></div>'
+    + '<div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>'
     + '</div>';
 
-  /* ─── tabela de ativos ─── */
   html += P.tabelaAtivos(P.posicoes(), true);
   html += P.planosCTA();
   document.getElementById('pg').innerHTML = html;
@@ -509,11 +521,16 @@ P.vDash = function () {
     if (P.st.carteiras.length >= P.limCart()) return P.upsell();
     P.formCarteira();
   };
+  document.getElementById('btnExtrato').onclick = P.verExtrato;
   document.querySelectorAll('[data-per]').forEach(function (b) {
     b.onclick = function () { P.periodo = b.dataset.per; P.render(); };
   });
+  /* clique numa linha de ativo abre o detalhe */
+  document.querySelectorAll('[data-ativo]').forEach(function (el) {
+    el.onclick = function () { P.verAtivo(el.dataset.ativo); };
+  });
 
-  /* gráficos */
+  /* ═══ gráficos ═══ */
   var r = P.rt(), brl = P.st.cfg.moeda === 'brl', pre = brl ? 'R$ ' : '$';
   if (serie.suficiente) {
     P.mkChart('chEvo', {
@@ -533,23 +550,239 @@ P.vDash = function () {
       options: {
         responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
         plugins: { legend: { display: false }, tooltip: { callbacks: { label: P.moneyCb() } } },
-        scales: { x: { grid: { display: false }, ticks: P.gTicks() }, y: { grid: P.gGrid(), ticks: Object.assign(P.gTicks(), { callback: function (v) { return pre + (Math.abs(v) >= 1000 ? (v / 1000) + 'k' : v); } }) } }
+        scales: { x: { grid: { display: false }, ticks: P.gTicks() },
+                  y: { grid: P.gGrid(), ticks: Object.assign(P.gTicks(), { callback: function (v) { return pre + (Math.abs(v) >= 1000 ? (v / 1000) + 'k' : v); } }) } }
       }
     });
   }
-  var dist = [T.hold.valor * r, T.defi.valor * r, T.trade.valor * r];
-  P.mkChart('chPz', {
-    type: 'doughnut',
-    data: { labels: ['HOLD', 'DeFi', 'Trade'], datasets: [{ data: dist, backgroundColor: ['#F5B614', '#14F195', '#00E5FF'], borderColor: '#0B1322', borderWidth: 3 }] },
-    options: {
-      responsive: true, maintainAspectRatio: false, cutout: '64%',
-      plugins: {
-        legend: { position: 'right', labels: { color: '#8B93A7', font: { family: 'Space Grotesk', size: 12 }, boxWidth: 12, boxHeight: 12 } },
-        tooltip: { callbacks: { label: function (c) { return ' ' + c.label + ': ' + pre + Math.round(c.raw).toLocaleString(brl ? 'pt-BR' : 'en-US'); } } }
+
+  /* Barra divergente: ganho para a direita, perda para a esquerda.
+     Responde "o que está me dando dinheiro" numa olhada. */
+  var top = contrib.linhas.slice(0, 8);
+  if (top.length) {
+    P.mkChart('chContrib', {
+      type: 'bar',
+      data: {
+        labels: top.map(function (l) { return l.nome; }),
+        datasets: [{
+          data: top.map(function (l) { return Math.round(l.total * r); }),
+          backgroundColor: top.map(function (l) { return l.total >= 0 ? 'rgba(20,241,149,.7)' : 'rgba(255,77,106,.7)'; }),
+          borderRadius: 5, borderSkipped: false
+        }]
+      },
+      options: {
+        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: P.moneyCb() } } },
+        scales: { x: { grid: P.gGrid(), ticks: Object.assign(P.gTicks(), { callback: function (v) { return pre + v; } }) },
+                  y: { grid: { display: false }, ticks: P.gTicks() } }
       }
-    }
-  });
+    });
+  }
   P.countUps();
+};
+
+/* ═══════════ BLOCO: onde está meu risco ═══════════ */
+P.blocoConcentracao = function (c) {
+  var e = P.esc;
+  if (!c.n) return '<div class="card"><div class="card-hd"><div class="card-title">Onde está meu risco</div></div>'
+    + '<div class="card-bd"><div class="empty">Sem posições abertas</div></div></div>';
+
+  var CORES = ['#9945FF', '#00E5FF', '#14F195', '#F5B614', '#FF4D6A', '#4D9FFF', '#B388FF', '#5FD0FF'];
+  var top = c.linhas.slice(0, 7);
+  var resto = c.linhas.slice(7);
+  var restoPct = resto.reduce(function (s, l) { return s + l.pct; }, 0);
+
+  var barra = top.map(function (l, i) {
+    return '<span class="cc-seg" style="width:' + l.pct.toFixed(2) + '%;background:' + CORES[i % CORES.length] + '" title="' + e(l.nome) + ': ' + l.pct.toFixed(1) + '%"></span>';
+  }).join('') + (restoPct > 0 ? '<span class="cc-seg" style="width:' + restoPct.toFixed(2) + '%;background:var(--mut2,#5D6880)" title="Outros: ' + restoPct.toFixed(1) + '%"></span>' : '');
+
+  var legenda = top.map(function (l, i) {
+    return '<div class="cc-item"><span class="cc-dot" style="background:' + CORES[i % CORES.length] + '"></span>'
+      + '<span class="cc-nome">' + e(l.nome) + (l.stable ? ' <small class="cc-tag">caixa</small>' : '') + '</span>'
+      + '<span class="cc-pct">' + l.pct.toFixed(1) + '%</span>'
+      + '<span class="cc-val">' + P.money(l.valor) + '</span></div>';
+  }).join('') + (resto.length ? '<div class="cc-item"><span class="cc-dot" style="background:var(--mut2,#5D6880)"></span>'
+      + '<span class="cc-nome mut">+ ' + resto.length + ' posição(ões)</span>'
+      + '<span class="cc-pct">' + restoPct.toFixed(1) + '%</span><span class="cc-val"></span></div>' : '');
+
+  /* O aviso vem do HHI, não de "quantos ativos você tem" — dez ativos com
+     um valendo 80% é uma carteira concentrada. */
+  var AVISO = {
+    unica:   ['info',    'Você tem uma posição só', 'Seu resultado é o resultado dela. Não é errado — só significa que diversificação ainda não se aplica aqui.'],
+    critica: ['alerta',  'Concentração crítica', c.maior.nome + ' é ' + c.maior.pct.toFixed(0) + '% de tudo. Uma queda de 50% nela derruba metade da sua carteira.'],
+    alta:    ['atencao', 'Concentração alta', c.maior.nome + ' pesa ' + c.maior.pct.toFixed(0) + '% e o top 3 soma ' + c.top3Pct.toFixed(0) + '%. Se foi escolha, tudo bem; se foi acidente de valorização, vale rever.'],
+    media:   ['info',    'Concentração moderada', 'O top 3 soma ' + c.top3Pct.toFixed(0) + '% do patrimônio.'],
+    baixa:   ['ok',      'Bem distribuída', 'Nenhuma posição domina: a maior é ' + c.maior.pct.toFixed(0) + '%.']
+  }[c.nivel];
+
+  return '<div class="card"><div class="card-hd"><div><div class="card-title">Onde está meu risco</div>'
+    + '<div class="card-sub">' + c.n + ' posições · caixa em stablecoin: ' + c.stablePct.toFixed(0) + '%</div></div>'
+    + '<div class="right"><span class="hhi" title="Índice HHI: soma dos quadrados das participações. Mede concentração melhor que contar ativos — 10 ativos de 10% dão 1.000; 1 ativo de 100% dá 10.000.">HHI ' + Math.round(c.hhi) + '</span></div></div>'
+    + '<div class="card-bd">'
+    + '<div class="cc-bar">' + barra + '</div>'
+    + '<div class="cc-lista">' + legenda + '</div>'
+    + '<div class="cc-aviso nx-' + AVISO[0] + '"><b>' + AVISO[1] + '</b><p>' + AVISO[2] + '</p></div>'
+    + '</div></div>';
+};
+
+/* ═══════════ BLOCO: o que está me dando dinheiro ═══════════ */
+P.blocoContribuicao = function (c) {
+  var e = P.esc;
+  if (!c.linhas.length) return '<div class="card"><div class="card-hd"><div class="card-title">O que está me dando dinheiro</div></div>'
+    + '<div class="card-bd"><div class="empty">Ainda sem resultado para atribuir</div></div></div>';
+
+  var grupos = c.grupos.map(function (g) {
+    return '<span class="cg-item"><span class="cg-nome">' + e(g.nome) + '</span>'
+      + '<b class="' + P.cls(g.total) + '">' + P.money(g.total) + '</b></span>';
+  }).join('');
+
+  var nota = '';
+  if (c.melhor && c.pior && c.melhor.nome !== c.pior.nome && c.pior.total < 0) {
+    nota = '<div class="cc-aviso nx-info"><b>' + e(c.melhor.nome) + ' puxa, ' + e(c.pior.nome) + ' segura</b>'
+      + '<p>' + e(c.melhor.nome) + ' contribuiu com ' + P.money(c.melhor.total)
+      + ' e ' + e(c.pior.nome) + ' com ' + P.money(c.pior.total) + '. Vale checar se a tese do segundo ainda vale de pé.</p></div>';
+  }
+
+  return '<div class="card"><div class="card-hd"><div><div class="card-title">O que está me dando dinheiro</div>'
+    + '<div class="card-sub">contribuição para o resultado, não peso na carteira</div></div></div>'
+    + '<div class="card-bd">'
+    + '<div class="cg-grupos">' + grupos + '</div>'
+    + '<div class="chart-box sm"><canvas id="chContrib"></canvas></div>'
+    + nota
+    + '</div></div>';
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   DRILL-DOWN DE UM ATIVO
+   O v1 mostrava uma linha de tabela e parava aí. Aqui dá para ver como
+   a posição foi construída: cada transação, o custo médio evoluindo e
+   o que já foi realizado em cada venda.
+   ══════════════════════════════════════════════════════════════════ */
+P.verAtivo = function (id) {
+  var C = window.PCore, e = P.esc;
+  var a = P.st.ativos.filter(function (x) { return x.id === id; })[0];
+  if (!a) return;
+  var p = C.posicao(P.st, id, P.precos[a.cg] != null ? P.precos[a.cg] : a.last);
+  var movs = C.movsDe(P.st, { ref: id });
+
+  var body = '<div class="mgrid mgrid-6" style="margin-bottom:1rem">'
+    + '<div class="mc sm"><div class="mc-lbl">Quantidade</div><div class="mc-val">' + p.qtd.toLocaleString('pt-BR', { maximumFractionDigits: 8 }) + '</div></div>'
+    + '<div class="mc sm"><div class="mc-lbl">Preço médio</div><div class="mc-val">' + P.money(p.custoMedio, 2) + '</div></div>'
+    + '<div class="mc sm"><div class="mc-lbl">Preço atual</div><div class="mc-val">' + P.money(p.precoAtual, 2) + '</div></div>'
+    + '<div class="mc sm"><div class="mc-lbl">Valor</div><div class="mc-val">' + P.money(p.valor) + '</div></div>'
+    + '<div class="mc sm"><div class="mc-lbl">Não realizado</div><div class="mc-val ' + P.cls(p.naoRealizado) + '">' + P.money(p.naoRealizado)
+    + '<small class="mc-pct">' + P.pct(p.naoRealizadoPct) + '</small></div></div>'
+    + '<div class="mc sm"><div class="mc-lbl">Realizado</div><div class="mc-val ' + (p.realizado ? P.cls(p.realizado) : '') + '">' + P.money(p.realizado) + '</div></div>'
+    + '</div>';
+
+  if (p.alertas.length) {
+    body += p.alertas.map(function (al) {
+      return '<div class="warn">⚠ ' + P.dBR(al.dt) + ' — ' + e(al.txt) + '</div>';
+    }).join('');
+  }
+  if (p.taxasPagas > 0) {
+    body += '<div class="notice">Você já pagou ' + P.money(p.taxasPagas) + ' em taxas neste ativo. Elas entram no custo na compra e reduzem a receita na venda.</div>';
+  }
+
+  /* Reconstrói o custo médio transação a transação: é aqui que a pessoa
+     entende POR QUE o preço médio dela é o que é. */
+  var qtd = 0, custo = 0;
+  var linhas = movs.map(function (m) {
+    var antes = qtd > 0 ? custo / qtd : 0, desta = 0;
+    if (m.tipo === 'compra') {
+      qtd += m.qtd; custo += m.qtd * m.px + m.fee;
+    } else {
+      var q = Math.min(m.qtd, qtd);
+      var baixa = antes * q;
+      desta = (q * m.px - m.fee) - baixa;
+      qtd -= q; custo -= baixa;
+    }
+    var medio = qtd > 0 ? custo / qtd : 0;
+    return '<tr><td class="mono" style="color:var(--mut)">' + P.dBR(m.dt) + '</td>'
+      + '<td><span class="badge ' + (m.tipo === 'compra' ? 'b-open' : 'b-closed') + '">' + (m.tipo === 'compra' ? 'Compra' : 'Venda') + '</span></td>'
+      + '<td class="num mono">' + m.qtd + '</td>'
+      + '<td class="num mono">' + P.money(m.px, 2) + '</td>'
+      + '<td class="num mono">' + (m.fee ? P.money(m.fee, 2) : '—') + '</td>'
+      + '<td class="num mono">' + qtd.toLocaleString('pt-BR', { maximumFractionDigits: 6 }) + '</td>'
+      + '<td class="num mono">' + (medio ? P.money(medio, 2) : '—') + '</td>'
+      + '<td class="num mono ' + (desta ? P.cls(desta) : 'mut') + '">' + (desta ? P.money(desta) : '—') + '</td></tr>';
+  }).reverse().join('');
+
+  body += '<div class="sb-sec" style="padding-left:0">Como esta posição foi construída</div>'
+    + '<div class="tblw"><table style="min-width:720px"><thead><tr>'
+    + '<th>Data</th><th>Tipo</th><th class="num">Qtd</th><th class="num">Preço</th><th class="num">Taxa</th>'
+    + '<th class="num">Saldo</th><th class="num">Preço médio</th><th class="num">Realizado</th>'
+    + '</tr></thead><tbody>' + (linhas || '<tr><td colspan="8"><div class="empty">Sem transações</div></td></tr>') + '</tbody></table></div>';
+
+  P.modal(e(a.tk) + ' <span style="color:var(--mut2);font-weight:400;font-size:12px">' + e(P.nomeCart(a.cart)) + '</span>',
+    body, { wide: true, footer: '<button class="btn btn-p" id="okAddTx">+ Transação</button>' });
+  var b = document.getElementById('okAddTx');
+  if (b) b.onclick = function () { P.closeModal(); P.formTx({ aid: id }); };
+};
+
+/* ══════════════════════════════════════════════════════════════════
+   EXTRATO — todas as movimentações num lugar só
+   Era o que faltava para o portfólio deixar de parecer planilha: um
+   lugar onde a pessoa confere e corrige o que registrou.
+   ══════════════════════════════════════════════════════════════════ */
+P.extratoFiltro = 'todos';
+P.verExtrato = function () {
+  var C = window.PCore, e = P.esc;
+  var grupos = [['todos', 'Tudo'], ['hold', 'HOLD'], ['defi', 'DeFi'], ['trade', 'Trade']];
+  var filtro = P.extratoFiltro;
+  var movs = C.movsDe(P.st, { cart: P.cart(), grupo: filtro === 'todos' ? null : filtro }).slice().reverse();
+
+  var nome = {};
+  P.st.ativos.forEach(function (a) { nome[a.id] = a.tk; });
+  P.st.pools.forEach(function (x) { nome[x.id] = x.par; });
+  P.st.lend.forEach(function (x) { nome[x.id] = x.plat; });
+
+  var linhas = movs.slice(0, P.histLim()).map(function (m) {
+    var t = C.TIPOS[m.tipo] || {};
+    /* trade_res guarda o sinal em px porque usd é sempre positivo */
+    var entra = m.tipo === 'trade_res' ? (m.px >= 0) : (t.sinal > 0 || t.sinal === 0);
+    return '<tr><td class="mono" style="color:var(--mut)">' + P.dBR(m.dt) + '</td>'
+      + '<td>' + e(t.lbl || m.tipo) + '</td>'
+      + '<td><b>' + e(nome[m.ref] || m.nota || '—') + '</b></td>'
+      + '<td class="num mono">' + (m.qtd != null ? m.qtd : '—') + '</td>'
+      + '<td class="num mono ' + (entra ? 'up' : 'down') + '">' + (entra ? '+' : '−') + P.money(m.usd) + '</td>'
+      + '<td class="num"><button class="btn-x" data-delmov="' + m.id + '" title="Excluir">×</button></td></tr>';
+  }).join('');
+
+  var abas = grupos.map(function (g) {
+    return '<button class="tab' + (filtro === g[0] ? ' on' : '') + '" data-ex="' + g[0] + '">' + g[1] + '</button>';
+  }).join('');
+
+  P.modal('Extrato de movimentações',
+    '<div class="tabs" style="margin-bottom:.9rem">' + abas
+      + '<span style="margin-left:auto;font-size:12px;color:var(--mut2)">' + movs.length + ' movimentação(ões)</span></div>'
+    + '<div class="tblw"><table style="min-width:640px"><thead><tr>'
+    + '<th>Data</th><th>Tipo</th><th>Onde</th><th class="num">Qtd</th><th class="num">Valor</th><th></th>'
+    + '</tr></thead><tbody>' + (linhas || '<tr><td colspan="6"><div class="empty">Nenhuma movimentação neste filtro</div></td></tr>')
+    + '</tbody></table></div>',
+    { wide: true, footer: P.exportBtn('extrato') });
+
+  document.querySelectorAll('[data-ex]').forEach(function (b) {
+    b.onclick = function () { P.extratoFiltro = b.dataset.ex; P.verExtrato(); };
+  });
+  document.querySelectorAll('[data-delmov]').forEach(function (b) {
+    b.onclick = function () {
+      if (!confirm('Excluir esta movimentação? O cálculo será refeito sem ela.')) return;
+      P.st.mov = P.st.mov.filter(function (m) { return m.id !== b.dataset.delmov; });
+      P.save(); P.render(); P.verExtrato();
+    };
+  });
+
+  P.exporters = P.exporters || {};
+  P.exporters.extrato = function () {
+    var L = [['Data', 'Tipo', 'Onde', 'Quantidade', 'Preco USD', 'Valor USD', 'Taxa USD', 'Nota']];
+    C.movsDe(P.st, { cart: P.cart() }).forEach(function (m) {
+      var t = C.TIPOS[m.tipo] || {};
+      L.push([m.dt, t.lbl || m.tipo, nome[m.ref] || '', m.qtd == null ? '' : m.qtd,
+              m.px == null ? '' : m.px.toFixed(2), m.usd.toFixed(2), m.fee.toFixed(2), m.nota || '']);
+    });
+    P.exportCSV('mundodefi-extrato', L);
+  };
 };
 
 /* Tabela de ativos compartilhada entre Dashboard e HOLD.
@@ -560,7 +793,7 @@ P.tabelaAtivos = function (pos, compacta) {
   var fechadas = pos.filter(function (p) { return p.qtd === 0; });
 
   var rows = abertas.map(function (p) {
-    return '<tr><td><div class="tk"><div class="tk-ic">' + e(p.tk.slice(0, 3)) + '</div><div><b>' + e(p.tk) + '</b><small>' + e(P.nomeCart(p.cart)) + '</small></div></div></td>'
+    return '<tr class="tr-click" data-ativo="' + p.id + '"><td><div class="tk"><div class="tk-ic">' + e(p.tk.slice(0, 3)) + '</div><div><b>' + e(p.tk) + '</b><small>' + e(P.nomeCart(p.cart)) + '</small></div></div></td>'
       + '<td class="num mono">' + p.qtd.toLocaleString('pt-BR', { maximumFractionDigits: 8 }) + '</td>'
       + '<td class="num mono">' + P.money(p.custoMedio, 2) + '</td>'
       + '<td class="num mono">' + P.money(p.precoAtual, 2) + '</td>'

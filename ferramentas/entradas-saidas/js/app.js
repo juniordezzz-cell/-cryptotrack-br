@@ -32,28 +32,28 @@
       return;
     }
 
-    function initLogoutAction() {
-      const logoutLinks = document.querySelectorAll("[data-logout]");
-      if (!logoutLinks.length) {
-        return;
-      }
+    dateInput.value = new Date().toISOString().slice(0, 10);
+  }
 
-      logoutLinks.forEach((link) => {
-        link.addEventListener("click", (event) => {
-          const auth = window.NexusAuth;
-          if (!auth || !auth.user || typeof auth.logout !== "function") {
-            return;
-          }
-          event.preventDefault();
-          Promise.resolve(auth.logout())
-            .finally(() => {
-              window.location.href = "/cadastro.html";
-            });
-        });
-      });
+  function initLogoutAction() {
+    const logoutLinks = document.querySelectorAll("[data-logout]");
+    if (!logoutLinks.length) {
+      return;
     }
 
-    dateInput.value = new Date().toISOString().slice(0, 10);
+    logoutLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const auth = window.NexusAuth;
+        if (!auth || !auth.user || typeof auth.logout !== "function") {
+          return;
+        }
+        event.preventDefault();
+        Promise.resolve(auth.logout())
+          .finally(() => {
+            window.location.href = "/cadastro.html";
+          });
+      });
+    });
   }
 
   document.addEventListener("DOMContentLoaded", () => {

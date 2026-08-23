@@ -277,6 +277,123 @@ C.registrarSnapshot(s10, { patrimonio: 100, investido: 0, realizado: 0, naoReali
 eqv('1 ponto = insuficiente (mostra estado vazio)', C.serie(s10, 'tudo').suficiente, false);
 eqv('zero pontos = insuficiente', C.serie(C.novoEstado(), 'tudo').suficiente, false);
 
+/* ══════════════════════════════════════════════════════════════
+   8. CONCENTRACAO DE RISCO
+   ══════════════════════════════════════════════════════════════ */
+sec('CONCENTRACAO: HHI enxerga o que "quantos ativos" esconde');
+function carteira(pesos){            // pesos = {TICKER: valorUSD}
+  var st = C.novoEstado();
+  st.carteiras.push({id:'c1',nome:'W'});
+  Object.keys(pesos).forEach(function(tk,i){
+    var id='a'+i;
+    st.ativos.push({id:id,tk:tk,cg:tk.toLowerCase(),cart:'c1',last:1});
+    C.addMov(st,{tipo:'compra',ref:id,cart:'c1',qtd:pesos[tk],px:1,dt:'2026-01-01'});
+  });
+  return st;
+}
+var precos1 = {};
+var st10 = carteira({A:10,B:10,C:10,D:10,E:10,F:10,G:10,H:10,I:10,J:10});
+'ABCDEFGHIJ'.split('').forEach(function(t){precos1[t.toLowerCase()]=1;});
+var c10 = C.concentracao(st10, precos1, 'all');
+eq('10 ativos iguais: HHI = 10 x 10^2', c10.hhi, 1000);
+eqv('nivel baixa', c10.nivel, 'baixa');
+eq('maior posicao 10%', c10.maior.pct, 10);
+
+var st1 = carteira({A:100});
+var c1 = C.concentracao(st1, {a:1}, 'all');
+eq('1 ativo so: HHI = 100^2', c1.hhi, 10000);
+eqv('nivel unica', c1.nivel, 'unica');
+
+sec('CONCENTRACAO: muitos ativos mas um domina');
+/* 5 ativos, mas um vale 80% — "tenho 5 ativos" esconde isso */
+var stD = carteira({A:80,B:5,C:5,D:5,E:5});
+var pD = {a:1,b:1,c:1,d:1,e:1};
+var cD = C.concentracao(stD, pD, 'all');
+eq('maior = 80%', cD.maior.pct, 80);
+eq('HHI = 80^2 + 4x5^2', cD.hhi, 6400+100);
+eqv('nivel critica', cD.nivel, 'critica');
+eqv('sao 5 posicoes', cD.n, 5);
+eq('top3 = 90%', cD.top3Pct, 90);
+
+sec('CONCENTRACAO: stablecoin contada a parte');
+var stS = carteira({BTC:50,USDC:50});
+var cS = C.concentracao(stS, {btc:1,usdc:1}, 'all');
+eq('stable = 50% do patrimonio', cS.stablePct, 50);
+eq('stable em valor', cS.stableValor, 50);
+eqv('USDC marcada como stable', cS.linhas.filter(function(l){return l.nome==='USDC';})[0].stable, true);
+eqv('BTC nao e stable', cS.linhas.filter(function(l){return l.nome==='BTC';})[0].stable, false);
+
+sec('CONCENTRACAO: pool e banca ocupam espaco na carteira');
+var stP = carteira({BTC:100});
+stP.pools.push({id:'p',par:'SOL/USDC',cart:'c1',st:'a',ab:'2026-01-01',cur:{usd:100}});
+C.addMov(stP,{tipo:'pool_dep',ref:'p',cart:'c1',usd:100,dt:'2026-01-01'});
+var cP = C.concentracao(stP, {btc:1}, 'all');
+eqv('duas linhas: ativo + pool', cP.n, 2);
+eq('BTC deixa de ser 100%', cP.maior.pct, 50);
+eq('HHI de 50/50', cP.hhi, 5000);
+
+sec('CONCENTRACAO: carteira vazia nao explode');
+var cV = C.concentracao(C.novoEstado(), {}, 'all');
+eqv('zero linhas', cV.n, 0);
+eq('hhi zero', cV.hhi, 0);
+eqv('maior e null', cV.maior, null);
+
+/* ══════════════════════════════════════════════════════════════
+   9. CONTRIBUICAO PARA O RESULTADO
+   ══════════════════════════════════════════════════════════════ */
+sec('CONTRIBUICAO: quem pesa nao e quem rende');
+var stC = C.novoEstado();
+stC.carteiras.push({id:'c1',nome:'W'});
+/* BTC: posicao grande, ganho pequeno.  SOL: posicao pequena, ganho grande. */
+stC.ativos.push({id:'b',tk:'BTC',cg:'bitcoin',cart:'c1',last:0});
+stC.ativos.push({id:'s',tk:'SOL',cg:'solana',cart:'c1',last:0});
+C.addMov(stC,{tipo:'compra',ref:'b',cart:'c1',qtd:1,px:1000,dt:'2026-01-01'});
+C.addMov(stC,{tipo:'compra',ref:'s',cart:'c1',qtd:1,px:100,dt:'2026-01-01'});
+var precosC = {bitcoin:1100, solana:400};   // BTC +100 (10%), SOL +300 (300%)
+var contrib = C.contribuicao(stC, precosC, 'all');
+eq('BTC contribuiu 100', contrib.linhas.filter(function(l){return l.nome==='BTC';})[0].total, 100);
+eq('SOL contribuiu 300', contrib.linhas.filter(function(l){return l.nome==='SOL';})[0].total, 300);
+eqv('SOL lidera a contribuicao', contrib.melhor.nome, 'SOL');
+eq('SOL = 75% do resultado', contrib.linhas[0].pct, 75);
+/* mas BTC pesa mais na carteira */
+var conc = C.concentracao(stC, precosC, 'all');
+eqv('e BTC lidera a alocacao', conc.maior.nome, 'BTC');
+
+sec('CONTRIBUICAO: ganho e perda nao se anulam no percentual');
+var stG = C.novoEstado();
+stG.carteiras.push({id:'c1',nome:'W'});
+stG.ativos.push({id:'g',tk:'GANHO',cg:'g',cart:'c1',last:0});
+stG.ativos.push({id:'p',tk:'PERDA',cg:'p',cart:'c1',last:0});
+C.addMov(stG,{tipo:'compra',ref:'g',cart:'c1',qtd:1,px:100,dt:'2026-01-01'});
+C.addMov(stG,{tipo:'compra',ref:'p',cart:'c1',qtd:1,px:100,dt:'2026-01-01'});
+var cg2 = C.contribuicao(stG, {g:200, p:0.0001}, 'all');
+eq('resultado liquido perto de zero', Math.round(cg2.resultadoTotal), 0);
+eq('mesmo assim cada um pesa 50%', cg2.linhas[0].pct, 50, 0.1);
+eqv('melhor e GANHO', cg2.melhor.nome, 'GANHO');
+eqv('pior e PERDA', cg2.pior.nome, 'PERDA');
+
+sec('CONTRIBUICAO: agrupa por area');
+var stA = C.novoEstado();
+stA.carteiras.push({id:'c1',nome:'W'});
+stA.ativos.push({id:'a',tk:'BTC',cg:'bitcoin',cart:'c1',last:0});
+C.addMov(stA,{tipo:'compra',ref:'a',cart:'c1',qtd:1,px:100,dt:'2026-01-01'});
+stA.pools.push({id:'p',par:'X/Y',cart:'c1',st:'a',ab:'2026-01-01',cur:{usd:100}});
+C.addMov(stA,{tipo:'pool_dep',ref:'p',cart:'c1',usd:100,dt:'2026-01-01'});
+C.addMov(stA,{tipo:'pool_fee',ref:'p',cart:'c1',usd:30,dt:'2026-02-01'});
+C.addMov(stA,{tipo:'trade_dep',cart:'c1',usd:500,dt:'2026-01-01'});
+C.addMov(stA,{tipo:'trade_res',cart:'c1',usd:70,px:1,dt:'2026-02-01'});
+var cA = C.contribuicao(stA, {bitcoin:150}, 'all');
+var porGrupo = {}; cA.grupos.forEach(function(g){porGrupo[g.nome]=g.total;});
+eq('HOLD contribuiu 50', porGrupo['HOLD'], 50);
+eq('DeFi contribuiu 30 (taxas)', porGrupo['DeFi'], 30);
+eq('Trade contribuiu 70', porGrupo['Trade'], 70);
+eq('soma dos grupos = resultado total', porGrupo['HOLD']+porGrupo['DeFi']+porGrupo['Trade'], cA.resultadoTotal);
+
+sec('CONTRIBUICAO: portfolio vazio');
+var cVz = C.contribuicao(C.novoEstado(), {}, 'all');
+eqv('sem linhas', cVz.linhas.length, 0);
+eqv('sem melhor', cVz.melhor, null);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

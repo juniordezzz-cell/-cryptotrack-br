@@ -403,3 +403,57 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
   .resumo-bar,.resumo-bar.resumo-4{grid-template-columns:1fr}
   .zero{padding:2rem 1rem}
 }
+
+/* ═══════════════ v6 — DASHBOARD ═══════════════
+   Blocos que respondem duas perguntas que a alocação sozinha não responde:
+   onde está o risco, e o que está dando dinheiro. */
+
+/* ── barra empilhada de concentração ──
+   Substitui o donut: com 8 posições o donut vira um anel de fatias finas
+   que ninguém consegue comparar. A barra mantém a leitura. */
+.cc-bar{display:flex;height:10px;border-radius:99px;overflow:hidden;background:var(--panel2);margin-bottom:1rem}
+.cc-seg{height:100%;transition:filter .15s}
+.cc-seg:hover{filter:brightness(1.25)}
+.cc-lista{display:flex;flex-direction:column;gap:7px;margin-bottom:1rem}
+.cc-item{display:flex;align-items:center;gap:9px;font-size:12.5px}
+.cc-dot{width:9px;height:9px;border-radius:3px;flex-shrink:0}
+.cc-nome{font-weight:600;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cc-tag{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;
+  color:var(--cyan,#00E5FF);background:var(--cyan-soft);padding:1px 6px;border-radius:4px}
+.cc-pct{font-family:var(--mono);font-size:12px;font-weight:700;min-width:48px;text-align:right}
+.cc-val{font-family:var(--mono);font-size:11.5px;color:var(--mut2);min-width:78px;text-align:right}
+
+/* aviso de concentração, reaproveitando as cores de severidade do Nexus */
+.cc-aviso{border-radius:10px;padding:.75rem .9rem;border-left:2px solid var(--nx-sev,var(--line2));
+  background:rgba(255,255,255,.025)}
+.cc-aviso b{font-size:12.5px;display:block;margin-bottom:.25rem}
+.cc-aviso p{font-size:12px;color:var(--mut);line-height:1.55}
+.cc-aviso.nx-alerta{--nx-sev:var(--red,#FF4D6A)}
+.cc-aviso.nx-atencao{--nx-sev:var(--gold,#F5B614)}
+.cc-aviso.nx-ok{--nx-sev:var(--green,#14F195)}
+.cc-aviso.nx-info{--nx-sev:var(--cyan,#00E5FF)}
+
+/* índice HHI no cabeçalho do card */
+.hhi{font-family:var(--mono);font-size:10.5px;font-weight:700;letter-spacing:.04em;
+  color:var(--mut);background:var(--panel2);border:1px solid var(--line);
+  padding:3px 9px;border-radius:99px;cursor:help}
+
+/* ── contribuição por área ── */
+.cg-grupos{display:flex;gap:1px;background:var(--line);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;margin-bottom:1rem}
+.cg-item{flex:1;background:var(--panel);padding:.6rem .8rem;display:flex;flex-direction:column;gap:2px}
+.cg-nome{font-size:10.5px;color:var(--mut2);text-transform:uppercase;letter-spacing:.08em}
+.cg-item b{font-family:var(--mono);font-size:14px;font-weight:700}
+
+/* subtítulo do card — explica o que o número quer dizer */
+.card-sub{font-size:11.5px;color:var(--mut2);margin-top:2px;line-height:1.4}
+
+/* linha de tabela que abre detalhe */
+.tr-click{cursor:pointer;transition:background .13s}
+.tr-click:hover{background:rgba(255,255,255,.03)}
+.tr-click:hover .tk-ic{filter:brightness(1.2)}
+
+@media(max-width:760px){
+  .cg-grupos{flex-direction:column}
+  .cc-val{display:none}
+}
