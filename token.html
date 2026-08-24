@@ -1000,7 +1000,15 @@ function aplicarSEO(id, nome, sym, logo) {
   if (logo) _seoLogo = logo;
   logo = _seoLogo;
 
-  var url = SITE + '/token.html?id=' + encodeURIComponent(id);
+  /* Quando existe pagina escrita para esta moeda em /moedas/, e' ela que
+     deve ser indexada: tem o texto no HTML, enquanto esta aqui so' se monta
+     depois do JavaScript. O conjunto de paginas geradas e' exatamente o
+     conjunto de moedas com texto curado, entao _descCache serve de indice
+     sem precisar de outra chamada. */
+  var temPaginaPropria = (typeof _descCache !== 'undefined' && _descCache && _descCache[id]);
+  var url = temPaginaPropria
+    ? SITE + '/moedas/' + encodeURIComponent(id) + '.html'
+    : SITE + '/token.html?id=' + encodeURIComponent(id);
   var titulo = tituloDeBusca(nome, sym);
   var desc = descricaoDeBusca(id, nome, sym);
 

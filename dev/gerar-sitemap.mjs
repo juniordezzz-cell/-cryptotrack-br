@@ -6,9 +6,10 @@
    ║  mesmo problema das listas de ferramentas em triplicata: mantido à   ║
    ║  mão, ele diverge.                                                   ║
    ║                                                                      ║
-   ║  Aqui as ferramentas saem de /mundodefi-catalogo.js, as páginas de   ║
-   ║  token saem de /mundodefi-ids.json (que já vem ordenado por          ║
-   ║  capitalização), e cada URL só entra se o arquivo existir no disco.  ║
+   ║                                                                      ║
+   ║  As ferramentas saem de /mundodefi-catalogo.js; as páginas de moeda  ║
+   ║  saem de /moedas/, escritas por dev/gerar-paginas-token.mjs. Cada   ║
+   ║  URL só entra se o arquivo existir no disco.                         ║
    ║                                                                      ║
    ║  ── COMO RODAR ──────────────────────────────────────────────────    ║
    ║      node dev/gerar-sitemap.mjs                                      ║
@@ -21,11 +22,6 @@ import { fileURLToPath } from 'node:url';
 
 const RAIZ = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const SITE = 'https://mundodefi.com.br';
-
-/* Quantas páginas de token entram. Listar as ~350 que temos encheria o
-   sitemap de páginas que ninguém procura; o valor está nas moedas que o
-   brasileiro de fato digita no Google. */
-const TOKENS_NO_SITEMAP = 40;
 
 /* Data da última alteração de verdade, do arquivo. Carimbar tudo com hoje
    é ruído: o Google aprende a ignorar lastmod de quem mente. */
@@ -71,15 +67,20 @@ for (const item of cat.itens) {
   add(url, arquivo, 'monthly', item.destaque ? '0.9' : '0.8');
 }
 
-/* ── páginas de token ─────────────────────────────────────────────── */
-const ids = Object.keys(JSON.parse(
-  fs.readFileSync(path.join(RAIZ, 'mundodefi-ids.json'), 'utf8')).ids
-).slice(0, TOKENS_NO_SITEMAP);
-const modToken = modificadoEm('token.html');
-for (const id of ids) {
+/* ── páginas de moeda ─────────────────────────────────────────
+   Antes o sitemap listava /token.html?id=X, que serve tudo por JavaScript:
+   um rastreador que não executa JS via 202 caracteres. As páginas em
+   /moedas/ trazem o texto no HTML cru. Só entra quem foi gerado — ou seja,
+   quem tem descrição escrita. Ver dev/gerar-paginas-token.mjs. */
+const dirMoedas = path.join(RAIZ, 'moedas');
+const moedas = fs.existsSync(dirMoedas)
+  ? fs.readdirSync(dirMoedas).filter(f => f.endsWith('.html')).sort()
+  : [];
+for (const arq of moedas) {
   urls.push({
-    loc: '/token.html?id=' + id,
-    lastmod: modToken, changefreq: 'daily', priority: '0.6'
+    loc: '/moedas/' + arq,
+    lastmod: modificadoEm('moedas/' + arq),
+    changefreq: 'weekly', priority: '0.7'
   });
 }
 
@@ -97,5 +98,5 @@ fs.writeFileSync(path.join(RAIZ, 'sitemap.xml'),
   + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
   + linhas.join('\n') + '\n</urlset>\n');
 
-console.log(`\n${urls.length} URLs (${urls.length - ids.length} paginas + ${ids.length} tokens)`);
+console.log(`\n${urls.length} URLs (${urls.length - moedas.length} paginas + ${moedas.length} moedas)`);
 console.log('Gravado em sitemap.xml');
