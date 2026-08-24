@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script src="/mundodefi-api.js?v=2026-08-29"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-30"></script>
+<script src="/ferramentas-core.js?v=2026-08-30"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-30" type="image/svg+xml">
 <title>Calculadora de Pool de Liquidez Grátis | MundoDeFi</title>
 <meta name="description" content="Calculadora de impermanent loss grátis: simule pools de liquidez 50/50, 80/20 e stable, compare com HOLD e descubra se as taxas compensam o IL.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/pool-liquidez.html">
@@ -20,8 +21,8 @@
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-30">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-30">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -324,9 +325,9 @@ select option{background:var(--surface2);color:var(--text)}
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-30" defer></script>
 
 <script>
 
@@ -384,25 +385,17 @@ function calcPool(){
      estimativa CONSERVADORA: pools tipo Curve concentram liquidez
      perto do peg e costumam ter IL menor que o exibido aqui. Errar
      para o lado de mostrar mais risco e o lado seguro.)              */
+  /* A conta mora em /ferramentas-core.js, testada no Node contra os
+     valores canonicos de impermanent loss. A formula estava correta aqui,
+     mas existia em duas copias -- esta e a do portfolio -- e duas copias
+     da mesma formula divergem com o tempo. */
   var w1 = tipo==='80/20' ? 0.8 : 0.5;
-  var w2 = 1 - w1;
-  var IL_pct = (Math.pow(r,w1)/(w1*r+w2) - 1) * 100;
-  if(IL_pct>0) IL_pct=0;   /* IL nunca e ganho; r=1 pode dar +1e-15 */
-
-  /* O benchmark de HOLD respeita os mesmos pesos. Antes assumia 50/50
-     inclusive no modo 80/20, o que deslocava a comparacao inteira. */
-  var valorHold = deposito*(w1*r + w2);
-  var valorPool = valorHold*(1 + IL_pct/100);
-  var taxas=deposito*apr*(dias/365);
-  var final=valorPool+taxas;
-  var roi=((final/deposito)-1)*100;
-  var ilPerda=valorHold-valorPool;
-  /* A pergunta util nao e "as taxas cobrem o IL" no vacuo — e "eu teria
-     ficado melhor fornecendo liquidez ou apenas segurando os tokens?".
-     Comparar final contra valorHold responde exatamente isso e evita o
-     caso em que o ativo despenca: o IL fica coberto pelas taxas, mas o
-     ROI e negativo porque o par caiu, nao porque a pool falhou. */
-  var vsHold=final-valorHold;
+  var R = window.FerramentasCore.pool({
+    deposito:deposito, precoIni:precoIni, precoFim:precoFim,
+    aprPct:apr*100, dias:dias, w1:w1
+  });
+  var IL_pct=R.ilPct, valorHold=R.valorHold, valorPool=R.valorPool;
+  var taxas=R.taxas, final=R.final, roi=R.roiPct, ilPerda=R.ilPerda, vsHold=R.vsHold;
   var ilCompensa=vsHold>0;
   document.getElementById('pool-hold').textContent='$'+fm(valorHold);
   document.getElementById('pool-valor-pool').textContent='$'+fm(valorPool);

@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script src="/mundodefi-api.js?v=2026-08-29"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-30"></script>
+<script src="/ferramentas-core.js?v=2026-08-30"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-30" type="image/svg+xml">
 <title>Calculadora de Juros Compostos Grátis | MundoDeFi</title>
 <meta name="description" content="Calculadora de juros compostos grátis com aportes mensais, gráfico e tabela. Simule em Real, Dólar ou Euro e planeje seu patrimônio cripto.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/juros-compostos.html">
@@ -29,8 +30,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
 <!-- ÚNICO visual: cores + layout compartilhado -->
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-30">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-30">
 
 <style>
 /* Específico desta ferramenta (não está no arquivo compartilhado):
@@ -206,9 +207,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-30" defer></script>
 
 <!-- miolo da ferramenta (cotação + cálculo — lógica preservada) -->
 <script>
@@ -272,14 +273,20 @@ function jCalcular(){
   var per=parseInt(document.getElementById('j-periodo').value)||0;
   var tipoPer=document.getElementById('j-tipoPeriodo').value;
   var ret=parseFloat(document.getElementById('j-retirada').value)||0;
-  var taxaMen=tipoT==='anual'?Math.pow(1+taxa/100,1/12)-1:taxa/100;
+  /* A conta mora em /ferramentas-core.js, testada no Node. O laco que
+     ficava aqui aplicava juros tambem no mes 0, antes de passar tempo
+     nenhum: R$ 1.000 a 1% por 12 meses davam R$ 1.138,09 em vez de
+     R$ 1.126,83 -- treze capitalizacoes onde deviam ser doze. */
+  var F=window.FerramentasCore;
+  var taxaMen=tipoT==='anual'?F.anualParaMensal(taxa):taxa/100;
   var meses=tipoPer==='anos'?per*12:per;
-  var dados=[],saldo=ini,totalInv=ini,totalJ=0;
-  for(var m=0;m<=meses;m++){var j=saldo*taxaMen;totalJ+=j;saldo+=j;if(m>0){totalInv+=men;saldo+=men;saldo-=ret;if(saldo<0)saldo=0;}dados.push({mes:m,juros:j,investido:totalInv,totalJuros:totalJ,acumulado:saldo});}
-  var ul=dados[dados.length-1];
-  document.getElementById('j-r-total').textContent=jFmt(ul.acumulado);
-  document.getElementById('j-r-inv').textContent=jFmt(ul.investido);
-  document.getElementById('j-r-juros').textContent=jFmt(ul.totalJuros);
+  var R=F.jurosCompostos({inicial:ini,aporte:men,taxaMensal:taxaMen,meses:meses,retirada:ret});
+  var dados=R.serie.map(function(p){
+    return {mes:p.mes,juros:p.juros,investido:p.investido,totalJuros:p.jurosAcumulados,acumulado:p.saldo};
+  });
+  document.getElementById('j-r-total').textContent=jFmt(R.saldoFinal);
+  document.getElementById('j-r-inv').textContent=jFmt(R.investido);
+  document.getElementById('j-r-juros').textContent=jFmt(R.jurosTotais);
   if(jChartInst){jChartInst.destroy();jChartInst=null;}
   document.getElementById('j-resultado').style.display='block';
   setTimeout(function(){

@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script src="/mundodefi-api.js?v=2026-08-29"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-30"></script>
+<script src="/ferramentas-core.js?v=2026-08-30"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-30" type="image/svg+xml">
 <title>Simulador de Staking Cripto Grátis | MundoDeFi</title>
 <meta name="description" content="Simulador de staking grátis: calcule o rendimento em APR ou APY, com preço ao vivo, para qualquer token — Binance, Orca, Jupiter, Hyperliquid e mais.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/staking.html">
@@ -24,8 +25,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-30">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-30">
 
 <style>
 /* Específico desta ferramenta (não está no compartilhado):
@@ -298,9 +299,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-30" defer></script>
 
 <!-- JSON-LD FAQ -->
 <script type="application/ld+json">
@@ -367,10 +368,13 @@ document.getElementById('horizonSeg').addEventListener('click',function(e){var b
 
 // ══════════ CÁLCULO ══════════
 var _last=null;
+/* A conta mora em /ferramentas-core.js, testada no Node. A formula aqui
+   ja estava certa -- APR simples, APY como taxa efetiva ao ano -- e foi
+   movida para o nucleo para existir em um lugar so. */
 function ganho(qtd,taxa,meses){
-  var anos=meses/12;
-  if(RATE==='apr')return qtd*taxa*anos;            // simples
-  return qtd*(Math.pow(1+taxa,anos)-1);            // composto (APY)
+  return window.FerramentasCore.staking({
+    quantidade:qtd, taxaPct:taxa*100, meses:meses, modo:RATE
+  }).rendimento;
 }
 function calcular(){
   var sym=(document.getElementById('tokenSym').value||'TOKEN').trim().toUpperCase();

@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-29"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-30"></script>
+<script src="/ferramentas-core.js?v=2026-08-30"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-30" type="image/svg+xml">
 <title>Simulador de Trade com Alavancagem e Gestão de Banca | MundoDeFi</title>
 <meta name="description" content="Simule trades com alavancagem, long e short: lucro, prejuízo, stop loss e preço de liquidação em tempo real, com gestão de banca.">
 <meta name="keywords" content="simulador de trade, calculadora de alavancagem, gestão de banca, long short cripto, preço de liquidação, stop loss, take profit, simulador de banca cripto">
@@ -23,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-30">
 <style>
 :root{
   /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
@@ -653,8 +654,8 @@ body.mdf-locked [data-mdf-lock-zone]::after{
   </div>
 </footer>
 
-<script src="/nexus/nexus-auth.js?v=2026-08-29"></script>
-<script src="/pro-gate.js?v=2026-08-29"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-30"></script>
+<script src="/pro-gate.js?v=2026-08-30"></script>
 <script>
 /* ══════════════════════════════════════
    ESTADO
@@ -674,9 +675,15 @@ let banca = { inicial: 50, atual: 50, entradas: [] };
    Taxas de corretagem e funding tambem nao entram na conta.          */
 const MMR = 0.005;
 
-/* Perda percentual da margem em que a posicao e liquidada.
-   equity <= notional * MMR  =>  pnlPct <= (lev*MMR - 1) * 100        */
-function limiteLiquidacao(lev){ return (lev * MMR - 1) * 100; }
+/* Deducao exata em /ferramentas-core.js, testada no Node.
+
+   A versao que ficava aqui aplicava a margem de manutencao sobre a
+   posicao ao preco de ENTRADA. A diferenca era pequena mas tinha sinal:
+   no long liquidava cedo demais (lado seguro) e no SHORT tarde demais --
+   dizia que voce tinha mais folga do que tem, que e o lado perigoso.  */
+function limiteLiquidacao(lev){
+  return window.FerramentasCore.limiteLiquidacaoPct(lev, dir, MMR);
+}
 
 let ultimoLiquido = 0;       // resultado projetado do take profit (no alvo)
 let ultimoLiquidado = false;
@@ -984,7 +991,7 @@ function calcular(){
 
   /* long:  entrada * (1 - 1/lev + MMR)   short: entrada * (1 + 1/lev - MMR)
      O termo MMR aproxima a liquidacao da entrada — e menos folga, nao mais. */
-  let liq = dir==='long' ? entrada*(1-(1/lev)+MMR) : entrada*(1+(1/lev)-MMR);
+  let liq = window.FerramentasCore.precoLiquidacao({entrada:entrada, alavancagem:lev, direcao:dir, mmr:MMR});
   if(liq < 0) liq = 0;
   el('card-liq').textContent = fmt(liq);
 

@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script src="/mundodefi-api.js?v=2026-08-29"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-30"></script>
+<script src="/ferramentas-core.js?v=2026-08-30"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-30" type="image/svg+xml">
 <title>Calculadora de Lucro Cripto Grátis | MundoDeFi</title>
 <meta name="description" content="Calculadora de lucro cripto grátis: descubra seu lucro líquido real com preço de entrada, saída e taxas de exchange, em dólar e em reais.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/lucro-cripto.html">
@@ -26,8 +27,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-30">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-30">
 
 <style>
 /* Específico desta ferramenta (não está no compartilhado):
@@ -206,9 +207,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-29" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-30" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-30" defer></script>
 
 <!-- miolo da ferramenta (busca de token + cálculo de lucro — lógica preservada) -->
 <script>
@@ -381,13 +382,18 @@ function lcCalcular(){
   var fee=parseFloat(document.getElementById('lc-fee').value)||0;
   var usdBrl=parseFloat(document.getElementById('lc-usd-brl').value)||5;
   if(!qty||!buy||!sell){alert('Preencha quantidade, preço de compra e preço de venda.');return;}
-  var investido=qty*buy;var saida=qty*sell;
-  var feeCompra=investido*fee/100;var feeVenda=saida*fee/100;
-  var totalFees=feeCompra+feeVenda;
-  var lucro_liq=(saida-investido)-totalFees;
-  /* variação LÍQUIDA: coerente com o lucro exibido ao lado dela.
-     Antes isto era a variação bruta e os dois números não batiam. */
-  var pct=investido>0?lucro_liq/investido*100:0;
+  /* A conta mora em /ferramentas-core.js, testada no Node.
+
+     O percentual era medido sobre (quantidade x preço de compra),
+     ignorando que a taxa da compra também saiu do bolso. O portfólio do
+     mesmo site soma a taxa ao custo -- então a mesma pergunta tinha duas
+     respostas dependendo de onde era feita. Agora a base é o desembolso
+     real nos dois lugares. */
+  var R=window.FerramentasCore.lucroOperacao({
+    quantidade:qty, precoCompra:buy, precoVenda:sell, taxaPct:fee
+  });
+  var investido=R.investido, saida=R.recebido, totalFees=R.taxas;
+  var lucro_liq=R.lucro, pct=R.lucroPct;
   function fUSD(v){return(v>=0?'':'−')+'$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
   function fBRL(v){return(v>=0?'':'−')+'R$ '+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
   var rLucro=document.getElementById('lc-r-lucro');rLucro.textContent=fUSD(lucro_liq);rLucro.style.color=lucro_liq>=0?'var(--verde)':'var(--vermelho)';
