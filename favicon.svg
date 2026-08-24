@@ -3,7 +3,15 @@
        arredondado com gradiente dourado e o simbolo do bitcoin. Aqui ela
        virou arquivo porque o site nao tinha favicon nenhum, e favicon
        aparece na aba do navegador E no resultado de busca do Google.
-       Proporcoes conferidas com o CSS: raio 11/40, fonte 27/40. -->
+       Proporcoes conferidas com o CSS: raio 11/40, fonte 27/40.
+
+       FONTE: nao use Georgia aqui. Georgia NAO tem o glifo U+20BF (o
+       simbolo do bitcoin) -- ela ja tinha feito o simbolo virar retangulo
+       vazio na imagem de compartilhamento. Como aqui o desenho depende da
+       fonte que cada aparelho resolve usar, o risco volta. Os PNG da raiz
+       (favicon.ico, apple-touch-icon.png) sao gerados por
+       dev/gerar-favicons.py com Arial Bold, que tem o glifo, e nao
+       dependem de fonte nenhuma no dispositivo. -->
   <defs>
     <linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#FFD44F"/>
@@ -13,6 +21,6 @@
   </defs>
   <rect width="512" height="512" rx="141" ry="141" fill="url(#ouro)"/>
   <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
-        font-family="Georgia, 'Times New Roman', serif" font-size="378" font-weight="700"
+        font-family="Arial, 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif" font-size="330" font-weight="700"
         fill="#241A04">₿</text>
 </svg>
