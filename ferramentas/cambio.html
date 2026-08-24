@@ -20,6 +20,7 @@
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/cambio.html">
 <meta property="og:locale" content="pt_BR">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/cambio.html">
+<script src="/ferramentas-core.js?v=2026-09-01"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -265,19 +266,23 @@ async function carregarCotacao() {
   const t = d['tether'], c = d['usd-coin'];
   if (!t || !c) throw new Error('dados');
 
-  // valor em USD de 1 unidade de cada moeda
+  /* Valor em USD de 1 unidade de cada moeda. A divisao mora no nucleo
+     testado: invertida, ela devolveria "1 real vale 5,17 dolares" com
+     formato impecavel e sentido de cabeca para baixo. */
+  const FC = window.FerramentasCore;
   valorUSD = {
     usd:  1,
-    brl:  t.usd / t.brl,
-    eur:  t.usd / t.eur,
-    gbp:  t.usd / t.gbp,
+    brl:  FC.valorEmDolar(t.usd, t.brl),
+    eur:  FC.valorEmDolar(t.usd, t.eur),
+    gbp:  FC.valorEmDolar(t.usd, t.gbp),
     usdt: t.usd,
     usdc: c.usd,
   };
 }
 
 // ---------- conversão ----------
-const converter = (valor, de, para) => valor * valorUSD[de] / valorUSD[para];
+const converter = (valor, de, para) =>
+  window.FerramentasCore.converterMoeda(valor, valorUSD[de], valorUSD[para]);
 
 function recalcular(origem) {
   if (!valorUSD) return;
@@ -290,7 +295,7 @@ function recalcular(origem) {
   }
   atualizarTaxas();
 }
-const fmtCampo = v => v.toLocaleString('pt-BR', { maximumFractionDigits: Math.abs(v) < 1 && v !== 0 ? 6 : 2 });
+const fmtCampo = v => (v === null || !isFinite(v)) ? '' : v.toLocaleString('pt-BR', { maximumFractionDigits: Math.abs(v) < 1 && v !== 0 ? 6 : 2 });
 
 // ---------- hero + rodapé + tabela ----------
 function atualizarTaxas() {
@@ -352,7 +357,8 @@ async function iniciar() {
   }
 }
 iniciar();
-// atualiza a cotação a cada 60s (respeita o rate limit da CoinGecko gratuita)
+// atualiza a cotação a cada 60s (a chamada sai pela camada de
+// /mundodefi-api.js, que hoje resolve na CoinPaprika)
 setInterval(() => { carregarCotacao().then(() => recalcular(ultimoCampo)).catch(()=>{}); }, 60000);
 </script>
 
