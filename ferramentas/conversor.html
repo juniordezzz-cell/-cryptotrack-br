@@ -155,7 +155,7 @@
 
     </div>
     <div class="conversor-rodape">
-      <span>Fonte: CoinGecko · sem taxas, só a cotação de mercado</span>
+      <span>Fonte: CoinPaprika · sem taxas, só a cotação de mercado</span>
       <span id="taxa-inversa">—</span>
     </div>
   </div>
@@ -163,7 +163,7 @@
   <!-- ===== GRÁFICO ===== -->
   <section>
     <h2><span class="ico">📈</span>Gráfico <span id="grafico-titulo">SOL/BRL</span></h2>
-    <p class="sub">Evolução do preço na moeda selecionada, direto da CoinGecko.</p>
+    <p class="sub">Evolução do preço na moeda selecionada, direto da DefiLlama.</p>
     <div class="grafico-card">
       <div class="grafico-topo">
         <div>
@@ -228,7 +228,7 @@
 
     <details>
       <summary id="faq-q1">Quanto vale R$ 1 em Solana hoje?</summary>
-      <p>O valor muda em tempo real conforme o mercado. Use o conversor no topo desta página: digite 1 no campo da moeda e veja a quantidade exata na cripto escolhida, com cotação ao vivo da CoinGecko.</p>
+      <p>O valor muda em tempo real conforme o mercado. Use o conversor no topo desta página: digite 1 no campo da moeda e veja a quantidade exata na cripto escolhida, com cotação ao vivo da CoinPaprika.</p>
     </details>
     <details>
       <summary>A conversão desta página tem taxas?</summary>
@@ -236,7 +236,7 @@
     </details>
     <details>
       <summary>De onde vêm os preços?</summary>
-      <p>Da API pública da <strong>CoinGecko</strong>, que agrega cotações de centenas de exchanges no mundo todo. Os valores são atualizados automaticamente enquanto você usa a página.</p>
+      <p>Das APIs públicas da <strong>CoinPaprika</strong> (preço) e da <strong>DefiLlama</strong> (histórico), que agregam cotações de centenas de exchanges no mundo todo. Os valores são atualizados automaticamente enquanto você usa a página.</p>
     </details>
     <details>
       <summary>Posso converter de Dólar e de Euro também?</summary>
@@ -273,7 +273,7 @@
   <!-- planos PRO / Premium (bloco injetado) -->
   <div data-mdf="pro"></div>
 <p class="aviso">
-    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e pela CoinPaprika, e podem apresentar
+    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinPaprika e pela DefiLlama, e podem apresentar
     pequenas diferenças em relação aos preços praticados por exchanges. O MundoDeFi não realiza intermediação de
     compra ou venda de ativos e nada nesta página constitui recomendação de investimento. Cripto envolve risco.
   </p>
@@ -761,7 +761,7 @@ setInterval(() => { if (LISTA.length) carregarDados().catch(() => {}); }, 60000)
     {
       "@type": "Question",
       "name": "De onde vêm os preços do conversor?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Da API pública da CoinGecko, que agrega cotações de centenas de exchanges. Os valores são atualizados automaticamente em tempo real." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Das APIs públicas da CoinPaprika (preço) e da DefiLlama (histórico), que agregam cotações de centenas de exchanges. Os valores são atualizados automaticamente em tempo real." }
     },
     {
       "@type": "Question",
