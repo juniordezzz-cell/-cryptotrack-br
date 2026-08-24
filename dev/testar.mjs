@@ -20,7 +20,8 @@ const detalhe = process.argv.includes('--detalhe');
 const SUITES = [
   ['Portfólio — matemática do núcleo', 'portfolio/testes/teste-core.js'],
   ['Ferramentas — matemática do núcleo', 'ferramentas/testes/teste-core.js'],
-  ['IMD — motor de pontuação', 'ferramentas/testes/teste-imd.js']
+  ['IMD — motor de pontuação', 'ferramentas/testes/teste-imd.js'],
+  ['Nexus — motor de regras', 'nexus/testes/teste-nexus.js']
 ];
 
 let totalOk = 0, houveFalha = false;

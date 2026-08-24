@@ -76,6 +76,10 @@
     f.patrimonio    = T.patrimonio;
     f.investido     = T.investido;
     f.realizado     = T.realizado;
+    /* Mesmo numero, sem o sinal. Existe porque "voce ja realizou
+       -$10.000 de prejuizo" tem uma negacao a mais: o titulo da regra
+       precisa de "$10.000". Mesmo motivo do piorILAtras la embaixo. */
+    f.prejuizoRealizado = Math.abs(Math.min(0, T.realizado));
     f.naoRealizado  = T.naoRealizado;
     f.resultadoTotal = T.resultadoTotal;
     f.rentAberta    = T.rentAberta;
@@ -283,6 +287,7 @@
           id: r.id,
           grupo: r.grupo,
           severidade: r.severidade || 'info',
+          soQuandoPerguntado: !!r.soQuandoPerguntado,
           titulo: M.interpolar(r.titulo, f),
           texto: M.interpolar(r.texto, f)
         };
@@ -341,7 +346,14 @@
   M.panorama = function (limite) {
     var f = M.fatos();
     if (!f.temDados) return [];
-    return M.avaliar(f, null).slice(0, limite || 4);
+    /* Regras marcadas com soQuandoPerguntado ficam de fora daqui.
+       Sao as que respondem "voce nao tem pool nenhuma" ou "voce nao
+       opera trade": uteis quando a pessoa PERGUNTA sobre o assunto,
+       ruido puro no painel de abertura de quem so faz HOLD. O panorama
+       tem quatro linhas; nenhuma delas pode ser sobre coisa que o
+       usuario nao faz. */
+    var visiveis = M.avaliar(f, null).filter(function (a) { return !a.soQuandoPerguntado; });
+    return visiveis.slice(0, limite || 4);
   };
 
   window.NexusMotor = M;
