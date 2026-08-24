@@ -15,7 +15,7 @@
 <meta property="og:image:alt" content="Câmbio — MundoDeFi">
 <meta name="twitter:image" content="https://mundodefi.com.br/og/ferramenta-cambio.png">
 <meta name="twitter:card" content="summary_large_image">
-<meta property="og:description" content="Converta moedas usando a cotação real do mercado cripto, via stablecoins USDT e USDC. Cotação ao vivo da CoinGecko.">
+<meta property="og:description" content="Converta moedas usando a cotação real do mercado cripto, via stablecoins USDT e USDC. Cotação ao vivo da CoinPaprika.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/cambio.html">
 <meta property="og:locale" content="pt_BR">
@@ -142,7 +142,7 @@
 
     </div>
     <div class="conversor-rodape">
-      <span>Fonte: CoinGecko · cotação de mercado via stablecoin, sem taxas</span>
+      <span>Fonte: CoinPaprika · cotação de mercado via stablecoin, sem taxas</span>
       <span id="taxa-inversa">—</span>
     </div>
   </div>
@@ -168,7 +168,7 @@
     <h2><span class="ico">❓</span>Perguntas frequentes</h2>
     <div class="faq-item">
       <h3>De onde vem a cotação do câmbio?</h3>
-      <p>Da API pública da <strong>CoinGecko</strong>, usando o preço das stablecoins <strong>USDT</strong> e <strong>USDC</strong> em cada moeda. Por isso o valor reflete o câmbio real que você pega operando no mercado cripto, e não a taxa oficial dos bancos.</p>
+      <p>Da API pública da <strong>CoinPaprika</strong>, usando o preço das stablecoins <strong>USDT</strong> e <strong>USDC</strong> em cada moeda. Por isso o valor reflete o câmbio real que você pega operando no mercado cripto, e não a taxa oficial dos bancos.</p>
     </div>
     <div class="faq-item">
       <h3>Quais moedas posso converter?</h3>
@@ -191,7 +191,7 @@
   <div data-mdf="pro"></div>
 
   <p class="aviso">
-    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinGecko e podem apresentar
+    As cotações exibidas têm caráter informativo e educacional, são fornecidas pela CoinPaprika e podem apresentar
     pequenas diferenças em relação aos preços praticados por exchanges e casas de câmbio. O MundoDeFi não realiza
     intermediação de compra ou venda de ativos e nada nesta página constitui recomendação de investimento.
   </p>
@@ -209,7 +209,7 @@
 /* =========================================================
    MundoDeFi — Calculadora de Câmbio
    BRL / USD / EUR / GBP / USDT / USDC ⇄ entre si
-   Cotação via stablecoin (CoinGecko), base USD
+   Cotação via stablecoin (CoinPaprika), base USD
    ========================================================= */
 
 const API = 'https://api.coingecko.com/api/v3';
@@ -364,7 +364,7 @@ setInterval(() => { carregarCotacao().then(() => recalcular(ultimoCampo)).catch(
     {
       "@type": "Question",
       "name": "De onde vem a cotação do câmbio?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Da API pública da CoinGecko, usando o preço das stablecoins USDT e USDC em cada moeda. O valor reflete o câmbio real do mercado cripto, não a taxa oficial dos bancos." }
+      "acceptedAnswer": { "@type": "Answer", "text": "Da API pública da CoinPaprika, usando o preço das stablecoins USDT e USDC em cada moeda. O valor reflete o câmbio real do mercado cripto, não a taxa oficial dos bancos." }
     },
     {
       "@type": "Question",

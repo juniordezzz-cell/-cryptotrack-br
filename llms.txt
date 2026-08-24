@@ -50,5 +50,5 @@ Idioma: português do Brasil. Moedas: real e dólar.
 ## Observações
 
 - Conteúdo educacional. O site não faz recomendação de investimento nem intermedia compra e venda de ativos.
-- Cotações vêm da CoinPaprika e da CoinGecko, e da Binance nas páginas de token.
+- Cotações vêm da CoinPaprika e da DefiLlama, e da Binance nas páginas de token. O site nao usa chave de API.
 - Rastreadores de IA são bem-vindos: veja /robots.txt. Se citar, use o link da ferramenta específica — é o que resolve a dúvida de quem perguntou.

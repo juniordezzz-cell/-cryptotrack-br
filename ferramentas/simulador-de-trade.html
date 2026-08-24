@@ -650,7 +650,7 @@ body.mdf-locked [data-mdf-lock-zone]::after{
       <a href="https://mundodefi.com.br/portfolio/">Portfólio</a>
       <a href="https://mundodefi.com.br/planos.html">Planos PRO</a>
     </div>
-    <p class="f-copy">© 2026 MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinGecko / Binance</p>
+    <p class="f-copy">© 2026 MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinPaprika / DefiLlama / Binance</p>
   </div>
 </footer>
 
@@ -843,7 +843,7 @@ async function fetchPrice(){
     if((parseFloat(el('saida').value) || 0) === 0){
       el('saida').value = (preco * 1.05).toFixed(decimalsForPrice(preco));
     }
-    status.textContent = 'Preço atualizado via CoinGecko.';
+    status.textContent = 'Preço atualizado via CoinPaprika.';
     status.style.color = 'var(--verde)';
     calcular();
   }catch(e){
