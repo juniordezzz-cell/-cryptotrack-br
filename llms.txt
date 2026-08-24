@@ -1,0 +1,54 @@
+# MundoDeFi
+
+> Ferramentas gratuitas em português para quem investe em criptomoedas e DeFi no Brasil. Calculadoras de impermanent loss, staking, juros compostos e conversão, mais um portfólio que acompanha HOLD, DeFi e trade com preço médio, lucro realizado e retorno anualizado.
+
+O site não disputa busca de cotação: ele existe para fazer conta que o investidor brasileiro precisa fazer e normalmente faz errado, ou não faz.
+
+Idioma: português do Brasil. Moedas: real e dólar.
+
+## Gerenciar — "Onde está meu dinheiro?"
+
+- [Portfólio](https://mundodefi.com.br/portfolio/index.html) (grátis): Acompanhe HOLD, DeFi e Trade num lugar só, com preço médio, lucro realizado e retorno anualizado. — aplicativo web, o conteúdo só existe depois do JavaScript
+- [Entradas e Saídas](https://mundodefi.com.br/ferramentas/entradas-saidas/) (assinatura PRO): Controle financeiro completo: registre entradas, despesas e investimentos e veja para onde seu dinheiro está indo. — aplicativo web, o conteúdo só existe depois do JavaScript
+
+## Projetar — "Quanto isso rende?"
+
+- [Juros Compostos](https://mundodefi.com.br/ferramentas/juros-compostos.html) (grátis): Simule o crescimento do seu patrimônio com aportes mensais, em Real, Dólar ou Euro, com gráfico e tabela mês a mês.
+- [Simulador de Staking](https://mundodefi.com.br/ferramentas/staking.html) (grátis): Quanto rendem seus tokens em staking, com APR simples ou APY composto e preço ao vivo.
+- [Pool de Liquidez](https://mundodefi.com.br/ferramentas/pool-liquidez.html) (grátis): A pergunta de todo provedor de liquidez: as taxas compensam o impermanent loss? Compare pool contra simplesmente segurar os tokens.
+
+## Decidir — "Vale a pena?"
+
+- [Lucro Cripto](https://mundodefi.com.br/ferramentas/lucro-cripto.html) (grátis): Seu lucro líquido de verdade: busca o preço ao vivo de qualquer token e desconta as taxas da exchange.
+- [Comparador de Ativos](https://mundodefi.com.br/ferramentas/comparador-de-ativos.html) (grátis): Compare a rentabilidade de cripto, ações e renda fixa lado a lado — qualquer ativo contra o CDI, com dados ao vivo.
+- [Simulador de Trade](https://mundodefi.com.br/ferramentas/simulador-de-trade.html) (assinatura PRO): Long e short com alavancagem, preço de liquidação com margem de manutenção e a banca crescendo operação após operação.
+
+## Converter — "Quanto dá em reais?"
+
+- [Conversor Cripto](https://mundodefi.com.br/ferramentas/conversor.html) (grátis): BTC, ETH, SOL e mais convertidos para Real, Dólar e Euro em tempo real, com variação de 24h.
+- [Câmbio](https://mundodefi.com.br/ferramentas/cambio.html) (grátis): Converta Real, Dólar, Euro e Libra entre si usando a cotação do mercado cripto ao vivo, via stablecoins.
+
+## Diagnosticar — "Em que pé eu estou?"
+
+- [Índice Mundo DeFi](https://mundodefi.com.br/ferramentas/imd/) (grátis): Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e onde estão suas maiores lacunas.
+
+## Como o site calcula
+
+- **Impermanent loss**: `IL = r^w1 / (w1·r + w2) − 1`, onde `r` é o desempenho RELATIVO entre os dois tokens do par, não a variação de um deles. Num par SOL/ETH em que os dois dobram, r = 1 e não há impermanent loss nenhum.
+- **Preço médio**: custo médio ponderado, o método usado no Brasil. Venda não muda o preço médio: ela baixa o custo proporcional e materializa o ganho.
+- **Retorno anualizado**: XIRR, que considera a data de cada aporte. Quem comprou na baixa e quem comprou na alta não podem aparecer com o mesmo retorno.
+- **Concentração**: índice de Herfindahl-Hirschman sobre as posições, com stablecoin tratada como caixa.
+- **Liquidação em trade alavancado**: inclui margem de manutenção. Ignorá-la subestima o risco, que é o lado perigoso do erro.
+
+## Páginas
+
+- [Todas as ferramentas](https://mundodefi.com.br/ferramentas/ferramentas.html)
+- [Planos e preços](https://mundodefi.com.br/planos.html): o portfólio completo é grátis com uma carteira; o PRO (R$ 19,90/mês) libera carteiras ilimitadas, o Nexus, Entradas e Saídas, Simulador de Trade e exportação em CSV.
+- [Nexus](https://mundodefi.com.br/nexus/index.html): lê os números do portfólio e responde sobre concentração, resultado e pools. É um motor de regras determinístico em JSON, auditável — não é modelo de linguagem e não gera texto.
+- [Política de privacidade](https://mundodefi.com.br/politica-de-privacidade.html)
+
+## Observações
+
+- Conteúdo educacional. O site não faz recomendação de investimento nem intermedia compra e venda de ativos.
+- Cotações vêm da CoinPaprika e da CoinGecko, e da Binance nas páginas de token.
+- Rastreadores de IA são bem-vindos: veja /robots.txt. Se citar, use o link da ferramenta específica — é o que resolve a dúvida de quem perguntou.
