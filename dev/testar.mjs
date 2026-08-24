@@ -58,6 +58,27 @@ for (const [nome, arquivo] of SUITES) {
   }
 }
 
+/* ── TRAVA DE CACHE ────────────────────────────────────────
+   Codigo certo que nao chega ao visitante e' codigo errado. Ja aconteceu
+   duas vezes: o IMD, onde nenhuma mudanca de regra chegava a quem ja
+   tinha visitado, e o cambio, que quebrou NO AR porque a pagina pedia a
+   versao nova e o navegador entregava um /ferramentas-core.js antigo, sem
+   a funcao que ela acabara de passar a chamar.
+   O carimbo e' hash de conteudo. Se estiver velho, isto falha aqui e nao
+   la. */
+try {
+  const saidaV = execFileSync(process.execPath,
+    [path.join(RAIZ, 'dev', 'versionar.mjs'), '--check'],
+    { encoding: 'utf8' });
+  const c = (saidaV.match(/carimbo[^:]*:\s*(\S+)/) || [])[1] || '?';
+  console.log('  ok  ' + 'Carimbo de versao (cache busting)'.padEnd(40) + c);
+} catch (e) {
+  houveFalha = true;
+  console.log('  XX  ' + 'Carimbo de versao (cache busting)'.padEnd(40) + 'desatualizado');
+  console.log('        Rode: node dev/versionar.mjs');
+  console.log('        Sem isso, quem ja visitou o site fica com o codigo antigo.');
+}
+
 console.log('');
 console.log(houveFalha
   ? '  ALGUMA COISA FALHOU — nao suba assim. Rode com --detalhe para ver tudo.'
