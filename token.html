@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<script src="/mundodefi-api.js?v=c175c9f404"></script>
-<script src="/ferramentas-core.js?v=c175c9f404"></script>
-<link rel="icon" href="/favicon.svg?v=c175c9f404" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=8e20501bc9"></script>
+<script src="/ferramentas-core.js?v=8e20501bc9"></script>
+<link rel="icon" href="/favicon.svg?v=8e20501bc9" type="image/svg+xml">
 <title id="page-title">Token — MundoDeFi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-<script src="/nexus/nexus-auth.js?v=c175c9f404"></script>
-<script src="/mundodefi-catalogo.js?v=c175c9f404"></script>
-<script src="/mundodefi-cta.js?v=c175c9f404"></script>
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=c175c9f404">
+<script src="/nexus/nexus-auth.js?v=8e20501bc9"></script>
+<script src="/mundodefi-catalogo.js?v=8e20501bc9"></script>
+<script src="/mundodefi-cta.js?v=8e20501bc9"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=8e20501bc9">
 <style>
 :root{
   /* Cores vêm de /mundodefi-tokens.css. Os nomes locais viram apelidos
@@ -679,7 +679,7 @@ function layerInfo(id){
 var _descCache=null;
 function carregarDescricoes(){
   if(_descCache)return Promise.resolve(_descCache);
-  return fetch('/token-descricoes.json?v=c175c9f404').then(function(r){return r.json();})
+  return fetch('/token-descricoes.json?v=8e20501bc9').then(function(r){return r.json();})
     .then(function(j){_descCache=j;return j;}).catch(function(){return {};});
 }
 
@@ -838,8 +838,26 @@ function renderPage(bin,cg){
     +'<div class="breadcrumb"><a href="/index.html">Início</a><span class="bc-sep"> › </span><a href="/index.html#mercado">Mercado</a><span class="bc-sep"> › </span><span style="color:var(--text);font-weight:600">'+name+'</span></div>'
     +'<div class="hero-row">'
     +'<div class="hero-l">';
-  if(logo)H+='<img class="hero-logo" id="hero-logo" src="'+logo+'" alt="'+name+'" onerror="this.style.display=\'none\'">';
-  else H+='<div class="hero-logo" style="display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:var(--gold)">'+_sym.slice(0,2)+'</div>';
+  /* O <img> e' criado SEMPRE, mesmo sem src ainda.
+     -- por que ---------------------------------------------------------
+     A fase 1 desenha em ~200ms com os dados da Binance, que nao trazem
+     logo. Antes, sem logo, ela punha no lugar um <div> com as duas
+     primeiras letras -- e sem id. A fase 2, que chega com o logo de
+     verdade, procura getElementById('hero-logo'), nao acha nada, e
+     desiste em silencio. Resultado no ar: NENHUMA pagina de moeda do
+     site tinha imagem. Todas mostravam duas letras, para sempre.
+     Mesmo defeito da barra de variacao; eu corrigi a barra e nao
+     procurei os irmaos.
+     Agora o <img> nasce escondido e as iniciais ficam ao lado como
+     reserva: quando o logo chega, um aparece e o outro some. Se o logo
+     falhar, as iniciais voltam -- ninguem fica com buraco na tela. */
+  H+='<img class="hero-logo" id="hero-logo" alt="'+name+'"'
+    +(logo?' src="'+logo+'"':'')
+    +' style="'+(logo?'':'display:none')+'"'
+    +' onerror="this.style.display=\'none\';var i=document.getElementById(\'hero-inicial\');if(i)i.style.display=\'flex\'">';
+  H+='<div class="hero-logo" id="hero-inicial" style="'+(logo?'display:none':'display:flex')
+    +';align-items:center;justify-content:center;font-family:var(--display);font-size:18px;color:var(--gold)">'
+    +_sym.slice(0,2)+'</div>';
   H+='<div><div class="hero-name" id="hero-name">'+name.toUpperCase()+'</div>'
     +'<div class="hero-meta">'
     +'<span class="htag" style="font-family:var(--mono)">'+_sym+'</span>';
@@ -1121,8 +1139,11 @@ async function init(){
     // Atualiza logo
     var logo=cg.image&&cg.image.large?cg.image.large:'';
     if(logo){
-      var hl=document.getElementById('hero-logo');if(hl){hl.src=logo;hl.style.display='block';}
-      var pl=document.getElementById('pc-logo');if(pl)pl.src=logo;
+      var hl=document.getElementById('hero-logo');
+      if(hl){hl.src=logo;hl.style.display='block';}
+      var hi=document.getElementById('hero-inicial');if(hi)hi.style.display='none';
+      var pl=document.getElementById('pc-logo');if(pl){pl.src=logo;pl.style.display='block';}
+      var pi=document.getElementById('pc-inicial');if(pi)pi.style.display='none';
     }
     // Atualiza nome
     if(cg.name){

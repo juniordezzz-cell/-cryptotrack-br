@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=c175c9f404"></script>
-<link rel="icon" href="/favicon.svg?v=c175c9f404" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=8e20501bc9"></script>
+<link rel="icon" href="/favicon.svg?v=8e20501bc9" type="image/svg+xml">
 <title>MundoDeFi — As melhores ferramentas de cripto do Brasil</title>
 <meta name="description" content="Ferramentas para investir em cripto com números: impermanent loss, staking, juros compostos e portfólio completo. Em português, a maioria grátis.">
 <link rel="canonical" href="https://mundodefi.com.br/">
@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=c175c9f404">
-<script src="/mundodefi-catalogo.js?v=c175c9f404"></script>
-<script src="/mundodefi-previas.js?v=c175c9f404"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=8e20501bc9">
+<script src="/mundodefi-catalogo.js?v=8e20501bc9"></script>
+<script src="/mundodefi-previas.js?v=8e20501bc9"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -198,7 +198,9 @@ section{padding:3.5rem 0}
 .mkt-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);padding:1rem 1.1rem;transition:border-color .15s,transform .15s;display:block}
 .mkt-card:hover{border-color:var(--line2);transform:translateY(-2px)}
 .mkt-top{display:flex;align-items:center;gap:8px;margin-bottom:.7rem}
-.mkt-top img{width:26px;height:26px;border-radius:50%}
+.mkt-top img{width:26px;height:26px;border-radius:50%;background:var(--bg3,#161a22);flex-shrink:0}
+.mkt-ini{width:26px;height:26px;border-radius:50%;background:var(--bg3,#161a22);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--mut2);flex-shrink:0}
+.mkt-grid{margin-top:1.5rem}
 .mkt-sym{font-family:var(--mono);font-weight:700;font-size:13px}
 .mkt-name{font-size:11px;color:var(--mut2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .mkt-price{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:-.02em}
@@ -538,6 +540,11 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
       <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
     </div>
+    <!-- A grade volta. Ela tinha saido "porque o site nao disputa busca de
+         ativos" -- so que nao disputar busca nunca quis dizer que a home
+         podia ficar sem imagem nenhuma. Sem ela sobrava uma parede de
+         texto: a pagina inteira tinha ZERO <img>. -->
+    <div class="mkt-grid" id="mkt-grid"></div>
   </div>
   <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
 </section>
@@ -658,14 +665,46 @@ function loadMarkets(){
   return MDF_API.get(ROTA_MKTS, 5*60*1000);
 }
 function renderMarket(list){
-  /* Restou a esteira. A grade de 6 cotacoes e os 4 cards de ranking sairam
-     junto com o reposicionamento: eram navegacao entre ativos, terreno que
-     o site nao disputa. */
+  /* A ESTEIRA E A GRADE
+     A grade tinha sido removida por causa do posicionamento -- "o site nao
+     disputa busca de ativos". A conclusao nao seguia da premissa: nao
+     competir em busca de ativos nao obriga a home a ficar sem imagem
+     nenhuma, e sem os logos a pagina virou uma parede de texto -- ZERO
+     <img> no documento inteiro.
+     As seis moedas com logo mostram numa olhada que o site esta VIVO e que
+     os numeros sao de agora. A esteira continua embaixo, para o panorama
+     largo. */
   var tk=list.slice(0,20).map(function(c){
     var v=c.price_change_percentage_24h;
     return '<span class="tk-item"><a href="/token.html?id='+esc(c.id)+'"><b>'+esc((c.symbol||'').toUpperCase())+'</b> '+fPrice(c.current_price)+' <span class="'+pcls(v)+'">'+fPct(v)+'</span></a></span>';
   }).join('');
   document.getElementById('ticker').innerHTML=tk+tk;
+
+  var grade=document.getElementById('mkt-grid');
+  if(!grade)return;
+  /* OVERVIEW_IDS manda na ordem: sao as moedas que o brasileiro procura,
+     nao as seis maiores por valor de mercado do dia. Se alguma faltar na
+     resposta, completa com as maiores para nunca sobrar buraco na grade. */
+  var porId={};list.forEach(function(c){porId[c.id]=c;});
+  var escolhidas=OVERVIEW_IDS.map(function(id){return porId[id];}).filter(Boolean).slice(0,6);
+  list.forEach(function(c){
+    if(escolhidas.length<6&&escolhidas.indexOf(c)<0)escolhidas.push(c);
+  });
+  grade.innerHTML=escolhidas.map(function(c){
+    var v=c.price_change_percentage_24h;
+    var ini=esc((c.symbol||'').slice(0,2).toUpperCase());
+    /* onerror troca a imagem pelas iniciais: logo que falha nao pode
+       deixar um quadrado vazio no meio da grade */
+    return '<a class="mkt-card" href="/token.html?id='+esc(c.id)+'">'
+      +'<div class="mkt-top">'
+      +'<img src="'+esc(c.image||'')+'" alt="" width="26" height="26"'
+      +" onerror=\"this.outerHTML='<span class=\'mkt-ini\'>"+ini+"</span>'\">"
+      +'<div><div class="mkt-sym">'+esc((c.symbol||'').toUpperCase())+'</div>'
+      +'<div class="mkt-name">'+esc(c.name||'')+'</div></div></div>'
+      +'<div class="mkt-price">'+fPrice(c.current_price)+'</div>'
+      +'<div class="mkt-var '+pcls(v)+'">'+fPct(v)+'</div>'
+      +'</a>';
+  }).join('');
 }
 loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
 /* Antes: setInterval fixo que apagava o cache e refazia a chamada mesmo
@@ -803,8 +842,8 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 </script>
 
 <!-- ═══ AUTH: a home passa a reconhecer quem está logado ═══ -->
-<script src="/nexus/nexus-auth.js?v=c175c9f404"></script>
-<script src="/mdf-avatars.js?v=c175c9f404"></script>
+<script src="/nexus/nexus-auth.js?v=8e20501bc9"></script>
+<script src="/mdf-avatars.js?v=8e20501bc9"></script>
 <script>
 (function(){
   var criarConta = document.getElementById('btnCriarConta');
