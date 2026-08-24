@@ -1,5 +1,5 @@
 {
-  "versao": 1,
+  "versao": "2",
   "_leiaMe": "Regras do Nexus. Isto é DADO, não código — dá para editar sem tocar em JS. Cada regra tem: quando (todas as condições precisam bater), titulo e texto (aceitam {fato} e {fato|formato}). Formatos: money, pct, pct0, pct1, num, num2. Prioridade maior aparece primeiro. Os fatos disponíveis estão em nexus-motor.js, na função fatos().",
   "mensagens": {
     "semDados": "Seu portfólio ainda está vazio. Registre a primeira compra e eu passo a ler seus números — patrimônio, preço médio, concentração, resultado realizado e o que mais der para calcular.",
@@ -85,7 +85,7 @@
         "defi"
       ],
       "max": 5,
-      "semAchado": "Você tem {nPoolsAbertas|num} pool(s) aberta(s) com {capitalEmPools|money} aplicados, rendendo {aprMedioPools|pct1} ao ano em taxas. Nada fora do lugar."
+      "semAchado": "Suas {nPoolsAbertas|num} pool(s) somam {capitalEmPools|money} aplicados, rendendo {aprMedioPools|pct1} ao ano em taxas. Nenhuma delas está fora do que eu consideraria normal."
     },
     {
       "id": "trade",
@@ -154,11 +154,13 @@
       "quando": [
         {
           "fato": "maiorAtivoPct",
-          "op": "entre",
-          "valor": [
-            40,
-            59.99
-          ]
+          "op": ">=",
+          "valor": 40
+        },
+        {
+          "fato": "maiorAtivoPct",
+          "op": "<",
+          "valor": 60
         },
         {
           "fato": "nAtivosAbertos",
@@ -688,6 +690,78 @@
       ],
       "titulo": "{poolsSemDadosIL|num} pool(s) sem cálculo de impermanent loss",
       "texto": "Falta o preço dos dois tokens no dia em que você abriu a pool. Com esse dado eu consigo dizer se ela está ganhando ou perdendo de simplesmente ter segurado o par — que é a pergunta que decide se a pool vale a pena. Dá para preencher no detalhe da pool, em DeFi."
+    },
+    {
+      "id": "prejuizo-realizado",
+      "grupo": "desempenho",
+      "prioridade": 87,
+      "severidade": "atencao",
+      "titulo": "Você já realizou {prejuizoRealizado|money} de prejuízo",
+      "texto": "Esse prejuízo saiu do papel: são vendas fechadas, pools encerradas ou trades liquidados. Diferente de posição aberta, ele não volta se o mercado subir — o que vier daqui em diante rende sobre o que sobrou, não sobre o que você tinha antes. Em aberto você tem {naoRealizado|money}.",
+      "quando": [
+        {
+          "fato": "realizado",
+          "op": "<",
+          "valor": 0
+        }
+      ]
+    },
+    {
+      "id": "profit-factor-medio",
+      "grupo": "trade",
+      "prioridade": 84,
+      "severidade": "info",
+      "titulo": "Profit factor de {profitFactor|num2}: positivo, com margem estreita",
+      "texto": "Em {nOps|num} operações seus ganhos superam suas perdas, então o sistema é ganhador. Mas a faixa de 1,0 a 1,5 é onde uma sequência ruim, um aumento de taxa ou um slippage maior apaga a vantagem. Ganho médio de {mediaGanho|money} contra perda média de {mediaPerda|money}: a distância entre esses dois números é todo o seu resultado.",
+      "quando": [
+        {
+          "fato": "profitFactor",
+          "op": ">=",
+          "valor": 1
+        },
+        {
+          "fato": "profitFactor",
+          "op": "<",
+          "valor": 1.5
+        },
+        {
+          "fato": "nOps",
+          "op": ">=",
+          "valor": 30
+        }
+      ]
+    },
+    {
+      "id": "sem-trade",
+      "grupo": "trade",
+      "prioridade": 10,
+      "severidade": "info",
+      "soQuandoPerguntado": true,
+      "titulo": "Você ainda não registrou operações de trade",
+      "texto": "Não há o que analisar aqui — win rate, profit factor e drawdown precisam de operações registradas para existir. Se você opera em alguma exchange, lançar os resultados na aba Trade passa a responder se o seu método ganha dinheiro, que é uma pergunta diferente de quanto você ganhou no mês.",
+      "quando": [
+        {
+          "fato": "nOps",
+          "op": "==",
+          "valor": 0
+        }
+      ]
+    },
+    {
+      "id": "sem-pools",
+      "grupo": "defi",
+      "prioridade": 10,
+      "severidade": "info",
+      "soQuandoPerguntado": true,
+      "titulo": "Você não tem nenhuma pool registrada",
+      "texto": "Sem pool não há APR, taxa acumulada nem impermanent loss para comparar. Se você já fornece liquidez em algum protocolo, registrar a posição na aba DeFi permite responder a única pergunta que importa numa pool: ela rendeu mais do que simplesmente ter segurado os dois tokens?",
+      "quando": [
+        {
+          "fato": "nPools",
+          "op": "==",
+          "valor": 0
+        }
+      ]
     }
   ]
 }
