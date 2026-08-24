@@ -520,7 +520,14 @@
           atl_change_percentage: { usd: null },
           price_change_percentage_24h: q.percent_change_24h,
           price_change_percentage_7d: q.percent_change_7d,
-          price_change_percentage_30d: q.percent_change_30d,
+          /* A Paprika publica 30d e 1y SEMPRE zerados no tier gratuito --
+             conferido em BTC, ETH, SOL, BNB, XRP e ADA no mesmo instante em
+             que o 7d marcava de 15% a 50%. Zero ali nao e' "nao variou", e'
+             "nao preenchi". Repassar isso pintaria "+0,00%" na tela com
+             cara de dado real. Vira null; quem precisa do numero de verdade
+             calcula do preco (veja variacoesReais em /token.html). */
+          price_change_percentage_30d: q.percent_change_30d || null,
+          price_change_percentage_1y: q.percent_change_1y || null,
           price_change_percentage_1h_in_currency: { usd: q.percent_change_1h },
           price_change_percentage_24h_in_currency: { usd: q.percent_change_24h }
         }
