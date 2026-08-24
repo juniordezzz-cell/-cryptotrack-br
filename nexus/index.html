@@ -3,21 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nexus — a inteligência artificial do MundoDeFi</title>
-<meta name="description" content="Conheça o Nexus: a IA do MundoDeFi que lê seu portfólio e responde sobre patrimônio, HOLD, DeFi, pools de liquidez e trade. Exclusivo para assinantes PRO.">
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
+<title>Nexus — a leitura dos seus números | MundoDeFi</title>
+<meta name="description" content="O Nexus lê os números do seu portfólio e responde sobre concentração, resultado e pools — com regras auditáveis, não com texto gerado.">
 <link rel="canonical" href="https://mundodefi.com.br/nexus/">
 <meta property="og:title" content="Nexus — a inteligência artificial do MundoDeFi">
-<meta property="og:description" content="A IA que conhece o seu portfólio: melhor ativo, pool que mais rende, winrate no trade e muito mais.">
+<meta property="og:image" content="https://mundodefi.com.br/og/nexus.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Nexus — MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/nexus.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Ele conhece os seus números: concentração de risco, pool que mais rende, se o seu trade é ganhador de verdade.">
 <meta property="og:url" content="https://mundodefi.com.br/nexus/">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<link rel="stylesheet" href="/nexus/nexus.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
+<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-31">
 <style>
 :root{
-  --nx-bg:#050914;--nx-panel:#0b1120;--nx-line:rgba(255,255,255,.08);
-  --nx-text:#EAF2FF;--nx-muted:#8b96ad;--nx-cyan:#22D3EE;--nx-gold:#F5B614;
-  --nx-purple:#9945FF;--nx-green:#14F195;
+  /* de /mundodefi-tokens.css */
+  --nx-bg:var(--mdf-bg);--nx-panel:var(--mdf-surface);--nx-line:var(--mdf-line-2);
+  --nx-text:var(--mdf-text);--nx-muted:var(--mdf-text-2);--nx-cyan:var(--cyan);--nx-gold:var(--gold);
+  --nx-purple:var(--purple);--nx-green:var(--green);
 }
 *{box-sizing:border-box}
 html{background:var(--nx-bg)}
@@ -99,7 +107,7 @@ section{padding:48px 0}
 .pro-band p{color:var(--nx-muted);margin:0 auto 22px;max-width:520px;line-height:1.65}
 .pro-price{font-family:'Space Mono',monospace;color:var(--nx-gold);font-size:1.05rem;margin-bottom:18px}
 
-/* futuro IA */
+/* bloco "por que regra" */
 .future{display:flex;gap:16px;align-items:flex-start;background:var(--nx-panel);border:1px dashed rgba(34,211,238,.35);border-radius:16px;padding:1.4rem 1.6rem;max-width:760px;margin:0 auto}
 .future .dot-ia{flex:0 0 auto;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:rgba(34,211,238,.12);font-size:1.1rem}
 .future p{margin:0;color:var(--nx-muted);font-size:.9rem;line-height:1.65}
@@ -118,6 +126,38 @@ footer a{color:var(--nx-muted)}
   .qa{grid-template-columns:1fr}
 }
 </style>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/nexus/index.html#app",
+   "name": "Nexus",
+   "url": "https://mundodefi.com.br/nexus/index.html",
+   "description": "Lê os números do seu portfólio e responde sobre concentração, resultado, pools de liquidez e trade — por regras auditáveis, não por texto gerado.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": false,
+   "offers": {
+    "@type": "Offer",
+    "price": "19.90",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   }
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body data-nexus-page="pagina-nexus">
 
@@ -134,7 +174,7 @@ footer a{color:var(--nx-muted)}
   <section class="hero">
     <div>
       <span class="tag">✦ EXCLUSIVO PLANO PRO</span>
-      <h1>Nexus. A inteligência que <em>conhece o seu portfólio</em>.</h1>
+      <h1>Nexus. A leitura que <em>conhece os seus números</em>.</h1>
       <p>O Nexus vive dentro do seu Portfólio MundoDeFi e responde na hora: qual ativo performa melhor, qual pool rende mais, como está seu winrate no trade e para onde vai seu patrimônio.</p>
       <div class="hero-ctas">
         <a class="btn btn-cyan" href="/portfolio/">Abrir no Portfólio</a>
@@ -151,7 +191,7 @@ footer a{color:var(--nx-muted)}
     <p class="sec-sub">O Nexus acompanha você em todas as telas do Portfólio — Dashboard, HOLD, DeFi, Trade e Atlas — sempre com os seus números na ponta da língua.</p>
     <div class="grid3">
       <div class="fcard"><div class="ico">💎</div><h3>HOLD</h3><p>Preço médio, valor atual e lucro de cada ativo. Pergunte "qual meu melhor ativo?" e receba o ranking completo da sua carteira.</p></div>
-      <div class="fcard"><div class="ico">🌊</div><h3>DeFi &amp; Pools</h3><p>Resultado líquido de cada pool, taxas coletadas e comparação entre estratégias de liquidez. O diferencial do MundoDeFi, agora com IA.</p></div>
+      <div class="fcard"><div class="ico">🌊</div><h3>DeFi &amp; Pools</h3><p>Resultado líquido de cada pool, taxas coletadas e comparação entre estratégias de liquidez. O diferencial do MundoDeFi.</p></div>
       <div class="fcard"><div class="ico">⚡</div><h3>Trade</h3><p>Winrate, resultado acumulado e evolução da banca. O Nexus mostra os números frios para você operar sem ilusão.</p></div>
     </div>
   </section>
@@ -171,22 +211,22 @@ footer a{color:var(--nx-muted)}
 
   <section>
     <div class="future">
-      <div class="dot-ia">🧠</div>
-      <p><strong>E ele vai ficar ainda mais inteligente.</strong> O Nexus já nasce preparado para se conectar a um modelo de IA completo: análises de contexto, alertas inteligentes e conversas livres sobre o mercado. Assinantes PRO recebem cada evolução automaticamente, sem pagar nada a mais.</p>
+      <div class="dot-ia">◆</div>
+      <p><strong>Por que regra, e não texto gerado.</strong> O Nexus responde a partir de regras declaradas, avaliadas contra os seus números reais. Isso significa que ele responde igual toda vez, não inventa valor nenhum, e cada afirmação é rastreável até a conta que a gerou — você pode conferir. Para dinheiro, isso vale mais que uma resposta que soa bem.</p>
     </div>
   </section>
 
   <section>
     <div class="pro-band">
       <h2>O Nexus é exclusivo do <span>MundoDeFi PRO</span></h2>
-      <p>Portfólio ilimitado, histórico completo, exportação para o IR — e o Nexus lendo seus números em todos os módulos.</p>
+      <p>Portfólio ilimitado, histórico completo e exportação dos seus dados em CSV — e o Nexus lendo seus números em todos os módulos.</p>
       <div class="pro-price">R$ 19,90/mês · cancele quando quiser · garantia de 7 dias</div>
       <a class="btn btn-gold" href="/planos.html">Assinar MundoDeFi PRO</a>
     </div>
   </section>
 
   <footer>
-    <span>© MundoDeFi — conteúdo educacional, não é recomendação de investimento.</span>
+    <span>© MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> — conteúdo educacional, não é recomendação de investimento.</span>
     <nav>
       <a href="/index.html">Início</a>
       <a href="/ferramentas/ferramentas.html">Ferramentas</a>
@@ -197,8 +237,8 @@ footer a{color:var(--nx-muted)}
 </div>
 
 <!-- O widget do Nexus também vive aqui: quem for PRO já pode conversar nesta página -->
-<script src="/nexus/nexus-portfolio-kb.js"></script>
-<script src="/nexus/nexus-auth.js"></script>
-<script src="/nexus/nexus-core.js"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-31"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-31"></script>
+<script src="/nexus/nexus-core.js?v=2026-08-31"></script>
 </body>
 </html>

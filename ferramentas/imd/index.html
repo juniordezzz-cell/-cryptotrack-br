@@ -3,19 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IMD — Índice Mundo DeFi · Diagnóstico do Investidor</title>
+  <link rel="canonical" href="https://mundodefi.com.br/ferramentas/imd/index.html">
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
+<title>IMD — Índice Mundo DeFi · Diagnóstico do Investidor</title>
+<meta property="og:image" content="https://mundodefi.com.br/og/ferramenta-imd.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Índice Mundo DeFi — MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/ferramenta-imd.png">
+<meta name="twitter:card" content="summary_large_image">
   <meta name="description" content="Descubra seu Índice Mundo DeFi: um diagnóstico adaptativo que mede seu nível em segurança, fundamentos, DeFi e autonomia. Gratuito, em poucos minutos." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
   <style>
     :root{
-      --bg:#06070c;
+      --bg:var(--mdf-bg);
       --panel:#10131c;
       --panel2:#151a26;
       --line:rgba(255,255,255,.08);
-      --text:#f5f7fb;
-      --muted:#aab1c4;
+      --text:var(--mdf-text);
+      --muted:var(--mdf-text-2);
       --purple:#9b5cff;
       --violet:#b97cff;
       --blue:#5aa7ff;
@@ -26,7 +35,7 @@
       --radius:24px;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 10%, rgba(155,92,255,.18), transparent 25%), radial-gradient(circle at 80% 10%, rgba(40,215,183,.12), transparent 20%), linear-gradient(180deg,#05060b 0%, #090b13 100%); color:var(--text); font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;}
+    html,body{margin:0;min-height:100%;background:radial-gradient(circle at 20% 10%, rgba(155,92,255,.18), transparent 25%), radial-gradient(circle at 80% 10%, rgba(40,215,183,.12), transparent 20%), linear-gradient(180deg,var(--mdf-bg) 0%, var(--mdf-surface) 100%); color:var(--text); font-family:var(--mdf-font);}
     .shell{max-width:1240px;margin:0 auto;padding:24px 18px 40px;}
     .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);font-size:14px;margin-bottom:20px}
     .brand{display:flex;align-items:center;gap:10px;color:var(--text);font-weight:700}
@@ -138,6 +147,70 @@
     .lock-status code{font-family:ui-monospace,monospace;font-size:11px;background:var(--panel2);padding:2px 6px;border-radius:6px;color:var(--green)}
 
   </style>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/ferramentas/imd/#app",
+   "name": "Índice Mundo DeFi",
+   "url": "https://mundodefi.com.br/ferramentas/imd/",
+   "description": "Diagnóstico gratuito: descubra seu nível em cripto de 0 a 100, com perfil de risco e onde estão suas maiores lacunas.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "featureList": [
+    "~5 minutos",
+    "Perfil de risco",
+    "Onde melhorar"
+   ],
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Ferramentas",
+     "item": "https://mundodefi.com.br/ferramentas/ferramentas.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Índice Mundo DeFi",
+     "item": "https://mundodefi.com.br/ferramentas/imd/"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
   <div class="shell">
@@ -403,15 +476,15 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase/config.js"></script>
-  <script src="js/firebase.js"></script>
+  <script src="firebase/config.js?v=2026-08-31"></script>
+  <script src="js/firebase.js?v=2026-08-31"></script>
 
   <!-- Miolo intocável + utilitários + confete -->
-  <script src="js/motor.js"></script>
-  <script src="js/app.js"></script>
-  <script src="assets/confetti.js"></script>
+  <script src="js/motor.js?v=2026-08-31"></script>
+  <script src="js/app.js?v=2026-08-31"></script>
+  <script src="assets/confetti.js?v=2026-08-31"></script>
 
   <!-- Ponte casca<->miolo (controla as telas) -->
-  <script src="js/imd-app.js"></script>
+  <script src="js/imd-app.js?v=2026-08-31"></script>
 </body>
 </html>

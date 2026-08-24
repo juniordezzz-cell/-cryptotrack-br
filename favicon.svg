@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MundoDeFi">
+  <!-- Mesma marca que .nav-logo-mark desenha em CSS desde sempre: quadrado
+       arredondado com gradiente dourado e o simbolo do bitcoin. Aqui ela
+       virou arquivo porque o site nao tinha favicon nenhum, e favicon
+       aparece na aba do navegador E no resultado de busca do Google.
+       Proporcoes conferidas com o CSS: raio 11/40, fonte 27/40. -->
+  <defs>
+    <linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD44F"/>
+      <stop offset="0.52" stop-color="#F5B614"/>
+      <stop offset="1" stop-color="#B57E04"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="141" ry="141" fill="url(#ouro)"/>
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
+        font-family="Georgia, 'Times New Roman', serif" font-size="378" font-weight="700"
+        fill="#241A04">₿</text>
+</svg>

@@ -3,23 +3,32 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="/mundodefi-api.js?v=2026-08-31"></script>
+<script src="/ferramentas-core.js?v=2026-08-31"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
 <title>Calculadora de Lucro Cripto Grátis | MundoDeFi</title>
-<meta name="description" content="Calculadora de lucro cripto grátis: calcule seu lucro real com preço de entrada, saída, taxas de exchange e imposto de renda, em dólar e em reais.">
+<meta name="description" content="Calculadora de lucro cripto grátis: descubra seu lucro líquido real com preço de entrada, saída e taxas de exchange, em dólar e em reais.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/lucro-cripto.html">
 <meta property="og:title" content="Calculadora de Lucro Cripto Grátis | MundoDeFi">
-<meta property="og:description" content="Calcule seu lucro real em cripto descontando taxas de exchange e imposto de renda, em dólar e em reais.">
+<meta property="og:image" content="https://mundodefi.com.br/og/ferramenta-lucro-cripto.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Lucro Cripto — MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/ferramenta-lucro-cripto.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Calcule seu lucro líquido em cripto descontando as taxas de exchange, em dólar e em reais.">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/lucro-cripto.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-31">
 
 <style>
 /* Específico desta ferramenta (não está no compartilhado):
@@ -44,6 +53,70 @@
 .coin-info-chg.up{color:var(--verde)}.coin-info-chg.down{color:var(--vermelho)}
 .chart-wrap canvas{width:100%!important}
 </style>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/ferramentas/lucro-cripto.html#app",
+   "name": "Lucro Cripto",
+   "url": "https://mundodefi.com.br/ferramentas/lucro-cripto.html",
+   "description": "Seu lucro líquido de verdade: busca o preço ao vivo de qualquer token e desconta as taxas da exchange.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "featureList": [
+    "Preço ao vivo",
+    "Taxas de exchange",
+    "Qualquer token"
+   ],
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Ferramentas",
+     "item": "https://mundodefi.com.br/ferramentas/ferramentas.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Lucro Cripto",
+     "item": "https://mundodefi.com.br/ferramentas/lucro-cripto.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 
@@ -54,7 +127,7 @@
 
   <div class="hero">
     <h1>Calculadora de <span class="par">Lucro Cripto</span></h1>
-    <p class="hero-sub">Calcule seu lucro real com preço de entrada, saída, taxas de exchange e imposto de renda — em dólar e em reais.</p>
+    <p class="hero-sub">Calcule seu lucro líquido com preço de entrada, saída e taxas de exchange — em dólar e em reais.</p>
   </div>
 
   <div class="card">
@@ -87,9 +160,7 @@
 
     <div class="grid2" style="margin-top:1rem">
       <div class="field"><label>Cotação USD → BRL</label><div class="input-wrap"><span class="prefix">R$</span><input type="number" id="lc-usd-brl" value="5.00" min="0" step="0.01" placeholder="5.00"/></div></div>
-      <div class="field"><label>Imposto sobre lucro (%)</label><div class="input-wrap"><span class="prefix">%</span><input type="number" id="lc-tax" value="15" min="0" step="1" placeholder="15"/></div></div>
     </div>
-    <div class="fee-notice">📋 IR Brasil: 15% sobre lucro em vendas acima de R$35.000/mês</div>
 
     <div class="actions">
       <button class="btn-calc" onclick="lcCalcular()">Calcular lucro</button>
@@ -106,16 +177,12 @@
       <div class="results-grid">
         <div class="res-box destaque"><div class="res-label">Lucro líquido (USD)</div><div class="res-val" id="lc-r-lucro">—</div></div>
         <div class="res-box"><div class="res-label">Lucro em BRL</div><div class="res-val" id="lc-r-lucro-brl">—</div></div>
-        <div class="res-box"><div class="res-label">Variação</div><div class="res-val" id="lc-r-pct">—</div></div>
+        <div class="res-box"><div class="res-label">Variação líquida</div><div class="res-val" id="lc-r-pct">—</div></div>
       </div>
       <div class="results-grid">
         <div class="res-box"><div class="res-label">Valor investido</div><div class="res-val" id="lc-r-inv">—</div></div>
         <div class="res-box"><div class="res-label">Valor de saída</div><div class="res-val" id="lc-r-out">—</div></div>
-        <div class="res-box"><div class="res-label">Imposto estimado</div><div class="res-val" id="lc-r-tax">—</div></div>
-      </div>
-      <div class="results-grid" style="grid-template-columns:1fr 1fr;margin-top:0">
         <div class="res-box"><div class="res-label">Total de taxas pagas</div><div class="res-val" id="lc-r-fees">—</div></div>
-        <div class="res-box"><div class="res-label">Lucro antes do IR</div><div class="res-val" id="lc-r-bruto">—</div></div>
       </div>
       <div class="section-label" style="margin-top:1rem">Resumo visual</div>
       <div class="chart-wrap" style="height:220px"><canvas id="lc-grafico"></canvas></div>
@@ -124,7 +191,7 @@
 
   <div class="card seo-card">
     <h2>Como calcular o lucro real de uma operação cripto?</h2>
-    <p>O lucro que aparece na tela da exchange raramente é o lucro que entra no seu bolso. Entre a compra e a venda existem <strong>taxas de negociação</strong> (0,1% na Binance, 0,05% na BingX) cobradas duas vezes — na entrada e na saída — e, no Brasil, <strong>imposto de renda de 15%</strong> sobre o ganho de capital quando as vendas do mês ultrapassam R$ 35.000.</p><p>Esta calculadora busca o preço atual de qualquer token via CoinGecko, desconta as taxas da exchange e o IR, e mostra seu lucro líquido em dólar e em reais, com um resumo visual da operação. Use o botão <strong>"usar preço atual como venda"</strong> para saber quanto embolsaria se vendesse agora.</p>
+    <p>O lucro que aparece na tela da exchange raramente é o lucro que entra no seu bolso. Entre a compra e a venda existem <strong>taxas de negociação</strong> (0,1% na Binance, 0,05% na BingX) cobradas duas vezes — na entrada e na saída. Numa operação de $10.000 com giro frequente, é dinheiro que some sem você perceber.</p><p>Esta calculadora busca o preço atual de qualquer token via CoinGecko, desconta as taxas da exchange e mostra seu lucro líquido em dólar e em reais, com um resumo visual da operação. Use o botão <strong>"usar preço atual como venda"</strong> para saber quanto embolsaria se vendesse agora.</p><p>O resultado aqui é <strong>antes de impostos</strong>. A tributação de cripto no Brasil depende do seu volume mensal, do tipo de operação e de onde o ativo está custodiado — consulte um contador para apurar o seu caso.</p>
   </div>
 
   <!-- outras ferramentas (bloco injetado) -->
@@ -133,14 +200,16 @@
   <!-- planos PRO / Premium (bloco injetado) -->
   <div data-mdf="pro"></div>
 
-  <p class="aviso">Os cálculos têm caráter educacional e não constituem recomendação de investimento nem orientação fiscal. Confirme as regras de imposto com um contador. O MundoDeFi não realiza intermediação de compra ou venda de ativos.</p>
+  <p class="aviso">Os cálculos têm caráter educacional e não constituem recomendação de investimento nem orientação fiscal. Os valores são apresentados antes de impostos — confirme a tributação com um contador. O MundoDeFi não realiza intermediação de compra ou venda de ativos.</p>
 </main>
 
 <!-- rodapé injetado -->
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-ferramentas.js" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-31" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-31" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-31" defer></script>
 
 <!-- miolo da ferramenta (busca de token + cálculo de lucro — lógica preservada) -->
 <script>
@@ -300,7 +369,7 @@ function lcUsarPrecoAtual(){
 function lcLimpar(){
   document.getElementById('lc-search').value='';document.getElementById('lc-qty').value='1';
   document.getElementById('lc-buy').value='';document.getElementById('lc-sell').value='';
-  document.getElementById('lc-fee').value='0.1';document.getElementById('lc-tax').value='15';
+  document.getElementById('lc-fee').value='0.1';
   document.getElementById('lc-resultado').style.display='none';
   document.getElementById('lc-coin-bar').style.display='none';
   _lcCoin=null;if(_lcChartInst){_lcChartInst.destroy();_lcChartInst=null;}
@@ -311,16 +380,20 @@ function lcCalcular(){
   var buy=parseFloat(document.getElementById('lc-buy').value)||0;
   var sell=parseFloat(document.getElementById('lc-sell').value)||0;
   var fee=parseFloat(document.getElementById('lc-fee').value)||0;
-  var tax=parseFloat(document.getElementById('lc-tax').value)||0;
   var usdBrl=parseFloat(document.getElementById('lc-usd-brl').value)||5;
   if(!qty||!buy||!sell){alert('Preencha quantidade, preço de compra e preço de venda.');return;}
-  var investido=qty*buy;var saida=qty*sell;
-  var feeCompra=investido*fee/100;var feeVenda=saida*fee/100;
-  var totalFees=feeCompra+feeVenda;
-  var lucro_bruto=(saida-investido)-totalFees;
-  var imposto=lucro_bruto>0?lucro_bruto*tax/100:0;
-  var lucro_liq=lucro_bruto-imposto;
-  var pct=(saida-investido)/investido*100;
+  /* A conta mora em /ferramentas-core.js, testada no Node.
+
+     O percentual era medido sobre (quantidade x preço de compra),
+     ignorando que a taxa da compra também saiu do bolso. O portfólio do
+     mesmo site soma a taxa ao custo -- então a mesma pergunta tinha duas
+     respostas dependendo de onde era feita. Agora a base é o desembolso
+     real nos dois lugares. */
+  var R=window.FerramentasCore.lucroOperacao({
+    quantidade:qty, precoCompra:buy, precoVenda:sell, taxaPct:fee
+  });
+  var investido=R.investido, saida=R.recebido, totalFees=R.taxas;
+  var lucro_liq=R.lucro, pct=R.lucroPct;
   function fUSD(v){return(v>=0?'':'−')+'$'+Math.abs(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
   function fBRL(v){return(v>=0?'':'−')+'R$ '+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
   var rLucro=document.getElementById('lc-r-lucro');rLucro.textContent=fUSD(lucro_liq);rLucro.style.color=lucro_liq>=0?'var(--verde)':'var(--vermelho)';
@@ -328,19 +401,51 @@ function lcCalcular(){
   var rPct=document.getElementById('lc-r-pct');rPct.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'%';rPct.style.color=pct>=0?'var(--verde)':'var(--vermelho)';
   document.getElementById('lc-r-inv').textContent=fUSD(investido);
   document.getElementById('lc-r-out').textContent=fUSD(saida);
-  document.getElementById('lc-r-tax').textContent=fUSD(imposto);
   document.getElementById('lc-r-fees').textContent=fUSD(totalFees);
-  document.getElementById('lc-r-bruto').textContent=fUSD(lucro_bruto);
   if(_lcChartInst){_lcChartInst.destroy();_lcChartInst=null;}
   document.getElementById('lc-resultado').style.display='block';
   setTimeout(function(){
     var c=document.getElementById('lc-grafico');
-    _lcChartInst=new Chart(c,{type:'bar',data:{labels:['Investido','Saída bruta','Taxas','Imposto','Lucro líquido'],datasets:[{data:[investido,saida,totalFees,imposto,Math.abs(lucro_liq)],backgroundColor:['rgba(75,150,255,0.7)','rgba(16,185,129,0.7)','rgba(239,68,68,0.5)','rgba(239,68,68,0.7)',lucro_liq>=0?'rgba(16,185,129,0.9)':'rgba(239,68,68,0.9)'],borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(13,17,32,0.95)',callbacks:{label:function(ctx){return fUSD(ctx.parsed.y);}}}},scales:{x:{ticks:{color:'#475569',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#475569',font:{size:11},callback:function(v){return'$'+v.toLocaleString('en-US',{maximumFractionDigits:0});}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
+    _lcChartInst=new Chart(c,{type:'bar',data:{labels:['Investido','Saída bruta','Taxas','Lucro líquido'],datasets:[{data:[investido,saida,totalFees,Math.abs(lucro_liq)],backgroundColor:['rgba(75,150,255,0.7)','rgba(16,185,129,0.7)','rgba(239,68,68,0.6)',lucro_liq>=0?'rgba(16,185,129,0.9)':'rgba(239,68,68,0.9)'],borderRadius:6,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{backgroundColor:'rgba(13,17,32,0.95)',callbacks:{label:function(ctx){return fUSD(ctx.parsed.y);}}}},scales:{x:{ticks:{color:'#475569',font:{size:11}},grid:{display:false}},y:{ticks:{color:'#475569',font:{size:11},callback:function(v){return'$'+v.toLocaleString('en-US',{maximumFractionDigits:0});}},grid:{color:'rgba(255,255,255,0.04)'}}}}});
   },80);
   setTimeout(function(){document.getElementById('lc-resultado').scrollIntoView({behavior:'smooth',block:'start'});},120);
 }
 
 document.getElementById('lc-usd-brl').addEventListener('input',function(){this._touched=true;});
+
+/* ── ?token=solana vindo da pagina do ativo ──
+   Aqui o ativo e escolhido por dropdown, entao montamos _lcCoin direto e
+   buscamos o preco — sem simular digitacao. Aceita id do CoinGecko ou ticker. */
+(function(){
+  var t=new URLSearchParams(location.search).get('token');
+  if(!t)return;
+  t=t.toLowerCase().replace(/[^a-z0-9-]/g,'').slice(0,40);
+  if(!t)return;
+  var km=(typeof _KNOWN_COINS!=='undefined'?_KNOWN_COINS:[]).find(function(c){
+    return c.id===t || (c.symbol||'').toLowerCase()===t;});
+  var id=km?km.id:t, sym=(km?km.symbol:t).toUpperCase();
+  _lcCoin={id:id,sym:sym,color:(km&&km.color)||'#888',thumb:null};
+  var busca=document.getElementById('lc-search'); if(busca)busca.value=sym;
+  var badge=document.getElementById('lc-badge');
+  if(badge){badge.textContent=sym.slice(0,4);badge.style.background=_lcCoin.color;}
+  var nome=document.getElementById('lc-coin-name'); if(nome)nome.textContent=km?km.name:sym;
+  var barra=document.getElementById('lc-coin-bar'); if(barra)barra.style.display='';
+  fetch('https://api.coingecko.com/api/v3/simple/price?ids='+encodeURIComponent(id)+'&vs_currencies=usd&include_24hr_change=true')
+    .then(function(r){return r.json();})
+    .then(function(pr){
+      var p=pr[id]; if(!p||!p.usd)return;
+      _lcPrices[id]=p;
+      var el=document.getElementById('lc-coin-price');
+      if(el)el.textContent='$'+p.usd.toLocaleString('en-US',{maximumFractionDigits:p.usd>=1?2:6});
+      var chg=document.getElementById('lc-coin-chg');
+      if(chg&&p.usd_24h_change!=null){
+        chg.textContent=(p.usd_24h_change>=0?'▲ +':'▼ ')+Math.abs(p.usd_24h_change).toFixed(2)+'%';
+        chg.className='lc-chg '+(p.usd_24h_change>=0?'up':'down');
+      }
+      var compra=document.getElementById('lc-buy');
+      if(compra&&!compra.value)compra.value=p.usd;
+    }).catch(function(){});
+})();
 </script>
 </body>
 </html>

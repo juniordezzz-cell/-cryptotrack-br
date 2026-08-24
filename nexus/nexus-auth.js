@@ -6,8 +6,8 @@
        "gratis" (padrão) | "pro" | "premium"
    • Se existir uma compra pendente da Kiwify para o e-mail
      logado (pendentes_pro/{email}), ativa o PRO sozinho.
-   • Sincroniza o plano com o Portfólio (P.st.cfg.plano) quando
-     o usuário está logado — o Firestore manda, não o localStorage.
+   • O Portfólio ouve "nexus-auth-changed" e se sincroniza sozinho —
+     o Firestore manda, o localStorage é só espelho.
    • Expõe window.NexusAuth:
        .ready   → já sabemos quem é? (true/false)
        .user    → usuário do Firebase (ou null)
@@ -59,17 +59,10 @@
     });
   }
 
-  /* Sincroniza o plano real com o estado do Portfólio (se existir) */
-  function syncPortfolio() {
-    try {
-      if (window.P && P.st && P.st.cfg && A.user) {
-        if (P.st.cfg.plano !== A.plano) {
-          P.st.cfg.plano = A.plano;
-          P.save();
-        }
-      }
-    } catch (e) {}
-  }
+  /* O Portfólio se sincroniza sozinho ouvindo "nexus-auth-changed"
+     (ver P.syncPlano em portfolio.js). Não escreva em P.st daqui:
+     dois donos do mesmo campo fazem o portfólio deixar de redesenhar
+     quando o plano muda. */
 
   /* Se a Kiwify registrou a compra antes do usuário logar,
      o resgate acontece aqui, sozinho. */
@@ -132,7 +125,6 @@
         carregarPlano(db, user).then(function (plano) {
           A.plano = plano || "gratis";
           A.ready = true;
-          syncPortfolio();
           emit();
         }).catch(function () {
           A.plano = "gratis";

@@ -34,10 +34,10 @@
   place-items: center;
   background:
     radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.85), transparent 34%),
-    radial-gradient(circle at 60% 65%, var(--green, #62ff4d) 0%, #1fae14 55%, #0a3d10 100%);
+    radial-gradient(circle at 60% 65%, var(--green, #14F195) 0%, #0fbf76 55%, #0a3d10 100%);
   box-shadow:
     0 12px 30px rgba(0, 0, 0, 0.55),
-    0 0 26px rgba(98, 255, 77, 0.45),
+    0 0 26px rgba(20, 241, 149, 0.45),
     inset 0 -6px 14px rgba(0, 0, 0, 0.35);
   animation:
     nexusOrbit 7s ease-in-out infinite,
@@ -60,7 +60,7 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(98, 255, 77, 0.5);
+  border: 2px solid rgba(20, 241, 149, 0.5);
   animation: nexusPing 2.8s cubic-bezier(0, 0, 0.2, 1) infinite;
   pointer-events: none;
 }
@@ -71,7 +71,7 @@
   position: absolute;
   inset: -6px;
   border-radius: 50%;
-  border: 2px solid rgba(98, 255, 77, 0.35);
+  border: 2px solid rgba(20, 241, 149, 0.35);
   animation: nexusPing 2.8s cubic-bezier(0, 0, 0.2, 1) infinite;
   animation-delay: 1.4s;
   pointer-events: none;
@@ -91,7 +91,7 @@
   transform: translateY(-50%);
   white-space: nowrap;
   background: rgba(8, 14, 10, 0.92);
-  border: 1px solid rgba(98, 255, 77, 0.35);
+  border: 1px solid rgba(20, 241, 149, 0.35);
   color: var(--text, #f5f7f8);
   font-size: 0.78rem;
   font-weight: 700;
@@ -123,13 +123,13 @@
   0%, 100% {
     box-shadow:
       0 12px 30px rgba(0, 0, 0, 0.55),
-      0 0 20px rgba(98, 255, 77, 0.35),
+      0 0 20px rgba(20, 241, 149, 0.35),
       inset 0 -6px 14px rgba(0, 0, 0, 0.35);
   }
   50% {
     box-shadow:
       0 12px 30px rgba(0, 0, 0, 0.55),
-      0 0 40px rgba(98, 255, 77, 0.65),
+      0 0 40px rgba(20, 241, 149, 0.65),
       inset 0 -6px 14px rgba(0, 0, 0, 0.35);
   }
 }
@@ -161,11 +161,11 @@
   flex-direction: column;
   width: min(380px, calc(100vw - 40px));
   height: min(540px, calc(100vh - 130px));
-  border: 1px solid rgba(98, 255, 77, 0.25);
+  border: 1px solid rgba(20, 241, 149, 0.25);
   border-radius: 18px;
   overflow: hidden;
   background: linear-gradient(180deg, #0c1210 0%, #080b0d 100%);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 30px rgba(98, 255, 77, 0.08);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65), 0 0 30px rgba(20, 241, 149, 0.08);
   transform-origin: bottom right;
   animation: nexusPop 0.28s cubic-bezier(0.22, 1.1, 0.36, 1) both;
 }
@@ -186,21 +186,21 @@
   gap: 10px;
   padding: 14px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(98, 255, 77, 0.05);
+  background: rgba(20, 241, 149, 0.05);
 }
 
 .nexus-status {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: var(--green, #62ff4d);
-  box-shadow: 0 0 10px rgba(98, 255, 77, 0.8);
+  background: var(--green, #14F195);
+  box-shadow: 0 0 10px rgba(20, 241, 149, 0.8);
   animation: nexusGlowDot 2s ease-in-out infinite;
 }
 
 @keyframes nexusGlowDot {
-  0%, 100% { box-shadow: 0 0 6px rgba(98, 255, 77, 0.5); }
-  50% { box-shadow: 0 0 14px rgba(98, 255, 77, 0.95); }
+  0%, 100% { box-shadow: 0 0 6px rgba(20, 241, 149, 0.5); }
+  50% { box-shadow: 0 0 14px rgba(20, 241, 149, 0.95); }
 }
 
 .nexus-header-text {
@@ -275,8 +275,8 @@
 
 .nexus-msg.user {
   align-self: flex-end;
-  background: rgba(98, 255, 77, 0.14);
-  border: 1px solid rgba(98, 255, 77, 0.3);
+  background: rgba(20, 241, 149, 0.14);
+  border: 1px solid rgba(20, 241, 149, 0.3);
   color: var(--text, #f5f7f8);
   border-bottom-right-radius: 5px;
 }
@@ -292,7 +292,7 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--green, #62ff4d);
+  background: var(--green, #14F195);
   opacity: 0.4;
   animation: nexusTyping 1.1s ease-in-out infinite;
 }
@@ -330,9 +330,9 @@
 }
 
 .nexus-chip:hover {
-  border-color: rgba(98, 255, 77, 0.5);
+  border-color: rgba(20, 241, 149, 0.5);
   color: var(--text, #f5f7f8);
-  background: rgba(98, 255, 77, 0.08);
+  background: rgba(20, 241, 149, 0.08);
 }
 
 .nexus-form {
@@ -356,15 +356,15 @@
 }
 
 .nexus-form input:focus {
-  border-color: rgba(98, 255, 77, 0.55);
-  box-shadow: 0 0 0 3px rgba(98, 255, 77, 0.12);
+  border-color: rgba(20, 241, 149, 0.55);
+  box-shadow: 0 0 0 3px rgba(20, 241, 149, 0.12);
 }
 
 .nexus-send {
   width: 42px;
   border: none;
   border-radius: 11px;
-  background: linear-gradient(135deg, var(--green, #62ff4d), #24c216);
+  background: linear-gradient(135deg, var(--green, #14F195), #24c216);
   color: #04120a;
   font-size: 1rem;
   cursor: pointer;
@@ -373,7 +373,7 @@
 
 .nexus-send:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(98, 255, 77, 0.3);
+  box-shadow: 0 6px 16px rgba(20, 241, 149, 0.3);
 }
 
 @media (max-width: 560px) {

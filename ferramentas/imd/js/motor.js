@@ -21,14 +21,24 @@
 
     /* ---- Carregamento dos dados (com fallback amigável) ---- */
     carregar: function () {
-      var base = (function () {
-        // caminho relativo à pasta /data a partir de qualquer página do projeto
-        return "data/";
+      var base = "data/";
+      /* A versao sai do proprio <script src="...?v=">: sem isso, editar uma
+         pergunta ou uma regra nao chegava em quem ja tinha visitado o site
+         -- o navegador continuava servindo o JSON antigo. */
+      var v = (function () {
+        try {
+          var m = (document.currentScript && document.currentScript.src || '')
+            .match(/[?&]v=([^&#]+)/);
+          if (m) return '?v=' + m[1];
+          var tag = document.querySelector('script[src*="motor.js"]');
+          var m2 = tag && tag.src.match(/[?&]v=([^&#]+)/);
+          return m2 ? '?v=' + m2[1] : '';
+        } catch (e) { return ''; }
       })();
       return Promise.all([
-        fetch(base + "perguntas.json").then(r => r.json()),
-        fetch(base + "competencias.json").then(r => r.json()),
-        fetch(base + "regras.json").then(r => r.json())
+        fetch(base + "perguntas.json" + v).then(r => r.json()),
+        fetch(base + "competencias.json" + v).then(r => r.json()),
+        fetch(base + "regras.json" + v).then(r => r.json())
       ]).then(function (res) {
         IMDMotor.dados.perguntas = res[0].perguntas;
         IMDMotor.dados.competencias = res[1].competencias;
@@ -211,6 +221,28 @@
         }
       });
 
+      /* ── TETO POR TRILHA ────────────────────────────────────────
+         O pilar e' medido contra o maximo PERGUNTADO, e o maximo depende
+         da trilha. Sem isto, acertar tudo na trilha de iniciante dava 97
+         ("Nativo DeFi") com 12 perguntas, contra 100 com 30 na avancada
+         -- e ser honesto sobre ser avancado so rendia mais chance de
+         errar. A trilha agora define ate onde o diagnostico pode ir.
+         Configurado em regras.json; ausente, nada muda.               */
+      var trilha = null;
+      var respondidas = Object.keys(this.estado.respostas);
+      (regras.trilhas || []).some(function (t) {
+        var achou = respondidas.some(function (id) {
+          return String(id).indexOf(t.prefixo + '-') === 0;
+        });
+        if (achou) { trilha = t; return true; }
+        return false;
+      });
+      /* NAO entra na lista de penalidades: teto de trilha nao e' castigo,
+         e' o alcance do diagnostico. Vai separado em `trilha`, e a tela
+         explica em vez de mostrar um aviso vermelho. */
+      var tetoAplicado = false;
+      if (trilha && imd > trilha.teto) { imd = trilha.teto; tetoAplicado = true; }
+
       imd = Math.max(0, Math.min(100, Math.round(imd)));
 
       // perfil
@@ -225,6 +257,8 @@
       return {
         imd: imd,
         bruto: Math.round(bruto),
+        trilha: trilha ? { id: trilha.id, teto: trilha.teto, rotulo: trilha.rotulo,
+                            motivo: trilha.motivo, limitou: tetoAplicado } : null,
         perfil: perfil,
         risco: this._calcularRisco(),
         pilares: pilares,

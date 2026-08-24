@@ -41,14 +41,14 @@
       { texto: 'Ferramentas', link: '/ferramentas/ferramentas.html' },
       { texto: 'Portfólio',   link: '/portfolio/' },
     ],
-    botaoPro: { texto: '👑 PRO', link: '/planos.html' },
+    botaoPro: { texto: '⚡ PRO', link: '/planos.html' },
 
     // Bloco PRO (roxo)
     pro: {
       tag:   '⚡ PRO',
       preco: 'R$ 19,90',
       ciclo: '/mês',
-      desc:  'Portfólio completo e ilimitado: HOLD, DeFi e Trade com export para o IR.',
+      desc:  'Carteiras ilimitadas, o Nexus respondendo sobre o seu portfólio, Entradas e Saídas e exportação em CSV.',
       cta:   'Assinar PRO',
       link:  '/planos.html',
     },
@@ -79,10 +79,10 @@
       titulo: 'Outras ferramentas gratuitas',
       sub: 'Tudo o que você precisa para operar cripto com método — grátis e em português.',
       cards: [
-        { preview: 'financas',   emoji: '💰', cor: '#9945FF', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: '👑 PRO', link: '/ferramentas/entradas-saidas/' },
+        { preview: 'financas',   emoji: '💰', cor: '#9945FF', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: '⚡ PRO', link: '/ferramentas/entradas-saidas/' },
         { preview: 'comparador', emoji: '📊', cor: '#00e5ff', nome: 'Comparador de Ativos', desc: 'Compare cripto com ouro, ações, índices e CDI.',               badge: 'Grátis',  link: '/ferramentas/comparador-de-ativos.html' },
         { preview: 'juros',      emoji: '📈', cor: '#14f195', nome: 'Juros Compostos',      desc: 'Simule o crescimento do patrimônio com aportes mensais.',      badge: 'Grátis',  link: '/ferramentas/juros-compostos.html' },
-        { preview: 'lucro',      emoji: '🪙', cor: '#4d9fff', nome: 'Lucro Cripto',         desc: 'Calcule o lucro real com preço de entrada, saída, taxas e IR.', badge: 'Grátis',  link: '/ferramentas/lucro-cripto.html' },
+        { preview: 'lucro',      emoji: '🪙', cor: '#4d9fff', nome: 'Lucro Cripto',         desc: 'Calcule o lucro real com preço de entrada, saída e taxas.', badge: 'Grátis',  link: '/ferramentas/lucro-cripto.html' },
         { preview: 'conversao',  emoji: '💱', cor: '#00e5ff', nome: 'Conversão',            desc: 'Converta entre cripto, Real, Dólar e Euro com cotação ao vivo.', badge: 'Grátis', link: '/ferramentas/conversor.html' },
         { preview: 'portfolio',  emoji: '💼', cor: '#9945ff', nome: 'Portfólio',            desc: 'Acompanhe HOLD, DeFi e Trade num painel só.',                  badge: 'Grátis',  link: '/portfolio/' },
       ],
@@ -177,11 +177,58 @@
 </footer>`;
   }
 
+  /* ── OUTRAS FERRAMENTAS ────────────────────────────────────────────
+     A lista sai de /mundodefi-catalogo.js, a fonte única do site, e as
+     ilustrações de /mundodefi-previas.js. CONFIG.outras acima virou
+     apenas reserva, para a página que não carregar o catálogo.
+
+     Antes esta lista era escrita à mão aqui: seis ferramentas enquanto o
+     catálogo já tinha onze, e cada página se listava a si mesma em
+     "outras ferramentas". */
+  function slugAtual() {
+    const cat = window.MDF_CATALOGO;
+    if (!cat) return null;
+    const limpa = (u) => String(u).toLowerCase().replace(/index\.html$/, '').replace(/\/+$/, '');
+    const aqui = limpa(location.pathname);
+    let achado = null;
+    cat.itens.forEach((i) => {
+      const alvo = limpa(i.url);
+      if (alvo && aqui.endsWith(alvo)) achado = i.slug;
+    });
+    return achado;
+  }
+
+  function cardsDoCatalogo(limite) {
+    const cat = window.MDF_CATALOGO;
+    if (!cat) return null;
+    const atual = slugAtual();
+    const eu = atual ? cat.porSlug(atual) : null;
+    const cores = {};
+    cat.categorias.forEach((c) => { cores[c.id] = c.cor; });
+
+    /* Primeiro as da mesma categoria: quem acabou de simular staking tende a
+       querer pool de liquidez, não conversor de moeda. */
+    const resto = cat.itens.filter((i) => i.slug !== atual);
+    const perto = eu ? resto.filter((i) => i.categoria === eu.categoria) : [];
+    const longe = resto.filter((i) => perto.indexOf(i) < 0);
+
+    return perto.concat(longe).slice(0, limite).map((i) => ({
+      cor: cores[i.categoria] || 'var(--purple-txt,#A96BFF)',
+      previewHtml: (window.MDF_PREVIAS || {})[i.slug] || '',
+      emoji: i.icone,
+      nome: i.nome,
+      desc: i.curto || i.resumo,
+      badge: i.plano === 'pro' ? '⚡ PRO' : 'Grátis',
+      link: i.url
+    }));
+  }
+
   function htmlOutras() {
     const o = CONFIG.outras;
-    const cards = o.cards
+    const lista = cardsDoCatalogo(6) || o.cards;
+    const cards = lista
       .map((c) => `<a class="tool-card" style="--tc:${c.cor}" href="${url(c.link)}">
-  <div class="tool-preview">${PREVIEWS[c.preview] || ''}</div>
+  <div class="tool-preview">${c.previewHtml != null ? c.previewHtml : (PREVIEWS[c.preview] || '')}</div>
   <div class="tool-body">
     <div class="tool-hdr"><div class="tool-icon" style="background:${tint(c.cor, 14)}">${c.emoji}</div><div class="tool-name">${esc(c.nome)}</div></div>
     <div class="tool-desc">${esc(c.desc)}</div>

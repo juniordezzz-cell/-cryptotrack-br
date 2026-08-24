@@ -3,10 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<script src="/mundodefi-api.js?v=2026-08-31"></script>
+<script src="/ferramentas-core.js?v=2026-08-31"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
 <title>Simulador de Staking Cripto Grátis | MundoDeFi</title>
 <meta name="description" content="Simulador de staking grátis: calcule o rendimento em APR ou APY, com preço ao vivo, para qualquer token — Binance, Orca, Jupiter, Hyperliquid e mais.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/staking.html">
 <meta property="og:title" content="Simulador de Staking Cripto Grátis | MundoDeFi">
+<meta property="og:image" content="https://mundodefi.com.br/og/ferramenta-staking.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Simulador de Staking — MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/ferramenta-staking.png">
+<meta name="twitter:card" content="summary_large_image">
 <meta property="og:description" content="Simule quanto seu staking pode render em 6 meses, 1 ano ou 5 anos, em APR ou APY, com preço ao vivo.">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/staking.html">
 <meta property="og:type" content="website">
@@ -14,10 +23,10 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-31">
 
 <style>
 /* Específico desta ferramenta (não está no compartilhado):
@@ -88,6 +97,70 @@
 .faq-q{font-size:.86rem;font-weight:600;color:var(--text);margin:1rem 0 .35rem}
 .faq-a{font-size:.8rem;color:var(--muted);line-height:1.7}
 </style>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/ferramentas/staking.html#app",
+   "name": "Simulador de Staking",
+   "url": "https://mundodefi.com.br/ferramentas/staking.html",
+   "description": "Quanto rendem seus tokens em staking, com APR simples ou APY composto e preço ao vivo.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "featureList": [
+    "APR e APY",
+    "Preço ao vivo",
+    "Mês a mês"
+   ],
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Ferramentas",
+     "item": "https://mundodefi.com.br/ferramentas/ferramentas.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Simulador de Staking",
+     "item": "https://mundodefi.com.br/ferramentas/staking.html"
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 
@@ -226,7 +299,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-ferramentas.js" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-31" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-31" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-31" defer></script>
 
 <!-- JSON-LD FAQ -->
 <script type="application/ld+json">
@@ -293,10 +368,13 @@ document.getElementById('horizonSeg').addEventListener('click',function(e){var b
 
 // ══════════ CÁLCULO ══════════
 var _last=null;
+/* A conta mora em /ferramentas-core.js, testada no Node. A formula aqui
+   ja estava certa -- APR simples, APY como taxa efetiva ao ano -- e foi
+   movida para o nucleo para existir em um lugar so. */
 function ganho(qtd,taxa,meses){
-  var anos=meses/12;
-  if(RATE==='apr')return qtd*taxa*anos;            // simples
-  return qtd*(Math.pow(1+taxa,anos)-1);            // composto (APY)
+  return window.FerramentasCore.staking({
+    quantidade:qtd, taxaPct:taxa*100, meses:meses, modo:RATE
+  }).rendimento;
 }
 function calcular(){
   var sym=(document.getElementById('tokenSym').value||'TOKEN').trim().toUpperCase();
@@ -390,6 +468,17 @@ window.addEventListener('paste',function(e){var items=(e.clipboardData||{}).item
 loadFx();
 fetchPrice('SOL');
 calcular();
+
+/* ── ?token=SOL vindo da pagina do ativo ── */
+(function(){
+  var t=new URLSearchParams(location.search).get('token');
+  if(!t)return;
+  t=t.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,10);
+  var el=document.getElementById('tokenSym'); if(!el||!t)return;
+  el.value=t;
+  var pr=document.getElementById('inPreco'); if(pr)pr.dataset.touched='';
+  if(typeof fetchPrice==='function')fetchPrice(t);
+})();
 </script>
 </body>
 </html>

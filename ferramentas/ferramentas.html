@@ -3,31 +3,42 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ferramentas Cripto Grátis | MundoDeFi</title>
-<meta name="description" content="Ferramentas cripto gratuitas em português: simulador de trade com gestão de banca, juros compostos, staking, pool de liquidez, conversor e câmbio em tempo real, lucro com IR e comparador de ativos.">
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
+<title>Ferramentas Cripto em Português | MundoDeFi</title>
+<meta name="description" content="Onze ferramentas para investir em cripto com números: portfólio, impermanent loss, staking, juros compostos e conversor. Em português, a maioria grátis.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/ferramentas.html">
 <meta property="og:title" content="Ferramentas Cripto Grátis | MundoDeFi">
-<meta property="og:description" content="Ferramentas cripto gratuitas em português: simulador de trade, juros compostos, staking, pool de liquidez, conversor, câmbio, lucro com IR e comparador de ativos.">
+<meta property="og:image" content="https://mundodefi.com.br/og/home.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Ferramentas do MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/home.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="11 ferramentas para investir em cripto com números. A maioria gratuita, sem cadastro, em português.">
 <meta property="og:url" content="https://mundodefi.com.br/ferramentas/ferramentas.html">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/mundodefi-tokens.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --card2:#1b1b22;
-  --border:#26262e;
-  --border2:#33333d;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
-  --text-dim:#b4b4bd;
-  --text-muted:#7a7a86;
+  /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
+     o porquê. As cores de marca NÃO são redefinidas aqui: antes este bloco
+     sobrescrevia --red com #ff5470 enquanto a marca usa #FF4D6A, e o mesmo
+     vermelho aparecia diferente conforme a página. */
+  --bg:var(--mdf-bg);
+  --bg2:var(--mdf-surface);
+  --card:var(--mdf-surface-2);
+  --card2:var(--mdf-surface-3);
+  --border:var(--mdf-line-2);
+  --border2:var(--mdf-line-3);
+  --text:var(--mdf-text);
+  --muted:var(--mdf-text-2);
+  --text-dim:var(--mdf-text-2);
+  --text-muted:var(--mdf-text-3);
   --roxo:var(--purple);
   --verde:var(--green);
   --vermelho:var(--red);
@@ -59,6 +70,10 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-f
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}
 .btn-pro{background:linear-gradient(135deg,var(--roxo),#6c2bd9);color:#fff;padding:7px 16px;border-radius:8px;font-weight:600}
+/* mesma correção do mundodefi-ferramentas.css: o nav estourava a
+   viewport por poucos pixels em tela estreita. */
+@media(max-width:520px){.nav-links{gap:12px;font-size:.82rem}.btn-pro{padding:6px 11px;font-size:.78rem}}
+@media(max-width:400px){.nav-links a:not(.btn-pro){display:none}}
 .btn-pro:hover{opacity:.9;text-decoration:none}
 
 /* ===== Page ===== */
@@ -71,6 +86,15 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-f
 /* ===== HUB ===== */
 .hub-wrap{max-width:1080px;margin:0 auto}
 .hub-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:2.2rem}
+/* Secoes por categoria: a pergunta que a pessoa esta fazendo vira o
+   subtitulo, porque e assim que ela procura — nao por tipo de artefato. */
+.hub-sec{margin-bottom:2.6rem}
+.hub-sec-hd{display:flex;align-items:baseline;gap:12px;margin-bottom:1.1rem;padding-bottom:.7rem;border-bottom:1px solid var(--border)}
+.hub-sec-ico{font-size:1.1rem}
+.hub-sec-nome{font-family:var(--display);font-size:1.15rem;font-weight:700;letter-spacing:-.01em}
+.hub-sec-perg{font-size:.8rem;color:var(--muted)}
+.hub-sec-n{margin-left:auto;font-size:.7rem;color:var(--muted);font-family:var(--mono)}
+@media(max-width:600px){.hub-sec-perg{display:none}}
 @media(max-width:920px){.hub-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:600px){.hub-grid{grid-template-columns:1fr}}
 .hub-card{display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-decoration:none;color:var(--text);transition:transform .2s,border-color .2s,box-shadow .2s;position:relative;overflow:hidden}
@@ -85,7 +109,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-f
 .hub-tag{font-size:.62rem;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--bg2);border:1px solid var(--border);color:var(--muted)}
 .hub-open{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:700;color:var(--ac)}
 .hub-free{position:absolute;top:14px;right:14px;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--verde);background:rgba(20,241,149,.1);border:1px solid rgba(20,241,149,.28);padding:3px 9px;border-radius:99px}
-.hub-pro{position:absolute;top:14px;right:14px;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#9945FF;background:rgba(153,69,255,.12);border:1px solid rgba(153,69,255,.35);padding:3px 9px;border-radius:99px}
+.hub-pro{position:absolute;top:14px;right:14px;font-size:.58rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#A96BFF;background:rgba(153,69,255,.12);border:1px solid rgba(153,69,255,.35);padding:3px 9px;border-radius:99px}
 
 /* ===== DUO PRO/PREMIUM ===== */
 .hub-duo{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px;margin:0 auto 1rem}
@@ -111,6 +135,101 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
 </style>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "CollectionPage",
+   "@id": "https://mundodefi.com.br/ferramentas/ferramentas.html",
+   "name": "Ferramentas de cripto do MundoDeFi",
+   "inLanguage": "pt-BR",
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   },
+   "about": "Ferramentas para investir em criptomoedas e DeFi",
+   "mainEntity": {
+    "@type": "ItemList",
+    "numberOfItems": 11,
+    "itemListElement": [
+     {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Portfólio",
+      "url": "https://mundodefi.com.br/portfolio/index.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Entradas e Saídas",
+      "url": "https://mundodefi.com.br/ferramentas/entradas-saidas/"
+     },
+     {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Juros Compostos",
+      "url": "https://mundodefi.com.br/ferramentas/juros-compostos.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 4,
+      "name": "Simulador de Staking",
+      "url": "https://mundodefi.com.br/ferramentas/staking.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 5,
+      "name": "Pool de Liquidez",
+      "url": "https://mundodefi.com.br/ferramentas/pool-liquidez.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 6,
+      "name": "Lucro Cripto",
+      "url": "https://mundodefi.com.br/ferramentas/lucro-cripto.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 7,
+      "name": "Comparador de Ativos",
+      "url": "https://mundodefi.com.br/ferramentas/comparador-de-ativos.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 8,
+      "name": "Simulador de Trade",
+      "url": "https://mundodefi.com.br/ferramentas/simulador-de-trade.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 9,
+      "name": "Conversor Cripto",
+      "url": "https://mundodefi.com.br/ferramentas/conversor.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 10,
+      "name": "Câmbio",
+      "url": "https://mundodefi.com.br/ferramentas/cambio.html"
+     },
+     {
+      "@type": "ListItem",
+      "position": 11,
+      "name": "Índice Mundo DeFi",
+      "url": "https://mundodefi.com.br/ferramentas/imd/"
+     }
+    ]
+   }
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 
@@ -128,40 +247,32 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 <main class="page">
   <div class="container">
     <div class="page-header">
-      <h1>Ferramentas Cripto <span>Gratuitas</span></h1>
-      <p>Calculadoras e simuladores profissionais para decidir com números, não com achismo.<br>Sem cadastro, sem limite de uso, em português.</p>
+      <h1>Ferramentas <span>para investir melhor</span></h1>
+      <p>Calculadoras e simuladores para decidir com números, não com achismo.<br>A maioria é gratuita, sem cadastro e sem limite de uso — em português.</p>
     </div>
 
     <div class="hub-wrap">
-      <div class="hub-grid">
-<!-- ===== GRATUITAS (primeiro) ===== -->
-<a class="hub-card" style="--ac:#8b5cf6" href="/ferramentas/juros-compostos.html"><span class="hub-free">Grátis</span><div class="hub-ico">📈</div><div class="hub-name">Juros Compostos</div><div class="hub-desc">Simule o crescimento do seu patrimônio com aportes mensais, gráfico interativo e tabela mês a mês — em Real, Dólar ou Euro.</div><div class="hub-tags"><span class="hub-tag">Gráfico + tabela</span><span class="hub-tag">3 moedas</span><span class="hub-tag">Retiradas mensais</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#f5a623" href="/ferramentas/lucro-cripto.html"><span class="hub-free">Grátis</span><div class="hub-ico">🪙</div><div class="hub-name">Lucro Cripto</div><div class="hub-desc">Descubra seu lucro líquido real: busca o preço ao vivo de qualquer token e desconta taxas da exchange e imposto de renda.</div><div class="hub-tags"><span class="hub-tag">Preço ao vivo</span><span class="hub-tag">Taxas + IR</span><span class="hub-tag">Qualquer token</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#22d3ee" href="/ferramentas/pool-liquidez.html"><span class="hub-free">Grátis</span><div class="hub-ico">💧</div><div class="hub-name">Pool de Liquidez</div><div class="hub-desc">A pergunta de todo provedor de liquidez: as taxas compensam o impermanent loss? Simule pools 50/50, 80/20 e stable e compare com HOLD.</div><div class="hub-tags"><span class="hub-tag">Impermanent loss</span><span class="hub-tag">Compara com HOLD</span><span class="hub-tag">Análise de risco</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#4b96ff" href="/ferramentas/staking.html"><span class="hub-free">Grátis</span><div class="hub-ico">🔒</div><div class="hub-name">Simulador de Staking</div><div class="hub-desc">Quanto rendem seus tokens em staking? APY composto de ETH, SOL, BNB, MATIC e ADA com preço atual e resultado em tokens, USD e BRL.</div><div class="hub-tags"><span class="hub-tag">APY composto</span><span class="hub-tag">Preço ao vivo</span><span class="hub-tag">Rend. diário</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#10b981" href="/ferramentas/conversor.html"><span class="hub-free">Grátis</span><div class="hub-ico">💱</div><div class="hub-name">Conversor Cripto</div><div class="hub-desc">BTC, ETH, SOL e mais convertidos para Real, Dólar e Euro em tempo real, com variação 24h e market cap via CoinGecko.</div><div class="hub-tags"><span class="hub-tag">Tempo real</span><span class="hub-tag">BRL · USD · EUR</span><span class="hub-tag">Market cap</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#2dd4bf" href="/ferramentas/cambio.html"><span class="hub-free">Grátis</span><div class="hub-ico">💵</div><div class="hub-name">Câmbio Cripto</div><div class="hub-desc">Converta Real, Dólar, Euro e Libra entre si usando a cotação do mercado cripto ao vivo, via stablecoins USDT e USDC.</div><div class="hub-tags"><span class="hub-tag">BRL · USD · EUR · GBP</span><span class="hub-tag">USDT · USDC</span><span class="hub-tag">Cotação ao vivo</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<a class="hub-card" style="--ac:#f97316" href="/ferramentas/comparador-de-ativos.html"><span class="hub-free">Grátis</span><div class="hub-ico">⚖️</div><div class="hub-name">Comparador de Ativos</div><div class="hub-desc">Compare a rentabilidade de cripto, ações e renda fixa lado a lado — qualquer ativo contra o CDI, com dados ao vivo de CoinGecko, BACEN e mercado tradicional.</div><div class="hub-tags"><span class="hub-tag">Cripto · ações · CDI</span><span class="hub-tag">Dados ao vivo</span><span class="hub-tag">Lado a lado</span></div><span class="hub-open">Abrir ferramenta →</span></a>
-<!-- ===== PRO (depois das gratuitas) ===== -->
-<a class="hub-card" style="--ac:#9945FF" href="/ferramentas/entradas-saidas/"><span class="hub-pro">👑 PRO</span><div class="hub-ico">💰</div><div class="hub-name">Entradas e Saídas</div><div class="hub-desc">Controle financeiro completo: registre entradas, despesas e investimentos, veja gráficos do seu fluxo de caixa e converse com o Nexus, seu analista financeiro.</div><div class="hub-tags"><span class="hub-tag">Fluxo de caixa</span><span class="hub-tag">Gráficos + relatórios</span><span class="hub-tag">Nexus IA</span></div><span class="hub-open">Ver a ferramenta →</span></a>
-<a class="hub-card" style="--ac:#9945FF" href="/ferramentas/simulador-de-trade.html"><span class="hub-pro">👑 PRO</span><div class="hub-ico">📊</div><div class="hub-name">Simulador de Trade</div><div class="hub-desc">Simule operações long e short com alavancagem, veja lucro, prejuízo e preço de liquidação — e acompanhe sua banca crescer entrada após entrada.</div><div class="hub-tags"><span class="hub-tag">Long e short</span><span class="hub-tag">Gestão de banca</span><span class="hub-tag">Liquidação</span></div><span class="hub-open">Ver a ferramenta →</span></a>
-      </div>
+      <!-- As cartas vem de /mundodefi-catalogo.js. Antes eram 9 <a> escritos
+           a mao aqui, enquanto a home tinha 11 e o menu 12 — a pagina chamada
+           "todas as ferramentas" era justamente a que tinha menos. -->
+      <div id="hub-catalogo"></div>
+
 
       <div class="page-header" style="margin-top:3.5rem">
-        <h1 style="font-size:1.5rem">Pronto para o próximo nível?</h1>
+        <h2 style="font-size:1.5rem">Pronto para o próximo nível?</h2>
         <p>As ferramentas calculam. Os planos acompanham seu dinheiro de verdade.</p>
       </div>
       <div class="hub-duo">
         <div class="duo-card">
-          <div class="duo-name" style="color:var(--purple)">⚡ PRO</div>
-          <div class="duo-price" style="color:var(--purple)">R$ 9,90<span>/mês</span></div>
-          <div class="duo-desc">Portfólio completo e ilimitado — HOLD, DeFi e Trade — com tracking de pools, impermanent loss e exportação para o IR.</div>
+          <div class="duo-name" style="color:var(--purple-txt)">⚡ PRO</div>
+          <div class="duo-price" style="color:var(--purple-txt)">R$ 19,90<span>/mês</span></div>
+          <div class="duo-desc">O portfólio é grátis com uma carteira. O PRO libera carteiras ilimitadas, o Nexus, o Entradas e Saídas, o Simulador de Trade e a exportação em CSV.</div>
           <a class="cta-btn-ghost" style="width:100%;justify-content:center;background:linear-gradient(135deg,var(--purple),#7b2ff7);color:#fff;border:none" href="/planos.html">Assinar PRO</a>
         </div>
         <div class="duo-card duo-prem">
           <div class="duo-tag">👑 Mentoria individual</div>
           <div class="duo-name" style="color:var(--gold)">PREMIUM</div>
-          <div class="duo-price" style="color:var(--gold)">R$ 29,90<span>/mês</span></div>
+          <div class="duo-price" style="color:var(--gold)">R$ 49,90<span>/mês</span></div>
           <div class="duo-desc">Tudo do PRO + estratégias avançadas de DeFi e Trade + 1 encontro individual por mês, adaptado ao seu nível. Vagas limitadas.</div>
           <a class="cta-btn-gold" style="width:100%;justify-content:center" href="/planos.html">Garantir minha vaga</a>
         </div>
@@ -179,9 +290,39 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
       <a href="/planos.html">Planos</a>
       <a href="/cadastro.html">Criar conta</a>
     </div>
-    <div class="f-copy">© 2026 MundoDeFi · Conteúdo educacional — não é recomendação de investimento<br>Dados de mercado via CoinGecko</div>
+    <div class="f-copy">© 2026 MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> · Conteúdo educacional — não é recomendação de investimento<br>Dados de mercado via CoinGecko</div>
   </div>
 </footer>
 
+<script src="/mundodefi-catalogo.js?v=2026-08-31"></script>
+<script>
+(function(){
+  var alvo=document.getElementById('hub-catalogo');
+  if(!alvo||!window.MDF_CATALOGO)return;
+  function esc(t){return String(t==null?'':t).replace(/[<>&"]/g,function(c){
+    return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+  alvo.innerHTML = MDF_CATALOGO.agrupado().map(function(g){
+    return '<section class="hub-sec">'
+      +'<div class="hub-sec-hd">'
+        +'<span class="hub-sec-ico">'+g.categoria.icone+'</span>'
+        +'<span class="hub-sec-nome">'+esc(g.categoria.nome)+'</span>'
+        +'<span class="hub-sec-perg">'+esc(g.categoria.pergunta)+'</span>'
+        +'<span class="hub-sec-n">'+g.itens.length+'</span>'
+      +'</div>'
+      +'<div class="hub-grid" style="margin-bottom:0">'
+      + g.itens.map(function(i){
+          return '<a class="hub-card" style="--ac:'+g.categoria.cor+'" href="'+i.url+'">'
+            +(i.plano==='pro'?'<span class="hub-pro">PRO</span>':'<span class="hub-free">Grátis</span>')
+            +'<div class="hub-ico">'+i.icone+'</div>'
+            +'<div class="hub-name">'+esc(i.nome)+'</div>'
+            +'<div class="hub-desc">'+esc(i.resumo)+'</div>'
+            +'<div class="hub-tags">'+(i.tags||[]).map(function(t){
+                return '<span class="hub-tag">'+esc(t)+'</span>';}).join('')+'</div>'
+            +'<span class="hub-open">Abrir ferramenta →</span></a>';
+        }).join('')
+      +'</div></section>';
+  }).join('');
+})();
+</script>
 </body>
 </html>

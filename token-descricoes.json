@@ -1,0 +1,381 @@
+{
+ "_leiaMe": "Explicações em português para a página de token. Chave = id do CoinGecko. Para adicionar um ativo, copie um bloco e troque o conteúdo. Quem não estiver aqui recebe um texto montado automaticamente a partir das categorias e do ranking — nunca fica sem nada. Escreva para quem está começando: sem jargão não explicado, sem promessa de retorno, sem 'vai valorizar'.",
+ "bitcoin": {
+  "titulo": "O que é o Bitcoin?",
+  "texto": "O Bitcoin é a primeira criptomoeda, criada em 2009 por alguém sob o pseudônimo Satoshi Nakamoto. Ele funciona como dinheiro digital que não depende de banco nem de governo: as transações são registradas numa rede pública mantida por milhares de computadores espalhados pelo mundo.\n\nA característica mais citada é o limite de 21 milhões de unidades, definido no código e nunca alterado. É isso que faz muita gente compará-lo ao ouro — a ideia de um ativo que ninguém pode emitir a mais. Por outro lado, o preço oscila muito: quedas de 50% ou mais já aconteceram várias vezes na história dele.",
+  "pontos": [
+   "Rede aberta, sem empresa ou país no controle",
+   "Emissão limitada a 21 milhões de unidades",
+   "Alta volatilidade — oscilações fortes são normais aqui"
+  ]
+ },
+ "ethereum": {
+  "titulo": "O que é o Ethereum?",
+  "texto": "O Ethereum é uma rede que vai além de transferir dinheiro: ela executa programas, chamados de contratos inteligentes. Na prática, é uma plataforma onde outras pessoas constroem aplicações — empréstimos, trocas de tokens, jogos, marketplaces — sem precisar de uma empresa no meio.\n\nO ETH é a moeda usada para pagar essas operações. Toda ação na rede custa uma taxa em ETH, chamada de gas. É por isso que o Ethereum costuma ser descrito menos como 'moeda' e mais como a infraestrutura onde boa parte do mundo DeFi acontece.",
+  "pontos": [
+   "Plataforma para contratos inteligentes e aplicações",
+   "ETH paga as taxas de uso da rede (gas)",
+   "Base de grande parte do ecossistema DeFi"
+  ]
+ },
+ "solana": {
+  "titulo": "O que é a Solana?",
+  "texto": "A Solana é uma rede criada com foco em velocidade e taxas baixas. Enquanto outras redes processam poucas transações por segundo e cobram caro em momentos de congestionamento, a Solana foi desenhada para suportar volume alto com custo de centavos.\n\nIsso a tornou popular para aplicações que exigem muitas operações: corretoras descentralizadas, pools de liquidez e negociação de tokens em geral. O contraponto histórico é a estabilidade — a rede já passou por interrupções que deixaram tudo fora do ar por horas.",
+  "pontos": [
+   "Taxas muito baixas e alta capacidade de transações",
+   "Ecossistema forte em DeFi e negociação",
+   "Já teve episódios de instabilidade da rede"
+  ]
+ },
+ "tether": {
+  "titulo": "O que é o USDT?",
+  "texto": "O USDT, ou Tether, é uma stablecoin: uma criptomoeda feita para valer sempre perto de um dólar. Ela não existe para valorizar, e sim para servir de referência estável dentro do mercado cripto — é onde muita gente 'estaciona' o dinheiro entre uma operação e outra.\n\nO valor se mantém porque a empresa emissora afirma manter reservas equivalentes em dólares e títulos. Esse é justamente o ponto de atenção: você está confiando numa empresa e nas reservas que ela declara ter, não em um código aberto.",
+  "pontos": [
+   "Feita para valer sempre cerca de US$ 1",
+   "Usada como caixa dentro do mercado cripto",
+   "Depende da confiança nas reservas do emissor"
+  ]
+ },
+ "usd-coin": {
+  "titulo": "O que é o USDC?",
+  "texto": "O USDC é uma stablecoin atrelada ao dólar, emitida pela Circle. Como o USDT, ela não foi feita para subir de preço: serve como dinheiro estável dentro do ecossistema cripto, para quem quer sair da volatilidade sem converter para reais.\n\nA diferença mais citada em relação ao USDT é a transparência das reservas — a Circle publica relatórios auditados com regularidade e opera sob regulação nos Estados Unidos. Ainda assim, vale a mesma ressalva: é confiança numa empresa.",
+  "pontos": [
+   "Stablecoin atrelada ao dólar, emitida pela Circle",
+   "Reservas auditadas e publicadas periodicamente",
+   "Muito usada em pools de liquidez e lending"
+  ]
+ },
+ "binancecoin": {
+  "titulo": "O que é o BNB?",
+  "texto": "O BNB nasceu como o token da corretora Binance, dando desconto em taxas para quem o utilizava. Com o tempo virou também a moeda da BNB Chain, uma rede própria com contratos inteligentes e um ecossistema grande de aplicações.\n\nA ligação com a Binance é a força e o risco do ativo ao mesmo tempo: ele se beneficia do tamanho da maior corretora do mundo, e sente diretamente qualquer problema regulatório que ela enfrente.",
+  "pontos": [
+   "Token da Binance e moeda da BNB Chain",
+   "Dá desconto em taxas na corretora",
+   "Muito ligado ao desempenho e à situação da Binance"
+  ]
+ },
+ "ripple": {
+  "titulo": "O que é o XRP?",
+  "texto": "O XRP é o ativo da rede XRP Ledger, criada para transferências internacionais rápidas e baratas. A proposta é servir de ponte entre moedas: em vez de um banco manter contas em vários países, ele converteria valores usando XRP em segundos.\n\nO ativo é conhecido pela longa disputa judicial entre a empresa Ripple e o regulador americano, que dominou a história recente do preço. É também um dos casos em que uma empresa tem papel central — diferente do Bitcoin, que não tem dono.",
+  "pontos": [
+   "Focado em transferências internacionais rápidas",
+   "Empresa Ripple tem papel central no projeto",
+   "Histórico marcado por disputas regulatórias"
+  ]
+ },
+ "cardano": {
+  "titulo": "O que é a Cardano?",
+  "texto": "A Cardano é uma rede de contratos inteligentes que se diferencia pelo método de desenvolvimento: mudanças passam por revisão acadêmica antes de irem para o código. Isso deixa a evolução mais lenta e previsível, o que é elogiado por uns e criticado por outros.\n\nO ADA é a moeda da rede, usada para taxas e para staking. O ecossistema de aplicações é menor que o do Ethereum ou da Solana, algo que costuma aparecer nas críticas ao projeto.",
+  "pontos": [
+   "Desenvolvimento com revisão acadêmica",
+   "ADA usado para taxas e staking",
+   "Ecossistema de aplicações menor que o dos concorrentes"
+  ]
+ },
+ "dogecoin": {
+  "titulo": "O que é o Dogecoin?",
+  "texto": "O Dogecoin começou em 2013 como piada, usando o meme de um cachorro da raça Shiba Inu. Não tinha pretensão técnica: foi criado em poucas horas a partir do código de outra moeda.\n\nApesar disso, virou uma das maiores criptomoedas por valor de mercado, impulsionado principalmente por comunidade e por menções de personalidades públicas. É o exemplo mais claro de um ativo cujo preço responde a atenção, não a fundamento técnico — o que também significa que pode cair na mesma velocidade.",
+  "pontos": [
+   "Criado em 2013 como brincadeira",
+   "Preço muito sensível a redes sociais e celebridades",
+   "Sem limite de emissão — novas moedas são criadas sempre"
+  ]
+ },
+ "chainlink": {
+  "titulo": "O que é o Chainlink?",
+  "texto": "O Chainlink resolve um problema específico: contratos inteligentes não conseguem, sozinhos, saber o que acontece fora da blockchain. Eles não sabem a cotação do dólar, o resultado de um jogo ou a temperatura de uma cidade.\n\nO Chainlink é a ponte que leva esses dados para dentro das redes, através de uma estrutura chamada oráculo. Boa parte das aplicações DeFi depende dele para saber preços — é uma peça de infraestrutura mais do que uma moeda de uso cotidiano.",
+  "pontos": [
+   "Leva dados do mundo real para dentro das blockchains",
+   "Infraestrutura usada por muitas aplicações DeFi",
+   "LINK paga os provedores de dados da rede"
+  ]
+ },
+ "avalanche-2": {
+  "titulo": "O que é a Avalanche?",
+  "texto": "A Avalanche é uma rede de contratos inteligentes que aposta em confirmação rápida e na possibilidade de criar sub-redes próprias. Uma empresa ou projeto pode montar sua própria blockchain com regras específicas, aproveitando a segurança da rede principal.\n\nO AVAX é usado para taxas e staking. A rede é compatível com as ferramentas do Ethereum, o que facilita a vida de quem já desenvolve nesse ambiente.",
+  "pontos": [
+   "Confirmação rápida de transações",
+   "Permite criar sub-redes personalizadas",
+   "Compatível com as ferramentas do Ethereum"
+  ]
+ },
+ "polkadot": {
+  "titulo": "O que é o Polkadot?",
+  "texto": "O Polkadot foi criado para resolver a incomunicabilidade entre blockchains: hoje, redes diferentes têm dificuldade de trocar informação e valor entre si. O Polkadot funciona como uma central que conecta várias redes independentes, chamadas de parachains.\n\nO DOT é usado para governança, staking e para disputar as vagas de parachain. É um projeto de infraestrutura, com foco em conectar ecossistemas em vez de competir por usuários finais.",
+  "pontos": [
+   "Conecta blockchains diferentes entre si",
+   "DOT usado em governança e staking",
+   "Foco em infraestrutura, não em aplicação final"
+  ]
+ },
+ "uniswap": {
+  "titulo": "O que é o Uniswap?",
+  "texto": "O Uniswap é uma corretora descentralizada: você troca um token por outro direto da sua carteira, sem depositar em empresa nenhuma. Não existe livro de ofertas com compradores e vendedores — os preços saem de uma fórmula matemática aplicada a reservas de tokens, as chamadas pools de liquidez.\n\nQualquer pessoa pode depositar tokens numa pool e receber parte das taxas de quem negocia. É esse mecanismo que está por trás de boa parte do DeFi, e é também onde aparece o impermanent loss.",
+  "pontos": [
+   "Troca de tokens direto da carteira, sem intermediário",
+   "Preços definidos por fórmula, não por livro de ofertas",
+   "Qualquer um pode fornecer liquidez e receber taxas"
+  ]
+ },
+ "aave": {
+  "titulo": "O que é o Aave?",
+  "texto": "O Aave é um protocolo de empréstimos sem banco. Quem tem cripto parada pode depositar e receber juros; quem precisa de liquidez pode pegar emprestado deixando outro ativo como garantia.\n\nTudo é executado por contratos inteligentes, com as taxas variando conforme a oferta e a demanda de cada token. O risco principal não é calote — a garantia cobre isso — e sim liquidação: se o valor da sua garantia cair demais, ela é vendida automaticamente.",
+  "pontos": [
+   "Empréstimos e depósitos sem intermediário",
+   "Juros variam conforme oferta e demanda",
+   "Risco de liquidação se a garantia desvalorizar"
+  ]
+ },
+ "shiba-inu": {
+  "titulo": "O que é o Shiba Inu?",
+  "texto": "O Shiba Inu é um token criado em 2020 inspirado no Dogecoin, também usando o meme do cachorro. Foi lançado com uma quantidade enorme de unidades em circulação, o que explica o preço com muitas casas decimais.\n\nÉ um ativo movido a comunidade e especulação, sem uso prático que justifique o valor de mercado. Ganhos expressivos aconteceram, mas o padrão desse tipo de token é subir rápido em ondas de atenção e devolver a maior parte depois.",
+  "pontos": [
+   "Token de meme, sem utilidade técnica central",
+   "Quantidade gigantesca de unidades em circulação",
+   "Preço movido por atenção e especulação"
+  ]
+ },
+ "litecoin": {
+  "titulo": "O que é o Litecoin?",
+  "texto": "O Litecoin foi criado em 2011 como uma versão mais leve e rápida do Bitcoin. A proposta era ser usado no dia a dia: confirmações em cerca de 2 minutos, contra 10 do Bitcoin, e taxas menores.\n\nÉ um dos projetos mais antigos ainda ativos, com histórico longo e sem grandes sobressaltos. Justamente por não ter mudado muito, costuma ser descrito como conservador dentro do universo cripto.",
+  "pontos": [
+   "Criado em 2011, um dos mais antigos em atividade",
+   "Confirmações mais rápidas que as do Bitcoin",
+   "Proposta de uso como meio de pagamento"
+  ]
+ },
+ "tron": {
+  "titulo": "O que é a TRON?",
+  "texto": "A TRON é uma rede criada em 2017 com foco em transações baratas e rápidas. O que a tornou relevante não foi o preço do TRX, e sim o volume: uma fatia enorme das transferências mundiais de USDT acontece nela, porque enviar dólar digital pela TRON custa centavos e chega em segundos.\n\nÉ uma rede bastante centralizada em comparação com Bitcoin ou Ethereum — poucos validadores, escolhidos por votação de quem tem TRX. Para quem só quer mover stablecoin, isso costuma não pesar. Para quem valoriza descentralização, pesa bastante.",
+  "pontos": [
+   "Uma das principais rotas de transferência de USDT no mundo",
+   "Taxas de centavos e confirmação em segundos",
+   "Bem mais centralizada que Bitcoin e Ethereum"
+  ]
+ },
+ "stellar": {
+  "titulo": "O que é a Stellar?",
+  "texto": "A Stellar nasceu em 2014 com um objetivo específico: mover dinheiro entre moedas e entre países de forma barata. Não foi feita para rodar aplicações complexas, e sim para liquidar pagamentos — uma remessa internacional que levaria dias em banco leva segundos ali, por frações de centavo.\n\nO XLM é usado para pagar as taxas da rede e como ponte entre moedas que não têm par direto. A Stellar trabalha bastante com instituições e projetos de inclusão financeira, o que a torna menos interessante para quem procura especulação e mais para quem olha uso real.",
+  "pontos": [
+   "Feita para pagamento e remessa internacional, não para DeFi",
+   "Taxa de fração de centavo, liquidação em segundos",
+   "Foco em instituições e inclusão financeira"
+  ]
+ },
+ "bitcoin-cash": {
+  "titulo": "O que é o Bitcoin Cash?",
+  "texto": "O Bitcoin Cash surgiu em 2017 de uma divisão na comunidade do Bitcoin. A discussão era sobre o tamanho do bloco: um lado queria blocos maiores, para caber mais transações e manter as taxas baixas; o outro preferiu manter o bloco pequeno e resolver a escala em camadas por cima. Quem queria blocos maiores criou o BCH.\n\nNa prática, o BCH tem taxas mais baixas e confirmações mais folgadas que o Bitcoin, e se posiciona como dinheiro para o dia a dia. Em contrapartida, ficou muito atrás em adoção, liquidez e reconhecimento — a maior parte do mercado seguiu com o Bitcoin original.",
+  "pontos": [
+   "Bifurcação do Bitcoin em 2017, por causa do tamanho do bloco",
+   "Taxas menores, proposta de uso como pagamento",
+   "Bem menor que o Bitcoin em adoção e liquidez"
+  ]
+ },
+ "monero": {
+  "titulo": "O que é o Monero?",
+  "texto": "O Monero é a principal criptomoeda focada em privacidade. Enquanto no Bitcoin qualquer pessoa consegue ver o valor e os endereços de qualquer transação, no Monero remetente, destinatário e valor ficam ocultos por padrão — não é uma opção que se liga, é como a rede funciona.\n\nEssa característica é justamente o que divide opiniões. Para quem entende privacidade financeira como direito, é o argumento central. Para reguladores, é motivo de atrito: várias corretoras deixaram de listar o XMR, o que reduz liquidez e dificulta comprar e vender em alguns países, inclusive por aqui.",
+  "pontos": [
+   "Privacidade por padrão: valores e endereços ocultos",
+   "Deslistado de várias corretoras por pressão regulatória",
+   "Menos líquido e mais difícil de negociar que a maioria"
+  ]
+ },
+ "the-open-network": {
+  "titulo": "O que é a TON?",
+  "texto": "A TON, ou The Open Network, começou como um projeto do Telegram. O time original saiu depois de um processo com o regulador americano, e a rede passou a ser tocada pela comunidade — mas a ligação com o Telegram permaneceu, e é ela que dá à TON algo que quase nenhuma outra rede tem: acesso direto a centenas de milhões de usuários dentro de um aplicativo de mensagens.\n\nNa prática isso se traduz em carteiras embutidas no Telegram, mini-aplicativos e pagamentos dentro do chat. A rede é rápida e barata; o ponto de atenção é o quanto do seu valor depende de um único aplicativo continuar apostando nela.",
+  "pontos": [
+   "Nasceu no Telegram e segue integrada a ele",
+   "Carteiras e aplicativos dentro do próprio mensageiro",
+   "Boa parte da tese depende da relação com o Telegram"
+  ]
+ },
+ "sui": {
+  "titulo": "O que é a Sui?",
+  "texto": "A Sui é uma rede lançada em 2023 por um time que trabalhou no projeto de blockchain da Meta. Ela usa uma linguagem própria, a Move, e organiza os dados por objeto em vez de por conta — o que permite processar em paralelo transações que não dependem umas das outras, e por isso ser rápida sob volume.\n\nO ecossistema é jovem, com força em jogos e aplicações que precisam de muitas operações pequenas. Como toda rede recente, carrega o risco de qualquer aposta em fase inicial: a tecnologia pode ser boa e mesmo assim o ecossistema não vingar.",
+  "pontos": [
+   "Linguagem Move e execução paralela de transações",
+   "Ecossistema forte em jogos e aplicações de alto volume",
+   "Rede recente, com risco típico de projeto jovem"
+  ]
+ },
+ "near": {
+  "titulo": "O que é a NEAR?",
+  "texto": "A NEAR é uma rede que resolve escala por fragmentação: em vez de todos os validadores processarem tudo, a rede se divide em partes que trabalham em paralelo. A ideia é crescer sem que as taxas subam junto com o uso.\n\nOutra marca do projeto é a preocupação com usabilidade — nomes de conta legíveis em vez de endereços embaralhados, e recursos que permitem a um aplicativo pagar a taxa pelo usuário. Mais recentemente a rede se posicionou também na interseção entre cripto e inteligência artificial, o que ainda está mais para promessa do que para produto consolidado.",
+  "pontos": [
+   "Escala por fragmentação da rede em partes paralelas",
+   "Endereços legíveis e taxa que o aplicativo pode pagar",
+   "Aposta recente em inteligência artificial, ainda em construção"
+  ]
+ },
+ "hedera-hashgraph": {
+  "titulo": "O que é a Hedera?",
+  "texto": "A Hedera não usa uma blockchain no sentido tradicional: ela roda sobre uma estrutura chamada hashgraph, que organiza as transações de outra forma e alcança confirmação em poucos segundos com custo previsível, na casa de frações de centavo.\n\nO que mais a distingue é a governança. A rede é dirigida por um conselho de grandes empresas e universidades, que se revezam operando os nós. Isso dá previsibilidade e atrai uso corporativo, e é exatamente o que afasta quem entende que uma rede aberta não deveria ter um grupo fechado no comando.",
+  "pontos": [
+   "Estrutura hashgraph, não uma blockchain tradicional",
+   "Conselho de grandes empresas no comando da rede",
+   "Custo previsível, atrativo para uso corporativo"
+  ]
+ },
+ "zcash": {
+  "titulo": "O que é o Zcash?",
+  "texto": "O Zcash é uma criptomoeda de privacidade construída sobre a mesma base do Bitcoin, mas com uma adição importante: provas de conhecimento zero, que permitem comprovar que uma transação é válida sem revelar quem enviou, quem recebeu ou quanto.\n\nA diferença para o Monero é que no Zcash a privacidade é opcional. Existem endereços transparentes e endereços blindados, e boa parte do volume histórico circulou pelos transparentes — o que, na prática, enfraquece o anonimato do conjunto. A tecnologia por trás dele, porém, é das mais respeitadas da área.",
+  "pontos": [
+   "Privacidade por provas de conhecimento zero",
+   "Endereço blindado é opcional, não padrão",
+   "Base criptográfica muito respeitada tecnicamente"
+  ]
+ },
+ "bittensor": {
+  "titulo": "O que é a Bittensor?",
+  "texto": "A Bittensor é uma tentativa de aplicar incentivos de cripto ao treinamento de modelos de inteligência artificial. A rede se divide em sub-redes, cada uma com uma tarefa, e quem contribui com trabalho útil — capacidade de computação, modelos, avaliação — recebe TAO em troca.\n\nÉ um dos projetos mais ambiciosos da interseção entre cripto e IA, e também um dos mais difíceis de avaliar: medir o que é contribuição “útil” é o problema central, e o desenho dos incentivos está em evolução constante. Vale entender que se compra uma tese, não um produto pronto.",
+  "pontos": [
+   "Recompensa contribuição para modelos de inteligência artificial",
+   "Organizada em sub-redes, cada uma com sua tarefa",
+   "Tese em construção, difícil de avaliar por resultado"
+  ]
+ },
+ "hyperliquid": {
+  "titulo": "O que é a Hyperliquid?",
+  "texto": "A Hyperliquid é uma corretora descentralizada de contratos perpétuos que roda na própria rede, construída para isso. A diferença em relação à maioria das concorrentes é que ela usa livro de ordens de verdade, como uma corretora centralizada, em vez de pool de liquidez — e mesmo assim a custódia continua com o usuário.\n\nO resultado é uma experiência próxima da de uma corretora tradicional em velocidade, com os fundos na sua carteira. O HYPE é usado para segurança da rede, por validadores que o colocam em stake. Contrato perpétuo é instrumento alavancado: o risco aqui não é só o do token, é o da operação.",
+  "pontos": [
+   "Corretora de perpétuos com livro de ordens, não pool",
+   "Rede própria, custódia continua com o usuário",
+   "Perpétuo é alavancado: risco de liquidação, não só de preço"
+  ]
+ },
+ "canton-network": {
+  "titulo": "O que é a Canton Network?",
+  "texto": "A Canton é uma rede voltada para instituições financeiras, construída para um problema que as redes públicas comuns não resolvem bem: privacidade. Nela, cada transação é visível apenas para quem participa dela — um banco pode liquidar uma operação sem expor o negócio ao resto do mercado.\n\nO uso pretendido é tokenização de ativos e liquidação entre instituições, e há grandes nomes do mercado financeiro tradicional envolvidos. É um projeto de infraestrutura, com horizonte longo: a tese não é uso de varejo, é a adoção acontecer dentro do sistema financeiro estabelecido.",
+  "pontos": [
+   "Privacidade por transação: só quem participa enxerga",
+   "Voltada a instituições, tokenização e liquidação",
+   "Tese de infraestrutura, com prazo longo de maturação"
+  ]
+ },
+ "memecore": {
+  "titulo": "O que é a MemeCore?",
+  "texto": "A MemeCore é uma rede dedicada a tokens de meme, com consenso próprio e ferramentas para lançar e sustentar projetos desse tipo. A proposta é dar infraestrutura a uma categoria que, até então, funcionava como enxurrada de tokens soltos em redes de propósito geral.\n\nÉ importante ser direto: token de meme não tem fundamento além de atenção e comunidade. Uma rede especializada nisso herda a mesma característica. Pode subir muito e pode ir a zero, e nenhum dos dois movimentos precisa de motivo além do humor do mercado.",
+  "pontos": [
+   "Rede especializada em tokens de meme",
+   "Valor depende de atenção e comunidade, não de fundamento",
+   "Volatilidade extrema, risco de perda total"
+  ]
+ },
+ "pump-fun": {
+  "titulo": "O que é a Pump.fun?",
+  "texto": "A Pump.fun é uma plataforma na Solana onde qualquer pessoa cria um token de meme em segundos, sem programar e sem colocar liquidez inicial. O token já nasce negociável por uma curva de preço automática, e se ganhar volume suficiente passa a ser listado em corretoras descentralizadas.\n\nEla popularizou o lançamento instantâneo de memecoin, e com isso também os problemas dele: a esmagadora maioria dos tokens criados ali perde todo o valor, e golpes de abandono são comuns. O token PUMP representa a plataforma, não os tokens lançados nela — são riscos diferentes, e vale não confundir.",
+  "pontos": [
+   "Lançamento instantâneo de memecoin na Solana",
+   "A maioria esmagadora dos tokens criados vai a zero",
+   "O token da plataforma não se confunde com os lançados nela"
+  ]
+ },
+ "dai": {
+  "titulo": "O que é o DAI?",
+  "texto": "O DAI é uma stablecoin diferente das outras: em vez de existir porque uma empresa guarda dólares num banco, ele existe porque pessoas travaram cripto como garantia num contrato automático. Para emitir DAI você deposita mais valor do que vai receber — é essa sobra que sustenta o preço perto de um dólar.\n\nA vantagem é não depender da palavra de uma empresa: as garantias estão na rede e qualquer um confere. A desvantagem é que o sistema pode ser pressionado numa queda forte de mercado, quando muitas garantias precisam ser liquidadas ao mesmo tempo. Com o tempo, parte do lastro passou a incluir outras stablecoins e ativos tradicionais, o que reduziu a pureza da ideia original.",
+  "pontos": [
+   "Emitido contra garantia em cripto, não contra dólar em banco",
+   "Sobrecolateralizado: trava-se mais valor do que se emite",
+   "Lastro hoje inclui outros ativos além de cripto"
+  ]
+ },
+ "usds": {
+  "titulo": "O que é o USDS?",
+  "texto": "O USDS é a stablecoin do protocolo Sky, que é como o MakerDAO passou a se chamar depois da reformulação de 2024. Ele segue a mesma lógica do DAI — emitido contra garantia, com o valor preso perto de um dólar — e existe junto dele, com a possibilidade de conversão entre os dois.\n\nA novidade em relação ao antecessor está nos módulos de poupança, que pagam rendimento a quem deposita, e no token de governança que acompanha o sistema. Para quem já entendia o DAI, o USDS é a versão nova da mesma ideia, com o mesmo tipo de risco.",
+  "pontos": [
+   "Stablecoin do Sky, o antigo MakerDAO",
+   "Conversível com o DAI, mesma lógica de garantia",
+   "Tem módulo de poupança que paga rendimento"
+  ]
+ },
+ "ethena-usde": {
+  "titulo": "O que é o USDe?",
+  "texto": "O USDe não é uma stablecoin comum. Ele não guarda dólares num banco nem trava cripto como garantia simples: mantém o valor por meio de uma posição comprada em cripto combinada com uma posição vendida equivalente em contratos futuros. Se o preço sobe, um lado ganha e o outro perde na mesma medida — e o saldo fica estável.\n\nEssa estrutura gera rendimento quando o mercado paga para manter posições compradas, o que costuma acontecer em alta. Mas ela depende de corretoras de derivativos funcionando e do mercado seguir se comportando assim. Não é dólar guardado em conta: é uma estratégia financeira embalada como stablecoin, e vale entender isso antes de tratá-la como caixa.",
+  "pontos": [
+   "Mantém o preço com posição comprada e vendida ao mesmo tempo",
+   "Rende quando o mercado paga por posições compradas",
+   "Depende de derivativos: não é dólar parado em banco"
+  ]
+ },
+ "paypal-usd": {
+  "titulo": "O que é o PYUSD?",
+  "texto": "O PYUSD é a stablecoin do PayPal, lançada em parceria com uma emissora regulada nos Estados Unidos. Cada unidade é lastreada em dólar e títulos públicos americanos de curto prazo, e o objetivo declarado é circular dentro do próprio ecossistema de pagamentos do PayPal e fora dele.\n\nO diferencial não é técnico, é de distribuição: é uma empresa com centenas de milhões de usuários colocando dólar digital na mão deles. O contraponto é o de sempre nas stablecoins de empresa — você depende de uma companhia e de um regulador, não de um contrato aberto.",
+  "pontos": [
+   "Stablecoin do PayPal, lastreada em dólar e títulos americanos",
+   "Distribuição enorme dentro do ecossistema de pagamentos",
+   "Depende de uma empresa e da regulação americana"
+  ]
+ },
+ "global-dollar": {
+  "titulo": "O que é o USDG?",
+  "texto": "O USDG é uma stablecoin lastreada em dólar criada por um consórcio: em vez de uma emissora ficar com todo o rendimento das reservas, ele é repartido com as plataformas que ajudam a distribuir a moeda. Corretoras e empresas de pagamento entram como sócias da adoção, não apenas como canais.\n\nNa prática, para quem usa, funciona como qualquer stablecoin de dólar: um token que vale um dólar e serve para mover valor. O que muda é o modelo de negócio por trás — e é ele que explica por que várias corretoras passaram a oferecê-la.",
+  "pontos": [
+   "Lastro em dólar e títulos de curto prazo",
+   "Divide o rendimento das reservas com quem distribui",
+   "Adotada por várias corretoras por causa desse modelo"
+  ]
+ },
+ "usd1-wlfi": {
+  "titulo": "O que é o USD1?",
+  "texto": "O USD1 é uma stablecoin de dólar emitida pela World Liberty Financial, com reservas custodiadas por uma empresa especializada e lastro em dinheiro e títulos públicos americanos de curto prazo. Circula em várias redes e cresceu rápido desde o lançamento.\n\nÉ uma stablecoin jovem, e isso importa mais do que parece: histórico é parte do que sustenta a confiança numa moeda que promete valer sempre um dólar. Como qualquer stablecoin de emissor único, o risco não é de mercado, é de contraparte — depende de quem guarda as reservas cumprir o combinado.",
+  "pontos": [
+   "Lastro em dinheiro e títulos públicos americanos",
+   "Disponível em várias redes, crescimento rápido",
+   "Emissor recente: pouco histórico em comparação às maiores"
+  ]
+ },
+ "ripple-usd": {
+  "titulo": "O que é o RLUSD?",
+  "texto": "O RLUSD é a stablecoin de dólar da empresa por trás do XRP, lançada com lastro em dinheiro e títulos públicos de curto prazo e supervisão de um regulador do estado de Nova York. Ela circula tanto na rede da Ripple quanto no Ethereum.\n\nO propósito é servir de dólar digital nas rotas de pagamento e liquidação que a empresa já opera com instituições. Para o investidor comum, é mais uma stablecoin de dólar; o que a diferencia é o canal de distribuição institucional que vem junto.",
+  "pontos": [
+   "Stablecoin de dólar da empresa por trás do XRP",
+   "Supervisão regulatória no estado de Nova York",
+   "Voltada a pagamento e liquidação entre instituições"
+  ]
+ },
+ "tether-gold": {
+  "titulo": "O que é o XAUT?",
+  "texto": "O XAUT não segue o dólar: cada unidade representa uma onça de ouro físico guardada em cofre na Suíça. É uma forma de ter exposição ao ouro dentro do universo cripto, com a mesma facilidade de transferir um token.\n\nO preço acompanha o ouro, não o mercado de cripto — o que faz dele um ativo de comportamento bem diferente do resto da carteira. O risco central é de custódia: você depende de a emissora realmente ter o metal e de o esquema de guarda funcionar. É confiança em uma empresa, não em um contrato.",
+  "pontos": [
+   "Cada token representa uma onça de ouro físico em cofre",
+   "Preço segue o ouro, não o mercado de cripto",
+   "Risco de custódia: depende da emissora ter o metal"
+  ]
+ },
+ "leo-token": {
+  "titulo": "O que é o LEO?",
+  "texto": "O LEO é o token da corretora Bitfinex. Ele dá desconto em taxas e vantagens a quem opera lá, e a empresa recompra e retira tokens de circulação usando parte da própria receita — o que reduz a oferta ao longo do tempo.\n\nToken de corretora é uma categoria à parte: o valor não vem de uma rede ou de um protocolo, vem do negócio da empresa que o emitiu. Se a corretora vai bem, tende a se sustentar; se ela tem problema regulatório ou perde volume, o token sente direto. É exposição a uma empresa, com formato de cripto.",
+  "pontos": [
+   "Token da corretora Bitfinex, com desconto em taxas",
+   "Recompra e queima com parte da receita da empresa",
+   "Valor atrelado ao negócio da corretora, não a uma rede"
+  ]
+ },
+ "okb": {
+  "titulo": "O que é o OKB?",
+  "texto": "O OKB é o token da corretora OKX. Serve para reduzir taxas de negociação, dar acesso a lançamentos na plataforma e participar do ecossistema que a empresa construiu em volta dela, incluindo a própria rede.\n\nComo todo token de corretora, ele é uma aposta na empresa. A oferta costuma ser reduzida por queimas periódicas, o que sustenta parte da tese, mas o fator determinante continua sendo a saúde do negócio e o ambiente regulatório em que ele opera.",
+  "pontos": [
+   "Token da corretora OKX: desconto em taxas e acesso a lançamentos",
+   "Oferta reduzida por queimas periódicas",
+   "Exposição ao negócio e ao risco regulatório da empresa"
+  ]
+ },
+ "crypto-com-chain": {
+  "titulo": "O que é o CRO?",
+  "texto": "O CRO é o token do ecossistema Crypto.com, uma das maiores plataformas de cripto voltadas ao varejo. Ele dá benefícios dentro do aplicativo — taxas menores, condições melhores no cartão, rendimento em programas da casa — e também é usado na rede que a empresa mantém.\n\nA marca ficou conhecida no Brasil por patrocínios esportivos de grande visibilidade. Vale separar as duas coisas: reconhecimento de marca não é fundamento. O CRO é, no fim, exposição ao desempenho de uma empresa de varejo cripto e às regras que a cercam.",
+  "pontos": [
+   "Token do ecossistema Crypto.com, com benefícios no aplicativo",
+   "Usado também na rede mantida pela empresa",
+   "Reconhecimento de marca não substitui fundamento"
+  ]
+ },
+ "whitebit": {
+  "titulo": "O que é o WBT?",
+  "texto": "O WBT é o token da corretora WhiteBIT, de origem europeia. Assim como os demais tokens de corretora, oferece desconto em taxas, acesso a programas da plataforma e vantagens para quem mantém saldo nele.\n\nÉ um ativo pouco conhecido no Brasil e com liquidez concentrada na própria corretora que o emite — o que significa que sair da posição pode ser mais difícil do que entrar. Concentração de negociação em um único lugar é um risco que costuma passar despercebido até a hora em que importa.",
+  "pontos": [
+   "Token da corretora WhiteBIT, com desconto em taxas",
+   "Liquidez concentrada na própria plataforma emissora",
+   "Pouco conhecido e pouco negociado no Brasil"
+  ]
+ }
+}

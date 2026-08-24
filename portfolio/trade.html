@@ -1,22 +1,147 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Trade — Portfólio MundoDeFi</title>
+<meta charset="UTF-8">
+<script src="/mundodefi-api.js?v=2026-08-31"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=2026-08-31"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
+<title>Diário de Trade: Banca, Win Rate e Drawdown | MundoDeFi</title>
+<meta name="description" content="Registre suas operações e veja profit factor, payoff, expectativa por operação e drawdown máximo — com aviso honesto quando a amostra ainda é pequena.">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/trade.html">
+<meta property="og:title" content="Diário de Trade: Banca, Win Rate e Drawdown | MundoDeFi">
+<meta property="og:image" content="https://mundodefi.com.br/og/portfolio-trade.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Portfólio MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/portfolio-trade.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Registre suas operações e veja profit factor, payoff, expectativa por operação e drawdown máximo — com aviso honesto quando a amostra ainda é pequena.">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/trade.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css">
-<link rel="stylesheet" href="/portfolio/portfolio.css">
-<link rel="stylesheet" href="/nexus/nexus.css">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-31">
+<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-31">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/trade.html#app",
+   "name": "MundoDeFi — Diário de trade",
+   "url": "https://mundodefi.com.br/portfolio/trade.html",
+   "description": "Banca, win rate, profit factor, expectativa por operação e drawdown máximo.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Diário de trade",
+     "item": "https://mundodefi.com.br/portfolio/trade.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "A banca é separada do resto do portfólio?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É. Aportes e retiradas da banca são registrados à parte, e o resultado do trade não se mistura com o HOLD. Dá para ver quanto do seu patrimônio está exposto à parte mais volátil."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Preciso registrar operação por operação?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Sim, e é justamente esse o ponto: métrica de trade só existe com histórico. O registro leva segundos e é o que transforma sensação em número."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 <div class="app" id="app"></div>
-<script src="/portfolio/portfolio.js"></script>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. Antes daqui, o HTML servido tinha
+     zero caractere e o /portfolio/ era invisivel para busca e IA. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Diário de trade: os números que dizem se você tem vantagem</h1>
+    <p class="pf-sub">Win rate alto não significa lucro. Aqui dá para ver a diferença.</p>
+    <h2>Win rate é a métrica mais enganosa do trade</h2>
+    <p>Dá para acertar 70% das operações e mesmo assim perder dinheiro: basta que as poucas perdas sejam maiores que os muitos ganhos. Por isso o diário mostra <strong>profit factor</strong> (quanto você ganha para cada real perdido), <strong>payoff</strong> (ganho médio contra perda média) e <strong>expectativa por operação</strong>.</p>
+    <p>Quando o win rate está alto e o profit factor abaixo de 1, o portfólio aponta isso com todas as letras — é o padrão clássico de quem realiza lucro cedo demais e deixa a perda correr.</p>
+    <h2>Amostra pequena não conclui nada</h2>
+    <p>Com dez operações, o que você vê é principalmente sorte — para os dois lados. As métricas só começam a significar algo por volta de trinta a cinquenta operações, e o sistema avisa isso em vez de deixar você tirar conclusão de ruído.</p>
+    <h2>Drawdown é sobre tamanho de posição</h2>
+    <p>O drawdown máximo mede a pior queda que sua banca atravessou desde o topo. Recuperar exige mais do que se perdeu: cair 50% pede 100% de alta para voltar ao mesmo lugar. Drawdown grande costuma ser sinal de posição grande demais, não de análise ruim.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>A banca é separada do resto do portfólio?</h3>
+    <p>É. Aportes e retiradas da banca são registrados à parte, e o resultado do trade não se mistura com o HOLD. Dá para ver quanto do seu patrimônio está exposto à parte mais volátil.</p>
+    <h3>Preciso registrar operação por operação?</h3>
+    <p>Sim, e é justamente esse o ponto: métrica de trade só existe com histórico. O registro leva segundos e é o que transforma sensação em número.</p>
+  </div>
+</section>
+
+<!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
+<script src="/nexus/nexus-auth.js?v=2026-08-31"></script>
+<script src="/portfolio/portfolio-core.js?v=2026-08-31"></script>
+<script src="/portfolio/portfolio-store.js?v=2026-08-31"></script>
+<script src="/portfolio/portfolio.js?v=2026-08-31"></script>
 <script>P.pageTrade();</script>
-<script src="/nexus/nexus-portfolio-kb.js"></script>
-<script src="/nexus/nexus-auth.js"></script>
-<script src="/nexus/nexus-core.js"></script>
+<script src="/nexus/nexus-motor.js?v=2026-08-31"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-31"></script>
+<script src="/nexus/nexus-core.js?v=2026-08-31"></script>
 </body>
 </html>

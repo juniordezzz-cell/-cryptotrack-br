@@ -18,21 +18,27 @@
 :root{
   /* cores da marca (preferem o tokens; o hex é só reserva) */
   --roxo:     var(--purple, #9945ff);
+  /* o roxo cheio reprova em contraste como TEXTO (3,57:1 sobre card);
+     para escrever, usa-se a variante clara. Preencher e' com --roxo. */
+  --roxo-txt: var(--purple-txt, #A96BFF);
   --verde:    var(--green,  #14f195);
   --ciano:    var(--cyan,   #00e5ff);
   --vermelho: var(--red,    #ff5470);
   --dourado:  var(--gold,   #f5b614);
 
-  /* superfícies e texto — dark premium */
-  --bg:#0a0a0a;
-  --bg2:#111114;
-  --card:#15151a;
-  --border:#26262e;
-  --text:#f2f2f5;
-  --muted:#9b9ba6;
+  /* Superfícies e texto vêm de /mundodefi-tokens.css. Este arquivo é
+     compartilhado por 6 ferramentas, então unificar aqui alinha todas
+     de uma vez — antes elas usavam #0a0a0a, um cinza puro que destoava
+     do azulado do resto do site. */
+  --bg:var(--mdf-bg);
+  --bg2:var(--mdf-surface);
+  --card:var(--mdf-surface-2);
+  --border:var(--mdf-line-2);
+  --text:var(--mdf-text);
+  --muted:var(--mdf-text-2);
 
-  --radius:14px;
-  --mono:'JetBrains Mono', ui-monospace, monospace;
+  --radius:var(--mdf-r-lg);
+  --mono:var(--mdf-mono);
 }
 
 /* ── 1. BASE ────────────────────────────────────────────────────────── */
@@ -85,7 +91,7 @@ header{
   padding:4px 14px;margin-bottom:16px;
 }
 h1{font-size:clamp(1.55rem,4.4vw,2.45rem);font-weight:700;line-height:1.2;margin-bottom:10px}
-h1 .par{color:var(--roxo)}
+h1 .par{color:var(--roxo-txt)}
 .hero-sub{font-size:1.02rem;color:var(--muted);max-width:640px;margin:0 auto}
 .hero-sub b{color:var(--text);font-weight:600}
 
@@ -135,7 +141,7 @@ select:focus{border-color:var(--roxo)}
 /* sliders */
 .range-wrap{display:flex;align-items:center;gap:12px}
 .range-wrap input[type=range]{flex:1;accent-color:var(--roxo);cursor:pointer}
-.range-val{font-family:var(--mono);font-size:.85rem;color:var(--roxo);min-width:44px;text-align:right}
+.range-val{font-family:var(--mono);font-size:.85rem;color:var(--roxo-txt);min-width:44px;text-align:right}
 /* toggle de duas opções (token/dólar, apr/apy...) */
 .toggle{display:inline-flex;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px}
 .toggle button{
@@ -177,7 +183,7 @@ select:focus{border-color:var(--roxo)}
 .res-box.cyan{background:rgba(0,229,255,.07);border-color:rgba(0,229,255,.3)}
 .res-label{font-size:.66rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
 .res-val{font-size:1.08rem;font-weight:700;font-family:var(--mono);color:var(--text);word-break:break-word}
-.res-box.destaque .res-val{color:var(--roxo)}
+.res-box.destaque .res-val{color:var(--roxo-txt)}
 .res-box.green .res-val{color:var(--verde)}
 .res-box.red .res-val{color:var(--vermelho)}
 .res-box.cyan .res-val{color:var(--ciano)}
@@ -300,7 +306,7 @@ select:focus{border-color:var(--roxo)}
 .taxa-viva strong{color:var(--text);font-size:1.2rem}
 .tri-fiat{font-size:.95rem;color:var(--muted);margin-bottom:4px}
 .tri-fiat b{color:var(--text);font-weight:600}
-.tri-fiat .sep{color:var(--roxo);margin:0 6px}
+.tri-fiat .sep{color:var(--roxo-txt);margin:0 6px}
 .atualizado{font-size:.78rem;color:var(--muted);opacity:.7}
 /* linha "Mais buscados" dentro do dropdown de busca */
 .populares{padding:10px 14px;border-bottom:1px solid var(--border);font-size:.78rem;color:var(--muted)}
@@ -320,7 +326,7 @@ details{background:var(--card);border:1px solid var(--border);border-radius:var(
 summary{cursor:pointer;font-weight:600;font-size:.97rem;padding:15px 0;list-style:none;
   position:relative;padding-right:26px}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"+";position:absolute;right:2px;color:var(--roxo);font-size:1.2rem;transition:transform .2s}
+summary::after{content:"+";position:absolute;right:2px;color:var(--roxo-txt);font-size:1.2rem;transition:transform .2s}
 details[open] summary::after{transform:rotate(45deg)}
 details p{color:var(--muted);font-size:.92rem;padding-bottom:16px}
 details p strong{color:var(--text)}
@@ -362,7 +368,7 @@ details p strong{color:var(--text)}
 .cta-card{background:linear-gradient(135deg,rgba(153,69,255,.1),rgba(20,241,149,.05));
   border:1px solid rgba(153,69,255,.3);border-radius:var(--radius);padding:28px 24px;margin-top:18px;text-align:center}
 .cta-card h3{font-size:1.2rem;font-weight:700;margin-bottom:8px}
-.cta-card h3 span{color:var(--roxo)}
+.cta-card h3 span{color:var(--roxo-txt)}
 .cta-card p{color:var(--muted);font-size:.9rem;max-width:620px;margin:0 auto 18px}
 .cta-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
 .cta-btn-gold{background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305;
@@ -383,7 +389,7 @@ details p strong{color:var(--text)}
   font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
   padding:5px 16px;border-radius:999px;white-space:nowrap}
 .plano .tag{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.plano.pro .tag{color:var(--roxo)}
+.plano.pro .tag{color:var(--roxo-txt)}
 .plano.premium .tag{color:var(--dourado)}
 .plano .preco{font-size:2rem;font-weight:700}
 .plano .preco small{font-size:.9rem;color:var(--muted);font-weight:500}
@@ -414,4 +420,16 @@ footer a:hover{color:var(--text)}
 @media(prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
   html{scroll-behavior:auto}
+}
+
+/* ═══ NAV EM TELA ESTREITA ═══
+   Os links de texto e o botão PRO não cabiam abaixo de ~420px e faziam a
+   página inteira rolar de lado por poucos pixels — o tipo de defeito que
+   ninguém reporta mas todo mundo sente. */
+@media(max-width:520px){
+  header .nav-links{gap:12px;font-size:.82rem}
+  header .btn-pro{padding:6px 11px;font-size:.78rem}
+}
+@media(max-width:400px){
+  header .nav-links a:not(.btn-pro){display:none}
 }

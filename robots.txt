@@ -1,5 +1,76 @@
+# ═══════════════════════════════════════════════════════════════════
+#  MUNDODEFI · robots.txt
+#
+#  ATENCAO AO EDITAR: um agente que tem bloco proprio ignora por completo
+#  o bloco "User-agent: *". Se voce adicionar um Disallow aqui em cima,
+#  precisa copiar em cada bloco de IA la embaixo -- senao eles continuam
+#  entrando onde voce quis bloquear.
+#
+#  Historico: /portfolio/ ficou bloqueado enquanto servia HTML vazio (o
+#  conteudo so existia depois do JavaScript). Agora as quatro paginas tem
+#  texto de verdade no HTML e por isso foram liberadas.
+# ═══════════════════════════════════════════════════════════════════
+
 User-agent: *
 Allow: /
-Disallow: /portfolio/
+
+
+# ═══════════════════════════════════════════════════════════════════
+#  RASTREADORES DE IA — LIBERADOS DE PROPOSITO
+#
+#  Muito site bloqueia estes agentes. Aqui e' escolha consciente deixar
+#  passar: quem pergunta a uma IA "como calculo impermanent loss" ou
+#  "quanto rende staking de SOL" e' exatamente quem procuramos, e uma
+#  resposta citando o MundoDeFi vale mais que a visita que nao viria.
+#
+#  Se um dia a decisao mudar, troque Allow por Disallow no agente.
+# ═══════════════════════════════════════════════════════════════════
+
+# ── OpenAI ──
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# ── Anthropic ──
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# ── Google (Gemini e treinamento; separado do Googlebot de busca) ──
+User-agent: Google-Extended
+Allow: /
+
+# ── Perplexity ──
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# ── Outros ──
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
 
 Sitemap: https://mundodefi.com.br/sitemap.xml

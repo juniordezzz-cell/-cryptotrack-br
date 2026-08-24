@@ -282,17 +282,37 @@
     // ----- Penalidades (avisos), se houver -----
     var avisos = document.getElementById("imd-penalidades");
     if (avisos) {
-      if (r.penalidades && r.penalidades.length) {
-        avisos.style.display = "block";
-        avisos.innerHTML = r.penalidades.map(function (p) {
-          return '<div class="checkpoint" style="border-color:rgba(255,110,143,.4);background:rgba(255,110,143,.08)">' +
-            '<span>⚠ ' + App.escapar(p.rotulo) + "</span>" +
-            '<b style="color:var(--danger);font-weight:600;font-size:12px">penalidade aplicada</b>' +
-            "</div>";
-        }).join("");
-      } else {
-        avisos.style.display = "none";
+      var blocos = [];
+
+      /* Alcance do diagnostico. NAO e' penalidade -- e' ate onde a trilha
+         respondida permite medir. Aparece em tom neutro e com o motivo
+         escrito, porque "seu teto e' 50" sem explicacao so' frustra. */
+      if (r.trilha && r.trilha.limitou) {
+        blocos.push(
+          '<div class="checkpoint" style="display:block;border-color:rgba(0,229,255,.35);' +
+          'background:rgba(0,229,255,.06)">' +
+          '<div style="font-weight:700;margin-bottom:4px">\uD83E\uDDED ' +
+          App.escapar(r.trilha.rotulo) + ' \u2014 diagn\u00f3stico at\u00e9 ' + r.trilha.teto + '</div>' +
+          '<div style="font-size:12.5px;line-height:1.6;color:var(--muted)">' +
+          App.escapar(r.trilha.motivo) + '</div></div>'
+        );
       }
+
+      /* Penalidades de verdade, agora com o motivo visivel: so o rotulo
+         deixava a pessoa sem saber o que fazer com a informacao. */
+      (r.penalidades || []).forEach(function (p) {
+        blocos.push(
+          '<div class="checkpoint" style="display:block;border-color:rgba(255,110,143,.4);' +
+          'background:rgba(255,110,143,.08)">' +
+          '<div style="font-weight:700;margin-bottom:4px;color:var(--danger)">\u26A0 ' +
+          App.escapar(p.rotulo) + '</div>' +
+          (p.motivo ? '<div style="font-size:12.5px;line-height:1.6;color:var(--muted)">' +
+            App.escapar(p.motivo) + '</div>' : '') + '</div>'
+        );
+      });
+
+      avisos.innerHTML = blocos.join("");
+      avisos.style.display = blocos.length ? "block" : "none";
     }
 
     // ----- Radar real dos 4 pilares -----
@@ -397,7 +417,7 @@
 
     host.innerHTML = lista.map(function (c) {
       var pi = pilarInfo(c.pilar);
-      var rotulo = c.valor < 50 ? "Quero aprender" :
+      var rotulo = c.valor < 50 ? "Ponto fraco" :
                    c.valor < 80 ? "Posso melhorar" : "Já domino";
       return '<div class="tl-item">' +
         '<span style="color:' + pi.cor + '">' + App.escapar(c.nome) + "</span>" +
@@ -459,12 +479,20 @@
      ============================================================ */
   function wireSalvar(r) {
     // ----------------------------------------------------------
-    // INTERRUPTOR DE SEGURANÇA DA TRAVA
-    // false = resultado aberto (login só salva). Suba assim primeiro,
-    //         teste o login no site, e SÓ DEPOIS mude para true.
+    // INTERRUPTOR DA TRAVA
     // true  = resultado TRAVADO: só revela após login + 2 consentimentos.
+    // false = resultado aberto (login apenas salva).
+    //
+    // Ligado a pedido do dono do site: o diagnóstico é a isca, e a conta
+    // é o que ele deixa em troca.
+    //
+    // O RISCO NÃO É A TRAVA, É O LOGIN FALHAR. Com o resultado travado,
+    // quem não consegue entrar fica sem ver nada e a ferramenta vira uma
+    // tela de erro. Por isso o tratamento de falha abaixo diz o que houve
+    // e tenta redirecionamento quando o popup é bloqueado — o que acontece
+    // com frequência em navegador de celular.
     // ----------------------------------------------------------
-    var TRAVAR_RESULTADO = false;
+    var TRAVAR_RESULTADO = true;
 
     var conteudo   = document.getElementById("imd-result-conteudo");
     var lock       = document.getElementById("imd-lock");
@@ -558,6 +586,26 @@
       if (Fire.getUser()) salvar();
     }
 
+    /* Mensagem por tipo de falha. "Nao foi possivel entrar (auth/erro-x)"
+       nao ajuda ninguem: a pessoa precisa saber se o problema e' dela, do
+       navegador ou do site. */
+    function explicarFalha(e) {
+      var c = (e && e.code) || "";
+      if (c === "auth/popup-closed-by-user" || c === "auth/cancelled-popup-request") {
+        return "Você fechou a janela do Google antes de terminar. Pode tentar de novo.";
+      }
+      if (c === "auth/popup-blocked") {
+        return "Seu navegador bloqueou a janela do Google. Vamos tentar de outro jeito…";
+      }
+      if (c === "auth/network-request-failed") {
+        return "Sem conexão com o servidor de login. Confira a internet e tente de novo.";
+      }
+      if (c === "auth/unauthorized-domain") {
+        return "Este endereço ainda não está liberado no login. Avise a equipe do MundoDeFi.";
+      }
+      return "Não foi possível entrar agora (" + (c || "erro") + "). Tente de novo em instantes.";
+    }
+
     // clique no login do cadeado
     if (lockLogin) {
       lockLogin.addEventListener("click", function () {
@@ -570,12 +618,32 @@
             return salvar();
           })
           .catch(function (e) {
-            if (lockStatus) lockStatus.textContent =
-              "Não foi possível entrar (" + (e.code || "erro") + "). Tente de novo.";
-            lockLogin.disabled = false;
             console.error(e);
+            if (lockStatus) lockStatus.textContent = explicarFalha(e);
+            /* Popup bloqueado e' comum em navegador de celular. Em vez de
+               deixar a pessoa presa, tenta pela rota de redirecionamento,
+               que nao depende de popup. */
+            if (e && e.code === "auth/popup-blocked" &&
+                Fire.auth && typeof firebase !== "undefined") {
+              try {
+                Fire.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+                return;
+              } catch (err) { console.error(err); }
+            }
+            lockLogin.disabled = false;
           });
       });
+    }
+
+    /* Volta do redirecionamento: o Firebase resolve isto sozinho e dispara
+       o evento de auth, mas conferimos aqui tambem para o caso de a pagina
+       ter recarregado com a sessao ja ativa. */
+    if (Fire.auth && Fire.auth.getRedirectResult) {
+      Fire.auth.getRedirectResult()
+        .then(function (res) { if (res && res.user) { revelar(); salvar(); } })
+        .catch(function (e) {
+          if (e && e.code && lockStatus) lockStatus.textContent = explicarFalha(e);
+        });
     }
 
     // se a autenticação mudar (ex.: login concluído em outra aba), reavalia

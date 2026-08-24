@@ -1,24 +1,28 @@
+/* Superfícies, texto e acentos vêm de /mundodefi-tokens.css. Este app era
+   uma ilha: nem carregava o sistema, e usava #030505 (preto puro) contra o
+   #070A12 azulado do resto do site, além de um verde-limão #14F195 que não
+   existia em nenhum outro lugar. */
 :root {
   color-scheme: dark;
-  --bg: #030505;
-  --bg-soft: #080b0d;
-  --panel: #0b0f12;
-  --panel-strong: #11161a;
-  --line: rgba(255, 255, 255, 0.1);
-  --line-strong: rgba(255, 255, 255, 0.18);
-  --text: #f5f7f8;
-  --muted: #aeb5bb;
-  --muted-2: #717980;
-  --green: #62ff4d;
-  --green-2: #32d61f;
-  --red: #ff4750;
+  --bg: var(--mdf-bg);
+  --bg-soft: var(--mdf-surface);
+  --panel: var(--mdf-surface);
+  --panel-strong: var(--mdf-surface-2);
+  --line: var(--mdf-line-2);
+  --line-strong: var(--mdf-line-3);
+  --text: var(--mdf-text);
+  --muted: var(--mdf-text-2);
+  --muted-2: var(--mdf-text-3);
+  --green: var(--mdf-green, #14F195);
+  --green-2: #0fbf76;
+  --red: var(--mdf-red, #FF4D6A);
   --red-2: #d92e38;
-  --gray: #d4d7dc;
-  --amber: #f2c14e;
-  --shadow: 0 8px 24px rgba(0, 0, 0, 0.34);
-  --shadow-hover: 0 18px 44px rgba(0, 0, 0, 0.5);
-  --radius: 16px;
-  --radius-sm: 11px;
+  --gray: var(--mdf-text-2);
+  --amber: var(--mdf-gold, #F5B614);
+  --shadow: var(--mdf-shadow);
+  --shadow-hover: var(--mdf-shadow-lg);
+  --radius: var(--mdf-r-lg);
+  --radius-sm: var(--mdf-r);
   --sidebar-width: 176px;
   --content-max: 1400px;
 }
@@ -38,15 +42,19 @@ body {
   font-size: 14.5px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background:
-    radial-gradient(ellipse 70% 45% at 15% -8%, rgba(98, 255, 77, 0.07), transparent),
+    radial-gradient(ellipse 70% 45% at 15% -8%, rgba(20, 241, 149, 0.07), transparent),
     radial-gradient(ellipse 55% 40% at 92% 8%, rgba(46, 144, 250, 0.055), transparent),
-    radial-gradient(circle at 50% 118%, rgba(98, 255, 77, 0.05), transparent 36rem),
+    radial-gradient(circle at 50% 118%, rgba(20, 241, 149, 0.05), transparent 36rem),
     linear-gradient(165deg, #020604 0%, #04090b 34%, #071012 62%, #0b1512 100%);
   background-attachment: fixed;
   color: var(--text);
   letter-spacing: 0;
 }
 
+/* O tema claro precisa dos acentos ESCUROS. O verde da marca é usado como
+   cor de texto em 10 lugares e sobre painel branco dava 1,50:1 — invisível.
+   O verde-limão anterior era pior ainda: 1,32:1. O vermelho dava 3,22:1,
+   também abaixo dos 4,5:1 do AA. Estes passam. */
 body.light-theme {
   --bg: #eff4f2;
   --bg-soft: #edf2f0;
@@ -57,9 +65,14 @@ body.light-theme {
   --text: #0b1110;
   --muted: #4c555c;
   --muted-2: #68737a;
+  --green: #0A7D4E;
+  --green-2: #086942;
+  --red: #C1121F;
+  --red-2: #9A0E18;
+  --amber: #8A5A00;
   --shadow: 0 16px 34px rgba(12, 20, 18, 0.12);
   background:
-    radial-gradient(circle at 50% 115%, rgba(54, 224, 38, 0.16), transparent 34rem),
+    radial-gradient(circle at 50% 115%, rgba(15, 191, 118, 0.16), transparent 34rem),
     linear-gradient(180deg, #f8fbfa 0%, #edf4f1 100%);
 }
 
@@ -176,7 +189,7 @@ body.light-theme .date-control {
 .date-control:focus,
 .input-control:focus,
 textarea:focus {
-  border-color: rgba(98, 255, 77, 0.55);
+  border-color: rgba(20, 241, 149, 0.55);
 }
 
 .button:hover {
@@ -185,7 +198,7 @@ textarea:focus {
 }
 
 .button.primary {
-  border-color: rgba(98, 255, 77, 0.45);
+  border-color: rgba(20, 241, 149, 0.45);
   background: linear-gradient(135deg, rgba(48, 218, 34, 0.94), rgba(107, 255, 83, 0.78));
   color: #061006;
   font-weight: 800;
@@ -293,7 +306,7 @@ textarea:focus {
   min-width: 240px;
   max-width: 360px;
   padding: 14px 16px;
-  border: 1px solid rgba(98, 255, 77, 0.34);
+  border: 1px solid rgba(20, 241, 149, 0.34);
   border-radius: var(--radius);
   background: rgba(10, 14, 16, 0.95);
   box-shadow: var(--shadow);
@@ -370,13 +383,13 @@ textarea:focus {
 }
 
 .card:hover::before {
-  background: linear-gradient(90deg, transparent, rgba(98, 255, 77, 0.4), transparent);
+  background: linear-gradient(90deg, transparent, rgba(20, 241, 149, 0.4), transparent);
 }
 
 /* sidebar com item ativo brilhando */
 .sidebar-nav .nav-link.active,
 .sidebar-nav .nav-link[aria-current="page"] {
-  box-shadow: inset 3px 0 0 var(--green), 0 0 18px rgba(98, 255, 77, 0.08);
+  box-shadow: inset 3px 0 0 var(--green), 0 0 18px rgba(20, 241, 149, 0.08);
 }
 
 .sidebar-nav .nav-link {
@@ -384,12 +397,12 @@ textarea:focus {
 }
 
 .sidebar-nav .nav-link:hover {
-  box-shadow: inset 3px 0 0 rgba(98, 255, 77, 0.4);
+  box-shadow: inset 3px 0 0 rgba(20, 241, 149, 0.4);
 }
 
 /* título da topbar com gradiente sutil */
 .topbar-title h1 {
-  background: linear-gradient(90deg, #f5f7f8 30%, rgba(98, 255, 77, 0.85));
+  background: linear-gradient(90deg, #f5f7f8 30%, rgba(20, 241, 149, 0.85));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -400,13 +413,13 @@ textarea:focus {
   background: linear-gradient(135deg, var(--green), var(--green-2));
   border: none;
   color: #04120a;
-  box-shadow: 0 6px 18px rgba(98, 255, 77, 0.22);
+  box-shadow: 0 6px 18px rgba(20, 241, 149, 0.22);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .button.primary:hover {
   transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(98, 255, 77, 0.32);
+  box-shadow: 0 10px 24px rgba(20, 241, 149, 0.32);
 }
 
 /* barra de rolagem elegante */
@@ -427,7 +440,7 @@ textarea:focus {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(98, 255, 77, 0.35);
+  background: rgba(20, 241, 149, 0.35);
   background-clip: content-box;
 }
 
@@ -457,8 +470,8 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: rgba(98, 255, 77, 0.55) !important;
-  box-shadow: 0 0 0 3px rgba(98, 255, 77, 0.1);
+  border-color: rgba(20, 241, 149, 0.55) !important;
+  box-shadow: 0 0 0 3px rgba(20, 241, 149, 0.1);
 }
 
 /* ============================================================
