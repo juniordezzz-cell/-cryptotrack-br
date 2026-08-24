@@ -2,28 +2,173 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<script src="/mundodefi-api.js?v=2026-08-22"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-22"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-22" type="image/svg+xml">
-<title>Dashboard — Portfólio MundoDeFi</title>
+<script src="/mundodefi-api.js?v=2026-08-23"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=2026-08-23"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-23" type="image/svg+xml">
+<title>Portfólio de Criptomoedas Grátis — HOLD, DeFi e Trade | MundoDeFi</title>
+<meta name="description" content="Portfólio de cripto grátis em português: preço médio, lucro realizado, retorno anualizado e impermanent loss das suas pools, com cotação ao vivo.">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/index.html">
+<meta property="og:title" content="Portfólio de Criptomoedas Grátis — HOLD, DeFi e Trade | MundoDeFi">
+<meta property="og:description" content="Portfólio de cripto grátis em português: preço médio, lucro realizado, retorno anualizado e impermanent loss das suas pools, com cotação ao vivo.">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/index.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-22">
-<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-22">
-<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-22">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-23">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-23">
+<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-23">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/index.html#app",
+   "name": "MundoDeFi — Portfólio de criptomoedas",
+   "url": "https://mundodefi.com.br/portfolio/index.html",
+   "description": "Acompanhe HOLD, DeFi e trade num lugar só, com preço médio, lucro realizado e retorno anualizado.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "O portfólio é mesmo grátis?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É. HOLD, DeFi e trade completos, com ativos, pools e operações ilimitados e histórico sem corte, numa carteira. A assinatura PRO existe para quem precisa separar carteiras — corretora, cold wallet, DeFi —, quer o Nexus respondendo sobre os próprios números e quer exportar tudo em CSV."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "De onde vem o preço dos ativos?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Da CoinPaprika e da CoinGecko, ao vivo. Quando a cotação falha, o portfólio usa a última conhecida e avisa na tela — patrimônio calculado com preço velho sem aviso é pior que patrimônio nenhum."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Como o preço médio é calculado?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pelo custo médio ponderado. Cada compra entra somando quantidade e custo, taxas incluídas. A venda não altera o preço médio: ela baixa o custo proporcional à quantidade vendida e transforma a diferença em lucro realizado."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "O que é retorno anualizado aqui?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É XIRR, que leva em conta a data de cada aporte, não só o valor. Sem isso, quem comprou na baixa e quem comprou na alta apareceriam com o mesmo retorno, o que não descreve nada."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Meus dados ficam salvos onde?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "No seu navegador. Se você entrar com uma conta Google, eles também sincronizam na nuvem para você abrir do celular. O MundoDeFi não pede chave de corretora nem acesso à sua carteira — e nunca vai pedir."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 <div class="app" id="app"></div>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. Antes daqui, o HTML servido tinha
+     zero caractere e o /portfolio/ era invisivel para busca e IA. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Portfólio de criptomoedas, grátis e em português</h1>
+    <p class="pf-sub">HOLD, DeFi e trade no mesmo lugar — com as contas que a planilha não faz.</p>
+    <h2>O que este portfólio faz</h2>
+    <p>A maioria das pessoas acompanha cripto de duas formas: olhando o saldo da corretora ou montando uma planilha. As duas escondem a mesma coisa — <strong>quanto você realmente ganhou</strong>. O saldo da corretora mostra o valor de hoje, não o resultado; a planilha, na prática, para de ser atualizada.</p>
+    <p>O portfólio do MundoDeFi guarda cada compra, venda, aporte em pool e operação como um evento com data. Tudo o mais — preço médio, lucro realizado, patrimônio, concentração — é <strong>calculado a partir daí</strong>, nunca digitado. Corrigir um lançamento antigo refaz o resto sozinho.</p>
+    <ul>
+      <li><strong>Grátis com uma carteira</strong>, sem limite de ativos, pools ou operações</li>
+      <li>Cotação ao vivo, com aviso quando o preço usado está velho</li>
+      <li>Histórico completo, sem corte por tempo</li>
+      <li>Seus dados ficam no seu navegador e, se você entrar com uma conta, sincronizam na nuvem</li>
+    </ul>
+    <h2>As três áreas</h2>
+    <p><strong>HOLD</strong> é o que você comprou para guardar. Aqui entram preço médio pelo custo médio ponderado — o método usado no Brasil — e a separação entre lucro que você já realizou e lucro que ainda existe só no papel.</p>
+    <p><strong>DeFi</strong> reúne pools de liquidez e lending. É onde fica a conta que quase nenhum acompanhamento faz: se as taxas coletadas cobriram o <em>impermanent loss</em>, ou se teria sido melhor apenas segurar os dois tokens.</p>
+    <p><strong>Trade</strong> é o diário das operações, com banca, win rate, profit factor, expectativa por operação e drawdown máximo — e um aviso honesto quando a amostra ainda é pequena demais para significar alguma coisa.</p>
+    <h2>Como começar</h2>
+    <p>Crie uma carteira, registre a primeira compra com data, quantidade e preço, e o resto aparece. Dá para carregar um portfólio de exemplo antes, se você quiser ver como fica com dados dentro.</p>
+    <p>Não é preciso conta para usar: sem login, tudo fica salvo no seu próprio navegador. A conta serve para sincronizar entre celular e computador.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>O portfólio é mesmo grátis?</h3>
+    <p>É. HOLD, DeFi e trade completos, com ativos, pools e operações ilimitados e histórico sem corte, numa carteira. A assinatura PRO existe para quem precisa separar carteiras — corretora, cold wallet, DeFi —, quer o Nexus respondendo sobre os próprios números e quer exportar tudo em CSV.</p>
+    <h3>De onde vem o preço dos ativos?</h3>
+    <p>Da CoinPaprika e da CoinGecko, ao vivo. Quando a cotação falha, o portfólio usa a última conhecida e avisa na tela — patrimônio calculado com preço velho sem aviso é pior que patrimônio nenhum.</p>
+    <h3>Como o preço médio é calculado?</h3>
+    <p>Pelo custo médio ponderado. Cada compra entra somando quantidade e custo, taxas incluídas. A venda <strong>não altera</strong> o preço médio: ela baixa o custo proporcional à quantidade vendida e transforma a diferença em lucro realizado.</p>
+    <h3>O que é retorno anualizado aqui?</h3>
+    <p>É XIRR, que leva em conta a data de cada aporte, não só o valor. Sem isso, quem comprou na baixa e quem comprou na alta apareceriam com o mesmo retorno, o que não descreve nada.</p>
+    <h3>Meus dados ficam salvos onde?</h3>
+    <p>No seu navegador. Se você entrar com uma conta Google, eles também sincronizam na nuvem para você abrir do celular. O MundoDeFi não pede chave de corretora nem acesso à sua carteira — e nunca vai pedir.</p>
+  </div>
+</section>
+
 <!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
-<script src="/nexus/nexus-auth.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-core.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-store.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-core.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-store.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio.js?v=2026-08-23"></script>
 <script>P.pageDash();</script>
-<script src="/nexus/nexus-motor.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-core.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-motor.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-core.js?v=2026-08-23"></script>
 </body>
 </html>

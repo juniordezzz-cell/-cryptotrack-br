@@ -329,7 +329,7 @@ P.shell = function (active) {
   var carts = '<select class="fsel" id="cartSel"><option value="all">Todas as carteiras</option>'
     + P.st.carteiras.map(function (c) { return '<option value="' + c.id + '"' + (P.st.cfg.cart === c.id ? ' selected' : '') + '>' + e(c.nome) + '</option>'; }).join('') + '</select>';
   var top = '<div class="mob-top"><button class="mob-burger" onclick="document.body.classList.toggle(\'snav\')">☰</button><div class="sb-logo-text" style="font-size:16px">Mundo<em>DeFi</em></div></div>'
-    + '<main class="main"><div class="top"><h1 id="pgTitle"></h1><div class="top-right">'
+    + '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-right">'
     + (P.st.carteiras.length ? carts : '')
     + '<div class="seg"><button id="mUsd" class="' + (P.st.cfg.moeda === 'usd' ? 'on' : '') + '">US$</button><button id="mBrl" class="' + (P.st.cfg.moeda === 'brl' ? 'on' : '') + '">R$</button></div>'
     + '<button class="btn btn-p" id="btnAdd">+ Adicionar</button>'

@@ -2,28 +2,141 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<script src="/mundodefi-api.js?v=2026-08-22"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-22"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-22" type="image/svg+xml">
-<title>HOLD — Portfólio MundoDeFi</title>
+<script src="/mundodefi-api.js?v=2026-08-23"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=2026-08-23"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-23" type="image/svg+xml">
+<title>Carteira HOLD: Preço Médio e Lucro Real | MundoDeFi</title>
+<meta name="description" content="Acompanhe suas posições de longo prazo com preço médio pelo custo médio ponderado, lucro realizado separado do não realizado e concentração da carteira.">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/hold.html">
+<meta property="og:title" content="Carteira HOLD: Preço Médio e Lucro Real | MundoDeFi">
+<meta property="og:description" content="Acompanhe suas posições de longo prazo com preço médio pelo custo médio ponderado, lucro realizado separado do não realizado e concentração da carteira.">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/hold.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-22">
-<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-22">
-<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-22">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-23">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-23">
+<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-23">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/hold.html#app",
+   "name": "MundoDeFi — Carteira HOLD",
+   "url": "https://mundodefi.com.br/portfolio/hold.html",
+   "description": "Posições de longo prazo com preço médio pelo custo médio ponderado e lucro realizado separado do não realizado.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Carteira HOLD",
+     "item": "https://mundodefi.com.br/portfolio/hold.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Taxa de corretagem entra no preço médio?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Entra. Na compra a taxa soma ao custo; na venda ela reduz a receita. Ignorar taxa infla o lucro que você acha que teve."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Posso registrar venda parcial?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Pode. A venda parcial baixa o custo proporcional à quantidade vendida, mantém o preço médio das que sobraram e registra o lucro realizado daquela operação."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 <div class="app" id="app"></div>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. Antes daqui, o HTML servido tinha
+     zero caractere e o /portfolio/ era invisivel para busca e IA. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Carteira HOLD: preço médio e lucro de verdade</h1>
+    <p class="pf-sub">O que você comprou para guardar, com as contas separadas como devem ser.</p>
+    <h2>Realizado e não realizado não são a mesma coisa</h2>
+    <p>Somar tudo num número só é o erro mais comum de quem acompanha cripto. <strong>Lucro realizado</strong> saiu do papel: veio de venda fechada e não depende mais do mercado. <strong>Lucro não realizado</strong> é o que suas posições abertas valem hoje — e pode desaparecer amanhã.</p>
+    <p>A carteira HOLD mostra os dois separados, por ativo e no total. Quem só olha o número cheio costuma se surpreender ao descobrir que boa parte do "lucro" nunca virou dinheiro.</p>
+    <h2>Como o preço médio funciona</h2>
+    <p>O método é o custo médio ponderado, que é o usado no Brasil. Cada compra soma quantidade e custo — com as taxas dentro, porque taxa faz parte do que você pagou. A venda não mexe no preço médio: baixa o custo proporcional e materializa o ganho.</p>
+    <p>Abrindo qualquer ativo você vê a reconstrução transação a transação: como o saldo e o preço médio mudaram a cada operação, e quanto cada venda realizou. É onde a conta deixa de ser caixa-preta.</p>
+    <h2>Concentração: contar ativos engana</h2>
+    <p>Ter dez moedas não significa estar diversificado se uma delas pesa 70%. O portfólio calcula o índice de Herfindahl-Hirschman sobre as posições, mostra quanto o maior ativo e o top 3 representam, e trata stablecoin como caixa — porque ela não é aposta, é espera.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>Taxa de corretagem entra no preço médio?</h3>
+    <p>Entra. Na compra a taxa soma ao custo; na venda ela reduz a receita. Ignorar taxa infla o lucro que você acha que teve.</p>
+    <h3>Posso registrar venda parcial?</h3>
+    <p>Pode. A venda parcial baixa o custo proporcional à quantidade vendida, mantém o preço médio das que sobraram e registra o lucro realizado daquela operação.</p>
+  </div>
+</section>
+
 <!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
-<script src="/nexus/nexus-auth.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-core.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-store.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-core.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-store.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio.js?v=2026-08-23"></script>
 <script>P.pageHold();</script>
-<script src="/nexus/nexus-motor.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-core.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-motor.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-core.js?v=2026-08-23"></script>
 </body>
 </html>

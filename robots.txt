@@ -2,24 +2,17 @@
 #  MUNDODEFI · robots.txt
 #
 #  ATENCAO AO EDITAR: um agente que tem bloco proprio ignora por completo
-#  o bloco "User-agent: *". Por isso o Disallow do portfolio se repete em
-#  cada bloco abaixo -- sem isso, os rastreadores nomeados sairiam varrendo
-#  as paginas vazias. Regra nova aqui em cima precisa ser copiada la
-#  embaixo tambem.
+#  o bloco "User-agent: *". Se voce adicionar um Disallow aqui em cima,
+#  precisa copiar em cada bloco de IA la embaixo -- senao eles continuam
+#  entrando onde voce quis bloquear.
+#
+#  Historico: /portfolio/ ficou bloqueado enquanto servia HTML vazio (o
+#  conteudo so existia depois do JavaScript). Agora as quatro paginas tem
+#  texto de verdade no HTML e por isso foram liberadas.
 # ═══════════════════════════════════════════════════════════════════
 
 User-agent: *
 Allow: /
-# O portfolio fica de fora do indice de proposito, e nao por ser pago --
-# ele e' gratis. E que as quatro paginas de /portfolio/ sao cascas de
-# JavaScript: o HTML servido tem menos de 40 caracteres de texto e a
-# interface inteira e' montada por portfolio.js depois. Indexa-las hoje
-# poria quatro paginas vazias no Google com a nossa assinatura.
-#
-# Para liberar, primeiro e' preciso escrever conteudo de verdade no HTML
-# (o que a ferramenta faz, para quem serve, como comeca) que apareca antes
-# do JS rodar. So depois vale tirar o Disallow daqui -- e dos blocos de IA.
-Disallow: /portfolio/
 
 
 # ═══════════════════════════════════════════════════════════════════
@@ -36,62 +29,48 @@ Disallow: /portfolio/
 # ── OpenAI ──
 User-agent: GPTBot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: OAI-SearchBot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: ChatGPT-User
 Allow: /
-Disallow: /portfolio/
 
 # ── Anthropic ──
 User-agent: ClaudeBot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: Claude-User
 Allow: /
-Disallow: /portfolio/
 
 User-agent: Claude-SearchBot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: anthropic-ai
 Allow: /
-Disallow: /portfolio/
 
 # ── Google (Gemini e treinamento; separado do Googlebot de busca) ──
 User-agent: Google-Extended
 Allow: /
-Disallow: /portfolio/
 
 # ── Perplexity ──
 User-agent: PerplexityBot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: Perplexity-User
 Allow: /
-Disallow: /portfolio/
 
 # ── Outros ──
 User-agent: Applebot-Extended
 Allow: /
-Disallow: /portfolio/
 
 User-agent: meta-externalagent
 Allow: /
-Disallow: /portfolio/
 
 User-agent: Amazonbot
 Allow: /
-Disallow: /portfolio/
 
 User-agent: CCBot
 Allow: /
-Disallow: /portfolio/
 
 Sitemap: https://mundodefi.com.br/sitemap.xml

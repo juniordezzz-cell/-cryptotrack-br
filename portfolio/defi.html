@@ -2,28 +2,141 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<script src="/mundodefi-api.js?v=2026-08-22"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-22"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-22" type="image/svg+xml">
-<title>DeFi — Portfólio MundoDeFi</title>
+<script src="/mundodefi-api.js?v=2026-08-23"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=2026-08-23"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-23" type="image/svg+xml">
+<title>Pools de Liquidez e Lending no Portfólio | MundoDeFi</title>
+<meta name="description" content="Acompanhe pools de liquidez e lending com taxas coletadas, APR realizado e a resposta que importa: as taxas cobriram o impermanent loss?">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/defi.html">
+<meta property="og:title" content="Pools de Liquidez e Lending no Portfólio | MundoDeFi">
+<meta property="og:description" content="Acompanhe pools de liquidez e lending com taxas coletadas, APR realizado e a resposta que importa: as taxas cobriram o impermanent loss?">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/defi.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
 <meta name="robots" content="noindex">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-22">
-<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-22">
-<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-22">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-23">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=2026-08-23">
+<link rel="stylesheet" href="/nexus/nexus.css?v=2026-08-23">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/defi.html#app",
+   "name": "MundoDeFi — Pools de liquidez e lending",
+   "url": "https://mundodefi.com.br/portfolio/defi.html",
+   "description": "Pools e lending com taxas coletadas, APR realizado e a comparação entre a pool e simplesmente ter segurado os tokens.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Pools de liquidez e lending",
+     "item": "https://mundodefi.com.br/portfolio/defi.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "O que é impermanent loss, em uma frase?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É o custo de deixar o AMM rebalancear sua posição sozinho: você termina com mais do token que caiu e menos do que subiu. Só desaparece se o par voltar à proporção de preços que tinha na abertura."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Preciso informar preço de abertura?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Só se quiser a comparação com o HOLD. Sem esses preços o portfólio ainda acompanha capital, taxas e resultado — ele simplesmente não inventa um número de impermanent loss que não teria como calcular."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
 </head>
 <body>
 <div class="app" id="app"></div>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. Antes daqui, o HTML servido tinha
+     zero caractere e o /portfolio/ era invisivel para busca e IA. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Pools de liquidez e lending, com a conta que importa</h1>
+    <p class="pf-sub">A pergunta não é quanto rendeu. É se rendeu mais do que ter só segurado os tokens.</p>
+    <h2>A pool bateu o HOLD?</h2>
+    <p>Toda pool tem impermanent loss. A pergunta útil nunca foi "tive perda impermanente?" — sempre se tem —, e sim se as <strong>taxas coletadas cobriram</strong> essa perda. Uma pool com APR alto que perde para o simples ato de segurar os dois tokens não está rendendo, está fazendo barulho.</p>
+    <p>Informando o preço dos dois tokens no dia da abertura, o portfólio compara sua posição com a alternativa de ter ficado parado, e diz de que lado você está — em reais e em porcentagem.</p>
+    <p>O cálculo usa o desempenho <em>relativo</em> entre os dois tokens, não a variação de um deles. Num par SOL/ETH em que os dois dobram, não há impermanent loss nenhum — e uma conta feita só sobre o SOL diria que houve.</p>
+    <h2>APR realizado, não APR anunciado</h2>
+    <p>A plataforma anuncia um APR; o que interessa é o que você de fato recebeu. O portfólio anualiza as taxas efetivamente coletadas sobre o capital aplicado, pelo tempo real da posição. Os dois números costumam ser bem diferentes.</p>
+    <h2>Lending com juros que compõem</h2>
+    <p>Em plataformas como Aave e Kamino os juros recebidos voltam a render. O portfólio registra os juros como recebimento e os incorpora ao principal, que é como o dinheiro se comporta lá — e conta apenas o que entrou, nunca APY estimado virando lucro.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>O que é impermanent loss, em uma frase?</h3>
+    <p>É o custo de deixar o AMM rebalancear sua posição sozinho: você termina com mais do token que caiu e menos do que subiu. Só desaparece se o par voltar à proporção de preços que tinha na abertura.</p>
+    <h3>Preciso informar preço de abertura?</h3>
+    <p>Só se quiser a comparação com o HOLD. Sem esses preços o portfólio ainda acompanha capital, taxas e resultado — ele simplesmente não inventa um número de impermanent loss que não teria como calcular.</p>
+  </div>
+</section>
+
 <!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
-<script src="/nexus/nexus-auth.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-core.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio-store.js?v=2026-08-22"></script>
-<script src="/portfolio/portfolio.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-auth.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-core.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio-store.js?v=2026-08-23"></script>
+<script src="/portfolio/portfolio.js?v=2026-08-23"></script>
 <script>P.pageDefi();</script>
-<script src="/nexus/nexus-motor.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-22"></script>
-<script src="/nexus/nexus-core.js?v=2026-08-22"></script>
+<script src="/nexus/nexus-motor.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=2026-08-23"></script>
+<script src="/nexus/nexus-core.js?v=2026-08-23"></script>
 </body>
 </html>

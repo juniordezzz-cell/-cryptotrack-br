@@ -139,7 +139,37 @@ button{font-family:var(--font);cursor:pointer}
   display:flex;align-items:flex-start;justify-content:space-between;
   gap:1rem;flex-wrap:wrap;margin-bottom:1.6rem;
 }
-.top h1{font-size:1.45rem;font-weight:700;letter-spacing:-.025em}
+/* Era um <h1>. Virou div: a saudacao nao e' o titulo da pagina, e agora
+   existe conteudo de verdade no HTML que carrega o h1. */
+.top .pg-titulo{font-size:1.45rem;font-weight:700;letter-spacing:-.025em}
+
+/* ══ CONTEUDO DA PAGINA ════════════════════════════════════
+   Texto de verdade abaixo do aplicativo. O .app e' flex com barra lateral
+   sticky de 100vh; esta secao vem DEPOIS dele, ocupando a largura toda, e
+   recua no desktop para nao nascer colada na barra. */
+.pf-sobre{
+  border-top:1px solid var(--line);
+  background:var(--panel);
+  padding:2.8rem 1.9rem 3.4rem;
+  margin-left:var(--sidebar);
+}
+.pf-sobre-in{max-width:760px}
+.pf-sobre h1{font-size:1.5rem;font-weight:700;letter-spacing:-.025em;margin-bottom:.45rem}
+.pf-sobre .pf-sub{font-size:13.5px;color:var(--mut);margin-bottom:2rem}
+.pf-sobre h2{
+  font-size:1.02rem;font-weight:700;letter-spacing:-.015em;
+  margin:2rem 0 .7rem;padding-top:1.4rem;border-top:1px solid var(--line);
+}
+.pf-sobre h2:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.pf-sobre h3{font-size:13.5px;font-weight:600;color:var(--txt);margin:1.3rem 0 .35rem}
+.pf-sobre p{font-size:13.5px;line-height:1.75;color:var(--mut);margin-bottom:.9rem}
+.pf-sobre strong{color:var(--txt);font-weight:600}
+.pf-sobre em{font-style:italic;color:var(--txt)}
+.pf-sobre ul{margin:.2rem 0 1rem;padding-left:1.15rem;display:flex;flex-direction:column;gap:.5rem}
+.pf-sobre li{font-size:13.5px;line-height:1.65;color:var(--mut)}
+@media(max-width:960px){
+  .pf-sobre{margin-left:0;padding:2.2rem 1rem 3rem}
+}
 .top-sub{font-size:12.5px;color:var(--mut2);width:100%;margin-top:-.2rem}
 .top-right{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .avatar{

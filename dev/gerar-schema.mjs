@@ -159,6 +159,77 @@ for (const item of cat.itens) {
   aplicar(arquivo, [{ '@id': ORG_ID, '@type': 'Organization' }, appDaFerramenta(item), trilha(item)]);
 }
 
+/* ── portfólio ────────────────────────────────────────────────
+   Quatro páginas, cada uma com o seu assunto. O FAQ é lido do próprio
+   HTML: schema que descreve pergunta que não está na página é exatamente
+   o que o Google pune, e divergiria no dia em que alguém editar o texto. */
+const PORTFOLIO = [
+  ['index', 'Portfólio de criptomoedas',
+   'Acompanhe HOLD, DeFi e trade num lugar só, com preço médio, lucro realizado e retorno anualizado.'],
+  ['hold', 'Carteira HOLD',
+   'Posições de longo prazo com preço médio pelo custo médio ponderado e lucro realizado separado do não realizado.'],
+  ['defi', 'Pools de liquidez e lending',
+   'Pools e lending com taxas coletadas, APR realizado e a comparação entre a pool e simplesmente ter segurado os tokens.'],
+  ['trade', 'Diário de trade',
+   'Banca, win rate, profit factor, expectativa por operação e drawdown máximo.']
+];
+
+/* Lê os pares <h3>pergunta</h3><p>resposta</p> da seção de conteúdo. */
+function faqDoArquivo(rel) {
+  const p = path.join(RAIZ, rel);
+  if (!fs.existsSync(p)) return null;
+  const s = fs.readFileSync(p, 'utf8');
+  const i = s.indexOf('Perguntas frequentes');
+  if (i < 0) return null;
+  const trecho = s.slice(i);
+  const pares = [...trecho.matchAll(/<h3>([\s\S]*?)<\/h3>\s*<p>([\s\S]*?)<\/p>/g)];
+  if (!pares.length) return null;
+  const limpa = t => t.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+  return {
+    '@type': 'FAQPage',
+    mainEntity: pares.map(m => ({
+      '@type': 'Question',
+      name: limpa(m[1]),
+      acceptedAnswer: { '@type': 'Answer', text: limpa(m[2]) }
+    }))
+  };
+}
+
+for (const [slug, nome, descricao] of PORTFOLIO) {
+  const rel = `portfolio/${slug}.html`;
+  const url = `${SITE}/${rel}`;
+  const grafo = [
+    { '@id': ORG_ID, '@type': 'Organization' },
+    {
+      '@type': 'WebApplication',
+      '@id': url + '#app',
+      name: 'MundoDeFi — ' + nome,
+      url,
+      description: descricao,
+      applicationCategory: 'FinanceApplication',
+      operatingSystem: 'Web',
+      browserRequirements: 'Requer JavaScript',
+      inLanguage: 'pt-BR',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
+      publisher: { '@id': ORG_ID },
+      isPartOf: { '@id': SITE_ID }
+    },
+    {
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: SITE + '/' },
+        { '@type': 'ListItem', position: 2, name: 'Portfólio', item: SITE + '/portfolio/index.html' },
+        ...(slug === 'index' ? [] : [{ '@type': 'ListItem', position: 3, name: nome, item: url }])
+      ]
+    }
+  ];
+  const faq = faqDoArquivo(rel);
+  if (faq) grafo.push(faq);
+  aplicar(rel, grafo);
+}
+
+
 /* ── planos: o produto pago, com preço legível por máquina ─────────── */
 aplicar('planos.html', [
   { '@id': ORG_ID, '@type': 'Organization' },

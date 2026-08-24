@@ -61,10 +61,18 @@ add('/politica-de-privacidade.html', null, 'yearly', '0.3');
 /* ── ferramentas, do catálogo ─────────────────────────────────────── */
 const cat = lerCatalogo();
 for (const item of cat.itens) {
-  if (item.slug === 'portfolio') continue;   /* casca de JS: ver robots.txt */
+  /* o portfólio entra abaixo, com as quatro páginas, não só a raiz */
+  if (item.slug === 'portfolio') continue;
   const url = item.url;
   const arquivo = url.endsWith('/') ? url + 'index.html' : url;
   add(url, arquivo, 'monthly', item.destaque ? '0.9' : '0.8');
+}
+
+/* ── portfólio ─────────────────────────────────────────────
+   Ficou fora enquanto as páginas serviam HTML vazio. Agora cada uma tem
+   texto próprio abaixo do aplicativo — ver o comentário no robots.txt. */
+for (const pg of ['index', 'hold', 'defi', 'trade']) {
+  add('/portfolio/' + pg + '.html', null, 'weekly', pg === 'index' ? '0.9' : '0.8');
 }
 
 /* ── páginas de moeda ─────────────────────────────────────────
