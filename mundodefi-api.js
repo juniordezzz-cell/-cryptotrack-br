@@ -1,26 +1,41 @@
-/* ╔══════════════════════════════════════════════════════════════════════╗
-   ║  MUNDODEFI · ACESSO À COINGECKO — PONTO ÚNICO                        ║
+/* ╔════════════════════════════════════════════════════════════════════╗
+   ║  MUNDODEFI · DADOS DE MERCADO — PONTO ÚNICO                            ║
    ║                                                                      ║
-   ║  12 arquivos batem na CoinGecko hoje, todos anônimos. O tier         ║
-   ║  público é muito restrito: em tráfego real vira 429 e a home         ║
-   ║  aparece vazia para quem chega.                                      ║
+   ║  O SITE NÃO PRECISA DE CHAVE DE API. Nenhuma.                        ║
    ║                                                                      ║
-   ║  ── PARA ATIVAR A CHAVE (2 minutos, gratuito) ───────────────────    ║
-   ║  1. coingecko.com/en/api/pricing → plano Demo (grátis)               ║
-   ║  2. copie a chave                                                    ║
-   ║  3. cole em MDF_API.chave logo abaixo                                ║
+   ║  ── POR QUÊ ISTO EXISTE ───────────────────────────────    ║
+   ║  Doze arquivos batiam na CoinGecko anônima. O tier público dela não   ║
+   ║  aguenta site com visita: em teste, ~50 chamadas de um mesmo IP em    ║
+   ║  poucos minutos já voltaram 429. E o plano Demo, que precisa de        ║
+   ║  cadastro, dá 10.000 chamadas por MÊS — na medição deste site, algo    ║
+   ║  como 220 visitas por dia.                                           ║
    ║                                                                      ║
-   ║  Só isso. Toda página que usar MDF_API passa a mandar a chave.       ║
-   ║  A chave Demo é de leitura e pode ficar no cliente, mas restrinja    ║
-   ║  por domínio no painel da CoinGecko.                                 ║
-   ╚══════════════════════════════════════════════════════════════════════╝ */
+   ║  ── DE ONDE VEM CADA DADO HOJE ───────────────────────────    ║
+   ║  DefiLlama    preço em dólar e histórico. Aceita `coingecko:<id>`,    ║
+   ║               ou seja os mesmos ids que o site já guarda: nenhuma     ║
+   ║               tradução de id, uma chamada para qualquer quantidade    ║
+   ║               de tokens, e sem teto mensal.                          ║
+   ║  CoinPaprika  tudo que precisa de outra moeda, capitalização,        ║
+   ║               ranking, busca ou detalhe do ativo. Sem chave, sem      ║
+   ║               cadastro, 20.000 chamadas/mês.                          ║
+   ║  Binance      gráfico da página de token.                             ║
+   ║  CoinGecko    RESERVA. Nada vai para lá em condição normal.          ║
+   ║                                                                      ║
+   ║  Toda resposta é traduzida para o formato da CoinGecko, então        ║
+   ║  nenhuma página do site precisou saber disso. Se qualquer fonte      ║
+   ║  falhar, a chamada cai na CoinGecko sozinha.                         ║
+   ║                                                                      ║
+   ║  ── SE UM DIA QUISER USAR A CHAVE ────────────────────────    ║
+   ║  Cole em MDF_API.chave abaixo e ela passa a ir em toda chamada que   ║
+   ║  chegue à CoinGecko — que hoje são só as de reserva. Para voltar     ║
+   ║  tudo para ela, sem deploy:  MDF_API.fonte = 'coingecko'             ║
+   ╚════════════════════════════════════════════════════════════════════╝ */
 (function () {
   'use strict';
 
   var API = {
-    /* ↓↓↓ COLE SUA CHAVE AQUI ↓↓↓ */
+    /* Opcional. O site funciona sem, e por padrão nada chega à CoinGecko. */
     chave: '',
-    /* ↑↑↑ deixe vazio para usar o tier público (sujeito a 429) ↑↑↑ */
 
     base: 'https://api.coingecko.com/api/v3'
   };
@@ -105,6 +120,7 @@
   function versionado(caminho) { return VERSAO ? caminho + '?v=' + VERSAO : caminho; }
 
   var PAPRIKA = 'https://api.coinpaprika.com/v1';
+  var LLAMA = 'https://coins.llama.fi';
   var LOGO = 'https://static.coinpaprika.com/coin/';
 
   /* Mapa de ids, gerado por dev/gerar-mapa-ids.mjs. Guardamos o sentido
@@ -122,6 +138,17 @@
         return rev;
       });
     return mapaEmVoo;
+  }
+
+  /* O mapa ja e' lido no sentido Paprika->CoinGecko para traduzir
+     resposta. Aqui precisamos do contrario: dado o id que o site usa,
+     achar o da Paprika. */
+  var pkDeCgCache = null;
+  function mapaDireto() {
+    if (pkDeCgCache) return Promise.resolve(pkDeCgCache);
+    return fetch(versionado('/mundodefi-ids.json'))
+      .then(function (r) { if (!r.ok) throw new Error('mapa ' + r.status); return r.json(); })
+      .then(function (d) { pkDeCgCache = d.ids || {}; return pkDeCgCache; });
   }
 
   function paprika(caminho) {
@@ -256,6 +283,282 @@
       });
   }
 
+  /* /simple/price — o endpoint mais usado do site, em 10 ferramentas mais
+     o portfólio. Duas fontes, escolhidas pelo que a chamada pede:
+
+       só dólar          DefiLlama. Aceita `coingecko:<id>`, ou seja os
+                         MESMOS ids que o site já guarda, sem mapa nenhum.
+                         Uma chamada serve qualquer quantidade de tokens e
+                         não existe teto mensal.
+
+       outra moeda,      CoinPaprika. Ela cota em BRL, EUR e GBP direto,
+       ou market cap     com preço de mercado cripto de verdade — importa
+                         para o câmbio, que existe justamente para mostrar
+                         a taxa do mercado cripto e não a oficial. Custa
+                         uma chamada por token e depende do mapa de ids.
+
+     Se algum id não estiver no mapa, ou se qualquer coisa falhar, cai na
+     CoinGecko como estava. */
+  function precoLlama(ids, querVariacao) {
+    var chave = ids.map(function (i) { return 'coingecko:' + i; }).join(',');
+    var pedidos = [fetch(LLAMA + '/prices/current/' + chave).then(function (r) {
+      if (!r.ok) throw new Error('llama ' + r.status); return r.json();
+    })];
+    if (querVariacao) {
+      pedidos.push(fetch(LLAMA + '/percentage/' + chave + '?period=24h')
+        .then(function (r) { return r.ok ? r.json() : { coins: {} }; })
+        .catch(function () { return { coins: {} }; }));
+    }
+    return Promise.all(pedidos).then(function (a) {
+      var precos = (a[0] && a[0].coins) || {};
+      var variacoes = (a[1] && a[1].coins) || {};
+      var fora = {}, achou = 0;
+      ids.forEach(function (id) {
+        var p = precos['coingecko:' + id];
+        if (!p || !(p.price > 0)) return;
+        achou++;
+        fora[id] = { usd: p.price };
+        var v = variacoes['coingecko:' + id];
+        if (v != null) fora[id].usd_24h_change = v;
+      });
+      if (!achou) throw new Error('llama sem dados');
+      return fora;
+    });
+  }
+
+  function precoPaprika(ids, moedas, querVariacao, querCap) {
+    return mapaDireto().then(function (pkDeCg) {
+      var faltando = ids.filter(function (i) { return !pkDeCg[i]; });
+      if (faltando.length) throw new Error('sem mapa: ' + faltando.join(','));
+      var qs = moedas.map(function (m) { return m.toUpperCase(); }).join(',');
+      return Promise.all(ids.map(function (id) {
+        return paprika('/tickers/' + pkDeCg[id] + '?quotes=' + qs)
+          .then(function (d) { return { id: id, d: d }; });
+      })).then(function (lista) {
+        var fora = {};
+        lista.forEach(function (x) {
+          var o = {};
+          moedas.forEach(function (m) {
+            var q = (x.d.quotes || {})[m.toUpperCase()];
+            if (!q) return;
+            o[m] = q.price;
+            if (querVariacao) o[m + '_24h_change'] = q.percent_change_24h;
+            if (querCap) o[m + '_market_cap'] = q.market_cap;
+          });
+          fora[x.id] = o;
+        });
+        return fora;
+      });
+    });
+  }
+
+  function traduzirSimplePrice(p) {
+    var ids = String(p.get('ids') || '').split(',')
+      .map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    if (!ids.length) return null;
+    var moedas = String(p.get('vs_currencies') || 'usd').split(',')
+      .map(function (s) { return s.trim().toLowerCase(); }).filter(Boolean);
+    var querVariacao = p.get('include_24hr_change') === 'true';
+    var querCap = p.get('include_market_cap') === 'true';
+
+    var soDolar = moedas.length === 1 && moedas[0] === 'usd';
+    if (soDolar && !querCap) return precoLlama(ids, querVariacao);
+    return precoPaprika(ids, moedas, querVariacao, querCap);
+  }
+
+  /* /coins/markets?ids=X — a forma pontual, usada pelo conversor quando o
+     usuário escolhe uma moeda. Antes ficava de fora por ser barata; agora
+     entra também, porque o objetivo passou a ser não depender de chave. */
+  function traduzirMarketsPorId(p, ids) {
+    var fiat = String(p.get('vs_currency') || 'usd').toUpperCase();
+    return mapaDireto().then(function (pkDeCg) {
+      var faltando = ids.filter(function (i) { return !pkDeCg[i]; });
+      if (faltando.length) throw new Error('sem mapa: ' + faltando.join(','));
+      return Promise.all(ids.map(function (id) {
+        return Promise.all([
+          paprika('/tickers/' + pkDeCg[id] + '?quotes=USD,' + fiat),
+          /* maxima e minima de 24h nao vem no ticker; o OHLCV tem, e em
+             dolar. Se falhar, seguimos sem elas em vez de derrubar tudo. */
+          paprika('/coins/' + pkDeCg[id] + '/ohlcv/latest')
+            .then(function (o) { return (o && o[0]) || {}; })
+            .catch(function () { return {}; })
+        ]).then(function (par) {
+            var c = par[0], ohlc = par[1];
+            var q = (c.quotes || {})[fiat] || {};
+            /* o OHLCV vem em dolar: converte pela razao do proprio preco */
+            var usd = (c.quotes || {}).USD || {};
+            var fator = (fiat === 'USD' || !usd.price || !q.price) ? 1 : (q.price / usd.price);
+            return {
+              low_24h: ohlc.low != null ? ohlc.low * fator : null,
+              high_24h: ohlc.high != null ? ohlc.high * fator : null,
+              id: id,
+              symbol: String(c.symbol || '').toLowerCase(),
+              name: c.name,
+              image: LOGO + pkDeCg[id] + '/logo.png',
+              current_price: q.price,
+              market_cap: q.market_cap,
+              total_volume: q.volume_24h,
+              market_cap_rank: c.rank,
+              price_change_percentage_24h: q.percent_change_24h,
+              price_change_percentage_24h_in_currency: q.percent_change_24h,
+              circulating_supply: c.circulating_supply,
+              total_supply: c.total_supply,
+              max_supply: c.max_supply
+            };
+          });
+      }));
+    });
+  }
+
+  /* /coins/{id}/market_chart — o gráfico. A DefiLlama serve o histórico
+     aceitando o mesmo `coingecko:<id>`, então aqui também não precisa de
+     mapa. Ela devolve só preço; volume e capitalização, que a CoinGecko
+     manda junto, ficam como listas vazias — nenhum consumidor do site usa
+     esses dois. */
+  function traduzirChart(id, p) {
+    var dias = parseInt(p.get('days'), 10) || 30;
+    var pontos = Math.min(dias, 365);
+    var fiat = String(p.get('vs_currency') || 'usd').toUpperCase();
+
+    /* A DefiLlama cota só em dólar. Sem converter, o gráfico do conversor
+       em reais mostrava o preço em dólar com o símbolo R$ na frente — número
+       errado com cara de certo, que é o pior tipo de erro. A razão vem da
+       própria Paprika, que cota o mesmo ativo nas duas moedas. */
+    var razao = fiat === 'USD'
+      ? Promise.resolve(1)
+      : mapaDireto().then(function (pkDeCg) {
+          if (!pkDeCg[id]) throw new Error('sem mapa para converter o grafico');
+          return paprika('/tickers/' + pkDeCg[id] + '?quotes=USD,' + fiat);
+        }).then(function (c) {
+          var q = c.quotes || {};
+          if (!q.USD || !q.USD.price || !q[fiat] || !q[fiat].price) {
+            throw new Error('sem cotacao para converter o grafico');
+          }
+          return q[fiat].price / q.USD.price;
+        });
+
+    var serie = fetch(LLAMA + '/chart/coingecko:' + encodeURIComponent(id)
+                      + '?span=' + pontos + '&period=1d')
+      .then(function (r) { if (!r.ok) throw new Error('llama chart ' + r.status); return r.json(); })
+      .then(function (d) {
+        var lista = ((d.coins || {})['coingecko:' + id] || {}).prices || [];
+        if (!lista.length) throw new Error('llama chart vazio');
+        return lista;
+      });
+
+    return Promise.all([serie, razao]).then(function (a) {
+      var lista = a[0], k = a[1];
+      return {
+        prices: lista.map(function (x) { return [x.timestamp * 1000, x.price * k]; }),
+        /* nenhum consumidor do site usa estes dois */
+        market_caps: [],
+        total_volumes: []
+      };
+    });
+  }
+
+  /* /coins/{id} — o detalhe usado pela página de token. Duas chamadas à
+     Paprika: o ticker traz preço, capitalização, máxima histórica e as
+     variações; o /coins traz nome, logo e links.
+
+     Um campo não existe na Paprika: a MÍNIMA histórica (atl). Vai como
+     null, e a página já sabe lidar com isso — ela monta um objeto com
+     atl:null quando só tem dados da Binance. Perder esse campo é o preço
+     de o site inteiro deixar de precisar de chave, e pareceu barato.
+
+     A valuation diluída também não vem pronta: calculamos preço vezes
+     oferta máxima, que é a definição dela. Sem oferta máxima definida,
+     fica null em vez de um número inventado. */
+  function traduzirDetalhe(id) {
+    return mapaDireto().then(function (pkDeCg) {
+      var pk = pkDeCg[id];
+      if (!pk) throw new Error('sem mapa: ' + id);
+      return Promise.all([
+        paprika('/tickers/' + pk + '?quotes=USD'),
+        paprika('/coins/' + pk).catch(function () { return {}; })
+      ]);
+    }).then(function (a) {
+      var t = a[0], c = a[1] || {};
+      var q = (t.quotes || {}).USD || {};
+      var maxima = t.max_supply || 0;
+      var logo = c.logo || (LOGO + (t.id || '') + '/logo.png');
+      var links = c.links || {};
+
+      function primeiro(v) { return (Array.isArray(v) && v.length) ? v[0] : null; }
+
+      return {
+        id: id,
+        symbol: String(t.symbol || '').toLowerCase(),
+        name: t.name || c.name || id,
+        image: { large: logo, small: logo, thumb: logo },
+        market_cap_rank: t.rank || null,
+        genesis_date: (c.started_at || '').slice(0, 10) || null,
+        description: { en: c.description || '' },
+        categories: (c.tags || []).map(function (x) { return x.name; }).filter(Boolean),
+        links: {
+          homepage: [primeiro(links.website) || ''],
+          blockchain_site: [primeiro(links.explorer) || ''],
+          repos_url: { github: links.source_code || [] },
+          subreddit_url: primeiro(links.reddit) || '',
+          twitter_screen_name: '',
+          telegram_channel_identifier: ''
+        },
+        market_data: {
+          current_price: { usd: q.price },
+          market_cap: { usd: q.market_cap },
+          total_volume: { usd: q.volume_24h },
+          fully_diluted_valuation: { usd: (maxima > 0 && q.price) ? maxima * q.price : null },
+          circulating_supply: t.circulating_supply || null,
+          total_supply: t.total_supply || null,
+          max_supply: maxima || null,
+          ath: { usd: q.ath_price != null ? q.ath_price : null },
+          ath_date: { usd: q.ath_date || null },
+          ath_change_percentage: { usd: q.percent_from_price_ath != null ? q.percent_from_price_ath : null },
+          /* a Paprika não publica mínima histórica */
+          atl: { usd: null },
+          atl_date: { usd: null },
+          atl_change_percentage: { usd: null },
+          price_change_percentage_24h: q.percent_change_24h,
+          price_change_percentage_7d: q.percent_change_7d,
+          price_change_percentage_30d: q.percent_change_30d,
+          price_change_percentage_1h_in_currency: { usd: q.percent_change_1h },
+          price_change_percentage_24h_in_currency: { usd: q.percent_change_24h }
+        }
+      };
+    });
+  }
+
+  /* /search — a busca de token do cabeçalho. A Paprika devolve id dela, e
+     o site inteiro fala em id da CoinGecko, então só entra o que está no
+     mapa. Isso limita a busca às maiores por capitalização, que é onde
+     está toda a procura real; o que ficar de fora cai na CoinGecko. */
+  function traduzirBusca(p) {
+    var q = String(p.get('query') || '').trim();
+    if (q.length < 2) return null;
+    return Promise.all([
+      mapa(),
+      paprika('/search?q=' + encodeURIComponent(q) + '&c=currencies&limit=20')
+    ]).then(function (a) {
+      var cgDePk = a[0], achados = (a[1] && a[1].currencies) || [];
+      var fora = [];
+      achados.forEach(function (c) {
+        var cg = cgDePk[c.id];
+        if (!cg) return;
+        fora.push({
+          id: cg,
+          name: c.name,
+          symbol: String(c.symbol || '').toUpperCase(),
+          market_cap_rank: c.rank,
+          thumb: LOGO + c.id + '/logo.png',
+          large: LOGO + c.id + '/logo.png'
+        });
+      });
+      if (!fora.length) throw new Error('busca sem resultado mapeado');
+      fora.sort(function (x, y) { return (x.market_cap_rank || 9e9) - (y.market_cap_rank || 9e9); });
+      return { coins: fora.slice(0, 10), exchanges: [], categories: [] };
+    });
+  }
+
   /* Devolve uma Promise com o JSON já no formato da CoinGecko, ou null
      quando este caminho não é traduzido (aí segue para a CoinGecko). */
   function traduzir(caminho) {
@@ -265,11 +568,20 @@
     var p;
     try { p = new URLSearchParams(partes[1] || ''); } catch (e) { return null; }
 
+    if (rota === '/simple/price') return traduzirSimplePrice(p);
     if (rota === '/global') return traduzirGlobal();
+    if (rota === '/search') return traduzirBusca(p);
     if (rota === '/coins/markets') {
-      if (p.get('ids')) return null;
+      var porId = p.get('ids');
+      if (porId) return traduzirMarketsPorId(p, porId.split(',').map(function (x) {
+        return x.trim().toLowerCase();
+      }).filter(Boolean));
       return traduzirMarkets(p);
     }
+    var mDet = rota.match(/^\/coins\/([^\/]+)$/);
+    if (mDet) return traduzirDetalhe(decodeURIComponent(mDet[1]).toLowerCase());
+    var mChart = rota.match(/^\/coins\/([^\/]+)\/market_chart$/);
+    if (mChart) return traduzirChart(decodeURIComponent(mChart[1]).toLowerCase(), p);
     return null;
   }
 

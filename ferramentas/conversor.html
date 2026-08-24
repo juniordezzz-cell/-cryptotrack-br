@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-23"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-23" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-08-29"></script>
+<link rel="icon" href="/favicon.svg?v=2026-08-29" type="image/svg+xml">
 <title>Conversor de Real, Dólar e Euro para Cripto | MundoDeFi</title>
 <meta name="description" content="Converta Real, Dólar e Euro para as maiores criptomoedas com cotação ao vivo, gráfico e tabelas de conversão. Grátis e em português.">
 <meta name="keywords" content="conversor fiat cripto, real para cripto, dolar para cripto, brl para sol, brl para btc, real para bitcoin, dolar para bitcoin, euro para cripto, cotação cripto brl">
@@ -23,8 +23,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-23">
-<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-23">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-29">
+<link rel="stylesheet" href="/mundodefi-ferramentas.css?v=2026-08-29">
 <!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
 <script type="application/ld+json">
 {
@@ -283,9 +283,9 @@
 <div data-mdf="footer"></div>
 
 <!-- injetor dos blocos compartilhados -->
-<script src="/mundodefi-catalogo.js?v=2026-08-23" defer></script>
-<script src="/mundodefi-previas.js?v=2026-08-23" defer></script>
-<script src="/mundodefi-ferramentas.js?v=2026-08-23" defer></script>
+<script src="/mundodefi-catalogo.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-previas.js?v=2026-08-29" defer></script>
+<script src="/mundodefi-ferramentas.js?v=2026-08-29" defer></script>
 
 <script>
 /* =========================================================
@@ -297,9 +297,10 @@
 const API = 'https://api.coingecko.com/api/v3';
 
 /* ----------------------------------------------------------
-   A CHAVE DA COINGECKO MORA EM UM LUGAR SÓ: /mundodefi-api.js
-   Aqui existia um segundo campo para colar. Quem preenchesse só um
-   dos dois ficava com metade do site sem chave e sem entender por quê.
+   O site nao usa chave de API: os dados vem da DefiLlama e da
+   CoinPaprika, que nao pedem cadastro. Este campo le de
+   /mundodefi-api.js e existe so para o caso de a chave da CoinGecko
+   voltar a ser usada algum dia.
    ---------------------------------------------------------- */
 const COINGECKO_KEY = (window.MDF_API && window.MDF_API.chave) || '';
 
@@ -345,9 +346,13 @@ let focoDropdown = -1;
 
 // ---------- formatação pt-BR ----------
 const fmtMoeda = (v, fiat = fiatAtual) =>
-  v.toLocaleString('pt-BR', { style:'currency', currency:FIATS[fiat].code, maximumFractionDigits: v < 1 ? 6 : 2 });
-const fmtNum = (v, dec) => v.toLocaleString('pt-BR', { maximumFractionDigits: dec });
+  (v == null || isNaN(v))
+    ? '—'
+    : v.toLocaleString('pt-BR', { style:'currency', currency:FIATS[fiat].code, maximumFractionDigits: v < 1 ? 6 : 2 });
+const fmtNum = (v, dec) =>
+  (v == null || isNaN(v)) ? '—' : v.toLocaleString('pt-BR', { maximumFractionDigits: dec });
 const fmtCompacto = v => {
+  if (v == null || isNaN(v)) return '—';
   const s = FIATS[fiatAtual].simbolo + ' ';
   if (v >= 1e12) return s + fmtNum(v/1e12, 2) + ' tri';
   if (v >= 1e9)  return s + fmtNum(v/1e9, 2)  + ' bi';
