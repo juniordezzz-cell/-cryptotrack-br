@@ -325,6 +325,39 @@
   };
 
   /* ══════════════════════════════════════════════════════════════
+     CAMBIO VIA STABLECOIN
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Quanto vale UMA unidade de uma moeda, em dolar, a partir do preco de
+     uma stablecoin cotada nas duas.
+
+     ── A INVERSAO ─────────────────────────────────────────────────
+     Se 1 USDT custa 1,00 USD e 5,17 BRL, entao 1 BRL vale 1,00/5,17 =
+     0,193 USD. E' divisao, e a ordem importa: trocada, ela devolve 5,17
+     -- "1 real vale 5,17 dolares" --, um numero com formato perfeito e
+     sentido invertido. Nada na tela denunciaria. Por isso a linha mora
+     aqui, com teste, e nao solta dentro da pagina.
+
+     Devolve null quando o preco na fiat nao serve como divisor, em vez de
+     Infinity vazando para a interface. */
+  F.valorEmDolar = function (precoEmUsd, precoNaMoeda) {
+    if (precoEmUsd == null || precoNaMoeda == null) return null;
+    if (!isFinite(precoEmUsd) || !isFinite(precoNaMoeda)) return null;
+    if (precoNaMoeda === 0) return null;
+    return precoEmUsd / precoNaMoeda;
+  };
+
+  /* Converte entre duas moedas passando pelo dolar como ponte. Recebe
+     quanto vale uma unidade de cada uma em dolar. */
+  F.converterMoeda = function (valor, valorDolarDe, valorDolarPara) {
+    if (valor == null || !isFinite(valor)) return null;
+    if (valorDolarDe == null || valorDolarPara == null) return null;
+    if (!isFinite(valorDolarDe) || !isFinite(valorDolarPara)) return null;
+    if (valorDolarPara === 0) return null;
+    return valor * valorDolarDe / valorDolarPara;
+  };
+
+  /* ══════════════════════════════════════════════════════════════
      TRADE ALAVANCADO
      ══════════════════════════════════════════════════════════════ */
 

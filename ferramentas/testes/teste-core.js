@@ -355,6 +355,48 @@ eq('queda de 200 para 100 = -50%', F.variacaoEmJanela([200, 150, 100], 2), -50, 
 eq('preco parado = 0%', F.variacaoEmJanela([50, 50, 50], 2), 0, 1e-9);
 
 
+sec('Cambio: valor de uma moeda em dolar');
+/* 1 USDT custa 1,00 USD e 5,17 BRL  ->  1 BRL vale 1/5,17 USD */
+eq('1 BRL em dolar', F.valorEmDolar(1, 5.17), 1 / 5.17, 1e-12);
+eqv('e vale MENOS que um dolar, nao mais', F.valorEmDolar(1, 5.17) < 1, true);
+eq('1 EUR em dolar (USDT a 0,92 EUR)', F.valorEmDolar(1, 0.92), 1 / 0.92, 1e-12);
+eqv('o euro vale MAIS que um dolar', F.valorEmDolar(1, 0.92) > 1, true);
+eq('o proprio dolar vale 1', F.valorEmDolar(1, 1), 1, 1e-12);
+
+sec('Cambio: a inversao trocada seria um numero plausivel');
+/* Este e' o teste que existe por causa do erro que ele impede: invertida,
+   a conta devolveria 5,17 -- "1 real vale 5,17 dolares" -- com formato
+   impecavel. Se alguem trocar a ordem, isto quebra. */
+eqv('1 BRL nao pode valer mais de um dolar', F.valorEmDolar(1, 5.17) < 1, true);
+eq('e o valor certo e' + " 0,1934...", F.valorEmDolar(1, 5.17), 0.19342359767891683, 1e-12);
+
+sec('Cambio: divisor invalido nao vira Infinity');
+eqv('preco zero na moeda: null', F.valorEmDolar(1, 0), null);
+eqv('preco nulo: null', F.valorEmDolar(1, null), null);
+eqv('preco indefinido: null', F.valorEmDolar(undefined, 5.17), null);
+
+sec('Cambio: conversao entre duas moedas');
+/* BRL vale 1/5,17 USD; EUR vale 1/0,92 USD */
+const vBRL = F.valorEmDolar(1, 5.17);
+const vEUR = F.valorEmDolar(1, 0.92);
+const vUSD = 1;
+eq('100 BRL em dolar', F.converterMoeda(100, vBRL, vUSD), 100 / 5.17, 1e-9);
+eq('100 USD em real', F.converterMoeda(100, vUSD, vBRL), 100 * 5.17, 1e-9);
+eq('a mesma moeda nao muda o valor', F.converterMoeda(42, vBRL, vBRL), 42, 1e-9);
+
+/* ida e volta tem que fechar: e' o teste que pega ordem trocada em
+   qualquer um dos dois sentidos */
+const ida = F.converterMoeda(250, vBRL, vEUR);
+const volta = F.converterMoeda(ida, vEUR, vBRL);
+eq('converter e desconverter devolve o valor original', volta, 250, 1e-9);
+
+sec('Cambio: conversao com entrada invalida');
+eqv('valor nulo: null', F.converterMoeda(null, vBRL, vUSD), null);
+eqv('destino zero: null', F.converterMoeda(100, vBRL, 0), null);
+eqv('origem nula: null', F.converterMoeda(100, null, vUSD), null);
+eq('zero converte para zero', F.converterMoeda(0, vBRL, vEUR), 0, 1e-12);
+
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0
