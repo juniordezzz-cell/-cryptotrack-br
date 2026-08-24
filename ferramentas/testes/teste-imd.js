@@ -226,36 +226,62 @@ for (let i = 0; i < 60; i++) {
 }
 eqv('em ' + comparacoes + ' comparacoes validas, nunca piorou', quebras, 0);
 
-sec('A trilha de entrada muda o teto da nota');
-/* Isto NAO e' um erro de conta -- e' consequencia do desenho adaptativo, e
-   esta aqui para nao mudar sem alguem perceber.
+sec('A trilha define o teto do diagnostico');
+/* O PROBLEMA QUE ISTO CORRIGE, medido antes da correcao:
+     declara pouca experiencia e acerta tudo -> 97, "Nativo DeFi", 12 perguntas
+     declara muita experiencia e acerta tudo -> 100, 30 perguntas
+   Tres pontos de diferenca. Como o pilar e' medido contra o maximo
+   PERGUNTADO, acertar tudo no facil valia quase o mesmo que acertar tudo
+   no dificil -- e ser honesto sobre ser avancado so dava mais chance de
+   perder ponto.
 
-   Quem declara pouca experiencia responde a trilha facil e, acertando
-   tudo, chega perto do topo com um terco das perguntas. Quem declara
-   muita responde a trilha dificil e tem mais chances de perder ponto.
-   Ou seja: ser honesto sobre ser avancado custa caro.
-
-   Se um dia a metodologia for revista, e' este numero que vai mudar. */
-function acertandoTudoCom(escolhaEntrada) {
+   Agora a trilha define ate onde o diagnostico chega, alinhado as faixas
+   de perfil que ja existiam. Quem nunca comprou cripto nao e' "Nativo
+   DeFi" por saber responder pergunta de iniciante. */
+function porTrilha(entradaIdx, ruimEm) {
   M.iniciar();
-  let q3, g3 = 0, n = 0;
-  while ((q3 = M.proxima()) && g3++ < 200) {
-    M.responder(q3.id, q3.id === 'ENTRADA-01' ? escolhaEntrada(q3.opcoes) : melhor(q3.opcoes));
+  let q4, g4 = 0, n = 0;
+  while ((q4 = M.proxima()) && g4++ < 200) {
+    let i;
+    if (q4.id === 'ENTRADA-01') i = entradaIdx;
+    else if (ruimEm && ruimEm.indexOf(q4.id) >= 0) i = pior(q4.opcoes);
+    else i = melhor(q4.opcoes);
+    M.responder(q4.id, i);
     n++;
   }
-  return { nota: M.calcular().imd, perguntas: n };
+  return Object.assign({ perguntas: n }, M.calcular());
 }
-const comoIniciante = acertandoTudoCom(pior);
-const comoAvancado = acertandoTudoCom(melhor);
-console.log('       declarando iniciante e acertando tudo: nota ' + comoIniciante.nota
-  + ' em ' + comoIniciante.perguntas + ' perguntas');
-console.log('       declarando avancado  e acertando tudo: nota ' + comoAvancado.nota
-  + ' em ' + comoAvancado.perguntas + ' perguntas');
-eqv('a trilha avancada faz mais perguntas', comoAvancado.perguntas > comoIniciante.perguntas, true);
-eqv('e nao pontua menos por isso', comoAvancado.nota >= comoIniciante.nota, true);
-eqv('a diferenca de teto entre as trilhas continua pequena (<= 5 pontos)',
-  comoAvancado.nota - comoIniciante.nota <= 5, true);
 
+const tIni = porTrilha(0, null);
+const tInt = porTrilha(2, ['INT-09']);
+const tAv  = porTrilha(4, null);
+console.log('       iniciante    : ' + tIni.imd + ' (' + tIni.perfil.nome + '), ' + tIni.perguntas + ' perguntas');
+console.log('       intermediario: ' + tInt.imd + ' (' + tInt.perfil.nome + '), ' + tInt.perguntas + ' perguntas');
+console.log('       avancado     : ' + tAv.imd + ' (' + tAv.perfil.nome + '), ' + tAv.perguntas + ' perguntas');
+
+eqv('a trilha e identificada', tIni.trilha.id + '/' + tInt.trilha.id + '/' + tAv.trilha.id,
+  'iniciante/intermediario/avancado');
+eq('acertando tudo na trilha inicial, para no teto', tIni.imd, 50);
+eq('na intermediaria, para no teto dela', tInt.imd, 75);
+eq('na avancada, chega a 100', tAv.imd, 100);
+eqv('declarar mais experiencia agora vale mais', tAv.imd > tInt.imd && tInt.imd > tIni.imd, true);
+eqv('o teto NAO entra como penalidade', (tIni.penalidades || []).length, 0);
+eqv('mas fica registrado que limitou', tIni.trilha.limitou, true);
+eqv('quem chega ao fim nao e limitado', tAv.trilha.limitou, false);
+eqv('e o motivo esta escrito, para a tela explicar',
+  typeof tIni.trilha.motivo === 'string' && tIni.trilha.motivo.length > 40, true);
+
+sec('Os tetos batem com as faixas de perfil');
+/* Cada teto deve cair no FIM de uma faixa: um teto no meio de uma faixa
+   deixaria perfis inalcancaveis pela trilha, o que confunde sem motivo. */
+(M.dados.regras.trilhas || []).forEach(function (t) {
+  const fecha = perfis.some(p => p.max === t.teto);
+  eqv('teto ' + t.teto + ' (' + t.id + ') fecha uma faixa de perfil', fecha, true);
+});
+
+/* ══════════════════════════════════════════════════════════════
+   1. O INVARIANTE QUE UM JSON MAL EDITADO QUEBRA
+   ══════════════════════════════════════════════════════════════ */
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0

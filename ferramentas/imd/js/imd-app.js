@@ -282,17 +282,37 @@
     // ----- Penalidades (avisos), se houver -----
     var avisos = document.getElementById("imd-penalidades");
     if (avisos) {
-      if (r.penalidades && r.penalidades.length) {
-        avisos.style.display = "block";
-        avisos.innerHTML = r.penalidades.map(function (p) {
-          return '<div class="checkpoint" style="border-color:rgba(255,110,143,.4);background:rgba(255,110,143,.08)">' +
-            '<span>⚠ ' + App.escapar(p.rotulo) + "</span>" +
-            '<b style="color:var(--danger);font-weight:600;font-size:12px">penalidade aplicada</b>' +
-            "</div>";
-        }).join("");
-      } else {
-        avisos.style.display = "none";
+      var blocos = [];
+
+      /* Alcance do diagnostico. NAO e' penalidade -- e' ate onde a trilha
+         respondida permite medir. Aparece em tom neutro e com o motivo
+         escrito, porque "seu teto e' 50" sem explicacao so' frustra. */
+      if (r.trilha && r.trilha.limitou) {
+        blocos.push(
+          '<div class="checkpoint" style="display:block;border-color:rgba(0,229,255,.35);' +
+          'background:rgba(0,229,255,.06)">' +
+          '<div style="font-weight:700;margin-bottom:4px">\uD83E\uDDED ' +
+          App.escapar(r.trilha.rotulo) + ' \u2014 diagn\u00f3stico at\u00e9 ' + r.trilha.teto + '</div>' +
+          '<div style="font-size:12.5px;line-height:1.6;color:var(--muted)">' +
+          App.escapar(r.trilha.motivo) + '</div></div>'
+        );
       }
+
+      /* Penalidades de verdade, agora com o motivo visivel: so o rotulo
+         deixava a pessoa sem saber o que fazer com a informacao. */
+      (r.penalidades || []).forEach(function (p) {
+        blocos.push(
+          '<div class="checkpoint" style="display:block;border-color:rgba(255,110,143,.4);' +
+          'background:rgba(255,110,143,.08)">' +
+          '<div style="font-weight:700;margin-bottom:4px;color:var(--danger)">\u26A0 ' +
+          App.escapar(p.rotulo) + '</div>' +
+          (p.motivo ? '<div style="font-size:12.5px;line-height:1.6;color:var(--muted)">' +
+            App.escapar(p.motivo) + '</div>' : '') + '</div>'
+        );
+      });
+
+      avisos.innerHTML = blocos.join("");
+      avisos.style.display = blocos.length ? "block" : "none";
     }
 
     // ----- Radar real dos 4 pilares -----

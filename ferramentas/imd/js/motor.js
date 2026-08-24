@@ -221,6 +221,28 @@
         }
       });
 
+      /* ── TETO POR TRILHA ────────────────────────────────────────
+         O pilar e' medido contra o maximo PERGUNTADO, e o maximo depende
+         da trilha. Sem isto, acertar tudo na trilha de iniciante dava 97
+         ("Nativo DeFi") com 12 perguntas, contra 100 com 30 na avancada
+         -- e ser honesto sobre ser avancado so rendia mais chance de
+         errar. A trilha agora define ate onde o diagnostico pode ir.
+         Configurado em regras.json; ausente, nada muda.               */
+      var trilha = null;
+      var respondidas = Object.keys(this.estado.respostas);
+      (regras.trilhas || []).some(function (t) {
+        var achou = respondidas.some(function (id) {
+          return String(id).indexOf(t.prefixo + '-') === 0;
+        });
+        if (achou) { trilha = t; return true; }
+        return false;
+      });
+      /* NAO entra na lista de penalidades: teto de trilha nao e' castigo,
+         e' o alcance do diagnostico. Vai separado em `trilha`, e a tela
+         explica em vez de mostrar um aviso vermelho. */
+      var tetoAplicado = false;
+      if (trilha && imd > trilha.teto) { imd = trilha.teto; tetoAplicado = true; }
+
       imd = Math.max(0, Math.min(100, Math.round(imd)));
 
       // perfil
@@ -235,6 +257,8 @@
       return {
         imd: imd,
         bruto: Math.round(bruto),
+        trilha: trilha ? { id: trilha.id, teto: trilha.teto, rotulo: trilha.rotulo,
+                            motivo: trilha.motivo, limitou: tetoAplicado } : null,
         perfil: perfil,
         risco: this._calcularRisco(),
         pilares: pilares,

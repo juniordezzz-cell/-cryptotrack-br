@@ -278,6 +278,60 @@ let anterior = 0;
   anterior = pl;
 });
 
+/* ══════════════════════════════════════════════════════════════
+   7. COMPARACAO ENTRE ATIVOS — a janela comum
+   ══════════════════════════════════════════════════════════════ */
+sec('Janela comum: todos com o mesmo historico');
+let J = F.janelaComum([[1, 2, 3], [10, 20, 30], [5, 6, 7]]);
+eq('comeca do zero', J.indice, 0);
+eqv('nao recortou nada', J.recortou, false);
+
+sec('Janela comum: um ativo entra depois');
+J = F.janelaComum([[1, 2, 3, 4], [null, null, 5, 6], [7, 8, 9, 10]]);
+eq('a janela comeca onde o mais novo entra', J.indice, 2);
+eqv('recortou', J.recortou, true);
+eq('e sabe quem limitou', J.quemLimita, 1);
+
+sec('Janela comum: serie totalmente vazia nao limita ninguem');
+J = F.janelaComum([[1, 2, 3], [null, null, null], [4, 5, 6]]);
+eq('a janela continua no zero', J.indice, 0);
+eqv('nao recortou por causa da vazia', J.recortou, false);
+
+sec('Janela comum: sem ativo nenhum');
+J = F.janelaComum([]);
+eq('indice zero', J.indice, 0);
+eqv('nao recortou', J.recortou, false);
+
+sec('Retorno medido a partir da janela');
+/* O caso que motivou a mudanca: um ativo antigo que subiu bastante ao
+   longo de todo o periodo, e um novo que subiu no trecho curto em que
+   existe. Medido desde o inicio de cada um, a comparacao nao responde
+   pergunta nenhuma -- sao periodos diferentes. */
+const antigo = [100, 120, 140, 160, 180];        /* +80% no total */
+const novo   = [null, null, null, 100, 150];     /* +50%, so no fim  */
+const jc = F.janelaComum([antigo, novo]);
+eq('a janela comeca onde o novo entra', jc.indice, 3);
+
+const antigoDesdeOInicio = F.retornoDesde(antigo, 0);
+const antigoNaJanela = F.retornoDesde(antigo, jc.indice);
+const novoNaJanela = F.retornoDesde(novo, jc.indice);
+eq('o antigo, desde o inicio dele: +80%', antigoDesdeOInicio.pct, 80, 1e-9);
+eq('o antigo, na janela comum: +12,5%', antigoNaJanela.pct, 12.5, 1e-9);
+eq('o novo, na janela comum: +50%', novoNaJanela.pct, 50, 1e-9);
+eqv('na janela comum, o novo realmente ganhou', novoNaJanela.pct > antigoNaJanela.pct, true);
+eqv('e medido errado o antigo e que pareceria melhor',
+  antigoDesdeOInicio.pct > novoNaJanela.pct, true);
+
+sec('Retorno: casos de borda');
+eqv('serie vazia devolve null', F.retornoDesde([], 0), null);
+eqv('so nulos devolve null', F.retornoDesde([null, null], 0), null);
+eqv('base zero devolve null, para nao dividir por zero', F.retornoDesde([0, 5], 0), null);
+const comBuraco = F.retornoDesde([null, null, 50, null, 75], 1);
+eq('buraco no indice pedido: usa o proximo com dado', comBuraco.base, 50);
+eq('e o ultimo ponto valido', comBuraco.ultimo, 75);
+eq('resultado +50%', comBuraco.pct, 50, 1e-9);
+
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0

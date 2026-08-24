@@ -261,6 +261,52 @@
   };
 
   /* ══════════════════════════════════════════════════════════════
+     COMPARACAO ENTRE ATIVOS
+     ══════════════════════════════════════════════════════════════ */
+
+  /* Qual o primeiro ponto em que TODOS os ativos ja tem dado.
+
+     ── POR QUE ISTO EXISTE ────────────────────────────────────────
+     Cada serie era normalizada pelo proprio primeiro ponto. No grafico
+     isso esta certo: nao existe retorno de antes do ativo existir. Mas a
+     lista de "quem rendeu mais" comparava periodos diferentes -- uma
+     moeda de tres meses com "+180%" aparecia acima do CDI de cinco anos
+     com "+45%", como se fosse a mesma pergunta. Nao era.
+
+     O ranking passa a medir todos a partir da data em que o ULTIMO ativo
+     entrou. O grafico continua mostrando o historico inteiro. */
+  F.janelaComum = function (series) {
+    if (!series || !series.length) return { indice: 0, recortou: false, quemLimita: -1 };
+    var indice = 0, quemLimita = -1;
+    for (var i = 0; i < series.length; i++) {
+      var lista = series[i] || [];
+      var primeiro = -1;
+      for (var j = 0; j < lista.length; j++) {
+        if (lista[j] != null) { primeiro = j; break; }
+      }
+      if (primeiro < 0) continue;              /* serie vazia nao limita ninguem */
+      if (primeiro > indice || quemLimita < 0) {
+        if (primeiro >= indice) { indice = primeiro; quemLimita = i; }
+      }
+    }
+    return { indice: indice, recortou: indice > 0, quemLimita: quemLimita };
+  };
+
+  /* Retorno de uma serie a partir de um indice. Se houver buraco exatamente
+     nele, usa o proximo ponto com dado em vez de descartar o ativo. */
+  F.retornoDesde = function (serie, indice) {
+    if (!serie || !serie.length) return null;
+    var base = null;
+    for (var i = Math.max(0, indice); i < serie.length && base == null; i++) base = serie[i];
+    if (base == null || base === 0) return null;
+    var ultimo = null;
+    for (var k = serie.length - 1; k >= 0 && ultimo == null; k--) ultimo = serie[k];
+    if (ultimo == null) return null;
+    return { base: base, ultimo: ultimo, multiplo: ultimo / base, pct: (ultimo / base - 1) * 100 };
+  };
+
+
+  /* ══════════════════════════════════════════════════════════════
      TRADE ALAVANCADO
      ══════════════════════════════════════════════════════════════ */
 
