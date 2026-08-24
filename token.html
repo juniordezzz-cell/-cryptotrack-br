@@ -1021,11 +1021,19 @@ function aplicarSEO(id, nome, sym, logo) {
   setOG('og:url', url);
   setOG('og:title', titulo);
   setOG('og:description', desc);
-  if (logo) setOG('og:image', logo);
-  setMeta('twitter:card', logo ? 'summary' : 'summary');
+  /* Cartão do site, não o logo da moeda: logo é um quadrado de 200px e
+     no espaço de 1200x630 do WhatsApp aparece minúsculo ou cortado.
+     Moeda com página própria em /moedas/ tem cartão próprio. */
+  var cartao = (typeof _descCache !== 'undefined' && _descCache && _descCache[id])
+    ? SITE + '/og/moeda-' + id + '.png'
+    : SITE + '/og/home.png';
+  setOG('og:image', cartao);
+  setOG('og:image:width', '1200');
+  setOG('og:image:height', '630');
+  setMeta('twitter:card', 'summary_large_image');
   setMeta('twitter:title', titulo);
   setMeta('twitter:description', desc);
-  if (logo) setMeta('twitter:image', logo);
+  setMeta('twitter:image', cartao);
 }
 
 // ═══════════════════════════════════
