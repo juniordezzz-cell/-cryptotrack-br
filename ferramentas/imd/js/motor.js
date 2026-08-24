@@ -21,14 +21,24 @@
 
     /* ---- Carregamento dos dados (com fallback amigável) ---- */
     carregar: function () {
-      var base = (function () {
-        // caminho relativo à pasta /data a partir de qualquer página do projeto
-        return "data/";
+      var base = "data/";
+      /* A versao sai do proprio <script src="...?v=">: sem isso, editar uma
+         pergunta ou uma regra nao chegava em quem ja tinha visitado o site
+         -- o navegador continuava servindo o JSON antigo. */
+      var v = (function () {
+        try {
+          var m = (document.currentScript && document.currentScript.src || '')
+            .match(/[?&]v=([^&#]+)/);
+          if (m) return '?v=' + m[1];
+          var tag = document.querySelector('script[src*="motor.js"]');
+          var m2 = tag && tag.src.match(/[?&]v=([^&#]+)/);
+          return m2 ? '?v=' + m2[1] : '';
+        } catch (e) { return ''; }
       })();
       return Promise.all([
-        fetch(base + "perguntas.json").then(r => r.json()),
-        fetch(base + "competencias.json").then(r => r.json()),
-        fetch(base + "regras.json").then(r => r.json())
+        fetch(base + "perguntas.json" + v).then(r => r.json()),
+        fetch(base + "competencias.json" + v).then(r => r.json()),
+        fetch(base + "regras.json" + v).then(r => r.json())
       ]).then(function (res) {
         IMDMotor.dados.perguntas = res[0].perguntas;
         IMDMotor.dados.competencias = res[1].competencias;

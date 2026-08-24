@@ -459,12 +459,20 @@
      ============================================================ */
   function wireSalvar(r) {
     // ----------------------------------------------------------
-    // INTERRUPTOR DE SEGURANÇA DA TRAVA
-    // false = resultado aberto (login só salva). Suba assim primeiro,
-    //         teste o login no site, e SÓ DEPOIS mude para true.
+    // INTERRUPTOR DA TRAVA
     // true  = resultado TRAVADO: só revela após login + 2 consentimentos.
+    // false = resultado aberto (login apenas salva).
+    //
+    // Ligado a pedido do dono do site: o diagnóstico é a isca, e a conta
+    // é o que ele deixa em troca.
+    //
+    // O RISCO NÃO É A TRAVA, É O LOGIN FALHAR. Com o resultado travado,
+    // quem não consegue entrar fica sem ver nada e a ferramenta vira uma
+    // tela de erro. Por isso o tratamento de falha abaixo diz o que houve
+    // e tenta redirecionamento quando o popup é bloqueado — o que acontece
+    // com frequência em navegador de celular.
     // ----------------------------------------------------------
-    var TRAVAR_RESULTADO = false;
+    var TRAVAR_RESULTADO = true;
 
     var conteudo   = document.getElementById("imd-result-conteudo");
     var lock       = document.getElementById("imd-lock");
@@ -558,6 +566,26 @@
       if (Fire.getUser()) salvar();
     }
 
+    /* Mensagem por tipo de falha. "Nao foi possivel entrar (auth/erro-x)"
+       nao ajuda ninguem: a pessoa precisa saber se o problema e' dela, do
+       navegador ou do site. */
+    function explicarFalha(e) {
+      var c = (e && e.code) || "";
+      if (c === "auth/popup-closed-by-user" || c === "auth/cancelled-popup-request") {
+        return "Você fechou a janela do Google antes de terminar. Pode tentar de novo.";
+      }
+      if (c === "auth/popup-blocked") {
+        return "Seu navegador bloqueou a janela do Google. Vamos tentar de outro jeito…";
+      }
+      if (c === "auth/network-request-failed") {
+        return "Sem conexão com o servidor de login. Confira a internet e tente de novo.";
+      }
+      if (c === "auth/unauthorized-domain") {
+        return "Este endereço ainda não está liberado no login. Avise a equipe do MundoDeFi.";
+      }
+      return "Não foi possível entrar agora (" + (c || "erro") + "). Tente de novo em instantes.";
+    }
+
     // clique no login do cadeado
     if (lockLogin) {
       lockLogin.addEventListener("click", function () {
@@ -570,12 +598,32 @@
             return salvar();
           })
           .catch(function (e) {
-            if (lockStatus) lockStatus.textContent =
-              "Não foi possível entrar (" + (e.code || "erro") + "). Tente de novo.";
-            lockLogin.disabled = false;
             console.error(e);
+            if (lockStatus) lockStatus.textContent = explicarFalha(e);
+            /* Popup bloqueado e' comum em navegador de celular. Em vez de
+               deixar a pessoa presa, tenta pela rota de redirecionamento,
+               que nao depende de popup. */
+            if (e && e.code === "auth/popup-blocked" &&
+                Fire.auth && typeof firebase !== "undefined") {
+              try {
+                Fire.auth.signInWithRedirect(new firebase.auth.GoogleAuthProvider());
+                return;
+              } catch (err) { console.error(err); }
+            }
+            lockLogin.disabled = false;
           });
       });
+    }
+
+    /* Volta do redirecionamento: o Firebase resolve isto sozinho e dispara
+       o evento de auth, mas conferimos aqui tambem para o caso de a pagina
+       ter recarregado com a sessao ja ativa. */
+    if (Fire.auth && Fire.auth.getRedirectResult) {
+      Fire.auth.getRedirectResult()
+        .then(function (res) { if (res && res.user) { revelar(); salvar(); } })
+        .catch(function (e) {
+          if (e && e.code && lockStatus) lockStatus.textContent = explicarFalha(e);
+        });
     }
 
     // se a autenticação mudar (ex.: login concluído em outra aba), reavalia
