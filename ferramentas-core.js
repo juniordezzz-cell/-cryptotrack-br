@@ -306,6 +306,24 @@
   };
 
 
+  /* Variacao percentual medida N periodos atras, dentro de uma serie de
+     fechamentos ordenada do mais antigo para o mais recente.
+
+     ── POR QUE A GUARDA IMPORTA ───────────────────────────────────
+     Se a serie for mais curta que a janela pedida, isto devolve null.
+     Nunca mede a partir do ponto mais antigo disponivel e chama o
+     resultado de "1 ano": um token listado ha tres meses renderia um
+     numero perfeitamente formatado e completamente falso -- o pior tipo
+     de erro, porque nada na tela denuncia. Ausencia tem que parecer
+     ausencia. */
+  F.variacaoEmJanela = function (serie, periodos) {
+    if (!serie || !serie.length) return null;
+    if (!(periodos > 0)) return null;
+    if (serie.length < periodos + 1) return null;
+    var r = F.retornoDesde(serie, serie.length - 1 - periodos);
+    return r ? r.pct : null;
+  };
+
   /* ══════════════════════════════════════════════════════════════
      TRADE ALAVANCADO
      ══════════════════════════════════════════════════════════════ */

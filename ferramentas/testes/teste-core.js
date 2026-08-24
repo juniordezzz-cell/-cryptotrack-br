@@ -332,6 +332,29 @@ eq('e o ultimo ponto valido', comBuraco.ultimo, 75);
 eq('resultado +50%', comBuraco.pct, 50, 1e-9);
 
 
+sec('Variacao medida N periodos atras');
+/* serie de 11 fechamentos: 100 ... 200, subindo de 10 em 10 */
+const fech = [100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200];
+eq('1 periodo atras: de 190 para 200 = +5,263%', F.variacaoEmJanela(fech, 1), (200 / 190 - 1) * 100, 1e-9);
+eq('5 periodos atras: de 150 para 200 = +33,33%', F.variacaoEmJanela(fech, 5), (200 / 150 - 1) * 100, 1e-9);
+eq('10 periodos atras: de 100 para 200 = +100%', F.variacaoEmJanela(fech, 10), 100, 1e-9);
+
+sec('Variacao: historico curto devolve null, nao um numero falso');
+/* A serie tem 11 pontos. Pedir 365 nao pode devolver "de 100 para 200",
+   que e' o que aconteceria se a funcao apenas truncasse o indice. */
+eqv('janela maior que a serie: null', F.variacaoEmJanela(fech, 365), null);
+eqv('janela igual ao tamanho da serie: null (faltaria a base)', F.variacaoEmJanela(fech, 11), null);
+eqv('exatamente na borda ainda mede', F.variacaoEmJanela(fech, 10) !== null, true);
+eqv('serie vazia: null', F.variacaoEmJanela([], 7), null);
+eqv('serie nula: null', F.variacaoEmJanela(null, 7), null);
+eqv('zero periodos: null', F.variacaoEmJanela(fech, 0), null);
+eqv('periodos negativo: null', F.variacaoEmJanela(fech, -3), null);
+
+sec('Variacao: queda e estabilidade');
+eq('queda de 200 para 100 = -50%', F.variacaoEmJanela([200, 150, 100], 2), -50, 1e-9);
+eq('preco parado = 0%', F.variacaoEmJanela([50, 50, 50], 2), 0, 1e-9);
+
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0

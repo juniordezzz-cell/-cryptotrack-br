@@ -3,17 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<script src="/mundodefi-api.js?v=2026-08-31"></script>
-<link rel="icon" href="/favicon.svg?v=2026-08-31" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=2026-09-01"></script>
+<script src="/ferramentas-core.js?v=2026-09-01"></script>
+<link rel="icon" href="/favicon.svg?v=2026-09-01" type="image/svg+xml">
 <title id="page-title">Token — MundoDeFi</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
-<script src="/nexus/nexus-auth.js?v=2026-08-31"></script>
-<script src="/mundodefi-catalogo.js?v=2026-08-31"></script>
-<script src="/mundodefi-cta.js?v=2026-08-31"></script>
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-08-31">
+<script src="/nexus/nexus-auth.js?v=2026-09-01"></script>
+<script src="/mundodefi-catalogo.js?v=2026-09-01"></script>
+<script src="/mundodefi-cta.js?v=2026-09-01"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=2026-09-01">
 <style>
 :root{
   /* Cores vêm de /mundodefi-tokens.css. Os nomes locais viram apelidos
@@ -375,6 +376,10 @@ function fmtB(v){
 }
 function fmtN(v){if(!v&&v!==0)return'—';return v.toLocaleString('en-US',{maximumFractionDigits:0});}
 function clr(v){return v===null||v===undefined||isNaN(v)?'nt':parseFloat(v)>=0?'up':'dn';}
+/* Formata uma variacao. Ausente vira travessao -- numero que nao existe
+   tem que PARECER que nao existe, nunca virar "+0,00%". */
+function fmtChg(v){return (v!==null&&v!==undefined&&isFinite(v))?(v>=0?'+':'')+Number(v).toFixed(2)+'%':'\u2014';}
+function pintarVar(rotulo,v){var el=document.getElementById('cc-'+rotulo);if(!el)return;el.textContent=fmtChg(v);el.className='cc-val '+clr(v);}
 function dateStr(s){if(!s)return'—';return new Date(s).toLocaleDateString('pt-BR',{day:'2-digit',month:'short',year:'numeric'});}
 function shortAddr(a){return a?a.slice(0,6)+'…'+a.slice(-4):'';}
 
@@ -404,6 +409,26 @@ async function binMulti(syms){
 async function binKlines(sym,interval,limit){
   var d=await binFetch('https://api.binance.com/api/v3/klines?symbol='+sym+'&interval='+interval+'&limit='+limit);
   return Array.isArray(d)?d:[];
+}
+
+/* VARIACOES CALCULADAS DO PRECO, NAO COPIADAS DE CAMPO
+   -- por que existe --------------------------------------------------
+   A Paprika zera 30d e 1y no tier gratuito, e a renderizacao rapida
+   entrava com metadados vazios que ninguem corrigia depois. Resultado
+   no ar: 1h, 7d e 30d em travessao, e 1Y morto por construcao.
+   A conta agora sai de 366 fechamentos diarios da Binance -- mesma
+   fonte do grafico, sem chave -- medidos pelo nucleo de
+   /ferramentas-core.js, que devolve null quando o historico e' mais
+   curto que a janela em vez de medir do ponto mais antigo e chamar o
+   resultado de "1 ano". */
+async function variacoesReais(sym){
+  var F=window.FerramentasCore;
+  if(!F||!F.variacaoEmJanela)return null;
+  var k=await binKlines(sym,'1d',366);
+  if(!k.length)return null;
+  var closes=k.map(function(c){return parseFloat(c[4]);}).filter(function(v){return isFinite(v);});
+  if(closes.length<2)return null;
+  return {d7:F.variacaoEmJanela(closes,7),d30:F.variacaoEmJanela(closes,30),y1:F.variacaoEmJanela(closes,365)};
 }
 
 // ═══════════════════════════════════
@@ -527,12 +552,16 @@ async function fetchTicker(){
     if(pd)pd.className='t-dot '+(chg>=0?'up':'dn');
     if(s==='BTC')_btcPrice=price;
   });
-  var tk=document.getElementById('ticker-track');if(tk&&!tk._dup){tk._dup=true;tk.innerHTML+=tk.innerHTML;}
   try{
     var fx=await fetch('https://api.exchangerate-api.com/v4/latest/USD');
     var j=await fx.json();
     if(j.rates&&j.rates.BRL){_usdBRL=j.rates.BRL;var e=document.getElementById('tkp-USD');if(e)e.textContent='R$ '+_usdBRL.toFixed(2).replace('.',',');}
   }catch(e){}
+  /* Clona a faixa so agora, com TODOS os valores no lugar -- inclusive
+     o dolar. Duplicar antes copia travessoes, e como o clone repete os
+     mesmos id, getElementById so enxerga a primeira metade e a segunda
+     nunca mais e' corrigida. */
+  var tk=document.getElementById('ticker-track');if(tk&&!tk._dup){tk._dup=true;tk.innerHTML+=tk.innerHTML;}
 }
 
 // ═══════════════════════════════════
@@ -650,7 +679,7 @@ function layerInfo(id){
 var _descCache=null;
 function carregarDescricoes(){
   if(_descCache)return Promise.resolve(_descCache);
-  return fetch('/token-descricoes.json?v=2026-08-31').then(function(r){return r.json();})
+  return fetch('/token-descricoes.json?v=2026-09-01').then(function(r){return r.json();})
     .then(function(j){_descCache=j;return j;}).catch(function(){return {};});
 }
 
@@ -781,6 +810,7 @@ function renderPage(bin,cg){
   var chg7=cg&&cg.market_data?cg.market_data.price_change_percentage_7d:null;
   var chg30=cg&&cg.market_data?cg.market_data.price_change_percentage_30d:null;
   var chg1h=cg&&cg.market_data&&cg.market_data.price_change_percentage_1h_in_currency?cg.market_data.price_change_percentage_1h_in_currency.usd:null;
+  var chg1y=cg&&cg.market_data?cg.market_data.price_change_percentage_1y:null;
   var desc=cg&&cg.description&&cg.description.en?cg.description.en:'';
   var links=cg&&cg.links?cg.links:{};
   var cats=(cg&&cg.categories?cg.categories:[]).filter(function(c){return c&&c.length<40;}).slice(0,3);
@@ -828,8 +858,12 @@ function renderPage(bin,cg){
 
   // CHANGE BAR
   H+='<div class="chg-bar">';
-  [[chg1h,'1h'],[chg24,'24h'],[chg7,'7d'],[chg30,'30d'],[null,'1Y']].forEach(function(x){
-    H+='<div class="cc"><div class="cc-lbl">'+x[1]+'</div><div class="cc-val '+clr(x[0])+'">'+(x[0]!==null&&x[0]!==undefined?(x[0]>=0?'+':'')+Number(x[0]).toFixed(2)+'%':'—')+'</div></div>';
+  /* Cada celula ganha id: a fase 1 desenha com o que tem e a fase 2
+     repinta. Sem id, a barra ficava congelada nos travessoes da
+     renderizacao rapida -- que era exatamente o bug. O 1Y estava fixo
+     em null desde sempre; agora e' um valor como os outros. */
+  [[chg1h,'1h'],[chg24,'24h'],[chg7,'7d'],[chg30,'30d'],[chg1y,'1Y']].forEach(function(x){
+    H+='<div class="cc"><div class="cc-lbl">'+x[1]+'</div><div class="cc-val '+clr(x[0])+'" id="cc-'+x[1]+'">'+fmtChg(x[0])+'</div></div>';
   });
   H+='</div>';
 
@@ -1075,6 +1109,12 @@ async function init(){
   var tempMeta={name:_sym,image:{large:''},market_cap_rank:null,market_data:{current_price:{usd:parseFloat(binData.lastPrice)},market_cap:{usd:null},fully_diluted_valuation:{usd:null},total_volume:{usd:parseFloat(binData.quoteVolume)},circulating_supply:null,max_supply:null,ath:{usd:null},atl:{usd:null},ath_change_percentage:{usd:null},ath_date:{usd:null},price_change_percentage_7d:null,price_change_percentage_30d:null,price_change_percentage_1h_in_currency:{usd:null}},categories:[],tickers:[],description:{en:''},links:{},genesis_date:null,hashing_algorithm:null,coingecko_score:null};
   renderPage(binData,tempMeta);
 
+  // FASE 1.5 — variacoes reais, calculadas dos fechamentos diarios
+  variacoesReais(sym).then(function(v){
+    if(!v)return;
+    pintarVar('7d',v.d7); pintarVar('30d',v.d30); pintarVar('1Y',v.y1);
+  }).catch(function(){});
+
   // FASE 2 — CoinGecko metadata (lazy ~1-3s, atualiza silenciosamente)
   cgMeta(_coinId).then(function(cg){
     if(!cg)return;
@@ -1089,6 +1129,10 @@ async function init(){
       var hn=document.getElementById('hero-name');if(hn)hn.textContent=cg.name.toUpperCase();
       var pn=document.getElementById('pc-tname');if(pn)pn.textContent=cg.name;
       aplicarSEO(_coinId, cg.name, _sym, (cg.image&&(cg.image.large||cg.image.small))||'');
+    }
+    // Variacao de 1h: a Paprika preenche esta, ao contrario de 30d e 1y
+    if(cg.market_data&&cg.market_data.price_change_percentage_1h_in_currency){
+      pintarVar('1h',cg.market_data.price_change_percentage_1h_in_currency.usd);
     }
     // Atualiza rank e mcap
     if(cg.market_cap_rank){
@@ -1107,7 +1151,11 @@ async function init(){
 // ═══════════════════════════════════
 // START
 // ═══════════════════════════════════
-(function(){var t=document.getElementById('ticker-track');if(t&&!t._dup){t._dup=true;t.innerHTML+=t.innerHTML;}})();
+/* A duplicacao da faixa (efeito de rolagem continua) mora em fetchTicker,
+   DEPOIS de os precos entrarem. Ela ja existiu aqui tambem, e sendo a
+   primeira a rodar clonava a faixa ainda vazia e marcava _dup -- entao a
+   copia de dentro do fetchTicker era pulada e metade da faixa ficava em
+   travessao para sempre. */
 fetchTicker();
 setTimeout(init,50);
 </script>
