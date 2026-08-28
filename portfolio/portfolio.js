@@ -493,28 +493,35 @@ P.vDash = function () {
   var serie = C.serie(P.st, P.periodo);
   var html = P.avisoPrecos();
 
-  /* ═══ BLOCO PRINCIPAL: patrimônio e resultado juntos ═══
-     Separar "quanto eu tenho" de "quanto eu ganhei" obriga o olho a
-     cruzar informação entre dois cantos da tela. */
-  html += '<div class="mgrid">'
-    + P.cardNeutro('Patrimônio total', P.money(T.patrimonio), 'var(--purple,#9945FF)',
-        'HOLD + DeFi + Trade', T.patrimonio)
-    + P.cardNeutro('Investido', P.money(T.investido), 'var(--mut2,#5D6880)',
-        'custo das posições abertas', T.investido)
-    + P.card('Não realizado', P.money(T.naoRealizado), 'var(--cyan,#00E5FF)',
-        '<span class="' + P.cls(T.rentAberta) + '">' + P.pct(T.rentAberta) + '</span> sobre o investido', T.naoRealizado)
-    + P.card('Realizado', P.money(T.realizado), 'var(--green,#14F195)',
-        'lucro que você já materializou', T.realizado)
-    + '</div>';
+  /* ═══ HERÓI: patrimônio total, não realizado e realizado subordinado ═══
+     O número que a pessoa veio ver primeiro, seguido do que está em
+     aberto agora — o realizado fica subordinado porque já é passado. */
+  html += '<div class="hero">'
+    + '<div><div class="mc-lbl">Patrimônio total</div>'
+    + '<div class="hero-big mono" data-cv="' + T.patrimonio + '" data-t="m">' + P.money(T.patrimonio) + '</div>'
+    + '<div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    + '<div style="text-align:right">'
+    + '<div class="mc-lbl">Não realizado</div>'
+    + '<div class="mc-val ' + P.cls(T.naoRealizado) + '" data-cv="' + T.naoRealizado + '" data-t="m">' + P.money(T.naoRealizado) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(T.rentAberta) + '">' + P.pct(T.rentAberta) + '</span> sobre o investido'
+    + ' · realizado: <b class="' + P.cls(T.realizado) + '">' + P.money(T.realizado) + '</b></div>'
+    + '</div></div>';
 
-  html += '<div class="resumo-bar">'
-    + '<div><span class="rb-lbl">Resultado total</span><b class="' + P.cls(T.resultadoTotal) + '">' + P.money(T.resultadoTotal) + '</b>'
-    + '<small>realizado + não realizado</small></div>'
-    + '<div><span class="rb-lbl">Retorno anualizado <i class="hint" title="XIRR: considera quando cada aporte entrou. É a métrica honesta quando você aporta em datas diferentes — quem comprou na baixa não aparece igual a quem comprou no topo.">?</i></span>'
-    + (xirr == null ? '<b class="mut">—</b><small>precisa de mais histórico</small>'
-                    : '<b class="' + P.cls(xirr) + '">' + P.pct(xirr) + '</b><small>ao ano, ponderado pelo tempo</small>') + '</div>'
-    + '<div><span class="rb-lbl">Taxas DeFi coletadas</span><b style="color:var(--cyan,#00E5FF)">' + P.money(T.taxasDeFi) + '</b>'
-    + '<small>já incluídas no realizado</small></div>'
+  /* ═══ KPIS: os 4 pilares do patrimônio ═══ */
+  html += '<div class="kpis">'
+    + '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div>'
+    + '<div class="kpi-v" data-cv="' + T.hold.valor + '" data-t="m">' + P.money(T.hold.valor) + '</div>'
+    + '<div class="mc-sub">investido: ' + P.money(T.hold.custo) + '</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div>'
+    + '<div class="kpi-v" data-cv="' + T.defi.valor + '" data-t="m">' + P.money(T.defi.valor) + '</div>'
+    + '<div class="mc-sub">taxas coletadas: ' + P.money(T.defi.taxas) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Trade</div>'
+    + '<div class="kpi-v" data-cv="' + T.trade.valor + '" data-t="m">' + P.money(T.trade.valor) + '</div>'
+    + '<div class="mc-sub">resultado: <span class="' + P.cls(T.trade.realizado) + '">' + P.money(T.trade.realizado) + '</span></div></div>'
+    + '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div>'
+    + '<div class="kpi-v ' + P.cls(T.resultadoTotal) + '" data-cv="' + T.resultadoTotal + '" data-t="m">' + P.money(T.resultadoTotal) + '</div>'
+    + '<div class="mc-sub">' + (xirr == null ? 'sem XIRR — precisa de mais histórico'
+        : '<span class="' + P.cls(xirr) + '">' + P.pct(xirr) + '</span> ao ano (XIRR)') + '</div></div>'
     + '</div>';
 
   /* ═══ EVOLUÇÃO ═══ */
@@ -526,40 +533,45 @@ P.vDash = function () {
   var varTxt = serie.suficiente
     ? '<span class="' + P.cls(serie.variacao) + '">' + P.money(serie.variacao) + ' (' + P.pct(serie.variacaoPct) + ')</span> no período'
     : '';
-  html += (serie.suficiente
-    ? '<div class="card"><div class="card-hd"><div><div class="card-title">Evolução do patrimônio</div>'
-      + (varTxt ? '<div class="card-sub">' + varTxt + '</div>' : '')
-      + '</div><div class="right">' + segs + '</div></div>'
-      + '<div class="card-bd"><div class="chart-box"><canvas id="chEvo"></canvas></div></div></div>'
-    : '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div><div class="right">' + segs + '</div></div>'
-      + '<div class="card-bd">' + P.vazio('Ainda não há histórico',
-          'O gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.', '')
-      + '</div></div>');
+  html += '<div class="card"><div class="card-hd"><div><div class="card-title">Evolução do patrimônio</div>'
+    + (varTxt ? '<div class="card-sub">' + varTxt + '</div>' : '')
+    + '</div><div class="right">' + segs + '</div></div>'
+    + '<div class="card-bd">' + (serie.suficiente
+        ? '<div class="chart-box"><canvas id="chEvo"></canvas></div>'
+        /* estado vazio discreto: não precisa de tela cheia pra dizer "volte amanhã" */
+        : '<div class="empty">Ainda não há histórico — o gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.</div>')
+    + '</div></div>';
+
+  /* ═══ carteiras: total + % do patrimônio, sem caixa/investido ═══ */
+  var patTotal = T.patrimonio;
+  var wcards = P.st.carteiras.map(function (c) {
+    var t = C.totais(P.st, P.precos, c.id);
+    var pctPat = patTotal > 0 ? (t.patrimonio / patTotal * 100) : 0;
+    return '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+      + '<span style="font-weight:600">👛 ' + e(c.nome) + '</span>'
+      + '<span class="mono" style="font-weight:700">' + P.money(t.patrimonio) + '</span></div>'
+      + '<div class="wcard-bar"><span style="width:' + pctPat.toFixed(1) + '%"></span></div>'
+      + '<div class="mc-sub">' + pctPat.toFixed(1) + '% do patrimônio</div></div>';
+  }).join('');
+
+  html += '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div>'
+    + '<div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
+    + '<div class="card-bd"><div class="wcards">' + (wcards || '<div class="empty">Nenhuma carteira ainda</div>') + '</div></div></div>';
 
   /* ═══ ONDE ESTÁ MEU RISCO ═══
      Barra empilhada no lugar do donut: com 8 posições o donut vira um
      anel de fatias finas que ninguém compara. A barra mantém a leitura. */
   html += '<div class="grid2b">' + P.blocoConcentracao(conc) + P.blocoContribuicao(contrib) + '</div>';
 
-  /* ═══ carteiras + movimentações ═══ */
-  var carts = P.st.carteiras.map(function (c) {
-    var t = C.totais(P.st, P.precos, c.id);
-    return '<div class="rank-row" style="padding:.7rem 1.1rem"><span style="font-size:15px">👛</span>'
-      + '<span class="rank-name">' + e(c.nome) + '</span><span class="rank-val">' + P.money(t.patrimonio) + '</span></div>';
-  }).join('');
-
+  /* ═══ últimas movimentações ═══ */
   var ev = P.eventos(), lim = Math.min(P.histLim(), 8);
   var evH = ev.slice(0, lim).map(function (x) {
     return '<div class="tl-item"><span class="tl-date">' + P.dBR(x.dt) + '</span><span class="tl-txt">' + x.txt + '</span></div>';
   }).join('');
 
-  html += '<div class="grid2b">'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div><div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
-    + (carts || '<div class="empty">Nenhuma carteira ainda</div>') + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div>'
+  html += '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div>'
     + '<div class="right"><button class="btn btn-g btn-sm" id="btnExtrato">Ver extrato →</button></div></div>'
-    + '<div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>'
-    + '</div>';
+    + '<div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>';
 
   html += P.tabelaAtivos(P.posicoes(), true);
   html += P.planosCTA();
@@ -857,7 +869,7 @@ P.tabelaAtivos = function (pos, compacta) {
 
   var html = '<div class="card"><div class="card-hd"><div class="card-title">' + (compacta ? 'Ativos em HOLD' : 'Posições abertas') + '</div>'
     + '<div class="right">' + (compacta ? '<a class="btn btn-g btn-sm" href="/portfolio/hold.html">Gerenciar →</a>' : P.exportBtn('hold')) + '</div></div>'
-    + '<div class="tblw"><table style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
+    + '<div class="tblw"><table class="' + (compacta ? 'dtable' : '') + '" style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
     + (rows || '<tr><td colspan="' + (compacta ? 6 : 8) + '"><div class="empty">Nenhuma posição aberta</div></td></tr>')
     + '</tbody></table></div></div>';
 
