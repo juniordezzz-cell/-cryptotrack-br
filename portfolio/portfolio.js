@@ -1644,27 +1644,34 @@ P.vTrade = function () {
     return;
   }
 
-  var html = '<div class="mgrid">'
-    + P.cardNeutro('Banca atual', P.money(S.banca), 'var(--purple,#9945FF)',
-        'aportado: ' + P.money(S.depositos) + (S.saques ? ' · sacado: ' + P.money(S.saques) : ''), S.banca)
-    + P.card('Resultado dos trades', P.money(S.resultado), 'var(--green,#14F195)',
-        '<span class="' + P.cls(S.rentabilidade) + '">' + P.pct(S.rentabilidade) + '</span> sobre o aportado', S.resultado)
-    + P.cardNeutro('Win rate', S.winRate.toFixed(0) + '%', 'var(--cyan,#00E5FF)',
-        S.vitorias + ' ganhos · ' + S.derrotas + ' perdas', S.winRate, 'n')
-    + P.card('Expectativa / operação', P.money(S.expectativa), 'var(--gold,#F5B614)',
-        'quanto se espera ganhar por trade', S.expectativa)
-    + '</div>';
-
-  /* Métricas que separam sistema ganhador de sorte. */
-  html += '<div class="resumo-bar resumo-4">'
-    + '<div><span class="rb-lbl">Profit factor <i class="hint" title="Soma dos ganhos dividida pela soma das perdas. Acima de 1 o sistema ganha dinheiro; abaixo, perde.">?</i></span>'
-    + '<b class="' + (S.profitFactor >= 1 ? 'up' : 'down') + '">' + (S.profitFactor === Infinity ? '∞' : S.profitFactor.toFixed(2)) + '</b><small>' + (S.profitFactor >= 1 ? 'sistema ganhador' : 'sistema perdedor') + '</small></div>'
-    + '<div><span class="rb-lbl">Payoff <i class="hint" title="Ganho médio dividido pela perda média. Payoff alto compensa win rate baixo.">?</i></span>'
-    + '<b>' + S.payoff.toFixed(2) + '</b><small>ganho médio ' + P.money(S.mediaGanho) + '</small></div>'
-    + '<div><span class="rb-lbl">Drawdown máximo <i class="hint" title="A maior queda da banca a partir de um topo. Mede o pior momento que você atravessou.">?</i></span>'
-    + '<b class="' + (S.drawdownMax > 30 ? 'down' : '') + '">' + S.drawdownMax.toFixed(1) + '%</b><small>maior perda ' + P.money(S.maiorPerda) + '</small></div>'
-    + '<div><span class="rb-lbl">Gestão da banca</span>'
-    + '<div class="rb-acts"><button class="btn btn-g btn-sm" id="btnDep">+ Aporte</button><button class="btn btn-g btn-sm" id="btnSaq">− Saque</button></div></div>'
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard/HOLD/DeFi,
+     com o acento dourado (k-trade) que identifica esta tela. As 8 métricas
+     fluem em duas linhas de 4 no mesmo grid — nenhuma foi removida, só
+     migraram do antigo .mc/.resumo-bar para o componente compartilhado. */
+  var html = '<div class="kpis">'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Banca atual</div>'
+    + '<div class="kpi-v" data-cv="' + S.banca + '" data-t="m">' + P.money(S.banca) + '</div>'
+    + '<div class="mc-sub">aportado: ' + P.money(S.depositos) + (S.saques ? ' · sacado: ' + P.money(S.saques) : '') + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Resultado dos trades</div>'
+    + '<div class="kpi-v ' + P.cls(S.resultado) + '" data-cv="' + S.resultado + '" data-t="m">' + P.money(S.resultado) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(S.rentabilidade) + '">' + P.pct(S.rentabilidade) + '</span> sobre o aportado</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Win rate</div>'
+    + '<div class="kpi-v" data-cv="' + S.winRate + '" data-t="n">' + S.winRate.toFixed(0) + '%</div>'
+    + '<div class="mc-sub">' + S.vitorias + ' ganhos · ' + S.derrotas + ' perdas</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Expectativa / operação</div>'
+    + '<div class="kpi-v ' + P.cls(S.expectativa) + '" data-cv="' + S.expectativa + '" data-t="m">' + P.money(S.expectativa) + '</div>'
+    + '<div class="mc-sub">quanto se espera ganhar por trade</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Profit factor <i class="hint" title="Soma dos ganhos dividida pela soma das perdas. Acima de 1 o sistema ganha dinheiro; abaixo, perde.">?</i></div>'
+    + '<div class="kpi-v ' + (S.profitFactor >= 1 ? 'up' : 'down') + '">' + (S.profitFactor === Infinity ? '∞' : S.profitFactor.toFixed(2)) + '</div>'
+    + '<div class="mc-sub">' + (S.profitFactor >= 1 ? 'sistema ganhador' : 'sistema perdedor') + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Payoff <i class="hint" title="Ganho médio dividido pela perda média. Payoff alto compensa win rate baixo.">?</i></div>'
+    + '<div class="kpi-v">' + S.payoff.toFixed(2) + '</div>'
+    + '<div class="mc-sub">ganho médio ' + P.money(S.mediaGanho) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Drawdown máximo <i class="hint" title="A maior queda da banca a partir de um topo. Mede o pior momento que você atravessou.">?</i></div>'
+    + '<div class="kpi-v ' + (S.drawdownMax > 30 ? 'down' : '') + '">' + S.drawdownMax.toFixed(1) + '%</div>'
+    + '<div class="mc-sub">maior perda ' + P.money(S.maiorPerda) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Gestão da banca</div>'
+    + '<div class="rb-acts" style="margin-top:8px"><button class="btn btn-g btn-sm" id="btnDep">+ Aporte</button><button class="btn btn-g btn-sm" id="btnSaq">− Saque</button></div></div>'
     + '</div>';
 
   html += '<div class="grid2b">' + P.grafCard('chTC', 'Evolução da banca', true) + P.grafCard('chTO', 'Resultado por operação', true) + '</div>';
@@ -1680,7 +1687,7 @@ P.vTrade = function () {
       + '<td style="color:var(--mut);font-size:12px;max-width:280px">' + e(o.txt || '—') + '</td></tr>';
   }).join('');
   html += '<div class="card"><div class="card-hd"><div class="card-title">Operações</div><div class="right">' + P.exportBtn('trade') + '</div></div>'
-    + '<div class="tblw"><table style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'
+    + '<div class="tblw"><table class="dtable" style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'
     + (rows || '<tr><td colspan="6"><div class="empty">Nenhuma operação ainda</div></td></tr>') + '</tbody></table></div></div>';
 
   html += P.planosCTA();
