@@ -1483,11 +1483,21 @@ P.vDefi = function () {
   abertas.forEach(function (p) { var R = C.poolResultado(P.st, p); aprMedio += R.aprFees * R.dep; somaDias += R.dep; });
   aprMedio = somaDias > 0 ? aprMedio / somaDias : 0;
 
-  var html = '<div class="mgrid">'
-    + P.cardNeutro('Valor em pools', P.money(valor), 'var(--green,#14F195)', capital ? 'capital aplicado: ' + P.money(capital) : null, valor)
-    + P.cardNeutro('Taxas coletadas', P.money(taxas), 'var(--cyan,#00E5FF)', 'renda real em dólar', taxas)
-    + P.card('Resultado DeFi', P.money(resultado), 'var(--purple,#9945FF)', 'pools abertas + encerradas', resultado)
-    + P.cardNeutro('APR médio das taxas', aprMedio.toFixed(1) + '%', 'var(--gold,#F5B614)', abertas.length + ' pool(s) aberta(s)', aprMedio, 'n')
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard/HOLD, com o
+     acento ciano (k-defi) que identifica esta tela ═══ */
+  var html = '<div class="kpis">'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Valor em pools</div>'
+    + '<div class="kpi-v" data-cv="' + valor + '" data-t="m">' + P.money(valor) + '</div>'
+    + (capital ? '<div class="mc-sub">capital aplicado: ' + P.money(capital) + '</div>' : '') + '</div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Taxas coletadas</div>'
+    + '<div class="kpi-v" data-cv="' + taxas + '" data-t="m">' + P.money(taxas) + '</div>'
+    + '<div class="mc-sub">renda real em dólar</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Resultado DeFi</div>'
+    + '<div class="kpi-v ' + P.cls(resultado) + '" data-cv="' + resultado + '" data-t="m">' + P.money(resultado) + '</div>'
+    + '<div class="mc-sub">pools abertas + encerradas</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">APR médio das taxas</div>'
+    + '<div class="kpi-v" data-cv="' + aprMedio + '" data-t="n">' + aprMedio.toFixed(1) + '%</div>'
+    + '<div class="mc-sub">' + abertas.length + ' pool(s) aberta(s)</div></div>'
     + '</div>';
 
   html += '<div class="tabs"><button class="tab' + (P.dTab === 'pools' ? ' on' : '') + '" data-t="pools">🌊 Pools</button>'
@@ -1511,7 +1521,7 @@ P.vDefi = function () {
           + '<td class="num"><span class="res-pill ' + (R.resultado >= 0 ? 'res-up' : 'res-dn') + '">' + P.money(R.resultado) + ' <small>' + P.pct(R.resultadoPct) + '</small></span></td></tr>';
       }).join('');
       html += '<div class="sb-sec" style="padding-left:0;margin-top:1rem">Histórico — pools encerradas</div>'
-        + '<div class="card"><div class="tblw"><table style="min-width:760px"><thead><tr><th>Pool</th><th>Chain</th><th>Período</th><th class="num">Depositado</th><th class="num">Taxas</th><th class="num">Resultado</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+        + '<div class="card"><div class="tblw"><table class="dtable" style="min-width:760px"><thead><tr><th>Pool</th><th>Chain</th><th>Período</th><th class="num">Depositado</th><th class="num">Taxas</th><th class="num">Resultado</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
     }
   }
 
@@ -1528,7 +1538,7 @@ P.vDefi = function () {
             ? '<button class="btn btn-g btn-sm" data-lj="' + l.id + '">+ Juros</button> <button class="btn btn-g btn-sm" data-le="' + l.id + '">Encerrar</button>'
             : '<span class="badge b-closed">Encerrada</span>') + '</td></tr>';
     }).join('');
-    html += '<div class="card"><div class="tblw"><table style="min-width:820px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Token</th><th class="num">Principal</th><th class="num">APY inf.</th><th class="num">Juros reais</th><th></th></tr></thead><tbody>'
+    html += '<div class="card"><div class="tblw"><table class="dtable" style="min-width:820px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Token</th><th class="num">Principal</th><th class="num">APY inf.</th><th class="num">Juros reais</th><th></th></tr></thead><tbody>'
       + (rowsL || '<tr><td colspan="8"><div class="empty">Nenhuma posição</div></td></tr>') + '</tbody></table></div></div>';
   }
 
