@@ -76,8 +76,7 @@ button{font-family:var(--font);cursor:pointer}
 .tnav-mark{width:30px;height:30px;border-radius:9px;background:linear-gradient(135deg,var(--purple,#9945FF),#6d28d9);
   display:grid;place-items:center;color:#fff;box-shadow:0 0 18px rgba(153,69,255,.4)}
 .tnav-name em{color:var(--purple-txt,#A96BFF);font-style:normal}
-.tnav-tabs{display:flex;gap:2px;margin-left:4px;min-width:0;overflow-x:auto;scrollbar-width:none}
-.tnav-tabs::-webkit-scrollbar{display:none}
+.tnav-tabs{display:flex;gap:2px;margin-left:4px;min-width:0}
 .tnav-tab{display:flex;align-items:center;gap:7px;padding:9px 13px;border-radius:10px;
   color:var(--mut);font-weight:500;font-size:14px;position:relative;white-space:nowrap;transition:.15s}
 .tnav-tab .ico{font-size:15px;opacity:.85}
@@ -108,7 +107,8 @@ button{font-family:var(--font);cursor:pointer}
 .main{max-width:var(--mdf-wrap,1220px);margin:0 auto;padding:22px 24px 60px}
 @media(max-width:768px){
   .tnav{gap:12px;padding:10px 14px;flex-wrap:wrap}
-  .tnav-tabs{order:3;width:100%}
+  .tnav-tabs{order:3;width:100%;overflow-x:auto;scrollbar-width:none}
+  .tnav-tabs::-webkit-scrollbar{display:none}
   .main{padding:18px 14px 60px}
 }
 

@@ -318,7 +318,7 @@ P.shell = function (active) {
 
   var tabs = items.map(function (it) {
     return '<a class="tnav-tab' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '" role="tab"'
-      + (active === it[0] ? ' aria-selected="true"' : '') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
+      + (active === it[0] ? ' aria-selected="true"' : ' aria-selected="false"') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
   }).join('') + soon.map(function (it) {
     return '<span class="tnav-tab soon" role="tab" aria-disabled="true"><span class="ico">' + it[1] + '</span>'
       + it[2] + '<span class="tnav-badge">breve</span></span>';
