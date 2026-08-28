@@ -869,7 +869,7 @@ P.tabelaAtivos = function (pos, compacta) {
 
   var html = '<div class="card"><div class="card-hd"><div class="card-title">' + (compacta ? 'Ativos em HOLD' : 'Posições abertas') + '</div>'
     + '<div class="right">' + (compacta ? '<a class="btn btn-g btn-sm" href="/portfolio/hold.html">Gerenciar →</a>' : P.exportBtn('hold')) + '</div></div>'
-    + '<div class="tblw"><table class="' + (compacta ? 'dtable' : '') + '" style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
+    + '<div class="tblw"><table class="dtable" style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
     + (rows || '<tr><td colspan="' + (compacta ? 6 : 8) + '"><div class="empty">Nenhuma posição aberta</div></td></tr>')
     + '</tbody></table></div></div>';
 
@@ -989,11 +989,20 @@ P.vHold = function () {
   var rent = custo > 0 ? naoReal / custo * 100 : 0;
 
   var html = P.avisoPrecos();
-  html += '<div class="mgrid">'
-    + P.cardNeutro('Valor em HOLD', P.money(valor), 'var(--gold,#F5B614)', null, valor)
-    + P.cardNeutro('Investido', P.money(custo), 'var(--mut2,#5D6880)', 'custo das posições abertas', custo)
-    + P.card('Não realizado', P.money(naoReal), 'var(--cyan,#00E5FF)', '<span class="' + P.cls(rent) + '">' + P.pct(rent) + '</span>', naoReal)
-    + P.card('Realizado', P.money(real), 'var(--green,#14F195)', 'de vendas já feitas', real)
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard, com o
+     acento roxo (k-hold) que identifica esta tela ═══ */
+  html += '<div class="kpis">'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Valor em HOLD</div>'
+    + '<div class="kpi-v" data-cv="' + valor + '" data-t="m">' + P.money(valor) + '</div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Investido</div>'
+    + '<div class="kpi-v" data-cv="' + custo + '" data-t="m">' + P.money(custo) + '</div>'
+    + '<div class="mc-sub">custo das posições abertas</div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Não realizado</div>'
+    + '<div class="kpi-v ' + P.cls(naoReal) + '" data-cv="' + naoReal + '" data-t="m">' + P.money(naoReal) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(rent) + '">' + P.pct(rent) + '</span></div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Realizado</div>'
+    + '<div class="kpi-v ' + P.cls(real) + '" data-cv="' + real + '" data-t="m">' + P.money(real) + '</div>'
+    + '<div class="mc-sub">de vendas já feitas</div></div>'
     + '</div>';
 
   html += '<div class="grid2b">' + P.grafCard('chHA', 'Alocação por ativo', true) + P.grafCard('chHL', 'Resultado por ativo', true) + '</div>';
