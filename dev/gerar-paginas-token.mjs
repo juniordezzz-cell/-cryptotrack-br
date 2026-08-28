@@ -208,7 +208,7 @@ ${JSON.stringify(schema, null, 1)}
       </div>
     </div>
     <p class="cot-nota">Cotação da CoinPaprika, atualizada ao abrir a página. Valores informativos.
-      <a href="/token.html?id=${id}" style="color:var(--roxo-txt);font-weight:600">Ver gráfico e dados de mercado →</a></p>
+      <a href="/ferramentas/comparador-de-ativos.html?token=${id}" style="color:var(--roxo-txt);font-weight:600">Comparar desempenho com outros ativos →</a></p>
 
     <div class="card seo-card">
       <h2>${esc(d.titulo || ('O que é ' + nome + '?'))}</h2>

@@ -525,7 +525,7 @@
              que o 7d marcava de 15% a 50%. Zero ali nao e' "nao variou", e'
              "nao preenchi". Repassar isso pintaria "+0,00%" na tela com
              cara de dado real. Vira null; quem precisa do numero de verdade
-             calcula do preco (veja variacoesReais em /token.html). */
+             calcula do preco. */
           price_change_percentage_30d: q.percent_change_30d || null,
           price_change_percentage_1y: q.percent_change_1y || null,
           price_change_percentage_1h_in_currency: { usd: q.percent_change_1h },
