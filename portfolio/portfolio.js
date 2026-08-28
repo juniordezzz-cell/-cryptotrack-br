@@ -311,32 +311,44 @@ P.shell = function (active) {
   var e = P.esc;
   var items = [['dash', '📊', 'Dashboard', '/portfolio/index.html'], ['hold', '💎', 'HOLD', '/portfolio/hold.html'],
                ['defi', '🌊', 'DeFi', '/portfolio/defi.html'], ['trade', '⚡', 'Trade', '/portfolio/trade.html']];
+  var soon = [['rwa', '🏛', 'RWA'], ['meta', '🎯', 'Meta']];
   /* O plano é apenas EXIBIDO aqui. A fonte de verdade é o Firestore, lido
      por nexus-auth.js. Nunca torne isto editável pelo usuário. */
   var planoLbl = P.PLAN_LBL[P.planoAtual] || 'Grátis';
-  var side = '<aside class="sb"><a href="/" class="sb-logo"><div class="sb-logo-mark"><span>₿</span></div><div class="sb-logo-text">Mundo<em>DeFi</em></div></a>'
-    + '<div class="sb-sec">Portfólio</div>'
-    + items.map(function (it) { return '<a class="sb-item' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '"><span class="ico">' + it[1] + '</span>' + it[2] + '</a>'; }).join('')
-    + '<div class="sb-foot">'
-    + '<div class="sb-sync" id="sbSync">' + P.statusSync() + '</div>'
-    + '<a class="sb-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
-    + '<a class="sb-link" href="/">← Voltar ao site</a>'
-    + '<div class="sb-plan"><div class="sb-plan-ico">' + (P.isFree() ? '○' : '⚡') + '</div><div class="sb-plan-bd"><div class="sb-plan-lbl">Seu plano</div>'
-    + '<div class="sb-plan-val">' + e(planoLbl) + '</div></div>'
-    + (P.isFree() ? '<a class="sb-plan-cta" href="/planos.html">Assinar</a>' : '')
-    + '</div>'
-    + '</div></aside>';
+
+  var tabs = items.map(function (it) {
+    return '<a class="tnav-tab' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '" role="tab"'
+      + (active === it[0] ? ' aria-selected="true"' : '') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
+  }).join('') + soon.map(function (it) {
+    return '<span class="tnav-tab soon" role="tab" aria-disabled="true"><span class="ico">' + it[1] + '</span>'
+      + it[2] + '<span class="tnav-badge">breve</span></span>';
+  }).join('');
+
   var carts = '<select class="fsel" id="cartSel"><option value="all">Todas as carteiras</option>'
     + P.st.carteiras.map(function (c) { return '<option value="' + c.id + '"' + (P.st.cfg.cart === c.id ? ' selected' : '') + '>' + e(c.nome) + '</option>'; }).join('') + '</select>';
-  var top = '<div class="mob-top"><button class="mob-burger" onclick="document.body.classList.toggle(\'snav\')">☰</button><div class="sb-logo-text" style="font-size:16px">Mundo<em>DeFi</em></div></div>'
-    + '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-right">'
+
+  var avMenu = '<div class="avmenu" id="avMenu" hidden>'
+    + '<div class="avmenu-sync" id="sbSync">' + P.statusSync() + '</div>'
+    + '<div class="avmenu-plan"><div><div class="avmenu-cap">Seu plano</div><div class="avmenu-val">' + e(planoLbl) + '</div></div>'
+    + (P.isFree() ? '<a class="btn btn-p" href="/planos.html">Assinar</a>' : '<span class="avmenu-pro">⚡ PRO</span>') + '</div>'
+    + '<a class="avmenu-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
+    + '<a class="avmenu-link" href="/">← Voltar ao site</a>'
+    + '</div>';
+
+  var header = '<header class="tnav">'
+    + '<a href="/" class="tnav-logo"><span class="tnav-mark">₿</span><span class="tnav-name">Mundo<em>DeFi</em></span></a>'
+    + '<nav class="tnav-tabs" role="tablist">' + tabs + '</nav>'
+    + '<div class="tnav-right">'
     + (P.st.carteiras.length ? carts : '')
     + '<div class="seg"><button id="mUsd" class="' + (P.st.cfg.moeda === 'usd' ? 'on' : '') + '">US$</button><button id="mBrl" class="' + (P.st.cfg.moeda === 'brl' ? 'on' : '') + '">R$</button></div>'
     + '<button class="btn btn-p" id="btnAdd">+ Adicionar</button>'
-    + '<div class="avatar" title="MundoDeFi">MD</div>'
-    + '</div><div class="top-sub" id="pgSub"></div></div><div id="pg"></div></main>'
+    + '<div class="avwrap"><button class="avatar" id="avBtn" aria-haspopup="true" aria-expanded="false" title="Conta">MD</button>' + avMenu + '</div>'
+    + '</div></header>';
+
+  var main = '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-sub" id="pgSub"></div></div><div id="pg"></div></main>'
     + '<div class="mdl-bg" id="mdlBg"><div class="mdl" id="mdlBox"><div class="mdl-hd"><div class="mdl-title" id="mdlTitle"></div><button class="mdl-x" onclick="P.closeModal()">×</button></div><div class="mdl-bd" id="mdlBody"></div><div class="mdl-ft" id="mdlFoot"></div></div></div>';
-  document.getElementById('app').innerHTML = side + '<div style="flex:1;min-width:0">' + top + '</div>';
+
+  document.getElementById('app').innerHTML = header + main;
   document.body.dataset.view = active;
 
   var cs = document.getElementById('cartSel');
@@ -347,9 +359,18 @@ P.shell = function (active) {
     ev.preventDefault();
     if (confirm('Isso apaga TODAS as suas movimentações, aqui e na sua conta. Não dá para desfazer.\n\nTem certeza?')) P.clearAll();
   });
+
+  var avBtn = document.getElementById('avBtn'), avEl = document.getElementById('avMenu');
+  avBtn.addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    if (avEl.hasAttribute('hidden')) { avEl.removeAttribute('hidden'); avBtn.setAttribute('aria-expanded', 'true'); }
+    else { avEl.setAttribute('hidden', ''); avBtn.setAttribute('aria-expanded', 'false'); }
+  });
+
   document.getElementById('mdlBg').addEventListener('click', function (ev) { if (ev.target === this) P.closeModal(); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') P.closeModal(); });
   document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('.avwrap') && !avEl.hasAttribute('hidden')) { avEl.setAttribute('hidden', ''); avBtn.setAttribute('aria-expanded', 'false'); }
     if (ev.target.closest('.lockbtn') || ev.target.closest('.lockrow')) { P.upsell(); return; }
     var ex = ev.target.closest('[data-exp]');
     if (ex && P.exporters && P.exporters[ex.dataset.exp]) P.exporters[ex.dataset.exp]();
