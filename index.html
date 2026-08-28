@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=8e20501bc9"></script>
-<link rel="icon" href="/favicon.svg?v=8e20501bc9" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=236c5545af"></script>
+<link rel="icon" href="/favicon.svg?v=236c5545af" type="image/svg+xml">
 <title>MundoDeFi — As melhores ferramentas de cripto do Brasil</title>
 <meta name="description" content="Ferramentas para investir em cripto com números: impermanent loss, staking, juros compostos e portfólio completo. Em português, a maioria grátis.">
 <link rel="canonical" href="https://mundodefi.com.br/">
@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=8e20501bc9">
-<script src="/mundodefi-catalogo.js?v=8e20501bc9"></script>
-<script src="/mundodefi-previas.js?v=8e20501bc9"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=236c5545af">
+<script src="/mundodefi-catalogo.js?v=236c5545af"></script>
+<script src="/mundodefi-previas.js?v=236c5545af"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -99,22 +99,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(7,10,18,.86);backdrop-filt
 .btn-pro:hover{filter:brightness(1.1);transform:translateY(-1px)}
 .burger{display:none;width:38px;height:38px;border-radius:var(--r);border:1px solid var(--line2);background:transparent;color:var(--txt);font-size:17px;align-items:center;justify-content:center}
 
-.searchbox{max-width:700px;position:relative}
-.search-row{display:flex;align-items:center;gap:10px;background:rgba(10,14,24,.92);border:1px solid var(--line2);border-radius:16px;padding:8px 8px 8px 20px;transition:border-color .2s,box-shadow .2s;box-shadow:0 18px 50px rgba(0,0,0,.5)}
-.search-row:focus-within{border-color:var(--purple,#9945FF);box-shadow:0 0 0 4px rgba(153,69,255,.16),0 18px 50px rgba(0,0,0,.55)}
-.search-row svg{width:19px;height:19px;stroke:var(--mut);flex-shrink:0}
-#busca{flex:1;background:transparent;border:none;outline:none;color:var(--txt);font-family:var(--font);font-size:16.5px;height:46px;min-width:0}
-#busca::placeholder{color:var(--mut2)}
-.search-btn{padding:13px 28px;border-radius:12px;background:linear-gradient(120deg,#a965ff,var(--purple,#9945FF));color:#fff;font-weight:700;font-size:14.5px;border:none;flex-shrink:0;box-shadow:0 10px 24px rgba(153,69,255,.3)}
-.search-btn:hover{filter:brightness(1.1)}
-.sugg{position:absolute;top:calc(100% + 8px);left:0;right:0;background:#0C101C;border:1px solid var(--line2);border-radius:14px;overflow:hidden;display:none;z-index:300;box-shadow:0 24px 60px rgba(0,0,0,.6);text-align:left}
-.sugg.on{display:block}
-.sugg a{display:flex;align-items:center;gap:12px;padding:11px 16px;transition:background .1s}
-.sugg a:hover,.sugg a.sel{background:var(--panel2)}
-.sugg img{width:24px;height:24px;border-radius:50%}
-.sugg .s-name{font-weight:600;font-size:14px}
-.sugg .s-sym{font-family:var(--mono);font-size:11px;color:var(--mut);text-transform:uppercase}
-.sugg .s-rank{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--mut2)}
 .chips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:.9rem;align-items:center}
 .chips-lbl{font-size:12px;color:var(--mut)}
 .chip{font-family:var(--mono);font-size:12px;font-weight:700;padding:7px 15px;border-radius:99px;border:1px solid var(--line2);color:#C7CCDB;background:rgba(10,14,24,.7);transition:all .15s}
@@ -124,25 +108,6 @@ nav{position:sticky;top:0;z-index:500;background:rgba(7,10,18,.86);backdrop-filt
 .btn-green{background:rgba(10,14,24,.7);border-color:rgba(20,241,149,.4);color:var(--green,#14F195)}
 .btn-green:hover{background:var(--green-soft)}
 
-
-/* barra de estatísticas na base do hero */
-.stats{position:relative;border-top:1px solid var(--line);background:rgba(7,10,18,.86);backdrop-filter:blur(6px);display:flex;justify-content:center;overflow-x:auto;padding:.7rem .6rem;scrollbar-width:none}
-.stats::-webkit-scrollbar{display:none}
-.st{display:flex;flex-direction:column;align-items:center;gap:2px;padding:0 1.5rem;border-right:1px solid var(--line);white-space:nowrap;flex-shrink:0}
-.st:last-child{border-right:none}
-.st-lbl{font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut2)}
-.st-val{font-family:var(--mono);font-size:15px;font-weight:700;letter-spacing:-.01em}
-.st-sub{font-family:var(--mono);font-size:10.5px;color:#D7DCE8}
-
-/* esteira de cotações */
-.ticker{position:relative;border-bottom:1px solid var(--line);background:rgba(7,10,18,.82);backdrop-filter:blur(6px);overflow:hidden;height:40px;display:flex;align-items:center}
-.ticker-track{display:flex;gap:2.4rem;white-space:nowrap;animation:tk 60s linear infinite;padding-left:1rem}
-.ticker:hover .ticker-track{animation-play-state:paused}
-@keyframes tk{to{transform:translateX(-50%)}}
-.tk-item{font-family:var(--mono);font-size:12px;color:var(--mut);display:inline-flex;gap:8px;align-items:center}
-.tk-item b{color:var(--txt);font-weight:700}
-.tk-item a{display:inline-flex;gap:8px}
-.tk-item a:hover b{color:var(--cyan,#00E5FF)}
 
 /* ═══ FAIXA 8+ FERRAMENTAS / ATLAS ═══ */
 .banner{padding:1.5rem 0 0}
@@ -192,37 +157,6 @@ section{padding:3.5rem 0}
 .svg-lbl{font-family:var(--mono);font-size:8.5px;fill:#5C6478}
 .svg-lbl2{font-family:var(--mono);font-size:9.5px;fill:#8B93A7}
 .svg-val{font-family:var(--mono);font-size:11px;font-weight:700;fill:#EDF0F7}
-
-/* ═══ MARKET OVERVIEW ═══ */
-.mkt-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
-.mkt-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);padding:1rem 1.1rem;transition:border-color .15s,transform .15s;display:block}
-.mkt-card:hover{border-color:var(--line2);transform:translateY(-2px)}
-.mkt-top{display:flex;align-items:center;gap:8px;margin-bottom:.7rem}
-.mkt-top img{width:26px;height:26px;border-radius:50%;background:var(--bg3,#161a22);flex-shrink:0}
-.mkt-ini{width:26px;height:26px;border-radius:50%;background:var(--bg3,#161a22);display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--mut2);flex-shrink:0}
-.mkt-grid{margin-top:1.5rem}
-.mkt-sym{font-family:var(--mono);font-weight:700;font-size:13px}
-.mkt-name{font-size:11px;color:var(--mut2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.mkt-price{font-family:var(--mono);font-size:16px;font-weight:700;letter-spacing:-.02em}
-.mkt-var{font-family:var(--mono);font-size:12px;font-weight:700;margin-top:2px}
-.mkt-meta{margin-top:.6rem;padding-top:.6rem;border-top:1px solid var(--line);font-size:10.5px;color:var(--mut2);display:flex;flex-direction:column;gap:2px}
-.mkt-meta span b{color:var(--mut);font-weight:600;font-family:var(--mono)}
-
-/* ═══ RANKINGS ═══ */
-#rankings{background:linear-gradient(180deg,transparent,rgba(255,255,255,.014) 18%,rgba(255,255,255,.014) 82%,transparent)}
-.rank-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.rank-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden}
-.rank-hd{display:flex;align-items:center;gap:9px;padding:.85rem 1rem;border-bottom:1px solid var(--line);font-weight:700;font-size:13.5px}
-.rank-hd .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
-.rank-row{display:flex;align-items:center;gap:10px;padding:.6rem 1rem;border-bottom:1px solid var(--line);transition:background .1s;font-size:13px}
-.rank-row:last-child{border-bottom:none}
-.rank-row:hover{background:var(--panel2)}
-.rank-pos{font-family:var(--mono);font-size:11px;color:var(--mut2);width:16px;flex-shrink:0}
-.rank-row img{width:20px;height:20px;border-radius:50%;flex-shrink:0}
-.rank-name{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;min-width:0}
-.rank-name small{font-family:var(--mono);color:var(--mut2);font-size:10.5px;margin-left:5px;text-transform:uppercase}
-.rank-val{font-family:var(--mono);font-size:12px;font-weight:700;white-space:nowrap}
-.skel{color:var(--mut2);font-size:12.5px;padding:1rem;text-align:center}
 
 /* ═══ PLANOS (padrão do site) ═══ */
 .plans{padding:3.4rem 0 3rem}
@@ -291,14 +225,8 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 .pf-item p{font-size:12.5px;color:var(--mut);line-height:1.6}
 @media(max-width:760px){.pf-grid{grid-template-columns:1fr}}
 
-/* a esteira agora vive dentro da seção de mercado, no fim da página */
-#mercado .ticker{margin-top:1.6rem;border-radius:var(--rl);overflow:hidden}
-#mercado .stats{margin-top:1.4rem}
-
 /* ═══ RESPONSIVO ═══ */
 @media(max-width:1080px){
-  .mkt-grid{grid-template-columns:repeat(3,1fr)}
-  .rank-grid{grid-template-columns:repeat(2,1fr)}
   .tools-grid{grid-template-columns:repeat(2,1fr)}
   .banner-in{grid-template-columns:1fr}
   .est-grid{grid-template-columns:1fr}
@@ -315,12 +243,8 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   .plans-grid{grid-template-columns:1fr;max-width:460px}
 }
 @media(max-width:640px){
-  .mkt-grid{grid-template-columns:repeat(2,1fr)}
-  .rank-grid{grid-template-columns:1fr}
   .tools-grid{grid-template-columns:1fr}
   .tool-feat{grid-column:span 1}
-  .search-row{padding-left:14px}
-  .search-btn{padding:11px 16px;font-size:13px}
   .foot-grid{grid-template-columns:1fr 1fr}
   section{padding:2.4rem 0}
   .hero-in{padding:2.35rem 18px 2.05rem}
@@ -329,7 +253,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   .pool-search input{width:100%}
 }
 @media(prefers-reduced-motion:reduce){
-  .ticker-track{animation:none}
   *{transition:none!important}
   html{scroll-behavior:auto}
 }
@@ -398,22 +321,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
       <div class="nav-logo-text">Mundo<em>DeFi</em></div>
     </a>
     <div class="nav-menu" id="navMenu">
-      <div class="nav-item">
-        <button class="nav-link" type="button">Mercado <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
-        <div class="mega">
-          <div class="mega-col">
-            <div class="mega-title">Visão geral</div>
-            <a href="/#mercado" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">📊</div><div><div class="mega-name">Visão de Mercado</div><div class="mega-desc">Preço, variação e volume dos líderes</div></div></a>
-          </div>
-          <div class="mega-col">
-            <div class="mega-title">Ativos em destaque</div>
-            <a href="/token.html?id=bitcoin" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">₿</div><div><div class="mega-name">Bitcoin</div><div class="mega-desc">Cotação e métricas do BTC</div></div></a>
-            <a href="/token.html?id=ethereum" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">◆</div><div><div class="mega-name">Ethereum</div><div class="mega-desc">Cotação e métricas do ETH</div></div></a>
-            <a href="/token.html?id=solana" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">◎</div><div><div class="mega-name">Solana</div><div class="mega-desc">Cotação e métricas do SOL</div></div></a>
-            <a href="/ferramentas/comparador-de-ativos.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">⚖️</div><div><div class="mega-name">Comparador de Ativos<span class="badge b-free">Grátis</span></div><div class="mega-desc">Compare desempenho lado a lado</div></div></a>
-          </div>
-        </div>
-      </div>
       <div class="nav-item">
         <button class="nav-link" type="button">Ferramentas <svg viewBox="0 0 10 6"><path d="M0 0l5 6 5-6z"/></svg></button>
         <!-- Colunas vêm de /mundodefi-catalogo.js — este era o terceiro
@@ -518,37 +425,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   </div>
 </section>
 
-<!-- ═══ MERCADO (compacto, perto do fim) ═══ -->
-<section id="mercado">
-  <div class="wrap">
-    <div class="sec-head">
-      <div><div class="sec-eyebrow">Consulta rápida</div><div class="sec-title">Mercado</div></div>
-    </div>
-    <div class="searchbox" style="max-width:640px">
-      <div class="search-row">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
-        <input id="busca" type="text" autocomplete="off" spellcheck="false" placeholder="Pesquise BTC, ETH, SOL…" aria-label="Pesquisar criptomoeda">
-        <button class="search-btn" type="button" onclick="submitBusca()">Pesquisar</button>
-      </div>
-      <div class="sugg" id="sugg" role="listbox"></div>
-    </div>
-    <div class="stats" aria-label="Resumo do mercado">
-      <div class="st"><span class="st-lbl">Bitcoin</span><b class="st-val" id="sBTC">—</b><span class="st-sub" id="sBTCv"></span></div>
-      <div class="st"><span class="st-lbl">Ethereum</span><b class="st-val" id="sETH">—</b><span class="st-sub" id="sETHv"></span></div>
-      <div class="st"><span class="st-lbl">Solana</span><b class="st-val" id="sSOL">—</b><span class="st-sub" id="sSOLv"></span></div>
-      <div class="st"><span class="st-lbl">Market Cap</span><b class="st-val" id="sCap">—</b><span class="st-sub" id="sCapv"></span></div>
-      <div class="st"><span class="st-lbl">Dom. BTC</span><b class="st-val" id="sDom">—</b><span class="st-sub">%</span></div>
-      <div class="st"><span class="st-lbl">Fear &amp; Greed</span><b class="st-val" id="sFng">—</b><span class="st-sub" id="sFngT"></span></div>
-    </div>
-    <!-- A grade volta. Ela tinha saido "porque o site nao disputa busca de
-         ativos" -- so que nao disputar busca nunca quis dizer que a home
-         podia ficar sem imagem nenhuma. Sem ela sobrava uma parede de
-         texto: a pagina inteira tinha ZERO <img>. -->
-    <div class="mkt-grid" id="mkt-grid"></div>
-  </div>
-  <div class="ticker" aria-hidden="true"><div class="ticker-track" id="ticker"></div></div>
-</section>
-
 <!-- ═══ PLANOS (padrão do site) ═══ -->
 <section class="plans" id="pro">
   <div class="wrap">
@@ -613,214 +489,10 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 </footer>
 
 <script>
-/* ═══════════ MUNDODEFI HOME v2 — JS ═══════════
-   Padrões: cache localStorage + lazy-load + retry com backoff (evita 429). */
+/* ═══════════ MUNDODEFI HOME v2 — JS ═══════════ */
 (function(){
 'use strict';
-var CG='https://api.coingecko.com/api/v3';
 document.getElementById('ano').textContent=new Date().getFullYear();
-
-
-/* ── cache com TTL ── */
-function cget(k){try{var o=JSON.parse(localStorage.getItem(k));if(o&&(Date.now()-o.t)<o.ttl)return o.d;}catch(e){}return null;}
-function cset(k,d,ttl){try{localStorage.setItem(k,JSON.stringify({t:Date.now(),ttl:ttl,d:d}));}catch(e){}}
-
-/* ── fetch com retry/backoff ── */
-function jfetch(url,tries){
-  tries=tries||3;
-  return new Promise(function(res,rej){
-    (function go(i){
-      fetch(url).then(function(r){
-        if(!r.ok)throw new Error(r.status);
-        return r.json();
-      }).then(res).catch(function(e){
-        if(i>=tries-1)return rej(e);
-        setTimeout(function(){go(i+1);},1200*Math.pow(2,i));
-      });
-    })(0);
-  });
-}
-
-/* ── formatadores ── */
-function fPrice(v){
-  if(v==null)return'—';
-  var d=v>=1000?0:v>=1?2:v>=0.01?4:8;
-  return '$'+v.toLocaleString('en-US',{minimumFractionDigits:d>2?2:d,maximumFractionDigits:d});
-}
-function fBig(v){
-  if(v==null)return'—';
-  if(v>=1e12)return'$'+(v/1e12).toFixed(2)+' T';
-  if(v>=1e9)return'$'+(v/1e9).toFixed(2)+' B';
-  if(v>=1e6)return'$'+(v/1e6).toFixed(1)+' M';
-  return '$'+Math.round(v).toLocaleString('en-US');
-}
-function fPct(v){if(v==null)return'—';return (v>=0?'+':'')+v.toFixed(2)+'%';}
-function pcls(v){return v>=0?'up':'down';}
-function esc(s){return String(s||'').replace(/[<>&"']/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c];});}
-
-/* ═══ MERCADO: ticker + overview + rankings (1 chamada) ═══ */
-var OVERVIEW_IDS=['bitcoin','ethereum','solana','binancecoin','ripple','dogecoin'];
-var ROTA_MKTS='/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=24h';
-function loadMarkets(){
-  return MDF_API.get(ROTA_MKTS, 5*60*1000);
-}
-function renderMarket(list){
-  /* A ESTEIRA E A GRADE
-     A grade tinha sido removida por causa do posicionamento -- "o site nao
-     disputa busca de ativos". A conclusao nao seguia da premissa: nao
-     competir em busca de ativos nao obriga a home a ficar sem imagem
-     nenhuma, e sem os logos a pagina virou uma parede de texto -- ZERO
-     <img> no documento inteiro.
-     As seis moedas com logo mostram numa olhada que o site esta VIVO e que
-     os numeros sao de agora. A esteira continua embaixo, para o panorama
-     largo. */
-  var tk=list.slice(0,20).map(function(c){
-    var v=c.price_change_percentage_24h;
-    return '<span class="tk-item"><a href="/token.html?id='+esc(c.id)+'"><b>'+esc((c.symbol||'').toUpperCase())+'</b> '+fPrice(c.current_price)+' <span class="'+pcls(v)+'">'+fPct(v)+'</span></a></span>';
-  }).join('');
-  document.getElementById('ticker').innerHTML=tk+tk;
-
-  var grade=document.getElementById('mkt-grid');
-  if(!grade)return;
-  /* OVERVIEW_IDS manda na ordem: sao as moedas que o brasileiro procura,
-     nao as seis maiores por valor de mercado do dia. Se alguma faltar na
-     resposta, completa com as maiores para nunca sobrar buraco na grade. */
-  var porId={};list.forEach(function(c){porId[c.id]=c;});
-  var escolhidas=OVERVIEW_IDS.map(function(id){return porId[id];}).filter(Boolean).slice(0,6);
-  list.forEach(function(c){
-    if(escolhidas.length<6&&escolhidas.indexOf(c)<0)escolhidas.push(c);
-  });
-  grade.innerHTML=escolhidas.map(function(c){
-    var v=c.price_change_percentage_24h;
-    var ini=esc((c.symbol||'').slice(0,2).toUpperCase());
-    /* onerror troca a imagem pelas iniciais: logo que falha nao pode
-       deixar um quadrado vazio no meio da grade */
-    return '<a class="mkt-card" href="/token.html?id='+esc(c.id)+'">'
-      +'<div class="mkt-top">'
-      +'<img src="'+esc(c.image||'')+'" alt="" width="26" height="26"'
-      +" onerror=\"this.outerHTML='<span class=\'mkt-ini\'>"+ini+"</span>'\">"
-      +'<div><div class="mkt-sym">'+esc((c.symbol||'').toUpperCase())+'</div>'
-      +'<div class="mkt-name">'+esc(c.name||'')+'</div></div></div>'
-      +'<div class="mkt-price">'+fPrice(c.current_price)+'</div>'
-      +'<div class="mkt-var '+pcls(v)+'">'+fPct(v)+'</div>'
-      +'</a>';
-  }).join('');
-}
-loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
-/* Antes: setInterval fixo que apagava o cache e refazia a chamada mesmo
-   com a aba escondida. Agora só atualiza quando a aba está visível. */
-MDF_API.repetir(function(){
-  MDF_API.invalidar(ROTA_MKTS);
-  loadMarkets().then(function(l){renderMarket(l);fillCoinStats(l);}).catch(function(){});
-}, 5*60*1000+5000);
-
-
-
-/* ═══ BARRA DE ESTATÍSTICAS (base do hero) ═══ */
-function setTxt(id,v,cls){var e=document.getElementById(id);if(!e)return;e.textContent=v;if(cls)e.className=e.className.split(' ')[0]+' '+cls;}
-function fillCoinStats(list){
-  var byId={};list.forEach(function(c){byId[c.id]=c;});
-  [['bitcoin','sBTC'],['ethereum','sETH'],['solana','sSOL']].forEach(function(par){
-    var c=byId[par[0]];if(!c)return;
-    setTxt(par[1],fPrice(c.current_price));
-    var v=c.price_change_percentage_24h;
-    setTxt(par[1]+'v',fPct(v));
-  });
-}
-function loadGlobalStats(){
-  var c=cget('mdf.home.glob');
-  var p=c?Promise.resolve(c):MDF_API.get('/global',10*60*1000,2).then(function(d){
-    var g=d.data||{};
-    var slim={cap:g.total_market_cap&&g.total_market_cap.usd,capv:g.market_cap_change_percentage_24h_usd,
-      vol:g.total_volume&&g.total_volume.usd,dom:g.market_cap_percentage&&g.market_cap_percentage.btc,atv:g.active_cryptocurrencies};
-    cset('mdf.home.glob',slim,10*60*1000);return slim;
-  });
-  p.then(function(g){
-    setTxt('sCap',fBig(g.cap));
-    if(g.capv!=null)setTxt('sCapv',fPct(g.capv));
-    if(g.dom!=null)setTxt('sDom',g.dom.toFixed(1));
-  }).catch(function(){});
-}
-function loadFng(){
-  var c=cget('mdf.home.fng');
-  var p=c?Promise.resolve(c):jfetch('https://api.alternative.me/fng/?limit=1',2).then(function(d){
-    var x=(d.data||[])[0]||{};var slim={v:Number(x.value),t:x.value_classification};
-    cset('mdf.home.fng',slim,30*60*1000);return slim;
-  });
-  p.then(function(f){
-    if(f.v==null||isNaN(f.v))return;
-    var tr={'Extreme Fear':'Medo Extremo','Fear':'Medo','Neutral':'Neutro','Greed':'Ganância','Extreme Greed':'Ganância Extrema'};
-    setTxt('sFng',String(f.v));
-    setTxt('sFngT',tr[f.t]||f.t||'');
-  }).catch(function(){});
-}
-loadGlobalStats();loadFng();
-
-
-/* ═══ BUSCA COM AUTOCOMPLETE ═══ */
-var busca=document.getElementById('busca'),sugg=document.getElementById('sugg');
-var debT=null,memo={},selIdx=-1,curItems=[];
-function renderSugg(items){
-  curItems=items;selIdx=-1;
-  if(!items.length){sugg.classList.remove('on');sugg.innerHTML='';return;}
-  sugg.innerHTML=items.map(function(c){
-    return '<a href="/token.html?id='+esc(c.id)+'" data-id="'+esc(c.id)+'">'
-      +(c.thumb?'<img src="'+esc(c.thumb)+'" alt="">':'')
-      +'<span class="s-name">'+esc(c.name)+'</span><span class="s-sym">'+esc(c.symbol)+'</span>'
-      +(c.market_cap_rank?'<span class="s-rank">#'+c.market_cap_rank+'</span>':'')
-      +'</a>';
-  }).join('');
-  sugg.classList.add('on');
-}
-function doSearch(q){
-  if(memo[q]){renderSugg(memo[q]);return;}
-  MDF_API.get('/search?query='+encodeURIComponent(q),10*60*1000,2).then(function(d){
-    var items=(d.coins||[]).slice(0,7);
-    memo[q]=items;
-    if(busca.value.trim().toLowerCase()===q)renderSugg(items);
-  }).catch(function(){});
-}
-busca.addEventListener('input',function(){
-  var q=busca.value.trim().toLowerCase();
-  clearTimeout(debT);
-  if(q.length<2){renderSugg([]);return;}
-  debT=setTimeout(function(){doSearch(q);},380);
-});
-busca.addEventListener('keydown',function(e){
-  var links=sugg.querySelectorAll('a');
-  if(e.key==='ArrowDown'||e.key==='ArrowUp'){
-    e.preventDefault();
-    if(!links.length)return;
-    selIdx=e.key==='ArrowDown'?Math.min(selIdx+1,links.length-1):Math.max(selIdx-1,0);
-    links.forEach(function(l,i){l.classList.toggle('sel',i===selIdx);});
-  }else if(e.key==='Enter'){
-    e.preventDefault();
-    if(selIdx>=0&&links[selIdx])location.href=links[selIdx].href;
-    else submitBusca();
-  }else if(e.key==='Escape'){renderSugg([]);}
-});
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.searchbox'))renderSugg([]);
-});
-window.submitBusca=function(){
-  var q=busca.value.trim();
-  if(!q)return busca.focus();
-  if(curItems.length)return void(location.href='/token.html?id='+encodeURIComponent(curItems[0].id));
-  MDF_API.get('/search?query='+encodeURIComponent(q),10*60*1000,2).then(function(d){
-    var c=(d.coins||[])[0];
-    if(c)location.href='/token.html?id='+encodeURIComponent(c.id);
-  }).catch(function(){});
-};
-
-/* placeholder animado */
-if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-  var phs=['Pesquise BTC, ETH, SOL, PEPE, AAVE…','Quanto rende uma pool de SOL/USDC?','Qual o market cap do PEPE?','Pesquise qualquer criptomoeda…'];
-  var pi=0;
-  setInterval(function(){
-    if(document.activeElement===busca||busca.value)return;
-    pi=(pi+1)%phs.length;busca.placeholder=phs[pi];
-  },3600);
-}
 
 /* ═══ MEGA MENU ═══ */
 document.querySelectorAll('.nav-item>button.nav-link').forEach(function(btn){
@@ -842,8 +514,8 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 </script>
 
 <!-- ═══ AUTH: a home passa a reconhecer quem está logado ═══ -->
-<script src="/nexus/nexus-auth.js?v=8e20501bc9"></script>
-<script src="/mdf-avatars.js?v=8e20501bc9"></script>
+<script src="/nexus/nexus-auth.js?v=236c5545af"></script>
+<script src="/mdf-avatars.js?v=236c5545af"></script>
 <script>
 (function(){
   var criarConta = document.getElementById('btnCriarConta');
