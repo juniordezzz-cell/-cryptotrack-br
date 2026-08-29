@@ -460,47 +460,53 @@ P.optCarteiras = function (sel) {
 P.saud = function () { var h = new Date().getHours(); return h < 6 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; };
 P.periodo = '30d';
 
-/* PRÉVIA para quem chega deslogado e sem dados: em vez de uma tela crua,
-   mostra o dashboard preenchido com dados de EXEMPLO (rotulados, esmaecidos)
-   e um convite a entrar — os numeros reais so aparecem logado. Uma carteira
-   e' gratis; o login serve pra ver os SEUS numeros e sincronizar. */
+/* PRÉVIA para quem chega deslogado e sem dados: em vez de tela crua OU de
+   um cadeado na cara, mostra o dashboard CHEIO com dados de EXEMPLO (cor
+   normal, nada de escurecer) pra pessoa ver o produto, com uma nota discreta
+   no topo e um convite amigavel EMBAIXO. Uma carteira e' gratis; o login
+   serve pra ver os SEUS numeros e sincronizar. */
 P.vDashTeaser = function () {
   var demo = ''
-    + '<div class="gate">'
-    +   '<div class="gate-ic">🔒</div>'
-    +   '<h2 class="gate-h">Entre para ver o seu portfólio</h2>'
-    +   '<p class="gate-p">Patrimônio, preço médio, lucro realizado e a evolução do seu dinheiro — num lugar só, sincronizado entre o celular e o computador.</p>'
-    +   '<div class="gate-acts"><button class="btn btn-p" id="gateLogin">Entrar com Google</button>'
-    +     '<a class="gate-alt" href="/portfolio/hold.html">ou começar sem conta →</a></div>'
-    +   '<div class="gate-free"><span class="up">✓</span> Grátis com uma carteira. O PRO é só pra quem quer separar carteiras.</div>'
+    + '<div class="demo-note"><span class="demo-dot"></span> Você está vendo um <b>exemplo</b>. '
+    +   '<a href="#" id="demoTop">Entre</a> para acompanhar o seu — grátis com uma carteira.</div>'
+    + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
+    +   '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
+    +   '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
+    + '<div class="kpis">'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
     + '</div>'
-    + '<div class="teaser-tag">Prévia · dados de exemplo</div>'
-    + '<div class="teaser" aria-hidden="true">'
-    +   '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
-    +     '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
-    +     '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
-    +     '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
-    +   '<div class="kpis">'
-    +     '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
-    +     '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
-    +     '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
-    +     '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
-    +   '</div>'
-    +   '<div class="grid2b">'
-    +     '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
-    +       '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
-    +     '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
-    +       '<div class="card-bd"><div class="tzbar">'
-    +         '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
-    +         '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
-    +         '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
-    +         '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
-    +       '</div></div>'
-    +   '</div>'
+    + '<div class="grid2b">'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
+    +     '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
+    +     '<div class="card-bd"><div class="tzbar">'
+    +       '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
+    +       '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
+    +       '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
+    +       '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
+    +     '</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div></div>'
+    +   '<div class="card-bd"><div class="wcards">'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 Phantom</span><span class="mono" style="font-weight:700">$10.300</span></div><div class="wcard-bar"><span style="width:55%"></span></div><div class="mc-sub">55,0% do patrimônio</div></div>'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 MetaMask</span><span class="mono" style="font-weight:700">$8.440</span></div><div class="wcard-bar"><span style="width:45%"></span></div><div class="mc-sub">45,0% do patrimônio</div></div>'
+    +   '</div></div></div>'
+    + '<div class="demo-cta">'
+    +   '<div class="demo-cta-mark">📊</div>'
+    +   '<h2 class="demo-cta-h">Estes números são um exemplo. Comece o seu.</h2>'
+    +   '<p class="demo-cta-p">Registre suas compras e o MundoDeFi calcula patrimônio, preço médio, lucro real e evolução — com cotação ao vivo e sincronizado entre o celular e o computador.</p>'
+    +   '<div class="demo-cta-acts"><button class="btn btn-p" id="demoLogin">Criar conta grátis</button>'
+    +     '<a class="demo-alt" href="/portfolio/hold.html">ou começar sem conta →</a></div>'
+    +   '<div class="demo-cta-free"><span class="up">✓</span> Uma carteira é grátis. O PRO é só pra quem quer separar carteiras.</div>'
     + '</div>';
   document.getElementById('pg').innerHTML = demo;
-  var gl = document.getElementById('gateLogin');
-  if (gl) gl.onclick = function () { if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  var entrar = function (ev) { if (ev) ev.preventDefault(); if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  var d1 = document.getElementById('demoLogin'); if (d1) d1.onclick = entrar;
+  var d2 = document.getElementById('demoTop'); if (d2) d2.onclick = entrar;
   P.mkChart('chEvoDemo', {
     type: 'line',
     data: { labels: ['','','','','','','','','','','',''],
