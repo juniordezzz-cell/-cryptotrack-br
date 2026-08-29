@@ -862,6 +862,63 @@
     };
   };
 
+  /* ═══════════════════ META ═══════════════════
+     Aritmética sobre os aportes REAIS (deposito/saque, que a fase 2 passou a
+     registrar), nunca previsão de mercado. O sistema não diz "você vai
+     chegar lá": ele responde quanto falta aportar por mês assumindo valor de
+     mercado PARADO — e quem exibe é obrigado a dizer isso. */
+  C.somaMeses = function (iso, n) {
+    var d = new Date(iso + 'T00:00:00Z');
+    d.setUTCMonth(d.getUTCMonth() + n);
+    return d.toISOString().slice(0, 10);
+  };
+
+  C.metaCalc = function (st, precos, meta) {
+    var esc = meta.escopo || 'total';
+    var T = C.totais(st, precos, esc === 'total' ? 'all' : esc);
+    var atual = T.patrimonio;
+    var alvo = num(meta.alvo);
+    var falta = alvo - atual;
+    var bateu = falta <= 0;
+    var hoje = C.hoje();
+    var diasRest = dias(hoje, meta.prazo);
+    var encerrada = diasRest < 0;
+    var mesesRestantes = Math.max(0, Math.round(diasRest / 30.44));
+
+    var aporteNecessario = 0;
+    if (!bateu && !encerrada && mesesRestantes > 0) aporteNecessario = falta / mesesRestantes;
+
+    /* ritmo real: aportes líquidos por mês, medidos do livro.
+       Sem pelo menos 30 dias entre o primeiro e o último evento não há
+       ritmo a medir — devolvemos null, e a tela escreve "ainda não dá para
+       medir". Zero seria uma afirmação diferente. */
+    var movs = C.movsDe(st, { cart: esc === 'total' ? 'all' : esc }).filter(function (m) {
+      return m.tipo === 'deposito' || m.tipo === 'saque';
+    });
+    var ritmoReal = null;
+    if (movs.length) {
+      var span = dias(movs[0].dt, movs[movs.length - 1].dt);
+      if (span >= 30) {
+        var liquido = 0;
+        movs.forEach(function (m) { liquido += C.TIPOS[m.tipo].sinal * num(m.usd); });
+        ritmoReal = liquido / (span / 30.44);
+      }
+    }
+
+    var situacao = bateu ? 'batida'
+      : encerrada ? 'encerrada'
+      : ritmoReal == null ? 'sem-medida'
+      : (ritmoReal >= aporteNecessario ? 'no-ritmo' : 'abaixo');
+
+    return {
+      atual: atual, alvo: alvo, falta: bateu ? 0 : falta,
+      pct: alvo > 0 ? Math.min(100, atual / alvo * 100) : 0,
+      mesesRestantes: mesesRestantes, aporteNecessario: aporteNecessario,
+      ritmoReal: ritmoReal, situacao: situacao,
+      encerrada: encerrada, bateu: bateu
+    };
+  };
+
   if (typeof module === 'object' && module.exports) module.exports = C;
   else root.PCore = C;
 

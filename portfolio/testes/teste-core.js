@@ -826,6 +826,52 @@ eqv('rwa_venda devolve ao caixa', C.TIPOS.rwa_venda.sinal, 1);
 /* HOLD e RWA nao se misturam */
 eqv('posicoes() do HOLD ignora RWA', C.posicoes(stR, {}, 'all').length, 0);
 
+/* ══════════════════════════════════════════════════════════════
+   META — aritmética sobre os aportes REAIS, nunca previsão
+   ══════════════════════════════════════════════════════════════ */
+sec('Meta: alvo e plano de aporte');
+
+var stM = C.novoEstado();
+stM.carteiras.push({ id: 'w1', nome: 'W' });
+/* 4 meses de aportes reais: 1000/mes a partir de 01/01 */
+C.addMov(stM, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+C.addMov(stM, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-02-01' });
+C.addMov(stM, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-03-01' });
+C.addMov(stM, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-04-01' });
+
+/* patrimonio = caixa = 4000 (nada investido).
+   alvo 10.000; faltam 6.000. Com 6 meses restantes -> 1.000/mes.  */
+var m1 = C.metaCalc(stM, {}, { id:'m1', nome:'Reserva', alvo:10000,
+                               prazo: C.somaMeses(C.hoje(), 6), escopo:'total' });
+eq('meta: atual e o patrimonio', m1.atual, 4000);
+eq('meta: falta', m1.falta, 6000);
+eq('meta: meses restantes', m1.mesesRestantes, 6);
+eq('meta: aporte necessario (6000/6)', m1.aporteNecessario, 1000);
+eqv('meta: nao encerrada', m1.encerrada, false);
+
+/* alvo ja batido: nao pede aporte nenhum e nao vira numero negativo */
+var m2 = C.metaCalc(stM, {}, { id:'m2', nome:'Batida', alvo:3000,
+                               prazo: C.somaMeses(C.hoje(), 6), escopo:'total' });
+eqv('meta batida', m2.bateu, true);
+eq('meta batida nao pede aporte', m2.aporteNecessario, 0);
+eqv('situacao batida', m2.situacao, 'batida');
+
+/* prazo vencido nao some nem vira erro: vira encerrada */
+var m3 = C.metaCalc(stM, {}, { id:'m3', nome:'Vencida', alvo:99999,
+                               prazo:'2020-01-01', escopo:'total' });
+eqv('prazo vencido encerra', m3.encerrada, true);
+eqv('prazo vencido nao bateu', m3.bateu, false);
+
+/* SEM historico suficiente o ritmo e NULL, nunca zero:
+   zero afirmaria "voce nao aportou nada", e o que existe e' ausencia de dado */
+var stV = C.novoEstado();
+stV.carteiras.push({ id:'w1', nome:'W' });
+C.addMov(stV, { tipo:'deposito', cart:'w1', usd:500, dt: C.hoje() });
+var m4 = C.metaCalc(stV, {}, { id:'m4', nome:'Nova', alvo:5000,
+                               prazo: C.somaMeses(C.hoje(), 12), escopo:'total' });
+eqv('ritmo sem historico e null', m4.ritmoReal, null);
+eqv('situacao sem medida', m4.situacao, 'sem-medida');
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
