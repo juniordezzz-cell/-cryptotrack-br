@@ -460,6 +460,59 @@ P.optCarteiras = function (sel) {
 P.saud = function () { var h = new Date().getHours(); return h < 6 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; };
 P.periodo = '30d';
 
+/* PRÉVIA para quem chega deslogado e sem dados: em vez de uma tela crua,
+   mostra o dashboard preenchido com dados de EXEMPLO (rotulados, esmaecidos)
+   e um convite a entrar — os numeros reais so aparecem logado. Uma carteira
+   e' gratis; o login serve pra ver os SEUS numeros e sincronizar. */
+P.vDashTeaser = function () {
+  var demo = ''
+    + '<div class="gate">'
+    +   '<div class="gate-ic">🔒</div>'
+    +   '<h2 class="gate-h">Entre para ver o seu portfólio</h2>'
+    +   '<p class="gate-p">Patrimônio, preço médio, lucro realizado e a evolução do seu dinheiro — num lugar só, sincronizado entre o celular e o computador.</p>'
+    +   '<div class="gate-acts"><button class="btn btn-p" id="gateLogin">Entrar com Google</button>'
+    +     '<a class="gate-alt" href="/portfolio/hold.html">ou começar sem conta →</a></div>'
+    +   '<div class="gate-free"><span class="up">✓</span> Grátis com uma carteira. O PRO é só pra quem quer separar carteiras.</div>'
+    + '</div>'
+    + '<div class="teaser-tag">Prévia · dados de exemplo</div>'
+    + '<div class="teaser" aria-hidden="true">'
+    +   '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
+    +     '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    +     '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
+    +     '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
+    +   '<div class="kpis">'
+    +     '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
+    +     '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
+    +     '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
+    +     '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
+    +   '</div>'
+    +   '<div class="grid2b">'
+    +     '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
+    +       '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
+    +     '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
+    +       '<div class="card-bd"><div class="tzbar">'
+    +         '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
+    +         '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
+    +         '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
+    +         '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
+    +       '</div></div>'
+    +   '</div>'
+    + '</div>';
+  document.getElementById('pg').innerHTML = demo;
+  var gl = document.getElementById('gateLogin');
+  if (gl) gl.onclick = function () { if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  P.mkChart('chEvoDemo', {
+    type: 'line',
+    data: { labels: ['','','','','','','','','','','',''],
+      datasets: [{ data: [100, 104, 102, 110, 116, 113, 124, 131, 127, 142, 150, 161],
+        borderColor: '#22D3EE', borderWidth: 2.2, pointRadius: 0, tension: .35, fill: true,
+        backgroundColor: function (c) { var ch = c.chart, g = ch.ctx.createLinearGradient(0, 0, 0, ch.height || 300); g.addColorStop(0, 'rgba(34,211,238,.30)'); g.addColorStop(1, 'rgba(34,211,238,0)'); return g; } }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { grid: { display: false }, ticks: { display: false } }, y: { grid: P.gGrid(), ticks: { display: false } } } }
+  });
+};
+
 P.vDash = function () {
   var e = P.esc, T = P.totais();
   document.getElementById('pgTitle').textContent = P.saud() + ' 👋';
@@ -472,6 +525,10 @@ P.vDash = function () {
   };
 
   if (T.vazio) {
+    /* Deslogado e sem dados: mostra a PRÉVIA (dados de exemplo) com convite a
+       entrar — os numeros reais so aparecem logado. Quem ja tem dados locais
+       (sem login) NAO cai aqui, porque T.vazio fica falso. */
+    if (!(window.NexusAuth && window.NexusAuth.user)) { P.vDashTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Seu portfólio começa aqui',
       'Registre sua primeira compra e o MundoDeFi passa a calcular patrimônio, preço médio, lucro realizado e não realizado — atualizados com a cotação do mercado.',
