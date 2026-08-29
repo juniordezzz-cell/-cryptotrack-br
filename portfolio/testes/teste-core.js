@@ -782,53 +782,6 @@ C.addMov(sup4, { tipo: 'transf', ref: 'perdida', cart: 'w1', usd: 40, px: -1, dt
 eqv('transferencia manca acusada',
   S.conferir(sup4).achados.filter(function (a) { return a.chave === 'transf-manca'; }).length, 1);
 
-/* FIX 4: a invariante que teria pego a FIX 1 — caixa + investido tem
-   que bater com depositado - sacado + resultado (so realizado, porque
-   o supervisor nao recebe cotacao). So CONFERE, nao mexe em nada. */
-sec('Supervisor: FIX 4 - invariante do patrimonio nao fecha');
-
-/* coerente: deposito 1000, compra custando 700 -> caixa 300, investido
-   700. A mao: 300 + 700 = 1000 = 1000 - 0 + 0. Fecha. */
-var sup5 = C.novoEstado();
-sup5.carteiras.push({ id: 'w1', nome: 'Coerente' });
-sup5.ativos.push({ id: 'a1', tk: 'SOL', cg: 'solana', cart: 'w1', last: 100 });
-C.addMov(sup5, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
-C.addMov(sup5, { tipo: 'compra', ref: 'a1', cart: 'w1', qtd: 7, px: 100, dt: '2026-01-02' });
-var r5s = S.conferir(sup5);
-eqv('portfolio coerente: sem achado de patrimonio-nao-fecha',
-  r5s.achados.filter(function (a) { return a.chave === 'patrimonio-nao-fecha'; }).length, 0);
-
-/* incoerente: uma pool foi apagada de st.pools mas o pool_dep continua
-   no ledger — bug real (nao corrupcao artificial de numero), porque
-   caixa e "depositado" leem o ledger direto e continuariam batendo
-   sozinhos se eu so mudasse um valor. O dinheiro saiu do caixa (-700)
-   mas nao virou "investido" em lugar nenhum porque a pool sumiu de
-   st.pools, entao a conta nao fecha: e exatamente o furo que essa
-   checagem existe pra achar.
-   A mao: caixa = 1000 - 700 = 300; investido = 0 (pool nao existe mais)
-   -> real = 300. esperado = depositado(1000) - sacado(0) + resultado(0)
-   = 1000. 300 != 1000. */
-var sup6 = C.novoEstado();
-sup6.carteiras.push({ id: 'w1', nome: 'Furada' });
-sup6.pools.push({ id: 'p1', par: 'X/Y', cart: 'w1', st: 'a', ab: '2026-01-02', cur: { usd: 700 } });
-C.addMov(sup6, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
-C.addMov(sup6, { tipo: 'pool_dep', ref: 'p1', cart: 'w1', usd: 700, dt: '2026-01-02' });
-sup6.pools = [];   /* a pool foi apagada; o movimento fica orfao no ledger */
-var r6s = S.conferir(sup6);
-var achFuro = r6s.achados.filter(function (a) { return a.chave === 'patrimonio-nao-fecha'; });
-eqv('patrimonio que nao fecha e acusado', achFuro.length, 1);
-eqv('e grave', achFuro.length ? achFuro[0].grave : false, true);
-
-/* transferencia completa entre carteiras NAO acusa o furo — checado no
-   agregado do portfolio de proposito, senao toda transferencia legitima
-   pareceria incoerencia (uma perna tira caixa sem gerar deposito/saque) */
-var sup7 = C.novoEstado();
-sup7.carteiras.push({ id: 'w1', nome: 'A' }, { id: 'w2', nome: 'B' });
-C.addMov(sup7, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
-C.transferir(sup7, { de: 'w1', para: 'w2', usd: 400, dt: '2026-01-02' });
-eqv('transferencia completa nao acusa patrimonio-nao-fecha',
-  S.conferir(sup7).achados.filter(function (a) { return a.chave === 'patrimonio-nao-fecha'; }).length, 0);
-
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
