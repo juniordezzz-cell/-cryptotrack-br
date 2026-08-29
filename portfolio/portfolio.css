@@ -174,11 +174,19 @@ button{font-family:var(--font);cursor:pointer}
 }
 .top-sub{font-size:12.5px;color:var(--mut2);width:100%;margin-top:-.2rem}
 .avatar{
+  position:relative;
   width:32px;height:32px;border-radius:50%;flex-shrink:0;
   background:var(--panel2);border:1px solid var(--line2);
   display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:700;color:var(--mut);
 }
+/* ponto discreto: só aparece quando a supervisão acha algo grave —
+   nunca para o vazio (não conferido) nem para "tudo certo". */
+.av-dot{
+  position:absolute;top:-1px;right:-1px;width:9px;height:9px;
+  border-radius:50%;background:var(--red,#FF4D6A);border:2px solid var(--panel2);
+}
+.av-dot[hidden]{display:none}
 /* ══════════════════════════════════════════════════════════════════
    CONTROLES
    ══════════════════════════════════════════════════════════════════ */
@@ -510,6 +518,14 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
   font-size:12.5px;color:var(--red,#FF4D6A);margin-bottom:1.1rem;
 }
 .empty{padding:1.6rem 1.2rem;text-align:center;font-size:12.5px;color:var(--mut2)}
+
+/* painel de supervisão — lista de achados e status */
+.sup-lista{margin:.6rem 0 0;padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px}
+.sup-item{font-size:13px;line-height:1.55;color:var(--mut);padding:8px 10px;
+  background:var(--panel2);border:1px solid var(--line2);border-radius:9px}
+.sup-item.sup-grave{color:var(--red,#FF4D6A);border-color:rgba(255,77,106,.3);background:var(--red-soft)}
+.sup-status{margin-top:.9rem;font-size:12.5px;color:var(--mut2)}
+.sup-status strong{color:var(--txt)}
 
 /* estado vazio com convite à ação */
 .zero{text-align:center;padding:2rem 1.5rem;max-width:520px;margin:0 auto}

@@ -40,6 +40,7 @@ window.MDF_PLANOS = {
 'use strict';
 var P = window.P = {};
 var C = window.PCore;
+var Sup = window.PSuper;
 var Store = window.PStore;
 var CG = 'https://api.coingecko.com/api/v3';
 
@@ -306,6 +307,52 @@ P.statusSync = function () {
   return '<span class="sync warn-s" title="Entre na sua conta para salvar na nuvem">◍ Só neste navegador</span>';
 };
 
+/* ═══════════ SUPERVISÃO ═══════════ */
+/* O supervisor só confere — nunca conserta. Este painel só lê o
+   resultado de PSuper.conferir e escreve na tela; se `ok` vier null,
+   é porque não há dado para comparar, e a tela tem que dizer "não
+   conferido" — dizer "tudo certo" aí seria mentir por omissão. */
+P.supResultado = function () { return Sup.conferir(P.st); };
+
+P.temAchadoGrave = function () {
+  var r = P.supResultado();
+  return r.ok === false && r.achados.some(function (a) { return a.grave; });
+};
+
+P.supCorpo = function () {
+  var r = P.supResultado();
+
+  if (r.ok === null) {
+    return '<div class="notice">Ainda não há movimentações registradas, então não existe nada para comparar. Assim que a primeira entrar, a supervisão passa a conferir o caixa de cada carteira, as transferências e o resto.</div>'
+      + '<p class="sup-status">Status: <strong>não conferido</strong></p>';
+  }
+
+  if (r.ok) {
+    return '<div class="notice"><p>As contas fecham. O que foi conferido:</p>'
+      + '<ul class="sup-lista"><li>Nenhuma carteira gastou mais do que recebeu em depósitos e transferências (caixa negativo).</li>'
+      + '<li>Não sobrou movimentação presa numa carteira já apagada.</li>'
+      + '<li>Toda transferência tem as duas pernas — origem e destino.</li></ul></div>'
+      + '<p class="sup-status">Status: <strong>tudo certo</strong></p>';
+  }
+
+  var itens = r.achados.map(function (a) {
+    return '<li class="sup-item' + (a.grave ? ' sup-grave' : '') + '">' + (a.grave ? '⚠ ' : '') + P.esc(a.txt) + '</li>';
+  }).join('');
+  return '<div class="err">Encontramos ' + r.achados.length + (r.achados.length === 1 ? ' inconsistência' : ' inconsistências') + '.</div>'
+    + '<ul class="sup-lista">' + itens + '</ul>';
+};
+
+P.abrirSupervisao = function (ev) {
+  if (ev) ev.preventDefault();
+  P.modal('Supervisão das contas', P.supCorpo());
+};
+
+P.atualizaSuper = function () {
+  var dot = document.getElementById('avDot');
+  if (!dot) return;
+  if (P.temAchadoGrave()) dot.removeAttribute('hidden'); else dot.setAttribute('hidden', '');
+};
+
 /* ═══════════ SHELL ═══════════ */
 P.shell = function (active) {
   var e = P.esc;
@@ -331,6 +378,7 @@ P.shell = function (active) {
     + '<div class="avmenu-sync" id="sbSync">' + P.statusSync() + '</div>'
     + '<div class="avmenu-plan"><div><div class="avmenu-cap">Seu plano</div><div class="avmenu-val">' + e(planoLbl) + '</div></div>'
     + (P.isFree() ? '<a class="btn btn-p" href="/planos.html">Assinar</a>' : '<span class="avmenu-pro">⚡ PRO</span>') + '</div>'
+    + '<a class="avmenu-link" href="#" id="sbSuper">🛡 Supervisão das contas</a>'
     + '<a class="avmenu-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
     + '<a class="avmenu-link" href="/">← Voltar ao site</a>'
     + '</div>';
@@ -342,7 +390,8 @@ P.shell = function (active) {
     + (P.st.carteiras.length ? carts : '')
     + '<div class="seg"><button id="mUsd" class="' + (P.st.cfg.moeda === 'usd' ? 'on' : '') + '">US$</button><button id="mBrl" class="' + (P.st.cfg.moeda === 'brl' ? 'on' : '') + '">R$</button></div>'
     + '<button class="btn btn-p" id="btnAdd">+ Adicionar</button>'
-    + '<div class="avwrap"><button class="avatar" id="avBtn" aria-haspopup="true" aria-expanded="false" title="Conta">MD</button>' + avMenu + '</div>'
+    + '<div class="avwrap"><button class="avatar" id="avBtn" aria-haspopup="true" aria-expanded="false" title="Conta">MD'
+    + '<span class="av-dot" id="avDot"' + (P.temAchadoGrave() ? '' : ' hidden') + '></span></button>' + avMenu + '</div>'
     + '</div></header>';
 
   var main = '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-sub" id="pgSub"></div></div><div id="pg"></div></main>'
@@ -359,6 +408,7 @@ P.shell = function (active) {
     ev.preventDefault();
     if (confirm('Isso apaga TODAS as suas movimentações, aqui e na sua conta. Não dá para desfazer.\n\nTem certeza?')) P.clearAll();
   });
+  document.getElementById('sbSuper').addEventListener('click', P.abrirSupervisao);
 
   var avBtn = document.getElementById('avBtn'), avEl = document.getElementById('avMenu');
   avBtn.addEventListener('click', function (ev) {
@@ -394,6 +444,7 @@ P.boot = function (active, renderFn) {
   P.syncPlano();
   P.shell(active);
   Store.aoMudar(P.atualizaSync);
+  Store.aoMudar(P.atualizaSuper);
 
   P.loadRate().then(function () {
     renderFn();
