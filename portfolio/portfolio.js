@@ -411,6 +411,9 @@ P.boot = function (active, renderFn) {
     if (uid && Store.uid !== uid) {
       Store.entrar(uid).then(function (st) {
         P.st = st;
+        /* mesma cura do boot: dados da nuvem também podem ser de antes
+           da fase 2, e sem isso o caixa fica negativo até um F5. */
+        if (C.aberturaDeSaldo(P.st) > 0) P.save();
         P.shell(active); renderFn();
         P.loadPrices().then(function () {
           renderFn();
@@ -465,17 +468,23 @@ P.optCarteiras = function (sel) {
    C.caixaDe, nunca guardada — e as quatro ações (depositar, sacar,
    transferir, swap) são a interface para o ledger que a explica. */
 
-/* Não bloqueia: a trava dura de verdade mora nos dados — C.transferir
-   já recusa sozinho quando falta caixa (Task 2). Aqui, para saque e
-   aberturas de posição que NÃO têm trava própria no núcleo, a tela só
-   avisa QUANTO falta e deixa a pessoa decidir — é o mesmo papel que o
-   comentário de C.podeGastar, em portfolio-core.js, descreve para
-   "a tela". Registrar mesmo assim é válido: é para isso que existe
-   C.aberturaDeSaldo, que resolve o caixa negativo resultante depois. */
-P.avisoCaixa = function (cartId, usd) {
+/* Trava de verdade — carteira sem caixa NÃO abre posição nem saca.
+   C.addMov fica burro de propósito (portfolio-core.js): ele é o
+   escritor bruto do ledger, e restaurar um backup replay a história
+   inteira, podendo legitimamente passar por uma compra antes do
+   depósito que a financiou. A trava não pode morar lá. Ela mora aqui,
+   no caminho de quem está criando dado NOVO pela tela: quando falta
+   caixa, mostra quanto falta e devolve false SEM gravar nada — quem
+   chama tem que checar o retorno e parar. */
+P.travaCaixa = function (cartId, usd) {
   var pode = C.podeGastar(P.st, cartId, usd);
   if (pode.ok) return true;
-  return confirm('Caixa insuficiente em ' + P.nomeCart(cartId) + ': faltam ' + P.money(pode.falta) + '. Registrar mesmo assim?');
+  P.modal('Caixa insuficiente',
+    '<div class="err">Faltam <b>' + P.money(pode.falta) + '</b> no caixa de <b>' + P.esc(P.nomeCart(cartId)) + '</b> para este valor.</div>'
+    + '<div class="fhint">Deposite o que falta e tente de novo.</div>',
+    { footer: '<button class="btn btn-p" id="okFaltaDep">Depositar em ' + P.esc(P.nomeCart(cartId)) + '</button>' });
+  document.getElementById('okFaltaDep').onclick = function () { P.formDeposito(cartId); };
+  return false;
 };
 
 /* Cartão de uma carteira: total (posições + caixa) e a barra dividida
@@ -547,7 +556,7 @@ P.formSaque = function (cartId) {
     { footer: '<button class="btn btn-p" id="okCx">Sacar</button>' });
   document.getElementById('okCx').onclick = function () {
     var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
-    if (!P.avisoCaixa(cartId, usd)) return;
+    if (!P.travaCaixa(cartId, usd)) return;
     C.addMov(P.st, { tipo: 'saque', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
     P.save(); P.closeModal(); P.render();
   };
@@ -1266,7 +1275,7 @@ P.formTx = function (pre) {
       if (!a) return;
     }
     /* compra tira do caixa (qtd × preço + taxa); venda devolve, sem checagem */
-    if (tipo === 'compra' && !P.avisoCaixa(a.cart, q * pr + fee)) return;
+    if (tipo === 'compra' && !P.travaCaixa(a.cart, q * pr + fee)) return;
     C.addMov(P.st, { tipo: tipo, ref: a.id, cart: a.cart, qtd: q, px: pr, fee: fee, dt: dt });
     P.save(); P.closeModal(); P.render();
     P.loadPrices().then(P.render);
@@ -1502,7 +1511,7 @@ P.formPool = function () {
     var par = P.val('fPar').toUpperCase(); if (!par) return alert('Informe o par da pool.');
     var dep = P.num('fDep'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
-    if (dep && !P.avisoCaixa(cart, dep)) return;
+    if (dep && !P.travaCaixa(cart, dep)) return;
     var pp = P.partesDoPar(par);
     var p = {
       id: C.uid(), par: par, proto: P.val('fProto') || '—', chain: P.val('fChain') || '—',
@@ -1563,7 +1572,7 @@ P.poolAcao = function (p, tipo) {
     var dt = P.val('aDt') || C.hoje(), usd = P.num('aUsd'), txt = P.val('aTxt'), tok = P.val('aTok');
     if (cfg[2]) {
       if (!usd) return alert('Informe o valor.');
-      if (tipo === 'dep' && !P.avisoCaixa(p.cart, usd)) return;
+      if (tipo === 'dep' && !P.travaCaixa(p.cart, usd)) return;
       C.addMov(P.st, { tipo: cfg[2], ref: p.id, cart: p.cart, usd: usd, dt: dt, nota: tok });
       /* o valor atual acompanha aportes e retiradas */
       if (tipo === 'dep') p.cur.usd = (Number(p.cur.usd) || 0) + usd;
@@ -1713,7 +1722,7 @@ P.formLend = function () {
     var tk = P.val('fTk').toUpperCase(); if (!tk) return alert('Informe o token.');
     var usd = P.num('fUsd'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
-    if (usd && !P.avisoCaixa(cart, usd)) return;
+    if (usd && !P.travaCaixa(cart, usd)) return;
     var l = { id: C.uid(), plat: P.val('fPlat') || '—', chain: P.val('fChain') || '—', tipo: P.val('fTipo') || 's', tk: tk, cart: cart, apy: P.num('fApy'), st: 'a', ab: dt };
     P.st.lend.push(l);
     if (usd) C.addMov(P.st, { tipo: 'lend_sup', ref: l.id, cart: cart, usd: usd, dt: dt });
@@ -1938,7 +1947,7 @@ P.formBanca = function (tipo) {
   document.getElementById('okB').onclick = function () {
     var v = P.num('fV'); if (!v || v <= 0) return alert('Informe um valor positivo.');
     var cart = P.val('fCart') || P.st.carteiras[0].id;
-    if (dep && !P.avisoCaixa(cart, v)) return;
+    if (dep && !P.travaCaixa(cart, v)) return;
     C.addMov(P.st, { tipo: dep ? 'trade_dep' : 'trade_saq', cart: cart, usd: v, dt: P.val('fDt') || C.hoje() });
     P.save(); P.closeModal(); P.render();
   };
@@ -2086,6 +2095,11 @@ P.carregarExemplo = function () {
     C.addMov(st, { tipo: 'trade_res', cart: c1.id, usd: Math.abs(t[3]), px: t[3] >= 0 ? 1 : -1, dt: t[4], nota: t[0] });
   });
 
+  /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
+     equivalente — sem isto toda carteira de exemplo nasceria com caixa
+     negativo. Mesma cura do boot, chamada aqui porque este caminho
+     grava e renderiza direto, sem passar por P.boot. */
+  C.aberturaDeSaldo(P.st);
   P.save();
   P.loadPrices().then(function () { P.render(); });
   P.render();
