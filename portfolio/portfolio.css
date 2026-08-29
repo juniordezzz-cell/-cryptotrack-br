@@ -105,10 +105,19 @@ button{font-family:var(--font);cursor:pointer}
 .avmenu-link{display:block;padding:8px 10px;border-radius:9px;color:var(--mut);font-size:13.5px}
 .avmenu-link:hover{background:var(--panel3);color:var(--txt)}
 .main{max-width:var(--mdf-wrap,1220px);margin:0 auto;padding:22px 24px 60px}
-@media(max-width:768px){
-  .tnav{gap:12px;padding:10px 14px;flex-wrap:wrap}
-  .tnav-tabs{order:3;width:100%;overflow-x:auto;scrollbar-width:none}
+/* O header vira DUAS linhas (logo + controles em cima, abas embaixo) assim
+   que os 6 itens + os controles da direita nao cabem numa linha so — o que
+   acontece bem antes do telefone. Sem isto, entre ~800 e ~1180px as abas
+   RWA/Meta colidiam com o cluster de moeda/Adicionar. O padding-bottom nas
+   abas da espaco pro sublinhado da aba ativa (bottom:-12px) nao clipar
+   quando a fila de abas vira rolavel em telas estreitas. */
+@media(max-width:1180px){
+  .tnav{flex-wrap:wrap}
+  .tnav-tabs{order:3;width:100%;margin-left:0;overflow-x:auto;scrollbar-width:none;padding-bottom:12px}
   .tnav-tabs::-webkit-scrollbar{display:none}
+}
+@media(max-width:768px){
+  .tnav{gap:12px;padding:10px 14px}
   .main{padding:18px 14px 60px}
 }
 
@@ -491,7 +500,7 @@ small.blk{display:block;font-size:10px;color:var(--mut2)}
 .empty{padding:1.6rem 1.2rem;text-align:center;font-size:12.5px;color:var(--mut2)}
 
 /* estado vazio com convite à ação */
-.zero{text-align:center;padding:3rem 1.5rem;max-width:520px;margin:0 auto}
+.zero{text-align:center;padding:2rem 1.5rem;max-width:520px;margin:0 auto}
 .zero-ico{font-size:34px;line-height:1;color:var(--mut2);margin-bottom:1rem;opacity:.6}
 .zero h3{font-size:1.15rem;font-weight:700;letter-spacing:-.02em;margin-bottom:.6rem}
 .zero p{font-size:13.5px;color:var(--mut);line-height:1.65;margin-bottom:1.4rem}
@@ -567,7 +576,7 @@ a.up-item:hover{border-color:var(--purple,#9945FF)}
    ══════════════════════════════════════════════════════════════════ */
 .plans-cta{
   display:grid;grid-template-columns:1fr;max-width:440px;gap:12px;
-  margin-top:1.8rem;padding-top:1.6rem;border-top:1px solid var(--line);
+  margin:1.8rem auto 0;padding-top:1.6rem;border-top:1px solid var(--line);
 }
 .pc-card{
   background:var(--panel2);border:1px solid rgba(153,69,255,.3);
