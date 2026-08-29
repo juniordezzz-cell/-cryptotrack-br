@@ -631,6 +631,49 @@ C.addMov(stb, { tipo: 'deposito', cart: 'w2', usd: 100, dt: '2026-03-01' });
 eqv('carteira saudavel nao migra', C.aberturaDeSaldo(stb), 0);
 eq('caixa intacto', C.caixaDe(stb, 'w2'), 100);
 
+/* ══════════════════════════════════════════════════════════════
+   14. SUPERVISOR — confere, nao calcula
+   ══════════════════════════════════════════════════════════════ */
+sec('Supervisor: confere, nao calcula');
+
+var S = require('../portfolio-supervisor.js');
+
+/* carteira saudável: nada a acusar */
+var sup1 = C.novoEstado();
+sup1.carteiras.push({ id: 'w1', nome: 'Ok' });
+C.addMov(sup1, { tipo: 'deposito', cart: 'w1', usd: 100, dt: '2026-01-01' });
+eqv('carteira saudavel: sem achados', S.conferir(sup1).achados.length, 0);
+eqv('carteira saudavel: ok true', S.conferir(sup1).ok, true);
+
+/* estado vazio: NAO conferido (null), nunca "tudo certo" */
+eqv('estado vazio devolve null', S.conferir(C.novoEstado()).ok, null);
+
+/* caixa negativo: acusa, e é grave */
+var sup2 = C.novoEstado();
+sup2.carteiras.push({ id: 'w1', nome: 'Furada' });
+sup2.ativos.push({ id: 'a1', tk: 'SOL', cg: 'solana', cart: 'w1', last: 100 });
+C.addMov(sup2, { tipo: 'compra', ref: 'a1', cart: 'w1', qtd: 1, px: 100, dt: '2026-01-01' });
+var r2 = S.conferir(sup2);
+eqv('caixa negativo acusado', r2.achados.filter(function (a) { return a.chave === 'caixa-negativo'; }).length, 1);
+eqv('caixa negativo e grave', r2.ok, false);
+
+/* dinheiro em carteira apagada */
+var sup3 = C.novoEstado();
+sup3.carteiras.push({ id: 'w1', nome: 'Viva' });
+C.addMov(sup3, { tipo: 'deposito', cart: 'w1', usd: 50, dt: '2026-01-01' });
+C.addMov(sup3, { tipo: 'deposito', cart: 'w-apagada', usd: 70, dt: '2026-01-02' });
+eqv('dinheiro em carteira apagada acusado',
+  S.conferir(sup3).achados.filter(function (a) { return a.chave === 'carteira-fantasma'; }).length, 1);
+
+/* transferência com uma perna só (corrompida) */
+var sup4 = C.novoEstado();
+sup4.carteiras.push({ id: 'w1', nome: 'A' });
+sup4.carteiras.push({ id: 'w2', nome: 'B' });
+C.addMov(sup4, { tipo: 'deposito', cart: 'w1', usd: 100, dt: '2026-01-01' });
+C.addMov(sup4, { tipo: 'transf', ref: 'perdida', cart: 'w1', usd: 40, px: -1, dt: '2026-01-02' });
+eqv('transferencia manca acusada',
+  S.conferir(sup4).achados.filter(function (a) { return a.chave === 'transf-manca'; }).length, 1);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
