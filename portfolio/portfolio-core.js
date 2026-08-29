@@ -36,7 +36,11 @@
     lend_juros:  { grupo:'defi',  sinal:+1, externo:false, lbl:'Juros de lending' },
     trade_dep:   { grupo:'trade', sinal:-1, externo:true,  lbl:'Aporte na banca' },
     trade_saq:   { grupo:'trade', sinal:+1, externo:true,  lbl:'Saque da banca' },
-    trade_res:   { grupo:'trade', sinal: 0, externo:false, lbl:'Resultado de trade' }
+    trade_res:   { grupo:'trade', sinal: 0, externo:false, lbl:'Resultado de trade' },
+    deposito:    { grupo:'caixa', sinal:+1, externo:true,  lbl:'Depósito' },
+    saque:       { grupo:'caixa', sinal:-1, externo:true,  lbl:'Saque' },
+    transf:      { grupo:'caixa', sinal: 0, externo:false, lbl:'Transferência' },
+    swap:        { grupo:'caixa', sinal: 0, externo:false, lbl:'Troca de ativo' }
   };
 
   /* ═══════════════════ UTILITÁRIOS ═══════════════════ */
@@ -108,6 +112,25 @@
       if (filtro.cart && filtro.cart !== 'all' && m.cart !== filtro.cart) return false;
       return true;
     }));
+  };
+
+  /* CAIXA = soma do livro daquela carteira. Nunca um campo gravado: um
+     saldo guardado pode divergir do extrato que o produziu, e é justamente
+     essa divergência que esta fase existe para tornar impossível.
+     O `sinal` de C.TIPOS já é o efeito no caixa: −1 saiu capital para a
+     posição, +1 voltou. Fee sai do caixa junto com a compra. */
+  C.caixaDe = function (st, cartId) {
+    var total = 0;
+    (st.mov || []).forEach(function (m) {
+      if (m.cart !== cartId) return;
+      var t = C.TIPOS[m.tipo];
+      if (!t) return;
+      total += t.sinal * num(m.usd);
+      /* a taxa sempre sai do bolso, em qualquer direção da operação */
+      if (m.tipo === 'compra') total -= num(m.fee);
+      else if (m.tipo === 'venda') total -= num(m.fee);
+    });
+    return total;
   };
 
   /* ═══════════════════ HOLD — CUSTO MÉDIO PONDERADO ═══════════════════

@@ -509,6 +509,41 @@ var ilEnc=C.poolIL(stEnc, stEnc.pools[0], {sol:150, usdc:1});
 eq('valor atual zerado', ilEnc.valorAtual, 0);
 eq('valorReal e so as taxas', ilEnc.valorReal, 300);
 
+/* ══════════════════════════════════════════════════════════════
+   CAIXA: consequência dos eventos, nunca um campo gravado
+   ══════════════════════════════════════════════════════════════ */
+sec('Caixa da carteira');
+
+var stx = C.novoEstado();
+stx.carteiras.push({ id: 'w1', nome: 'Phantom' });
+stx.ativos.push({ id: 'ax', tk: 'SOL', cg: 'solana', cart: 'w1', last: 200 });
+
+/* À mão:  +1000 depósito  −200 saque  = 800
+   depois compra 3 @ 100 (=300, fee 5) → 800 − 305 = 495          */
+C.addMov(stx, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+C.addMov(stx, { tipo: 'saque',    cart: 'w1', usd: 200,  dt: '2026-01-02' });
+eq('caixa apos deposito e saque', C.caixaDe(stx, 'w1'), 800);
+
+C.addMov(stx, { tipo: 'compra', ref: 'ax', cart: 'w1', qtd: 3, px: 100, fee: 5, dt: '2026-01-03' });
+eq('caixa apos compra 3x100 + fee 5', C.caixaDe(stx, 'w1'), 495);
+
+/* venda de 1 @ 150 devolve 150 ao caixa: 495 + 150 = 645 */
+C.addMov(stx, { tipo: 'venda', ref: 'ax', cart: 'w1', qtd: 1, px: 150, dt: '2026-01-04' });
+eq('caixa apos venda 1x150', C.caixaDe(stx, 'w1'), 645);
+
+/* carteira sem nenhum evento tem caixa zero, nao NaN */
+eq('caixa de carteira inexistente', C.caixaDe(stx, 'w-nao-existe'), 0);
+
+/* swap nao mexe no caixa: troca de ativo dentro da carteira */
+C.addMov(stx, { tipo: 'swap', cart: 'w1', usd: 300, dt: '2026-01-05' });
+eq('caixa apos swap (neutro)', C.caixaDe(stx, 'w1'), 645);
+
+/* os tipos novos existem e declaram o efeito certo */
+eqv('deposito e externo (entra no XIRR)', C.TIPOS.deposito.externo, true);
+eqv('saque e externo', C.TIPOS.saque.externo, true);
+eqv('transf NAO e externo', C.TIPOS.transf.externo, false);
+eqv('swap NAO e externo', C.TIPOS.swap.externo, false);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
