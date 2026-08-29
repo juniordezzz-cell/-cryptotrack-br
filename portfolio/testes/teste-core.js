@@ -544,6 +544,30 @@ eqv('saque e externo', C.TIPOS.saque.externo, true);
 eqv('transf NAO e externo', C.TIPOS.transf.externo, false);
 eqv('swap NAO e externo', C.TIPOS.swap.externo, false);
 
+/* ══════════════════════════════════════════════════════════════
+   11. TRAVA DE CAIXA
+   ══════════════════════════════════════════════════════════════ */
+sec('Trava de caixa');
+
+var stt = C.novoEstado();
+stt.carteiras.push({ id: 'w1', nome: 'Phantom' });
+C.addMov(stt, { tipo: 'deposito', cart: 'w1', usd: 500, dt: '2026-01-01' });
+
+var r1 = C.podeGastar(stt, 'w1', 300);
+eqv('gasto dentro do caixa e permitido', r1.ok, true);
+eq('falta zero quando cabe', r1.falta, 0);
+
+var r2 = C.podeGastar(stt, 'w1', 800);
+eqv('gasto acima do caixa e recusado', r2.ok, false);
+eq('falta exatamente a diferenca', r2.falta, 300);
+eq('informa o caixa disponivel', r2.caixa, 500);
+
+/* gasto igual ao caixa cabe — a borda é inclusiva */
+eqv('gasto igual ao caixa cabe', C.podeGastar(stt, 'w1', 500).ok, true);
+
+/* carteira sem depósito nenhum não abre posição */
+eqv('carteira zerada nao gasta', C.podeGastar(stt, 'w-nova', 1).ok, false);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

@@ -133,6 +133,16 @@
     return total;
   };
 
+  /* A trava vive AQUI, na camada de dados, e não na tela: assim vale para
+     importação, restauração de backup e qualquer tela futura. A tela também
+     checa, mas só para poder dizer QUANTO falta. */
+  C.podeGastar = function (st, cartId, usd) {
+    var caixa = C.caixaDe(st, cartId);
+    var v = Math.abs(num(usd));
+    var falta = v - caixa;
+    return { ok: falta <= 0, caixa: caixa, falta: falta > 0 ? falta : 0 };
+  };
+
   /* ═══════════════════ HOLD — CUSTO MÉDIO PONDERADO ═══════════════════
      Método de custo médio (o mesmo que a Receita usa no Brasil).
      A venda NÃO altera o custo médio; ela baixa custo proporcional
