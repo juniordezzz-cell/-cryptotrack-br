@@ -36,7 +36,11 @@
     lend_juros:  { grupo:'defi',  sinal:+1, externo:false, lbl:'Juros de lending' },
     trade_dep:   { grupo:'trade', sinal:-1, externo:true,  lbl:'Aporte na banca' },
     trade_saq:   { grupo:'trade', sinal:+1, externo:true,  lbl:'Saque da banca' },
-    trade_res:   { grupo:'trade', sinal: 0, externo:false, lbl:'Resultado de trade' }
+    trade_res:   { grupo:'trade', sinal: 0, externo:false, lbl:'Resultado de trade' },
+    deposito:    { grupo:'caixa', sinal:+1, externo:true,  lbl:'Depósito' },
+    saque:       { grupo:'caixa', sinal:-1, externo:true,  lbl:'Saque' },
+    transf:      { grupo:'caixa', sinal: 0, externo:false, lbl:'Transferência' },
+    swap:        { grupo:'caixa', sinal: 0, externo:false, lbl:'Troca de ativo' }
   };
 
   /* ═══════════════════ UTILITÁRIOS ═══════════════════ */
@@ -108,6 +112,88 @@
       if (filtro.cart && filtro.cart !== 'all' && m.cart !== filtro.cart) return false;
       return true;
     }));
+  };
+
+  /* CAIXA = soma do livro daquela carteira. Nunca um campo gravado: um
+     saldo guardado pode divergir do extrato que o produziu, e é justamente
+     essa divergência que esta fase existe para tornar impossível.
+     O `sinal` de C.TIPOS já é o efeito no caixa: −1 saiu capital para a
+     posição, +1 voltou. Fee sai do caixa junto com a compra. */
+  C.caixaDe = function (st, cartId) {
+    var total = 0;
+    (st.mov || []).forEach(function (m) {
+      if (m.cart !== cartId) return;
+      var t = C.TIPOS[m.tipo];
+      if (!t) return;
+      /* transf carrega o sinal na perna (px), não no tipo */
+      var s = (m.tipo === 'transf') ? (num(m.px) < 0 ? -1 : +1) : t.sinal;
+      total += s * num(m.usd);
+      /* a taxa sempre sai do bolso, em qualquer direção da operação */
+      if (m.tipo === 'compra') total -= num(m.fee);
+      else if (m.tipo === 'venda') total -= num(m.fee);
+    });
+    return total;
+  };
+
+  /* A trava vive AQUI, na camada de dados, e não na tela: assim vale para
+     importação, restauração de backup e qualquer tela futura. A tela também
+     checa, mas só para poder dizer QUANTO falta. */
+  C.podeGastar = function (st, cartId, usd) {
+    var caixa = C.caixaDe(st, cartId);
+    var v = Math.abs(num(usd));
+    var falta = v - caixa;
+    /* mesma tolerância do supervisor (0.005): resíduo de float sub-centavo
+       não pode recusar um saque legítimo do saldo cheio. `falta` reportada
+       nunca é negativa nem carrega esse ruído — ou é zero, ou é a falta
+       real. */
+    return { ok: falta <= 0.005, caixa: caixa, falta: falta > 0.005 ? falta : 0 };
+  };
+
+  /* Transferência é UM evento com DUAS pernas unidas pelo mesmo `ref`.
+     Nunca duas movimentações soltas: se uma perna sumir, o supervisor
+     acusa, e apagar a transferência apaga as duas. O sinal de cada perna
+     vai em `px` (−1 origem, +1 destino), como `trade_res` já faz. */
+  C.transferir = function (st, o) {
+    o = o || {};
+    var usd = Math.abs(num(o.usd));
+    if (!o.de || !o.para || o.de === o.para || !usd) {
+      return { ok: false, ref: null, falta: 0 };
+    }
+    var pode = C.podeGastar(st, o.de, usd);
+    if (!pode.ok) return { ok: false, ref: null, falta: pode.falta };
+
+    var ref = C.uid();
+    var dt = o.dt || C.hoje();
+    C.addMov(st, { tipo: 'transf', ref: ref, cart: o.de,   usd: usd, px: -1, dt: dt, nota: o.nota || '' });
+    C.addMov(st, { tipo: 'transf', ref: ref, cart: o.para, usd: usd, px: +1, dt: dt, nota: o.nota || '' });
+    return { ok: true, ref: ref, falta: 0 };
+  };
+
+  /* Portfólio anterior à fase 2 tem posições sem evento de caixa que as
+     explique — o caixa daria negativo e o supervisor acusaria um erro que
+     é da migração, não do usuário. A abertura de saldo é a resposta, e ela
+     SOME SOZINHA quando não há o que migrar (carteira com caixa >= 0). */
+  C.aberturaDeSaldo = function (st) {
+    var n = 0;
+    (st.carteiras || []).forEach(function (c) {
+      var caixa = C.caixaDe(st, c.id);
+      if (caixa >= 0) return;
+      var movs = C.movsDe(st, { cart: c.id });
+      var dt = movs.length ? movs[0].dt : C.hoje();
+      var m = C.addMov(st, {
+        tipo: 'deposito', cart: c.id, usd: Math.abs(caixa), dt: dt,
+        nota: 'Abertura de saldo — posições registradas antes do controle de caixa'
+      });
+      /* Quando a data da abertura EMPATA com a primeira movimentação da
+         carteira (o caso comum: ela é datada dessa mesma movimentação),
+         addMov deu a ela o `seq` mais alto de todos — e o sort cronológico
+         desempata por seq, então a posição apareceria ANTES do depósito
+         no extrato, com o saldo corrente negativo por uma linha. Um seq
+         negativo garante que a abertura sempre vem primeiro no empate. */
+      m.seq = -1 - n;
+      n++;
+    });
+    return n;
   };
 
   /* ═══════════════════ HOLD — CUSTO MÉDIO PONDERADO ═══════════════════
@@ -364,7 +450,21 @@
 
     var tr = C.tradeResumo(st, cart);
 
-    var patrimonio = holdValor + poolValor + lendValor + tr.banca;
+    /* FIX 3 (fase 2): patrimônio total é caixa + investido — caixa parado
+       também é patrimônio da pessoa. Sem isso, uma carteira com um
+       depósito grande ainda sem posição aberta aparecia quase zerada no
+       KPI principal, enquanto o card da própria carteira (que já somava
+       caixa por fora) mostrava o número certo — dois totais diferentes
+       na mesma tela. Agora o caixa entra aqui, uma vez só, e quem exibe
+       não soma de novo. */
+    var caixaTotal = 0;
+    if (!cart || cart === 'all') {
+      (st.carteiras || []).forEach(function (c) { caixaTotal += C.caixaDe(st, c.id); });
+    } else {
+      caixaTotal = C.caixaDe(st, cart);
+    }
+
+    var patrimonio = holdValor + poolValor + lendValor + tr.banca + caixaTotal;
     var investido = holdCusto + poolCusto + lendCusto + Math.max(0, tr.depositos - tr.saques);
     var naoRealizado = holdNaoReal + poolNaoReal;
     var realizado = holdReal + poolReal + lendReal + tr.resultado;
@@ -606,16 +706,30 @@
      O XIRR resolve isso — é a taxa que zera o valor presente dos fluxos. */
   C.fluxos = function (st, precos, cart) {
     var f = [];
+    /* FIX 1 (fase 2 — CRÍTICO): antes de existir caixa, compra/venda/
+       pool_dep/pool_ret/lend_sup/lend_ret/trade_dep/trade_saq eram usados
+       como PROXY de aporte externo (por isso `C.TIPOS[...].externo` ainda
+       marca todos eles `true` — não mexemos nesse dado, mudaria o
+       significado de todo portfólio salvo). Agora que depósito e saque
+       existem de verdade, a fronteira real do portfólio é o caixa: um
+       depósito FINANCIA a compra que vem depois, então contar os dois
+       como fluxo faz um cancelar o outro (a compra deixa de ser um fluxo
+       "de fora" — é dinheiro que já estava dentro, só mudou de forma).
+       Por isso aqui o filtro é explícito por tipo, não por `externo`. */
     C.movsDe(st, { cart: cart }).forEach(function (m) {
-      var t = C.TIPOS[m.tipo];
-      if (!t || !t.externo || t.sinal === 0) return;
-      /* sinal -1 = dinheiro saiu do bolso para a posição.
-         A taxa SEMPRE subtrai: numa compra ela aumenta o desembolso,
-         numa venda ela reduz o que você recebe. */
-      f.push({ dt: m.dt, valor: t.sinal * m.usd - m.fee });
+      if (m.tipo !== 'deposito' && m.tipo !== 'saque') return;
+      /* Sinal do XIRR é o OPOSTO do sinal de caixa: dinheiro saindo do
+         BOLSO DA PESSOA para dentro do portfólio é negativo (depósito),
+         dinheiro voltando pro bolso é positivo (saque). Inverter isso
+         inverte todo retorno calculado — daí o comentário. */
+      var sinalXirr = m.tipo === 'deposito' ? -1 : +1;
+      /* taxa sempre reduz o bolso: num depósito aumenta o que saiu,
+         num saque reduz o que voltou. */
+      f.push({ dt: m.dt, valor: sinalXirr * m.usd - m.fee });
     });
     if (!f.length) return f;
-    /* valor de mercado hoje entra como resgate final */
+    /* valor de mercado hoje entra como resgate final — e já inclui caixa
+       (FIX 3), então o resgate é riqueza total, não só posições. */
     var T = C.totais(st, precos, cart);
     f.push({ dt: C.hoje(), valor: T.patrimonio });
     return f;

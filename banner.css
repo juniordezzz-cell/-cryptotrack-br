@@ -1,0 +1,129 @@
+/* ╔══════════════════════════════════════════════════════════════════════╗
+   ║  MUNDODEFI · BANNERS DE PLANO — PADRÃO ÚNICO (banner.css)            ║
+   ║                                                                      ║
+   ║  Um par de banners (Grátis + PRO) com UMA aparência só, para o site  ║
+   ║  inteiro. Antes cada tela inventava o seu: o portfólio tinha um      ║
+   ║  card roxo, o dashboard outro, e a /planos.html um terceiro — três   ║
+   ║  desenhos para a mesma oferta é como o produto perde credibilidade.  ║
+   ║                                                                      ║
+   ║  A linguagem vem dos cards da /planos.html, que é a página onde a    ║
+   ║  oferta mora: barra de acento no topo, nome do plano em caixa alta,  ║
+   ║  título, preço, lista de itens com check, botão no rodapé.           ║
+   ║                                                                      ║
+   ║  Cor por função (tokens de mundodefi-tokens.css):                    ║
+   ║    verde   = grátis, o que já está liberado                          ║
+   ║    roxo    = PRO, o que a assinatura abre                            ║
+   ║  Verde e vermelho NUNCA aparecem aqui como ganho/perda — aqui verde  ║
+   ║  é "incluído", que é o vocabulário de plano, não de resultado.       ║
+   ╚══════════════════════════════════════════════════════════════════════╝ */
+
+.mdfb{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:16px;
+  align-items:stretch;
+  margin-top:1.8rem;
+}
+
+.mdfb-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  padding:1.9rem 1.6rem;
+  border:1px solid var(--mdf-line-2,rgba(255,255,255,.13));
+  border-radius:var(--mdf-r-xl,20px);
+  background:linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0) 40%),var(--mdf-surface,#0D111C);
+  transition:transform .25s,border-color .25s,box-shadow .25s;
+}
+.mdfb-card:hover{transform:translateY(-4px)}
+
+/* barra de acento no topo — mesma assinatura dos cards da /planos.html */
+.mdfb-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;
+}
+.mdfb-free::before{background:linear-gradient(90deg,transparent,var(--green,#14F195),transparent)}
+.mdfb-free:hover{border-color:rgba(20,241,149,.28);box-shadow:0 18px 50px rgba(0,0,0,.45),0 0 35px rgba(20,241,149,.07)}
+
+.mdfb-pro{border-color:rgba(153,69,255,.28);box-shadow:0 0 50px rgba(153,69,255,.10)}
+.mdfb-pro::before{background:linear-gradient(90deg,transparent,var(--purple,#9945FF),transparent)}
+.mdfb-pro:hover{box-shadow:0 22px 60px rgba(0,0,0,.5),0 0 55px rgba(153,69,255,.18)}
+
+/* selo flutuante no topo do card */
+.mdfb-tag{
+  position:absolute;top:-11px;left:50%;transform:translateX(-50%);
+  font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+  padding:5px 14px;border-radius:99px;white-space:nowrap;
+  background:var(--purple,#9945FF);color:#fff;box-shadow:0 4px 18px rgba(153,69,255,.45);
+}
+
+.mdfb-name{font-size:11px;text-transform:uppercase;letter-spacing:.16em;font-weight:700;margin-bottom:8px}
+.mdfb-free .mdfb-name{color:var(--green,#14F195)}
+.mdfb-pro .mdfb-name{color:var(--purple-txt,#A96BFF)}
+
+.mdfb-title{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;margin-bottom:.45rem;text-wrap:balance}
+.mdfb-desc{font-size:13px;color:var(--mdf-text-2,#9AA3B8);line-height:1.55;margin-bottom:1.3rem}
+.mdfb-desc b{color:var(--mdf-text,#EDF0F7);font-weight:600}
+
+.mdfb-price{display:flex;align-items:baseline;gap:5px}
+.mdfb-cur{font-size:15px;font-weight:700;color:var(--mdf-text-3,#828CA1)}
+.mdfb-val{
+  font-family:var(--mdf-mono,'Space Mono',monospace);
+  font-size:2.3rem;font-weight:800;line-height:1;letter-spacing:-.05em;
+}
+.mdfb-free .mdfb-val{color:var(--green,#14F195)}
+.mdfb-pro .mdfb-val{color:var(--purple-txt,#A96BFF)}
+.mdfb-per{font-size:13px;color:var(--mdf-text-3,#828CA1)}
+.mdfb-note{font-size:11.5px;color:var(--mdf-text-3,#828CA1);margin-top:7px}
+.mdfb-note b{color:var(--mdf-text,#EDF0F7)}
+.mdfb-pricewrap{margin-bottom:1.3rem}
+
+.mdfb-div{height:1px;background:var(--mdf-line,rgba(255,255,255,.07));margin-bottom:1.2rem}
+
+.mdfb-gtitle{
+  font-size:10.5px;text-transform:uppercase;letter-spacing:.13em;font-weight:700;
+  color:var(--mdf-text-3,#828CA1);margin-bottom:.7rem;
+}
+.mdfb-feats{display:flex;flex-direction:column;gap:.6rem;margin-bottom:1.5rem}
+.mdfb-feat{display:flex;gap:10px;align-items:flex-start}
+.mdfb-check{
+  flex-shrink:0;width:17px;height:17px;border-radius:5px;
+  display:grid;place-items:center;font-size:10px;font-weight:800;margin-top:1px;
+}
+.mdfb-free .mdfb-check{background:var(--mdf-green-soft,rgba(20,241,149,.11));color:var(--green,#14F195)}
+.mdfb-pro .mdfb-check{background:var(--mdf-purple-soft,rgba(153,69,255,.13));color:var(--purple-txt,#A96BFF)}
+.mdfb-ftext{font-size:12.5px;color:var(--mdf-text-2,#9AA3B8);line-height:1.5}
+.mdfb-ftext b{color:var(--mdf-text,#EDF0F7);font-weight:600}
+
+/* pílula de destaque dentro de um item (ex.: "1 carteira") */
+.mdfb-hl{
+  display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:5px;
+  margin-left:3px;vertical-align:1px;
+}
+.mdfb-hl-green{background:var(--mdf-green-soft,rgba(20,241,149,.11));color:var(--green,#14F195)}
+.mdfb-hl-purple{background:var(--mdf-purple-soft,rgba(153,69,255,.13));color:var(--purple-txt,#A96BFF)}
+
+/* botão: sempre no rodapé do card, independente do tamanho da lista */
+.mdfb-btn{
+  margin-top:auto;display:flex;align-items:center;justify-content:center;
+  width:100%;padding:.85rem 1rem;border-radius:var(--mdf-r,12px);
+  font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:1px solid transparent;
+  transition:filter .18s,border-color .18s,background .18s;
+}
+.mdfb-btn-free{background:var(--purple,#9945FF);color:#fff;box-shadow:0 0 24px rgba(153,69,255,.3)}
+.mdfb-btn-free:hover{filter:brightness(1.1)}
+.mdfb-btn-pro{
+  background:transparent;color:var(--mdf-text,#EDF0F7);
+  border-color:var(--mdf-line-3,rgba(255,255,255,.20));
+}
+.mdfb-btn-pro:hover{border-color:var(--purple,#9945FF);background:var(--mdf-purple-soft,rgba(153,69,255,.13))}
+.mdfb-btnsub{text-align:center;font-size:11.5px;color:var(--mdf-text-3,#828CA1);margin-top:.6rem}
+.mdfb-btnsub a{color:var(--mdf-text-2,#9AA3B8);font-weight:600}
+.mdfb-btnsub a:hover{color:var(--mdf-text,#EDF0F7)}
+
+@media(max-width:768px){
+  .mdfb{grid-template-columns:1fr;gap:22px;margin-top:1.4rem}
+  .mdfb-card{padding:1.7rem 1.3rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .mdfb-card,.mdfb-card:hover{transition:none;transform:none}
+}

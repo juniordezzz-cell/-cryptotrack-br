@@ -163,15 +163,27 @@ sec('TOTAIS: investido NAO e derivado por subtracao');
 var g = C.novoEstado();
 g.carteiras.push({ id: 'c1', nome: 'W' });
 g.ativos.push({ id: 'a1', tk: 'SOL', cg: 'solana', cart: 'c1', last: 100 });
+/* deposito financia a compra (60 x 68 = 4080) — sem ele a compra sozinha
+   deixaria o caixa negativo, que e exatamente o estado que a trava de
+   caixa (FIX 5 / P.travaCaixa) proibe na tela real. */
+C.addMov(g, { tipo: 'deposito', cart: 'c1', usd: 4080, dt: '2026-01-05' });
 C.addMov(g, { tipo: 'compra', ref: 'a1', cart: 'c1', qtd: 60, px: 68, dt: '2026-01-10' });
 C.addMov(g, { tipo: 'venda', ref: 'a1', cart: 'c1', qtd: 15, px: 112, dt: '2026-06-10' });
 var T = C.totais(g, { solana: 100 }, 'all');
-eq('patrimonio (45 x 100)', T.patrimonio, 4500);
+/* a mao: caixa = 4080 (deposito) - 4080 (compra) + 1680 (venda 15x112)
+   = 1680 — a venda parcial devolveu dinheiro que ainda nao foi gasto. */
+eq('caixa sobrou da venda parcial', C.caixaDe(g, 'c1'), 1680);
+/* FIX 3: patrimonio agora inclui caixa. valor das posicoes (45 x 100 =
+   4500) + caixa (1680) = 6180 */
+eq('patrimonio = valor das posicoes + caixa (4500 + 1680)', T.patrimonio, 6180);
 eq('investido = custo das abertas (45 x 68)', T.investido, 3060);
 eq('nao realizado', T.naoRealizado, 1440);
 eq('realizado', T.realizado, 660);
 eq('resultado total', T.resultadoTotal, 2100);
-eq('IDENTIDADE: pat - inv == naoReal', T.patrimonio - T.investido, T.naoRealizado);
+/* a identidade antiga (pat - inv == naoReal) valia porque patrimonio so
+   somava valor de posicoes. Agora patrimonio inclui caixa tambem, entao
+   o lado direito precisa somar esse caixa pra continuar batendo. */
+eq('IDENTIDADE: pat - inv == naoReal + caixa', T.patrimonio - T.investido, T.naoRealizado + C.caixaDe(g, 'c1'));
 eq('rentabilidade das abertas', T.rentAberta, 1440 / 3060 * 100);
 
 sec('TOTAIS: taxa de pool nao e contada duas vezes');
@@ -187,8 +199,17 @@ eq('resultado total nao vira 100', T2.resultadoTotal, 50);
 sec('TOTAIS: filtro de carteira alcanca o trade (bug P1-06)');
 var g3 = C.novoEstado();
 g3.carteiras.push({ id: 'c1', nome: 'A' }, { id: 'c2', nome: 'B' });
+/* deposito financia o aporte na banca em cada carteira — trade_dep tira
+   do caixa (sinal -1) igual compra/pool_dep/lend_sup; sem o deposito
+   correspondente o caixa ficaria negativo. Com ele, caixa fecha em 0 em
+   cada carteira, entao o patrimonio (banca + caixa) nao muda: continua
+   sendo so o valor da banca, como o teste original esperava. */
+C.addMov(g3, { tipo: 'deposito', cart: 'c1', usd: 1000, dt: '2026-01-01' });
 C.addMov(g3, { tipo: 'trade_dep', cart: 'c1', usd: 1000, dt: '2026-01-01' });
+C.addMov(g3, { tipo: 'deposito', cart: 'c2', usd: 500, dt: '2026-01-01' });
 C.addMov(g3, { tipo: 'trade_dep', cart: 'c2', usd: 500, dt: '2026-01-01' });
+eq('caixa de c1 fecha em 0 (deposito consumido pelo aporte)', C.caixaDe(g3, 'c1'), 0);
+eq('caixa de c2 fecha em 0', C.caixaDe(g3, 'c2'), 0);
 eq('todas as carteiras', C.totais(g3, {}, 'all').patrimonio, 1500);
 eq('so carteira c1', C.totais(g3, {}, 'c1').patrimonio, 1000);
 eq('so carteira c2', C.totais(g3, {}, 'c2').patrimonio, 500);
@@ -236,24 +257,34 @@ eqv('sem sinais opostos retorna null', C.xirr([
 eqv('fluxo unico retorna null', C.xirr([{ dt: '2026-01-01', valor: -100 }]), null);
 eqv('vazio retorna null', C.xirr([]), null);
 
-sec('XIRR: integrado ao portfolio');
+sec('XIRR: integrado ao portfolio (FIX 1 — so deposito/saque sao fluxo)');
 var g4 = C.novoEstado();
+g4.carteiras.push({ id: 'c1', nome: 'W' });
 g4.ativos.push({ id: 'a', tk: 'BTC', cg: 'bitcoin', cart: 'c1', last: 60000 });
-C.addMov(g4, { tipo: 'compra', ref: 'a', qtd: 1, px: 50000, dt: '2026-01-01' });
+/* deposito financia a compra inteira — caixa fecha em 0, a compra deixa
+   de ser fluxo (FIX 1) e so o deposito conta. */
+C.addMov(g4, { tipo: 'deposito', cart: 'c1', usd: 50000, dt: '2026-01-01' });
+C.addMov(g4, { tipo: 'compra', ref: 'a', cart: 'c1', qtd: 1, px: 50000, dt: '2026-01-01' });
 var f = C.fluxos(g4, { bitcoin: 60000 }, 'all');
-eqv('gerou 2 fluxos (compra + valor atual)', f.length, 2);
-eq('fluxo de saida e negativo', f[0].valor, -50000);
-eq('fluxo final e o patrimonio', f[1].valor, 60000);
+eqv('gerou 2 fluxos (so o deposito + valor atual — a compra NAO conta mais)', f.length, 2);
+eq('fluxo de saida e negativo (o deposito)', f[0].valor, -50000);
+eq('fluxo final e o patrimonio (caixa 0 + posicao 60000)', f[1].valor, 60000);
 
-/* taxa sempre reduz o bolso, nos dois sentidos */
+/* taxa sempre reduz o bolso, nos dois sentidos — agora testado em
+   deposito/saque, que sao os fluxos de verdade depois da FIX 1
+   (compra/venda pararam de contar aqui, mesmo pagando taxa) */
 var g5 = C.novoEstado();
-g5.ativos.push({ id: 'a', tk: 'X', cg: 'x', cart: 'c1', last: 0 });
-C.addMov(g5, { tipo: 'compra', ref: 'a', qtd: 1, px: 1000, fee: 10, dt: '2026-01-01' });
-C.addMov(g5, { tipo: 'venda',  ref: 'a', qtd: 1, px: 2000, fee: 20, dt: '2026-06-01' });
-var f5 = C.fluxos(g5, { x: 0 }, 'all');
-eq('compra: -(1000) - 10', f5[0].valor, -1010);
-eq('venda:  +(2000) - 20', f5[1].valor, 1980);
-eq('usd normalizado na compra', g5.mov[0].usd, 1000);
+g5.carteiras.push({ id: 'c1', nome: 'W' });
+C.addMov(g5, { tipo: 'deposito', cart: 'c1', usd: 2000, fee: 10, dt: '2026-01-01' });
+C.addMov(g5, { tipo: 'saque',    cart: 'c1', usd: 500,  fee: 20, dt: '2026-06-01' });
+var f5 = C.fluxos(g5, {}, 'all');
+eqv('2 fluxos (deposito, saque) + patrimonio final', f5.length, 3);
+eq('deposito: -(2000) - 10 (taxa aumenta o que saiu do bolso)', f5[0].valor, -2010);
+eq('saque:  +(500) - 20 (taxa reduz o que voltou ao bolso)', f5[1].valor, 480);
+/* caixa = 2000 (deposito) - 500 (saque) = 1500; C.caixaDe so desconta
+   taxa de compra/venda, nao de deposito/saque (comportamento existente,
+   fora do escopo desta fix) — por isso o patrimonio nao reflete as taxas */
+eq('fluxo final e o patrimonio (caixa 1500, sem posicoes)', f5[2].valor, 1500);
 
 /* ══════════════════════════════════════════════════════════════
    7. SNAPSHOTS — sem curva inventada
@@ -508,6 +539,248 @@ C.addMov(stEnc,{tipo:'pool_fee',ref:'p',usd:300,dt:'2026-06-01'});
 var ilEnc=C.poolIL(stEnc, stEnc.pools[0], {sol:150, usdc:1});
 eq('valor atual zerado', ilEnc.valorAtual, 0);
 eq('valorReal e so as taxas', ilEnc.valorReal, 300);
+
+/* ══════════════════════════════════════════════════════════════
+   CAIXA: consequência dos eventos, nunca um campo gravado
+   ══════════════════════════════════════════════════════════════ */
+sec('Caixa da carteira');
+
+var stx = C.novoEstado();
+stx.carteiras.push({ id: 'w1', nome: 'Phantom' });
+stx.ativos.push({ id: 'ax', tk: 'SOL', cg: 'solana', cart: 'w1', last: 200 });
+
+/* À mão:  +1000 depósito  −200 saque  = 800
+   depois compra 3 @ 100 (=300, fee 5) → 800 − 305 = 495          */
+C.addMov(stx, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+C.addMov(stx, { tipo: 'saque',    cart: 'w1', usd: 200,  dt: '2026-01-02' });
+eq('caixa apos deposito e saque', C.caixaDe(stx, 'w1'), 800);
+
+C.addMov(stx, { tipo: 'compra', ref: 'ax', cart: 'w1', qtd: 3, px: 100, fee: 5, dt: '2026-01-03' });
+eq('caixa apos compra 3x100 + fee 5', C.caixaDe(stx, 'w1'), 495);
+
+/* venda de 1 @ 150 devolve 150 ao caixa: 495 + 150 = 645 */
+C.addMov(stx, { tipo: 'venda', ref: 'ax', cart: 'w1', qtd: 1, px: 150, dt: '2026-01-04' });
+eq('caixa apos venda 1x150', C.caixaDe(stx, 'w1'), 645);
+
+/* carteira sem nenhum evento tem caixa zero, nao NaN */
+eq('caixa de carteira inexistente', C.caixaDe(stx, 'w-nao-existe'), 0);
+
+/* swap nao mexe no caixa: troca de ativo dentro da carteira */
+C.addMov(stx, { tipo: 'swap', cart: 'w1', usd: 300, dt: '2026-01-05' });
+eq('caixa apos swap (neutro)', C.caixaDe(stx, 'w1'), 645);
+
+/* os tipos novos existem e declaram o efeito certo */
+eqv('deposito e externo (entra no XIRR)', C.TIPOS.deposito.externo, true);
+eqv('saque e externo', C.TIPOS.saque.externo, true);
+eqv('transf NAO e externo', C.TIPOS.transf.externo, false);
+eqv('swap NAO e externo', C.TIPOS.swap.externo, false);
+
+/* ══════════════════════════════════════════════════════════════
+   11. TRAVA DE CAIXA
+   ══════════════════════════════════════════════════════════════ */
+sec('Trava de caixa');
+
+var stt = C.novoEstado();
+stt.carteiras.push({ id: 'w1', nome: 'Phantom' });
+C.addMov(stt, { tipo: 'deposito', cart: 'w1', usd: 500, dt: '2026-01-01' });
+
+var r1 = C.podeGastar(stt, 'w1', 300);
+eqv('gasto dentro do caixa e permitido', r1.ok, true);
+eq('falta zero quando cabe', r1.falta, 0);
+
+var r2 = C.podeGastar(stt, 'w1', 800);
+eqv('gasto acima do caixa e recusado', r2.ok, false);
+eq('falta exatamente a diferenca', r2.falta, 300);
+eq('informa o caixa disponivel', r2.caixa, 500);
+
+/* gasto igual ao caixa cabe — a borda é inclusiva */
+eqv('gasto igual ao caixa cabe', C.podeGastar(stt, 'w1', 500).ok, true);
+
+/* carteira sem depósito nenhum não abre posição */
+eqv('carteira zerada nao gasta', C.podeGastar(stt, 'w-nova', 1).ok, false);
+
+/* ══════════════════════════════════════════════════════════════
+   12. TRANSFERÊNCIA ENTRE CARTEIRAS
+   ══════════════════════════════════════════════════════════════ */
+sec('Transferencia entre carteiras');
+
+var str = C.novoEstado();
+str.carteiras.push({ id: 'w1', nome: 'Corretora' });
+str.carteiras.push({ id: 'w2', nome: 'Cold' });
+C.addMov(str, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+
+var t = C.transferir(str, { de: 'w1', para: 'w2', usd: 400, dt: '2026-01-02' });
+eqv('transferencia aceita', t.ok, true);
+eq('origem perde 400',  C.caixaDe(str, 'w1'), 600);
+eq('destino ganha 400', C.caixaDe(str, 'w2'), 400);
+
+/* a soma das duas carteiras não muda: transferência redistribui,
+   não cria nem destrói patrimônio */
+eq('soma preservada', C.caixaDe(str, 'w1') + C.caixaDe(str, 'w2'), 1000);
+
+/* as duas pernas existem e compartilham o mesmo ref */
+var pernas = str.mov.filter(function (m) { return m.tipo === 'transf' && m.ref === t.ref; });
+eqv('gravou duas pernas', pernas.length, 2);
+
+/* sem caixa não transfere, e diz quanto falta */
+var t2 = C.transferir(str, { de: 'w2', para: 'w1', usd: 900, dt: '2026-01-03' });
+eqv('transferencia sem caixa recusada', t2.ok, false);
+eq('informa quanto falta', t2.falta, 500);
+eq('nada mudou apos recusa', C.caixaDe(str, 'w2'), 400);
+
+/* não dá para transferir para a mesma carteira */
+eqv('mesma carteira e recusada', C.transferir(str, { de: 'w1', para: 'w1', usd: 10 }).ok, false);
+
+/* ══════════════════════════════════════════════════════════════
+   13. ABERTURA DE SALDO (dados anteriores a fase 2)
+   ══════════════════════════════════════════════════════════════ */
+sec('Abertura de saldo (dados anteriores a fase 2)');
+
+var sta = C.novoEstado();
+sta.carteiras.push({ id: 'w1', nome: 'Antiga' });
+sta.ativos.push({ id: 'a9', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 60000 });
+/* posição antiga: compra sem nenhum depósito que a explique */
+C.addMov(sta, { tipo: 'compra', ref: 'a9', cart: 'w1', qtd: 0.1, px: 50000, dt: '2026-02-10' });
+eq('antes da abertura, caixa negativo', C.caixaDe(sta, 'w1'), -5000);
+
+var n = C.aberturaDeSaldo(sta);
+eqv('uma carteira recebeu abertura', n, 1);
+eq('depois da abertura, caixa zerado', C.caixaDe(sta, 'w1'), 0);
+
+/* a abertura é datada do primeiro evento da carteira, não de hoje */
+var ab = sta.mov.filter(function (m) { return m.tipo === 'deposito' && m.nota.indexOf('Abertura') === 0; })[0];
+eqv('abertura datada do primeiro evento', ab.dt, '2026-02-10');
+
+/* roda de novo: não duplica, porque não há mais o que migrar */
+eqv('idempotente — nao duplica', C.aberturaDeSaldo(sta), 0);
+eq('caixa continua zerado', C.caixaDe(sta, 'w1'), 0);
+
+/* carteira saudável (com depósito) não recebe abertura nenhuma */
+var stb = C.novoEstado();
+stb.carteiras.push({ id: 'w2', nome: 'Nova' });
+C.addMov(stb, { tipo: 'deposito', cart: 'w2', usd: 100, dt: '2026-03-01' });
+eqv('carteira saudavel nao migra', C.aberturaDeSaldo(stb), 0);
+eq('caixa intacto', C.caixaDe(stb, 'w2'), 100);
+
+/* empate de data: a abertura tem que vir ANTES da compra que ela explica,
+   senão o saldo corrente do extrato fica negativo por uma linha (achado
+   da revisão da Task 4) */
+var stc = C.novoEstado();
+stc.carteiras.push({ id: 'w3', nome: 'Empate' });
+stc.ativos.push({ id: 'a10', tk: 'ETH', cg: 'ethereum', cart: 'w3', last: 3000 });
+C.addMov(stc, { tipo: 'compra', ref: 'a10', cart: 'w3', qtd: 1, px: 2000, dt: '2026-04-01' });
+C.aberturaDeSaldo(stc);
+var movsC = C.movsDe(stc, { cart: 'w3' });
+eqv('mesma data: abertura vem antes da compra', movsC[0].tipo, 'deposito');
+eqv('compra fica em segundo', movsC[1].tipo, 'compra');
+/* saldo corrente nunca fica negativo em nenhum ponto do extrato */
+var saldoC = 0, negativo = false;
+movsC.forEach(function (m) {
+  var t = C.TIPOS[m.tipo];
+  var s = (m.tipo === 'transf') ? ((m.px < 0) ? -1 : 1) : t.sinal;
+  saldoC += s * m.usd;
+  if (saldoC < -0.005) negativo = true;
+});
+eqv('saldo corrente nunca fica negativo', negativo, false);
+
+/* ══════════════════════════════════════════════════════════════
+   13b. FIX 1 (CRITICO) — a migracao nao pode mais destruir o XIRR
+   ══════════════════════════════════════════════════════════════
+   Bug achado na revisao da fase 2: C.aberturaDeSaldo (que roda sozinha
+   no boot pra TODO usuario existente) lancava um deposito sintetico, e
+   o C.fluxos antigo contava compra E deposito como fluxo externo — dois
+   fluxos na mesma data se cancelando, XIRR virando null pra todo mundo
+   que ja tinha portfolio. A fix trocou o que conta como fluxo: so
+   deposito/saque (a fronteira real do caixa), nunca compra/venda/etc.
+   Este bloco prova, com conta de cabeca, que o retorno certo sobrevive
+   antes E depois da migracao. */
+sec('XIRR: FIX 1 - abertura de saldo nao muda mais o retorno');
+
+/* data relativa a "hoje" (nao fixa) para o teste nao depender de quando
+   ele e rodado: o inicio e sempre exatamente 365 dias atras. */
+var haUmAno = new Date(Date.now() - 365 * 864e5).toISOString().slice(0, 10);
+
+/* ─── caso saudavel: deposito ANTES da compra (fluxo de fase 2 normal) ─── */
+var gSaudavel = C.novoEstado();
+gSaudavel.carteiras.push({ id: 'w1', nome: 'Nova' });
+gSaudavel.ativos.push({ id: 'btc', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 100000 });
+C.addMov(gSaudavel, { tipo: 'deposito', cart: 'w1', usd: 50000, dt: haUmAno });
+C.addMov(gSaudavel, { tipo: 'compra', ref: 'btc', cart: 'w1', qtd: 1, px: 50000, dt: haUmAno });
+var xirrSaudavel = C.xirr(C.fluxos(gSaudavel, { bitcoin: 100000 }, 'all'));
+/* a mao: -50000 ha 1 ano, +100000 hoje = dobrou em 1 ano = 100% a.a.
+   (mesmo calculo do caso "dobrou em 1 ano" ja provado na secao de XIRR) */
+eq('portfolio saudavel: dobrou em 1 ano = 100% a.a.', xirrSaudavel, 100, 0.5);
+
+/* ─── caso legado: a MESMA historia economica, mas sem deposito nenhum —
+   e exatamente a reproducao do bug relatado na revisao: 1 BTC comprado
+   ha 1 ano por $50.000, vale $100.000 hoje, portfolio anterior a fase 2 ─── */
+var gLegado = C.novoEstado();
+gLegado.carteiras.push({ id: 'w1', nome: 'Legado' });
+gLegado.ativos.push({ id: 'btc', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 100000 });
+C.addMov(gLegado, { tipo: 'compra', ref: 'btc', cart: 'w1', qtd: 1, px: 50000, dt: haUmAno });
+eq('antes da migracao, caixa negativo (compra sem deposito que a explique)',
+  C.caixaDe(gLegado, 'w1'), -50000);
+
+/* aberturaDeSaldo roda automaticamente no boot — lanca o deposito
+   sintetico que faltava, datado do primeiro evento da carteira */
+C.aberturaDeSaldo(gLegado);
+eq('depois da migracao, caixa fecha em 0', C.caixaDe(gLegado, 'w1'), 0);
+var xirrMigrado = C.xirr(C.fluxos(gLegado, { bitcoin: 100000 }, 'all'));
+
+/* A PROVA: migrar o portfolio legado tem que dar o MESMO retorno do
+   portfolio que sempre teve deposito — a migracao nao muda o XIRR,
+   so preenche o fato que faltava (antes ela destruia: virava null). */
+eq('migracao reproduz o mesmo XIRR do portfolio saudavel (nao destroi mais)',
+  xirrMigrado, xirrSaudavel, 0.5);
+eqv('nao e mais null (o bug relatado)', xirrMigrado !== null, true);
+
+/* migrar de novo e idempotente — nao muda o XIRR uma segunda vez */
+C.aberturaDeSaldo(gLegado);
+var xirrMigradoDeNovo = C.xirr(C.fluxos(gLegado, { bitcoin: 100000 }, 'all'));
+eq('rodar a migracao de novo nao muda o XIRR', xirrMigradoDeNovo, xirrMigrado, 0.01);
+
+/* ══════════════════════════════════════════════════════════════
+   14. SUPERVISOR — confere, nao calcula
+   ══════════════════════════════════════════════════════════════ */
+sec('Supervisor: confere, nao calcula');
+
+var S = require('../portfolio-supervisor.js');
+
+/* carteira saudável: nada a acusar */
+var sup1 = C.novoEstado();
+sup1.carteiras.push({ id: 'w1', nome: 'Ok' });
+C.addMov(sup1, { tipo: 'deposito', cart: 'w1', usd: 100, dt: '2026-01-01' });
+eqv('carteira saudavel: sem achados', S.conferir(sup1).achados.length, 0);
+eqv('carteira saudavel: ok true', S.conferir(sup1).ok, true);
+
+/* estado vazio: NAO conferido (null), nunca "tudo certo" */
+eqv('estado vazio devolve null', S.conferir(C.novoEstado()).ok, null);
+
+/* caixa negativo: acusa, e é grave */
+var sup2 = C.novoEstado();
+sup2.carteiras.push({ id: 'w1', nome: 'Furada' });
+sup2.ativos.push({ id: 'a1', tk: 'SOL', cg: 'solana', cart: 'w1', last: 100 });
+C.addMov(sup2, { tipo: 'compra', ref: 'a1', cart: 'w1', qtd: 1, px: 100, dt: '2026-01-01' });
+var r2 = S.conferir(sup2);
+eqv('caixa negativo acusado', r2.achados.filter(function (a) { return a.chave === 'caixa-negativo'; }).length, 1);
+eqv('caixa negativo e grave', r2.ok, false);
+
+/* dinheiro em carteira apagada */
+var sup3 = C.novoEstado();
+sup3.carteiras.push({ id: 'w1', nome: 'Viva' });
+C.addMov(sup3, { tipo: 'deposito', cart: 'w1', usd: 50, dt: '2026-01-01' });
+C.addMov(sup3, { tipo: 'deposito', cart: 'w-apagada', usd: 70, dt: '2026-01-02' });
+eqv('dinheiro em carteira apagada acusado',
+  S.conferir(sup3).achados.filter(function (a) { return a.chave === 'carteira-fantasma'; }).length, 1);
+
+/* transferência com uma perna só (corrompida) */
+var sup4 = C.novoEstado();
+sup4.carteiras.push({ id: 'w1', nome: 'A' });
+sup4.carteiras.push({ id: 'w2', nome: 'B' });
+C.addMov(sup4, { tipo: 'deposito', cart: 'w1', usd: 100, dt: '2026-01-01' });
+C.addMov(sup4, { tipo: 'transf', ref: 'perdida', cart: 'w1', usd: 40, px: -1, dt: '2026-01-02' });
+eqv('transferencia manca acusada',
+  S.conferir(sup4).achados.filter(function (a) { return a.chave === 'transf-manca'; }).length, 1);
 
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));

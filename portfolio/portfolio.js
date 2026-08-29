@@ -40,6 +40,7 @@ window.MDF_PLANOS = {
 'use strict';
 var P = window.P = {};
 var C = window.PCore;
+var Sup = window.PSuper;
 var Store = window.PStore;
 var CG = 'https://api.coingecko.com/api/v3';
 
@@ -306,37 +307,97 @@ P.statusSync = function () {
   return '<span class="sync warn-s" title="Entre na sua conta para salvar na nuvem">◍ Só neste navegador</span>';
 };
 
+/* ═══════════ SUPERVISÃO ═══════════ */
+/* O supervisor só confere — nunca conserta. Este painel só lê o
+   resultado de PSuper.conferir e escreve na tela; se `ok` vier null,
+   é porque não há dado para comparar, e a tela tem que dizer "não
+   conferido" — dizer "tudo certo" aí seria mentir por omissão. */
+P.supResultado = function () { return Sup.conferir(P.st); };
+
+P.temAchadoGrave = function () {
+  var r = P.supResultado();
+  return r.ok === false && r.achados.some(function (a) { return a.grave; });
+};
+
+P.supCorpo = function () {
+  var r = P.supResultado();
+
+  if (r.ok === null) {
+    return '<div class="notice">Ainda não há movimentações registradas, então não existe nada para comparar. Assim que a primeira entrar, a supervisão passa a conferir o caixa de cada carteira, as transferências e o resto.</div>'
+      + '<p class="sup-status">Status: <strong>não conferido</strong></p>';
+  }
+
+  if (r.ok) {
+    return '<div class="notice"><p>As contas fecham. O que foi conferido:</p>'
+      + '<ul class="sup-lista"><li>Nenhuma carteira gastou mais do que recebeu em depósitos e transferências (caixa negativo).</li>'
+      + '<li>Não sobrou movimentação presa numa carteira já apagada.</li>'
+      + '<li>Toda transferência tem as duas pernas — origem e destino.</li></ul></div>'
+      + '<p class="sup-status">Status: <strong>tudo certo</strong></p>';
+  }
+
+  var itens = r.achados.map(function (a) {
+    return '<li class="sup-item' + (a.grave ? ' sup-grave' : '') + '">' + (a.grave ? '⚠ ' : '') + P.esc(a.txt) + '</li>';
+  }).join('');
+  return '<div class="err">Encontramos ' + r.achados.length + (r.achados.length === 1 ? ' inconsistência' : ' inconsistências') + '.</div>'
+    + '<ul class="sup-lista">' + itens + '</ul>';
+};
+
+P.abrirSupervisao = function (ev) {
+  if (ev) ev.preventDefault();
+  P.modal('Supervisão das contas', P.supCorpo());
+};
+
+P.atualizaSuper = function () {
+  var dot = document.getElementById('avDot');
+  if (!dot) return;
+  if (P.temAchadoGrave()) dot.removeAttribute('hidden'); else dot.setAttribute('hidden', '');
+};
+
 /* ═══════════ SHELL ═══════════ */
 P.shell = function (active) {
   var e = P.esc;
   var items = [['dash', '📊', 'Dashboard', '/portfolio/index.html'], ['hold', '💎', 'HOLD', '/portfolio/hold.html'],
                ['defi', '🌊', 'DeFi', '/portfolio/defi.html'], ['trade', '⚡', 'Trade', '/portfolio/trade.html']];
+  var soon = [['rwa', '🏛', 'RWA'], ['meta', '🎯', 'Meta']];
   /* O plano é apenas EXIBIDO aqui. A fonte de verdade é o Firestore, lido
      por nexus-auth.js. Nunca torne isto editável pelo usuário. */
   var planoLbl = P.PLAN_LBL[P.planoAtual] || 'Grátis';
-  var side = '<aside class="sb"><a href="/" class="sb-logo"><div class="sb-logo-mark"><span>₿</span></div><div class="sb-logo-text">Mundo<em>DeFi</em></div></a>'
-    + '<div class="sb-sec">Portfólio</div>'
-    + items.map(function (it) { return '<a class="sb-item' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '"><span class="ico">' + it[1] + '</span>' + it[2] + '</a>'; }).join('')
-    + '<div class="sb-foot">'
-    + '<div class="sb-sync" id="sbSync">' + P.statusSync() + '</div>'
-    + '<a class="sb-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
-    + '<a class="sb-link" href="/">← Voltar ao site</a>'
-    + '<div class="sb-plan"><div class="sb-plan-ico">' + (P.isFree() ? '○' : '⚡') + '</div><div class="sb-plan-bd"><div class="sb-plan-lbl">Seu plano</div>'
-    + '<div class="sb-plan-val">' + e(planoLbl) + '</div></div>'
-    + (P.isFree() ? '<a class="sb-plan-cta" href="/planos.html">Assinar</a>' : '')
-    + '</div>'
-    + '</div></aside>';
+
+  var tabs = items.map(function (it) {
+    return '<a class="tnav-tab' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '" role="tab"'
+      + (active === it[0] ? ' aria-selected="true"' : ' aria-selected="false"') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
+  }).join('') + soon.map(function (it) {
+    return '<span class="tnav-tab soon" role="tab" aria-disabled="true"><span class="ico">' + it[1] + '</span>'
+      + it[2] + '<span class="tnav-badge">breve</span></span>';
+  }).join('');
+
   var carts = '<select class="fsel" id="cartSel"><option value="all">Todas as carteiras</option>'
     + P.st.carteiras.map(function (c) { return '<option value="' + c.id + '"' + (P.st.cfg.cart === c.id ? ' selected' : '') + '>' + e(c.nome) + '</option>'; }).join('') + '</select>';
-  var top = '<div class="mob-top"><button class="mob-burger" onclick="document.body.classList.toggle(\'snav\')">☰</button><div class="sb-logo-text" style="font-size:16px">Mundo<em>DeFi</em></div></div>'
-    + '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-right">'
+
+  var avMenu = '<div class="avmenu" id="avMenu" hidden>'
+    + '<div class="avmenu-sync" id="sbSync">' + P.statusSync() + '</div>'
+    + '<div class="avmenu-plan"><div><div class="avmenu-cap">Seu plano</div><div class="avmenu-val">' + e(planoLbl) + '</div></div>'
+    + (P.isFree() ? '<a class="btn btn-p" href="/planos.html">Assinar</a>' : '<span class="avmenu-pro">⚡ PRO</span>') + '</div>'
+    + '<a class="avmenu-link" href="#" id="sbSuper">🛡 Supervisão das contas</a>'
+    + '<a class="avmenu-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
+    + '<a class="avmenu-link" href="/">← Voltar ao site</a>'
+    + '</div>';
+
+  var header = '<header class="tnav">'
+    + '<a href="/" class="tnav-logo"><span class="tnav-mark">₿</span><span class="tnav-name">Mundo<em>DeFi</em></span></a>'
+    + '<nav class="tnav-tabs" role="tablist">' + tabs + '</nav>'
+    + '<div class="tnav-right">'
     + (P.st.carteiras.length ? carts : '')
     + '<div class="seg"><button id="mUsd" class="' + (P.st.cfg.moeda === 'usd' ? 'on' : '') + '">US$</button><button id="mBrl" class="' + (P.st.cfg.moeda === 'brl' ? 'on' : '') + '">R$</button></div>'
     + '<button class="btn btn-p" id="btnAdd">+ Adicionar</button>'
-    + '<div class="avatar" title="MundoDeFi">MD</div>'
-    + '</div><div class="top-sub" id="pgSub"></div></div><div id="pg"></div></main>'
+    + '<div class="avwrap"><button class="avatar" id="avBtn" aria-haspopup="true" aria-expanded="false" title="Conta">MD'
+    + '<span class="av-dot" id="avDot"' + (P.temAchadoGrave() ? '' : ' hidden') + '></span></button>' + avMenu + '</div>'
+    + '</div></header>';
+
+  var main = '<main class="main"><div class="top"><div class="pg-titulo" id="pgTitle"></div><div class="top-sub" id="pgSub"></div></div><div id="pg"></div></main>'
     + '<div class="mdl-bg" id="mdlBg"><div class="mdl" id="mdlBox"><div class="mdl-hd"><div class="mdl-title" id="mdlTitle"></div><button class="mdl-x" onclick="P.closeModal()">×</button></div><div class="mdl-bd" id="mdlBody"></div><div class="mdl-ft" id="mdlFoot"></div></div></div>';
-  document.getElementById('app').innerHTML = side + '<div style="flex:1;min-width:0">' + top + '</div>';
+
+  document.getElementById('app').innerHTML = header + main;
   document.body.dataset.view = active;
 
   var cs = document.getElementById('cartSel');
@@ -347,9 +408,19 @@ P.shell = function (active) {
     ev.preventDefault();
     if (confirm('Isso apaga TODAS as suas movimentações, aqui e na sua conta. Não dá para desfazer.\n\nTem certeza?')) P.clearAll();
   });
+  document.getElementById('sbSuper').addEventListener('click', P.abrirSupervisao);
+
+  var avBtn = document.getElementById('avBtn'), avEl = document.getElementById('avMenu');
+  avBtn.addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    if (avEl.hasAttribute('hidden')) { avEl.removeAttribute('hidden'); avBtn.setAttribute('aria-expanded', 'true'); }
+    else { avEl.setAttribute('hidden', ''); avBtn.setAttribute('aria-expanded', 'false'); }
+  });
+
   document.getElementById('mdlBg').addEventListener('click', function (ev) { if (ev.target === this) P.closeModal(); });
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') P.closeModal(); });
   document.addEventListener('click', function (ev) {
+    if (!ev.target.closest('.avwrap') && !avEl.hasAttribute('hidden')) { avEl.setAttribute('hidden', ''); avBtn.setAttribute('aria-expanded', 'false'); }
     if (ev.target.closest('.lockbtn') || ev.target.closest('.lockrow')) { P.upsell(); return; }
     var ex = ev.target.closest('[data-exp]');
     if (ex && P.exporters && P.exporters[ex.dataset.exp]) P.exporters[ex.dataset.exp]();
@@ -364,10 +435,16 @@ P.atualizaSync = function () {
 /* ═══════════ BOOT ═══════════ */
 P.boot = function (active, renderFn) {
   P.load();
+  /* Cura dados de antes da fase 2: posição sem depósito que a explique
+     vira caixa negativo, e o supervisor acusaria um erro que é da
+     migração, não do usuário. Idempotente — some sozinha quando não
+     há mais o que migrar, então pode rodar em todo boot. */
+  if (C.aberturaDeSaldo(P.st) > 0) P.save();
   P.render = renderFn;
   P.syncPlano();
   P.shell(active);
   Store.aoMudar(P.atualizaSync);
+  Store.aoMudar(P.atualizaSuper);
 
   P.loadRate().then(function () {
     renderFn();
@@ -385,6 +462,9 @@ P.boot = function (active, renderFn) {
     if (uid && Store.uid !== uid) {
       Store.entrar(uid).then(function (st) {
         P.st = st;
+        /* mesma cura do boot: dados da nuvem também podem ser de antes
+           da fase 2, e sem isso o caixa fica negativo até um F5. */
+        if (C.aberturaDeSaldo(P.st) > 0) P.save();
         P.shell(active); renderFn();
         P.loadPrices().then(function () {
           renderFn();
@@ -433,11 +513,324 @@ P.optCarteiras = function (sel) {
   }).join('');
 };
 
+/* ═══════════ caixa da carteira: cartão, ações e extrato ═══════════
+   A fase 1 desenhou a barra Investido/Caixa do cartão de carteira sem
+   ter caixa para preencher. Ela existe agora — sempre lida via
+   C.caixaDe, nunca guardada — e as quatro ações (depositar, sacar,
+   transferir, swap) são a interface para o ledger que a explica. */
+
+/* Trava de verdade — carteira sem caixa NÃO abre posição nem saca.
+   C.addMov fica burro de propósito (portfolio-core.js): ele é o
+   escritor bruto do ledger, e restaurar um backup replay a história
+   inteira, podendo legitimamente passar por uma compra antes do
+   depósito que a financiou. A trava não pode morar lá. Ela mora aqui,
+   no caminho de quem está criando dado NOVO pela tela: quando falta
+   caixa, mostra quanto falta e devolve false SEM gravar nada — quem
+   chama tem que checar o retorno e parar. */
+P.travaCaixa = function (cartId, usd) {
+  var pode = C.podeGastar(P.st, cartId, usd);
+  if (pode.ok) return true;
+  P.modal('Caixa insuficiente',
+    '<div class="err">Faltam <b>' + P.money(pode.falta) + '</b> no caixa de <b>' + P.esc(P.nomeCart(cartId)) + '</b> para este valor.</div>'
+    + '<div class="fhint">Deposite o que falta e tente de novo.</div>',
+    { footer: '<button class="btn btn-p" id="okFaltaDep">Depositar em ' + P.esc(P.nomeCart(cartId)) + '</button>' });
+  document.getElementById('okFaltaDep').onclick = function () { P.formDeposito(cartId); };
+  return false;
+};
+
+/* Cartão de uma carteira: total (posições + caixa) e a barra dividida
+   Investido | Caixa — roxo é o que está no mercado, ciano é o que está
+   parado à espera (cor de informação neutra, nunca verde/vermelho:
+   isto não é ganho ou perda). */
+P.wcardHTML = function (c) {
+  var e = P.esc;
+  var t = C.totais(P.st, P.precos, c.id);
+  var caixa = C.caixaDe(P.st, c.id);
+  /* t.patrimonio já inclui o caixa desta carteira (FIX 3, portfolio-core.js)
+     — somar de novo aqui contaria o mesmo dinheiro duas vezes. */
+  var total = t.patrimonio;
+  var base = t.investido + Math.max(caixa, 0);
+  var pctInv = base > 0 ? (t.investido / base * 100) : 0;
+  var pctCx = base > 0 ? (Math.max(caixa, 0) / base * 100) : 0;
+  var multi = P.st.carteiras.length >= 2;
+  return '<div class="wcard" data-cart="' + c.id + '">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+    + '<span style="font-weight:600">👛 ' + e(c.nome) + '</span>'
+    + '<span class="mono" style="font-weight:700">' + P.money(total) + '</span></div>'
+    + '<div class="wcard-bar"><span style="width:' + pctInv.toFixed(1) + '%"></span>'
+    + '<span class="seg-cx" style="width:' + pctCx.toFixed(1) + '%"></span></div>'
+    + '<div class="mc-sub">Investido ' + P.money(t.investido) + ' · Caixa <b class="' + (caixa < 0 ? 'down' : '') + '">' + P.money(caixa) + '</b></div>'
+    + '<div class="wcard-acts">'
+    + '<button class="btn btn-g btn-sm" data-wact="extrato">Extrato</button>'
+    + '<button class="btn btn-g btn-sm" data-wact="dep">+ Depositar</button>'
+    + '<button class="btn btn-g btn-sm" data-wact="saq">− Sacar</button>'
+    + (multi ? '<button class="btn btn-g btn-sm" data-wact="transf">⇄ Transferir</button>' : '')
+    + '<button class="btn btn-g btn-sm" data-wact="swap">↺ Swap</button>'
+    + '</div></div>';
+};
+
+/* Liga os botões de todo cartão de carteira presente na tela — funciona
+   para quantas carteiras houver, sem depender de IDs fixos por cartão. */
+P.wireWcards = function () {
+  document.querySelectorAll('.wcard[data-cart]').forEach(function (el) {
+    var id = el.dataset.cart;
+    el.querySelectorAll('[data-wact]').forEach(function (b) {
+      b.onclick = function () {
+        var a = b.dataset.wact;
+        if (a === 'extrato') P.verExtratoCarteira(id);
+        else if (a === 'dep') P.formDeposito(id);
+        else if (a === 'saq') P.formSaque(id);
+        else if (a === 'transf') P.formTransferirCarteira(id);
+        else if (a === 'swap') P.formSwap(id);
+      };
+    });
+  });
+};
+
+P.formDeposito = function (cartId) {
+  P.modal('Depositar — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota" placeholder="Ex: Aporte mensal"></div>',
+    { footer: '<button class="btn btn-p" id="okCx">Depositar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    C.addMov(P.st, { tipo: 'deposito', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+P.formSaque = function (cartId) {
+  P.modal('Sacar — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota"></div>'
+    + '<div class="fhint">Caixa disponível: ' + P.money(C.caixaDe(P.st, cartId)) + '</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Sacar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    if (!P.travaCaixa(cartId, usd)) return;
+    C.addMov(P.st, { tipo: 'saque', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+/* Só é chamada quando o cartão já decidiu mostrar o botão (2+ carteiras),
+   mas confere de novo aqui — nenhuma trava nova, é a mesma regra do
+   P.limCart()/P.upsell() que já existe para criar a 2ª carteira. */
+P.formTransferirCarteira = function (cartId) {
+  var outras = P.st.carteiras.filter(function (c) { return c.id !== cartId; });
+  if (!outras.length) return;
+  P.modal('Transferir — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Para</label><select id="fTrPara">' + outras.map(function (c) {
+      return '<option value="' + c.id + '">' + P.esc(c.nome) + '</option>';
+    }).join('') + '</select></div>'
+    + '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota"></div>'
+    + '<div class="fhint">Caixa disponível: ' + P.money(C.caixaDe(P.st, cartId)) + '</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Transferir</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    var r = C.transferir(P.st, { de: cartId, para: P.val('fTrPara'), usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    if (!r.ok) return alert('Caixa insuficiente. Faltam ' + P.money(r.falta) + '.');
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+P.formSwap = function (cartId) {
+  P.modal('Troca de ativo — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor da troca (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(ex: 0,5 SOL → 75 USDC)</small></label><input id="fCxNota" placeholder="O que trocou por quê"></div>'
+    + '<div class="fhint">Swap é só um registro: trocar um ativo por outro dentro da carteira não move o caixa.</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Registrar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    C.addMov(P.st, { tipo: 'swap', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+/* Extrato de UMA carteira, em ordem cronológica, com saldo corrente —
+   a prova visual de que o caixa é consequência dos eventos, não um
+   campo editável. */
+P.verExtratoCarteira = function (cartId) {
+  var e = P.esc;
+  var movs = C.movsDe(P.st, { cart: cartId });
+  var saldo = 0;
+  var linhas = movs.map(function (m) {
+    var t = C.TIPOS[m.tipo] || {};
+    var s = (m.tipo === 'transf') ? (m.px < 0 ? -1 : 1) : (t.sinal || 0);
+    var delta = s * m.usd;
+    saldo += delta;
+    var cls = delta > 0 ? 'up' : (delta < 0 ? 'down' : '');
+    var sinal = delta > 0 ? '+' : (delta < 0 ? '−' : '');
+    return '<tr><td class="mono" style="color:var(--mut)">' + P.dBR(m.dt) + '</td>'
+      + '<td>' + e(t.lbl || m.tipo) + (m.nota ? '<small class="blk">' + e(m.nota) + '</small>' : '') + '</td>'
+      + '<td class="num mono ' + cls + '">' + sinal + P.money(Math.abs(delta)) + '</td>'
+      + '<td class="num mono ' + (saldo < 0 ? 'down' : '') + '">' + P.money(saldo) + '</td></tr>';
+  }).join('');
+
+  P.modal('Extrato — ' + e(P.nomeCart(cartId)),
+    '<div class="tblw"><table style="min-width:520px"><thead><tr><th>Data</th><th>Tipo</th><th class="num">Valor</th><th class="num">Saldo</th></tr></thead><tbody>'
+    + (linhas || '<tr><td colspan="4"><div class="empty">Nenhuma movimentação nesta carteira</div></td></tr>')
+    + '</tbody></table></div>',
+    { wide: true });
+};
+
 /* ══════════════════════════════════════════════════════════════════
    DASHBOARD
    ══════════════════════════════════════════════════════════════════ */
 P.saud = function () { var h = new Date().getHours(); return h < 6 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; };
 P.periodo = '30d';
+
+/* ═══════════ PRÉVIA DESLOGADA — peças compartilhadas ═══════════
+   Dashboard, HOLD, DeFi e Trade usam as MESMAS tres pecas: a nota do topo,
+   os dois banners (gratis e PRO) e o wiring do login. Elas vivem aqui uma
+   vez so — quatro copias divergiriam no primeiro ajuste de texto. */
+P.demoNote = function () {
+  return '<div class="demo-note"><span class="demo-dot"></span> Você está vendo um <b>exemplo</b>. '
+    + '<a href="#" id="demoTop">Entre</a> para acompanhar o seu — grátis com uma carteira.</div>';
+};
+
+P.duoBanners = function () {
+  /* O par de banners e' do site inteiro (banner.js), nao do portfolio. */
+  return window.MDFBanner ? MDFBanner.duo() : '';
+};
+
+/* Liga os dois gatilhos de login da prévia (nota do topo e botão do banner). */
+P.duoWire = function () {
+  var entrar = function () { if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  if (window.MDFBanner) MDFBanner.wire(entrar, ['demoTop']);
+};
+
+/* Deslogado e sem dados? A tela mostra a prévia em vez do estado vazio. */
+P.modoDemo = function () { return !(window.NexusAuth && window.NexusAuth.user); };
+
+/* PRÉVIA para quem chega deslogado e sem dados: em vez de tela crua OU de
+   um cadeado na cara, mostra o dashboard CHEIO com dados de EXEMPLO (cor
+   normal, nada de escurecer) pra pessoa ver o produto, com uma nota discreta
+   no topo e um convite amigavel EMBAIXO. Uma carteira e' gratis; o login
+   serve pra ver os SEUS numeros e sincronizar. */
+P.vDashTeaser = function () {
+  var demo = ''
+    + P.demoNote()
+    + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
+    +   '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
+    +   '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
+    + '<div class="kpis">'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
+    + '</div>'
+    + '<div class="grid2b">'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
+    +     '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
+    +     '<div class="card-bd"><div class="tzbar">'
+    +       '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
+    +       '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
+    +       '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
+    +       '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
+    +     '</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div></div>'
+    +   '<div class="card-bd"><div class="wcards">'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 Phantom</span><span class="mono" style="font-weight:700">$10.300</span></div><div class="wcard-bar"><span style="width:55%"></span></div><div class="mc-sub">55,0% do patrimônio</div></div>'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 MetaMask</span><span class="mono" style="font-weight:700">$8.440</span></div><div class="wcard-bar"><span style="width:45%"></span></div><div class="mc-sub">45,0% do patrimônio</div></div>'
+    +   '</div></div></div>'
+    + P.duoBanners();
+  document.getElementById('pg').innerHTML = demo;
+  P.duoWire();
+  P.mkChart('chEvoDemo', {
+    type: 'line',
+    data: { labels: ['','','','','','','','','','','',''],
+      datasets: [{ data: [100, 104, 102, 110, 116, 113, 124, 131, 127, 142, 150, 161],
+        borderColor: '#22D3EE', borderWidth: 2.2, pointRadius: 0, tension: .35, fill: true,
+        backgroundColor: function (c) { var ch = c.chart, g = ch.ctx.createLinearGradient(0, 0, 0, ch.height || 300); g.addColorStop(0, 'rgba(34,211,238,.30)'); g.addColorStop(1, 'rgba(34,211,238,0)'); return g; } }] },
+    options: { responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { enabled: false } },
+      scales: { x: { grid: { display: false }, ticks: { display: false } }, y: { grid: P.gGrid(), ticks: { display: false } } } }
+  });
+};
+
+/* Prévias dos módulos: mesma ideia do dashboard — números de exemplo nos
+   componentes reais da tela, nota no topo e os dois banners embaixo. */
+P.vHoldTeaser = function () {
+  var linha = function (tk, ic, cor, bg, qtd, pm, pa, val, res, pct) {
+    return '<tr><td><div class="tk"><span class="ic" style="background:' + bg + ';color:' + cor + '">' + ic + '</span>'
+      + '<div><div style="font-weight:600">' + tk + '</div><div class="q">exemplo</div></div></div></td>'
+      + '<td class="r mono">' + qtd + '</td><td class="r mono" style="color:var(--mut)">' + pm + '</td>'
+      + '<td class="r mono">' + pa + '</td><td class="r mono">' + val + '</td>'
+      + '<td class="r mono up">' + res + '<div style="font-size:11px;font-weight:400">' + pct + '</div></td></tr>';
+  };
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">Valor em HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">3 ativos</div></div>'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">Investido</div><div class="kpi-v mono">$9.900</div><div class="mc-sub">custo das posições abertas</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Não realizado</div><div class="kpi-v mono up">+$2.580</div><div class="mc-sub"><span class="up">+26,1%</span></div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Realizado</div><div class="kpi-v mono up">+$1.980</div><div class="mc-sub">de vendas já feitas</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Ativo</th>'
+    +   '<th class="r">Qtd</th><th class="r">Preço médio</th><th class="r">Preço atual</th><th class="r">Valor</th><th class="r">Não realizado</th></tr></thead><tbody>'
+    +   linha('BTC', '₿', 'var(--gold,#F5B614)', 'var(--gold-soft)', '0,08', '$61.200', '$67.800', '$5.424', '+$528', '+10,8%')
+    +   linha('SOL', '◎', 'var(--purple-txt,#A96BFF)', 'var(--purple-soft)', '25,0', '$132,40', '$168,20', '$4.205', '+$895', '+27,0%')
+    +   linha('ETH', 'Ξ', 'var(--blue,#4D9FFF)', 'var(--mdf-blue-soft,rgba(77,159,255,.12))', '0,85', '$3.010', '$3.340', '$2.839', '+$280', '+11,0%')
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
+P.vDefiTeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">Valor em pools</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">capital aplicado: $3.900</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">Taxas coletadas</div><div class="kpi-v mono">$180</div><div class="mc-sub">renda real em dólar</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Resultado DeFi</div><div class="kpi-v mono up">+$480</div><div class="mc-sub">pools abertas + encerradas</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">APR médio das taxas</div><div class="kpi-v mono">18,4%</div><div class="mc-sub">2 pools abertas</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Posição</th>'
+    +   '<th class="r">Capital</th><th class="r">Taxas</th><th class="r">APR real</th><th class="r">Resultado</th></tr></thead><tbody>'
+    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--purple-soft);color:var(--purple-txt,#A96BFF)">◎</span>'
+    +     '<div><div style="font-weight:600">SOL/USDC</div><div class="q">Orca · Solana</div></div></div></td>'
+    +     '<td class="r mono">$2.400</td><td class="r mono up">+$118</td><td class="r mono">19,1%</td><td class="r mono up">+$312</td></tr>'
+    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--cyan-soft);color:var(--cyan,#00E5FF)">🏦</span>'
+    +     '<div><div style="font-weight:600">USDC</div><div class="q">Kamino · lending</div></div></div></td>'
+    +     '<td class="r mono">$1.500</td><td class="r mono up">+$62</td><td class="r mono">8,4%</td><td class="r mono up">+$168</td></tr>'
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
+P.vTradeTeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Banca atual</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">aportado: $1.800</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Resultado dos trades</div><div class="kpi-v mono up">+$260</div><div class="mc-sub"><span class="up">+14,4%</span> sobre o aportado</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Win rate</div><div class="kpi-v mono">62%</div><div class="mc-sub">8 ganhos · 5 perdas</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Expectativa / operação</div><div class="kpi-v mono up">+$20,00</div><div class="mc-sub">quanto se espera ganhar por trade</div></div>'
+    + '</div>'
+    + '<div class="kpis">'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Profit factor</div><div class="kpi-v mono up">1,90</div><div class="mc-sub">sistema ganhador</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Payoff</div><div class="kpi-v mono">1,45</div><div class="mc-sub">ganho médio $78,00</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Drawdown máximo</div><div class="kpi-v mono">6,2%</div><div class="mc-sub">maior perda $54,00</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Operações</div><div class="kpi-v mono">13</div><div class="mc-sub">amostra ainda pequena</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Operações</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Data</th>'
+    +   '<th>Ativo</th><th>Direção</th><th class="r">Alav.</th><th class="r">Resultado</th></tr></thead><tbody>'
+    +   '<tr><td class="mono">12/08</td><td style="font-weight:600">BTC</td><td>Long</td><td class="r mono">3x</td><td class="r mono up">+$120</td></tr>'
+    +   '<tr><td class="mono">09/08</td><td style="font-weight:600">SOL</td><td>Short</td><td class="r mono">2x</td><td class="r mono down">−$54</td></tr>'
+    +   '<tr><td class="mono">05/08</td><td style="font-weight:600">ETH</td><td>Long</td><td class="r mono">2x</td><td class="r mono up">+$96</td></tr>'
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
 
 P.vDash = function () {
   var e = P.esc, T = P.totais();
@@ -451,6 +844,10 @@ P.vDash = function () {
   };
 
   if (T.vazio) {
+    /* Deslogado e sem dados: mostra a PRÉVIA (dados de exemplo) com convite a
+       entrar — os numeros reais so aparecem logado. Quem ja tem dados locais
+       (sem login) NAO cai aqui, porque T.vazio fica falso. */
+    if (P.modoDemo()) { P.vDashTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Seu portfólio começa aqui',
       'Registre sua primeira compra e o MundoDeFi passa a calcular patrimônio, preço médio, lucro realizado e não realizado — atualizados com a cotação do mercado.',
@@ -472,28 +869,35 @@ P.vDash = function () {
   var serie = C.serie(P.st, P.periodo);
   var html = P.avisoPrecos();
 
-  /* ═══ BLOCO PRINCIPAL: patrimônio e resultado juntos ═══
-     Separar "quanto eu tenho" de "quanto eu ganhei" obriga o olho a
-     cruzar informação entre dois cantos da tela. */
-  html += '<div class="mgrid">'
-    + P.cardNeutro('Patrimônio total', P.money(T.patrimonio), 'var(--purple,#9945FF)',
-        'HOLD + DeFi + Trade', T.patrimonio)
-    + P.cardNeutro('Investido', P.money(T.investido), 'var(--mut2,#5D6880)',
-        'custo das posições abertas', T.investido)
-    + P.card('Não realizado', P.money(T.naoRealizado), 'var(--cyan,#00E5FF)',
-        '<span class="' + P.cls(T.rentAberta) + '">' + P.pct(T.rentAberta) + '</span> sobre o investido', T.naoRealizado)
-    + P.card('Realizado', P.money(T.realizado), 'var(--green,#14F195)',
-        'lucro que você já materializou', T.realizado)
-    + '</div>';
+  /* ═══ HERÓI: patrimônio total, não realizado e realizado subordinado ═══
+     O número que a pessoa veio ver primeiro, seguido do que está em
+     aberto agora — o realizado fica subordinado porque já é passado. */
+  html += '<div class="hero">'
+    + '<div><div class="mc-lbl">Patrimônio total</div>'
+    + '<div class="hero-big mono" data-cv="' + T.patrimonio + '" data-t="m">' + P.money(T.patrimonio) + '</div>'
+    + '<div class="mc-sub">HOLD + DeFi + Trade + Caixa</div></div>'
+    + '<div style="text-align:right">'
+    + '<div class="mc-lbl">Não realizado</div>'
+    + '<div class="mc-val ' + P.cls(T.naoRealizado) + '" data-cv="' + T.naoRealizado + '" data-t="m">' + P.money(T.naoRealizado) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(T.rentAberta) + '">' + P.pct(T.rentAberta) + '</span> sobre o investido'
+    + ' · realizado: <b class="' + P.cls(T.realizado) + '">' + P.money(T.realizado) + '</b></div>'
+    + '</div></div>';
 
-  html += '<div class="resumo-bar">'
-    + '<div><span class="rb-lbl">Resultado total</span><b class="' + P.cls(T.resultadoTotal) + '">' + P.money(T.resultadoTotal) + '</b>'
-    + '<small>realizado + não realizado</small></div>'
-    + '<div><span class="rb-lbl">Retorno anualizado <i class="hint" title="XIRR: considera quando cada aporte entrou. É a métrica honesta quando você aporta em datas diferentes — quem comprou na baixa não aparece igual a quem comprou no topo.">?</i></span>'
-    + (xirr == null ? '<b class="mut">—</b><small>precisa de mais histórico</small>'
-                    : '<b class="' + P.cls(xirr) + '">' + P.pct(xirr) + '</b><small>ao ano, ponderado pelo tempo</small>') + '</div>'
-    + '<div><span class="rb-lbl">Taxas DeFi coletadas</span><b style="color:var(--cyan,#00E5FF)">' + P.money(T.taxasDeFi) + '</b>'
-    + '<small>já incluídas no realizado</small></div>'
+  /* ═══ KPIS: os 4 pilares do patrimônio ═══ */
+  html += '<div class="kpis">'
+    + '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div>'
+    + '<div class="kpi-v" data-cv="' + T.hold.valor + '" data-t="m">' + P.money(T.hold.valor) + '</div>'
+    + '<div class="mc-sub">investido: ' + P.money(T.hold.custo) + '</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div>'
+    + '<div class="kpi-v" data-cv="' + T.defi.valor + '" data-t="m">' + P.money(T.defi.valor) + '</div>'
+    + '<div class="mc-sub">taxas coletadas: ' + P.money(T.defi.taxas) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Trade</div>'
+    + '<div class="kpi-v" data-cv="' + T.trade.valor + '" data-t="m">' + P.money(T.trade.valor) + '</div>'
+    + '<div class="mc-sub">resultado: <span class="' + P.cls(T.trade.realizado) + '">' + P.money(T.trade.realizado) + '</span></div></div>'
+    + '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div>'
+    + '<div class="kpi-v ' + P.cls(T.resultadoTotal) + '" data-cv="' + T.resultadoTotal + '" data-t="m">' + P.money(T.resultadoTotal) + '</div>'
+    + '<div class="mc-sub">' + (xirr == null ? 'sem XIRR — precisa de mais histórico'
+        : '<span class="' + P.cls(xirr) + '">' + P.pct(xirr) + '</span> ao ano (XIRR)') + '</div></div>'
     + '</div>';
 
   /* ═══ EVOLUÇÃO ═══ */
@@ -505,40 +909,38 @@ P.vDash = function () {
   var varTxt = serie.suficiente
     ? '<span class="' + P.cls(serie.variacao) + '">' + P.money(serie.variacao) + ' (' + P.pct(serie.variacaoPct) + ')</span> no período'
     : '';
-  html += (serie.suficiente
-    ? '<div class="card"><div class="card-hd"><div><div class="card-title">Evolução do patrimônio</div>'
-      + (varTxt ? '<div class="card-sub">' + varTxt + '</div>' : '')
-      + '</div><div class="right">' + segs + '</div></div>'
-      + '<div class="card-bd"><div class="chart-box"><canvas id="chEvo"></canvas></div></div></div>'
-    : '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div><div class="right">' + segs + '</div></div>'
-      + '<div class="card-bd">' + P.vazio('Ainda não há histórico',
-          'O gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.', '')
-      + '</div></div>');
+  html += '<div class="card"><div class="card-hd"><div><div class="card-title">Evolução do patrimônio</div>'
+    + (varTxt ? '<div class="card-sub">' + varTxt + '</div>' : '')
+    + '</div><div class="right">' + segs + '</div></div>'
+    + '<div class="card-bd">' + (serie.suficiente
+        ? '<div class="chart-box"><canvas id="chEvo"></canvas></div>'
+        /* estado vazio discreto: não precisa de tela cheia pra dizer "volte amanhã" */
+        : '<div class="empty">Ainda não há histórico — o gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.</div>')
+    + '</div></div>';
+
+  /* ═══ carteiras: total (posições + caixa) e a barra Investido | Caixa —
+     a fase 1 desenhou esta barra sem ter o que preencher; caixa é o que
+     faltava. ═══ */
+  var wcards = P.st.carteiras.map(function (c) { return P.wcardHTML(c); }).join('');
+
+  html += '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div>'
+    + '<div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
+    + '<div class="card-bd"><div class="wcards">' + (wcards || '<div class="empty">Nenhuma carteira ainda</div>') + '</div></div></div>';
 
   /* ═══ ONDE ESTÁ MEU RISCO ═══
      Barra empilhada no lugar do donut: com 8 posições o donut vira um
      anel de fatias finas que ninguém compara. A barra mantém a leitura. */
   html += '<div class="grid2b">' + P.blocoConcentracao(conc) + P.blocoContribuicao(contrib) + '</div>';
 
-  /* ═══ carteiras + movimentações ═══ */
-  var carts = P.st.carteiras.map(function (c) {
-    var t = C.totais(P.st, P.precos, c.id);
-    return '<div class="rank-row" style="padding:.7rem 1.1rem"><span style="font-size:15px">👛</span>'
-      + '<span class="rank-name">' + e(c.nome) + '</span><span class="rank-val">' + P.money(t.patrimonio) + '</span></div>';
-  }).join('');
-
+  /* ═══ últimas movimentações ═══ */
   var ev = P.eventos(), lim = Math.min(P.histLim(), 8);
   var evH = ev.slice(0, lim).map(function (x) {
     return '<div class="tl-item"><span class="tl-date">' + P.dBR(x.dt) + '</span><span class="tl-txt">' + x.txt + '</span></div>';
   }).join('');
 
-  html += '<div class="grid2b">'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div><div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
-    + (carts || '<div class="empty">Nenhuma carteira ainda</div>') + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div>'
+  html += '<div class="card"><div class="card-hd"><div class="card-title">Últimas movimentações</div>'
     + '<div class="right"><button class="btn btn-g btn-sm" id="btnExtrato">Ver extrato →</button></div></div>'
-    + '<div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>'
-    + '</div>';
+    + '<div class="card-bd" style="padding:.6rem 1.15rem"><div class="tl">' + (evH || '<div class="empty">Sem movimentações</div>') + '</div></div></div>';
 
   html += P.tabelaAtivos(P.posicoes(), true);
   html += P.planosCTA();
@@ -549,6 +951,7 @@ P.vDash = function () {
     P.formCarteira();
   };
   document.getElementById('btnExtrato').onclick = P.verExtrato;
+  P.wireWcards();
   document.querySelectorAll('[data-per]').forEach(function (b) {
     b.onclick = function () { P.periodo = b.dataset.per; P.render(); };
   });
@@ -836,7 +1239,7 @@ P.tabelaAtivos = function (pos, compacta) {
 
   var html = '<div class="card"><div class="card-hd"><div class="card-title">' + (compacta ? 'Ativos em HOLD' : 'Posições abertas') + '</div>'
     + '<div class="right">' + (compacta ? '<a class="btn btn-g btn-sm" href="/portfolio/hold.html">Gerenciar →</a>' : P.exportBtn('hold')) + '</div></div>'
-    + '<div class="tblw"><table style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
+    + '<div class="tblw"><table class="dtable" style="min-width:' + (compacta ? 700 : 900) + 'px"><thead>' + head + '</thead><tbody>'
     + (rows || '<tr><td colspan="' + (compacta ? 6 : 8) + '"><div class="empty">Nenhuma posição aberta</div></td></tr>')
     + '</tbody></table></div></div>';
 
@@ -914,16 +1317,22 @@ P.formTx = function (pre) {
     var dt = P.val('fDt') || C.hoje(), tipo = P.val('fT') || 'compra';
     if (!q || q <= 0) return alert('Informe a quantidade.');
     if (pr < 0) return alert('O preço não pode ser negativo.');
-    var a;
+    var a, ativoNovo = false;
     if (aid === '__novo') {
       var tk = P.val('fTk').toUpperCase();
       if (!tk) return alert('Informe o ticker do ativo.');
       a = { id: C.uid(), tk: tk, cg: P.val('fCg').toLowerCase(), cart: P.val('fCart') || P.st.carteiras[0].id, last: pr, lastAt: null };
-      P.st.ativos.push(a);
+      ativoNovo = true;
     } else {
       a = P.st.ativos.filter(function (x) { return x.id === aid; })[0];
       if (!a) return;
     }
+    /* compra tira do caixa (qtd × preço + taxa); venda devolve, sem checagem.
+       A trava tem que rodar ANTES de tocar em qualquer array — senão um
+       "＋ Novo ativo…" recusado pela trava deixava o ativo órfão em
+       memória, e o próximo P.save() qualquer o gravava vazio pra sempre. */
+    if (tipo === 'compra' && !P.travaCaixa(a.cart, q * pr + fee)) return;
+    if (ativoNovo) P.st.ativos.push(a);
     C.addMov(P.st, { tipo: tipo, ref: a.id, cart: a.cart, qtd: q, px: pr, fee: fee, dt: dt });
     P.save(); P.closeModal(); P.render();
     P.loadPrices().then(P.render);
@@ -937,6 +1346,7 @@ P.vHold = function () {
 
   var pos = P.posicoes();
   if (!pos.length) {
+    if (P.modoDemo()) { P.vHoldTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhum ativo registrado',
       'Registre sua primeira compra. A partir dela o MundoDeFi calcula preço médio ponderado, quanto você já realizou de lucro e quanto ainda está em aberto.',
@@ -956,11 +1366,20 @@ P.vHold = function () {
   var rent = custo > 0 ? naoReal / custo * 100 : 0;
 
   var html = P.avisoPrecos();
-  html += '<div class="mgrid">'
-    + P.cardNeutro('Valor em HOLD', P.money(valor), 'var(--gold,#F5B614)', null, valor)
-    + P.cardNeutro('Investido', P.money(custo), 'var(--mut2,#5D6880)', 'custo das posições abertas', custo)
-    + P.card('Não realizado', P.money(naoReal), 'var(--cyan,#00E5FF)', '<span class="' + P.cls(rent) + '">' + P.pct(rent) + '</span>', naoReal)
-    + P.card('Realizado', P.money(real), 'var(--green,#14F195)', 'de vendas já feitas', real)
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard, com o
+     acento roxo (k-hold) que identifica esta tela ═══ */
+  html += '<div class="kpis">'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Valor em HOLD</div>'
+    + '<div class="kpi-v" data-cv="' + valor + '" data-t="m">' + P.money(valor) + '</div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Investido</div>'
+    + '<div class="kpi-v" data-cv="' + custo + '" data-t="m">' + P.money(custo) + '</div>'
+    + '<div class="mc-sub">custo das posições abertas</div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Não realizado</div>'
+    + '<div class="kpi-v ' + P.cls(naoReal) + '" data-cv="' + naoReal + '" data-t="m">' + P.money(naoReal) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(rent) + '">' + P.pct(rent) + '</span></div></div>'
+    + '<div class="kpi k-hold"><div class="mc-lbl">Realizado</div>'
+    + '<div class="kpi-v ' + P.cls(real) + '" data-cv="' + real + '" data-t="m">' + P.money(real) + '</div>'
+    + '<div class="mc-sub">de vendas já feitas</div></div>'
     + '</div>';
 
   html += '<div class="grid2b">' + P.grafCard('chHA', 'Alocação por ativo', true) + P.grafCard('chHL', 'Resultado por ativo', true) + '</div>';
@@ -1149,6 +1568,7 @@ P.formPool = function () {
     var par = P.val('fPar').toUpperCase(); if (!par) return alert('Informe o par da pool.');
     var dep = P.num('fDep'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (dep && !P.travaCaixa(cart, dep)) return;
     var pp = P.partesDoPar(par);
     var p = {
       id: C.uid(), par: par, proto: P.val('fProto') || '—', chain: P.val('fChain') || '—',
@@ -1209,6 +1629,7 @@ P.poolAcao = function (p, tipo) {
     var dt = P.val('aDt') || C.hoje(), usd = P.num('aUsd'), txt = P.val('aTxt'), tok = P.val('aTok');
     if (cfg[2]) {
       if (!usd) return alert('Informe o valor.');
+      if (tipo === 'dep' && !P.travaCaixa(p.cart, usd)) return;
       C.addMov(P.st, { tipo: cfg[2], ref: p.id, cart: p.cart, usd: usd, dt: dt, nota: tok });
       /* o valor atual acompanha aportes e retiradas */
       if (tipo === 'dep') p.cur.usd = (Number(p.cur.usd) || 0) + usd;
@@ -1358,6 +1779,7 @@ P.formLend = function () {
     var tk = P.val('fTk').toUpperCase(); if (!tk) return alert('Informe o token.');
     var usd = P.num('fUsd'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (usd && !P.travaCaixa(cart, usd)) return;
     var l = { id: C.uid(), plat: P.val('fPlat') || '—', chain: P.val('fChain') || '—', tipo: P.val('fTipo') || 's', tk: tk, cart: cart, apy: P.num('fApy'), st: 'a', ab: dt };
     P.st.lend.push(l);
     if (usd) C.addMov(P.st, { tipo: 'lend_sup', ref: l.id, cart: cart, usd: usd, dt: dt });
@@ -1420,6 +1842,7 @@ P.vDefi = function () {
 
   var pools = P.poolsFiltradas(), lends = P.lendFiltrado();
   if (!pools.length && !lends.length) {
+    if (P.modoDemo()) { P.vDefiTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma posição DeFi',
       'Registre uma pool de liquidez ou uma posição de lending. O MundoDeFi acompanha capital, taxas coletadas e o APR que você está realmente obtendo — não o APR anunciado.',
@@ -1441,11 +1864,21 @@ P.vDefi = function () {
   abertas.forEach(function (p) { var R = C.poolResultado(P.st, p); aprMedio += R.aprFees * R.dep; somaDias += R.dep; });
   aprMedio = somaDias > 0 ? aprMedio / somaDias : 0;
 
-  var html = '<div class="mgrid">'
-    + P.cardNeutro('Valor em pools', P.money(valor), 'var(--green,#14F195)', capital ? 'capital aplicado: ' + P.money(capital) : null, valor)
-    + P.cardNeutro('Taxas coletadas', P.money(taxas), 'var(--cyan,#00E5FF)', 'renda real em dólar', taxas)
-    + P.card('Resultado DeFi', P.money(resultado), 'var(--purple,#9945FF)', 'pools abertas + encerradas', resultado)
-    + P.cardNeutro('APR médio das taxas', aprMedio.toFixed(1) + '%', 'var(--gold,#F5B614)', abertas.length + ' pool(s) aberta(s)', aprMedio, 'n')
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard/HOLD, com o
+     acento ciano (k-defi) que identifica esta tela ═══ */
+  var html = '<div class="kpis">'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Valor em pools</div>'
+    + '<div class="kpi-v" data-cv="' + valor + '" data-t="m">' + P.money(valor) + '</div>'
+    + (capital ? '<div class="mc-sub">capital aplicado: ' + P.money(capital) + '</div>' : '') + '</div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Taxas coletadas</div>'
+    + '<div class="kpi-v" data-cv="' + taxas + '" data-t="m">' + P.money(taxas) + '</div>'
+    + '<div class="mc-sub">renda real em dólar</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">Resultado DeFi</div>'
+    + '<div class="kpi-v ' + P.cls(resultado) + '" data-cv="' + resultado + '" data-t="m">' + P.money(resultado) + '</div>'
+    + '<div class="mc-sub">pools abertas + encerradas</div></div>'
+    + '<div class="kpi k-defi"><div class="mc-lbl">APR médio das taxas</div>'
+    + '<div class="kpi-v" data-cv="' + aprMedio + '" data-t="n">' + aprMedio.toFixed(1) + '%</div>'
+    + '<div class="mc-sub">' + abertas.length + ' pool(s) aberta(s)</div></div>'
     + '</div>';
 
   html += '<div class="tabs"><button class="tab' + (P.dTab === 'pools' ? ' on' : '') + '" data-t="pools">🌊 Pools</button>'
@@ -1469,7 +1902,7 @@ P.vDefi = function () {
           + '<td class="num"><span class="res-pill ' + (R.resultado >= 0 ? 'res-up' : 'res-dn') + '">' + P.money(R.resultado) + ' <small>' + P.pct(R.resultadoPct) + '</small></span></td></tr>';
       }).join('');
       html += '<div class="sb-sec" style="padding-left:0;margin-top:1rem">Histórico — pools encerradas</div>'
-        + '<div class="card"><div class="tblw"><table style="min-width:760px"><thead><tr><th>Pool</th><th>Chain</th><th>Período</th><th class="num">Depositado</th><th class="num">Taxas</th><th class="num">Resultado</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
+        + '<div class="card"><div class="tblw"><table class="dtable" style="min-width:760px"><thead><tr><th>Pool</th><th>Chain</th><th>Período</th><th class="num">Depositado</th><th class="num">Taxas</th><th class="num">Resultado</th></tr></thead><tbody>' + rows + '</tbody></table></div></div>';
     }
   }
 
@@ -1486,7 +1919,7 @@ P.vDefi = function () {
             ? '<button class="btn btn-g btn-sm" data-lj="' + l.id + '">+ Juros</button> <button class="btn btn-g btn-sm" data-le="' + l.id + '">Encerrar</button>'
             : '<span class="badge b-closed">Encerrada</span>') + '</td></tr>';
     }).join('');
-    html += '<div class="card"><div class="tblw"><table style="min-width:820px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Token</th><th class="num">Principal</th><th class="num">APY inf.</th><th class="num">Juros reais</th><th></th></tr></thead><tbody>'
+    html += '<div class="card"><div class="tblw"><table class="dtable" style="min-width:820px"><thead><tr><th>Plataforma</th><th>Chain</th><th>Tipo</th><th>Token</th><th class="num">Principal</th><th class="num">APY inf.</th><th class="num">Juros reais</th><th></th></tr></thead><tbody>'
       + (rowsL || '<tr><td colspan="8"><div class="empty">Nenhuma posição</div></td></tr>') + '</tbody></table></div></div>';
   }
 
@@ -1570,7 +2003,9 @@ P.formBanca = function (tipo) {
     { footer: '<button class="btn btn-p" id="okB">Salvar</button>' });
   document.getElementById('okB').onclick = function () {
     var v = P.num('fV'); if (!v || v <= 0) return alert('Informe um valor positivo.');
-    C.addMov(P.st, { tipo: dep ? 'trade_dep' : 'trade_saq', cart: P.val('fCart') || P.st.carteiras[0].id, usd: v, dt: P.val('fDt') || C.hoje() });
+    var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (dep && !P.travaCaixa(cart, v)) return;
+    C.addMov(P.st, { tipo: dep ? 'trade_dep' : 'trade_saq', cart: cart, usd: v, dt: P.val('fDt') || C.hoje() });
     P.save(); P.closeModal(); P.render();
   };
 };
@@ -1582,6 +2017,7 @@ P.vTrade = function () {
   document.getElementById('btnAdd').onclick = P.formOp;
 
   if (!S.n && !S.depositos) {
+    if (P.modoDemo()) { P.vTradeTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma operação registrada',
       'Aporte na banca e registre suas operações. Você passa a ver win rate, profit factor, expectativa por operação e drawdown máximo — as métricas que dizem se o sistema é ganhador.',
@@ -1592,27 +2028,34 @@ P.vTrade = function () {
     return;
   }
 
-  var html = '<div class="mgrid">'
-    + P.cardNeutro('Banca atual', P.money(S.banca), 'var(--purple,#9945FF)',
-        'aportado: ' + P.money(S.depositos) + (S.saques ? ' · sacado: ' + P.money(S.saques) : ''), S.banca)
-    + P.card('Resultado dos trades', P.money(S.resultado), 'var(--green,#14F195)',
-        '<span class="' + P.cls(S.rentabilidade) + '">' + P.pct(S.rentabilidade) + '</span> sobre o aportado', S.resultado)
-    + P.cardNeutro('Win rate', S.winRate.toFixed(0) + '%', 'var(--cyan,#00E5FF)',
-        S.vitorias + ' ganhos · ' + S.derrotas + ' perdas', S.winRate, 'n')
-    + P.card('Expectativa / operação', P.money(S.expectativa), 'var(--gold,#F5B614)',
-        'quanto se espera ganhar por trade', S.expectativa)
-    + '</div>';
-
-  /* Métricas que separam sistema ganhador de sorte. */
-  html += '<div class="resumo-bar resumo-4">'
-    + '<div><span class="rb-lbl">Profit factor <i class="hint" title="Soma dos ganhos dividida pela soma das perdas. Acima de 1 o sistema ganha dinheiro; abaixo, perde.">?</i></span>'
-    + '<b class="' + (S.profitFactor >= 1 ? 'up' : 'down') + '">' + (S.profitFactor === Infinity ? '∞' : S.profitFactor.toFixed(2)) + '</b><small>' + (S.profitFactor >= 1 ? 'sistema ganhador' : 'sistema perdedor') + '</small></div>'
-    + '<div><span class="rb-lbl">Payoff <i class="hint" title="Ganho médio dividido pela perda média. Payoff alto compensa win rate baixo.">?</i></span>'
-    + '<b>' + S.payoff.toFixed(2) + '</b><small>ganho médio ' + P.money(S.mediaGanho) + '</small></div>'
-    + '<div><span class="rb-lbl">Drawdown máximo <i class="hint" title="A maior queda da banca a partir de um topo. Mede o pior momento que você atravessou.">?</i></span>'
-    + '<b class="' + (S.drawdownMax > 30 ? 'down' : '') + '">' + S.drawdownMax.toFixed(1) + '%</b><small>maior perda ' + P.money(S.maiorPerda) + '</small></div>'
-    + '<div><span class="rb-lbl">Gestão da banca</span>'
-    + '<div class="rb-acts"><button class="btn btn-g btn-sm" id="btnDep">+ Aporte</button><button class="btn btn-g btn-sm" id="btnSaq">− Saque</button></div></div>'
+  /* ═══ KPIS do módulo: mesmos componentes .kpi do Dashboard/HOLD/DeFi,
+     com o acento dourado (k-trade) que identifica esta tela. As 8 métricas
+     fluem em duas linhas de 4 no mesmo grid — nenhuma foi removida, só
+     migraram do antigo .mc/.resumo-bar para o componente compartilhado. */
+  var html = '<div class="kpis">'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Banca atual</div>'
+    + '<div class="kpi-v" data-cv="' + S.banca + '" data-t="m">' + P.money(S.banca) + '</div>'
+    + '<div class="mc-sub">aportado: ' + P.money(S.depositos) + (S.saques ? ' · sacado: ' + P.money(S.saques) : '') + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Resultado dos trades</div>'
+    + '<div class="kpi-v ' + P.cls(S.resultado) + '" data-cv="' + S.resultado + '" data-t="m">' + P.money(S.resultado) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(S.rentabilidade) + '">' + P.pct(S.rentabilidade) + '</span> sobre o aportado</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Win rate</div>'
+    + '<div class="kpi-v" data-cv="' + S.winRate + '" data-t="n">' + S.winRate.toFixed(0) + '%</div>'
+    + '<div class="mc-sub">' + S.vitorias + ' ganhos · ' + S.derrotas + ' perdas</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Expectativa / operação</div>'
+    + '<div class="kpi-v ' + P.cls(S.expectativa) + '" data-cv="' + S.expectativa + '" data-t="m">' + P.money(S.expectativa) + '</div>'
+    + '<div class="mc-sub">quanto se espera ganhar por trade</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Profit factor <i class="hint" title="Soma dos ganhos dividida pela soma das perdas. Acima de 1 o sistema ganha dinheiro; abaixo, perde.">?</i></div>'
+    + '<div class="kpi-v ' + (S.profitFactor >= 1 ? 'up' : 'down') + '">' + (S.profitFactor === Infinity ? '∞' : S.profitFactor.toFixed(2)) + '</div>'
+    + '<div class="mc-sub">' + (S.profitFactor >= 1 ? 'sistema ganhador' : 'sistema perdedor') + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Payoff <i class="hint" title="Ganho médio dividido pela perda média. Payoff alto compensa win rate baixo.">?</i></div>'
+    + '<div class="kpi-v">' + S.payoff.toFixed(2) + '</div>'
+    + '<div class="mc-sub">ganho médio ' + P.money(S.mediaGanho) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Drawdown máximo <i class="hint" title="A maior queda da banca a partir de um topo. Mede o pior momento que você atravessou.">?</i></div>'
+    + '<div class="kpi-v ' + (S.drawdownMax > 30 ? 'down' : '') + '">' + S.drawdownMax.toFixed(1) + '%</div>'
+    + '<div class="mc-sub">maior perda ' + P.money(S.maiorPerda) + '</div></div>'
+    + '<div class="kpi k-trade"><div class="mc-lbl">Gestão da banca</div>'
+    + '<div class="rb-acts" style="margin-top:8px"><button class="btn btn-g btn-sm" id="btnDep">+ Aporte</button><button class="btn btn-g btn-sm" id="btnSaq">− Saque</button></div></div>'
     + '</div>';
 
   html += '<div class="grid2b">' + P.grafCard('chTC', 'Evolução da banca', true) + P.grafCard('chTO', 'Resultado por operação', true) + '</div>';
@@ -1628,7 +2071,7 @@ P.vTrade = function () {
       + '<td style="color:var(--mut);font-size:12px;max-width:280px">' + e(o.txt || '—') + '</td></tr>';
   }).join('');
   html += '<div class="card"><div class="card-hd"><div class="card-title">Operações</div><div class="right">' + P.exportBtn('trade') + '</div></div>'
-    + '<div class="tblw"><table style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'
+    + '<div class="tblw"><table class="dtable" style="min-width:720px"><thead><tr><th>Data</th><th>Ativo</th><th>Direção</th><th class="num">Alav.</th><th class="num">Resultado</th><th>Anotação</th></tr></thead><tbody>'
     + (rows || '<tr><td colspan="6"><div class="empty">Nenhuma operação ainda</div></td></tr>') + '</tbody></table></div></div>';
 
   html += P.planosCTA();
@@ -1709,6 +2152,11 @@ P.carregarExemplo = function () {
     C.addMov(st, { tipo: 'trade_res', cart: c1.id, usd: Math.abs(t[3]), px: t[3] >= 0 ? 1 : -1, dt: t[4], nota: t[0] });
   });
 
+  /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
+     equivalente — sem isto toda carteira de exemplo nasceria com caixa
+     negativo. Mesma cura do boot, chamada aqui porque este caminho
+     grava e renderiza direto, sem passar por P.boot. */
+  C.aberturaDeSaldo(P.st);
   P.save();
   P.loadPrices().then(function () { P.render(); });
   P.render();

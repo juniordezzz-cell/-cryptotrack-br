@@ -231,6 +231,11 @@ function carteiraConcentrada(pctMaior) {
   st.carteiras.push({ id: 'c1', nome: 'P' });
   st.ativos.push({ id: 'x', tk: 'BTC', cg: 'bitcoin', cart: 'c1', last: pctMaior });
   st.ativos.push({ id: 'y', tk: 'ETH', cg: 'ethereum', cart: 'c1', last: 100 - pctMaior });
+  /* deposito financia as duas compras (fase 2 do portfolio: patrimônio
+     passou a incluir caixa — sem um depósito que explique as compras, o
+     caixa fica negativo e derruba o patrimônio total para 0, zerando
+     maiorAtivoPct por divisão por zero em vez do percentual real). */
+  PCore.addMov(st, { tipo: 'deposito', cart: 'c1', usd: 100, dt: '2026-01-09' });
   PCore.addMov(st, { tipo: 'compra', ref: 'x', cart: 'c1', qtd: 1, px: pctMaior, dt: '2026-01-10' });
   PCore.addMov(st, { tipo: 'compra', ref: 'y', cart: 'c1', qtd: 1, px: 100 - pctMaior, dt: '2026-01-10' });
   return { st: st, precos: { bitcoin: pctMaior, ethereum: 100 - pctMaior } };
