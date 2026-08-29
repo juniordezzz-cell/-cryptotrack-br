@@ -125,7 +125,9 @@
       if (m.cart !== cartId) return;
       var t = C.TIPOS[m.tipo];
       if (!t) return;
-      total += t.sinal * num(m.usd);
+      /* transf carrega o sinal na perna (px), não no tipo */
+      var s = (m.tipo === 'transf') ? (num(m.px) < 0 ? -1 : +1) : t.sinal;
+      total += s * num(m.usd);
       /* a taxa sempre sai do bolso, em qualquer direção da operação */
       if (m.tipo === 'compra') total -= num(m.fee);
       else if (m.tipo === 'venda') total -= num(m.fee);
@@ -141,6 +143,26 @@
     var v = Math.abs(num(usd));
     var falta = v - caixa;
     return { ok: falta <= 0, caixa: caixa, falta: falta > 0 ? falta : 0 };
+  };
+
+  /* Transferência é UM evento com DUAS pernas unidas pelo mesmo `ref`.
+     Nunca duas movimentações soltas: se uma perna sumir, o supervisor
+     acusa, e apagar a transferência apaga as duas. O sinal de cada perna
+     vai em `px` (−1 origem, +1 destino), como `trade_res` já faz. */
+  C.transferir = function (st, o) {
+    o = o || {};
+    var usd = Math.abs(num(o.usd));
+    if (!o.de || !o.para || o.de === o.para || !usd) {
+      return { ok: false, ref: null, falta: 0 };
+    }
+    var pode = C.podeGastar(st, o.de, usd);
+    if (!pode.ok) return { ok: false, ref: null, falta: pode.falta };
+
+    var ref = C.uid();
+    var dt = o.dt || C.hoje();
+    C.addMov(st, { tipo: 'transf', ref: ref, cart: o.de,   usd: usd, px: -1, dt: dt, nota: o.nota || '' });
+    C.addMov(st, { tipo: 'transf', ref: ref, cart: o.para, usd: usd, px: +1, dt: dt, nota: o.nota || '' });
+    return { ok: true, ref: ref, falta: 0 };
   };
 
   /* ═══════════════════ HOLD — CUSTO MÉDIO PONDERADO ═══════════════════

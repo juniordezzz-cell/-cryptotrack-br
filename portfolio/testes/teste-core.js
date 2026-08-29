@@ -568,6 +568,38 @@ eqv('gasto igual ao caixa cabe', C.podeGastar(stt, 'w1', 500).ok, true);
 /* carteira sem depósito nenhum não abre posição */
 eqv('carteira zerada nao gasta', C.podeGastar(stt, 'w-nova', 1).ok, false);
 
+/* ══════════════════════════════════════════════════════════════
+   12. TRANSFERÊNCIA ENTRE CARTEIRAS
+   ══════════════════════════════════════════════════════════════ */
+sec('Transferencia entre carteiras');
+
+var str = C.novoEstado();
+str.carteiras.push({ id: 'w1', nome: 'Corretora' });
+str.carteiras.push({ id: 'w2', nome: 'Cold' });
+C.addMov(str, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+
+var t = C.transferir(str, { de: 'w1', para: 'w2', usd: 400, dt: '2026-01-02' });
+eqv('transferencia aceita', t.ok, true);
+eq('origem perde 400',  C.caixaDe(str, 'w1'), 600);
+eq('destino ganha 400', C.caixaDe(str, 'w2'), 400);
+
+/* a soma das duas carteiras não muda: transferência redistribui,
+   não cria nem destrói patrimônio */
+eq('soma preservada', C.caixaDe(str, 'w1') + C.caixaDe(str, 'w2'), 1000);
+
+/* as duas pernas existem e compartilham o mesmo ref */
+var pernas = str.mov.filter(function (m) { return m.tipo === 'transf' && m.ref === t.ref; });
+eqv('gravou duas pernas', pernas.length, 2);
+
+/* sem caixa não transfere, e diz quanto falta */
+var t2 = C.transferir(str, { de: 'w2', para: 'w1', usd: 900, dt: '2026-01-03' });
+eqv('transferencia sem caixa recusada', t2.ok, false);
+eq('informa quanto falta', t2.falta, 500);
+eq('nada mudou apos recusa', C.caixaDe(str, 'w2'), 400);
+
+/* não dá para transferir para a mesma carteira */
+eqv('mesma carteira e recusada', C.transferir(str, { de: 'w1', para: 'w1', usd: 10 }).ok, false);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
