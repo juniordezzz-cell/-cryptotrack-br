@@ -40,7 +40,9 @@
     deposito:    { grupo:'caixa', sinal:+1, externo:true,  lbl:'Depósito' },
     saque:       { grupo:'caixa', sinal:-1, externo:true,  lbl:'Saque' },
     transf:      { grupo:'caixa', sinal: 0, externo:false, lbl:'Transferência' },
-    swap:        { grupo:'caixa', sinal: 0, externo:false, lbl:'Troca de ativo' }
+    swap:        { grupo:'caixa', sinal: 0, externo:false, lbl:'Troca de ativo' },
+    rwa_compra:  { grupo:'rwa', sinal:-1, externo:false, lbl:'Compra de ação tokenizada' },
+    rwa_venda:   { grupo:'rwa', sinal:+1, externo:false, lbl:'Venda de ação tokenizada' }
   };
 
   /* ═══════════════════ UTILITÁRIOS ═══════════════════ */
@@ -70,6 +72,8 @@
       pools: [],
       lend: [],
       trades: [],
+      rwa: [],
+      metas: [],
       mov: [],
       snaps: []
     };
@@ -96,7 +100,8 @@
     /* Compra e venda são lançadas por quantidade × preço. Normalizamos o
        valor em dólar aqui para que `usd` signifique a mesma coisa em TODO
        evento do ledger — sem isso o fluxo de caixa de uma compra sai zerado. */
-    if ((m.tipo === 'compra' || m.tipo === 'venda') && !m.usd && m.qtd != null && m.px != null) {
+    if ((m.tipo === 'compra' || m.tipo === 'venda' ||
+         m.tipo === 'rwa_compra' || m.tipo === 'rwa_venda') && !m.usd && m.qtd != null && m.px != null) {
       m.usd = Math.abs(m.qtd * m.px);
     }
     st.mov.push(m);
@@ -128,9 +133,10 @@
       /* transf carrega o sinal na perna (px), não no tipo */
       var s = (m.tipo === 'transf') ? (num(m.px) < 0 ? -1 : +1) : t.sinal;
       total += s * num(m.usd);
-      /* a taxa sempre sai do bolso, em qualquer direção da operação */
-      if (m.tipo === 'compra') total -= num(m.fee);
-      else if (m.tipo === 'venda') total -= num(m.fee);
+      /* a taxa sempre sai do bolso, em qualquer direção da operação —
+         RWA usa o mesmo caixa do HOLD, então a taxa sai igual */
+      if (m.tipo === 'compra' || m.tipo === 'rwa_compra') total -= num(m.fee);
+      else if (m.tipo === 'venda' || m.tipo === 'rwa_venda') total -= num(m.fee);
     });
     return total;
   };
@@ -208,18 +214,23 @@
 
      Taxas entram no custo na compra e reduzem a receita na venda, que é
      como o custo de aquisição/alienação realmente funciona. */
-  C.posicao = function (st, ativoId, precoAtual) {
+  C.posicao = function (st, ativoId, precoAtual, tipos) {
+    /* Quais eventos são "entrada" e "saída" desta posição. O RWA usa o MESMO
+       motor de preço médio — copiá-lo seria duplicar o cálculo mais delicado
+       do sistema, justamente o que o v1 errou. */
+    tipos = tipos || { compra: 'compra', venda: 'venda' };
+
     var movs = C.movsDe(st, { ref: ativoId });
     var qtd = 0, custoTotal = 0, realizado = 0, taxasPagas = 0;
     var compras = 0, vendas = 0, alertas = [];
 
     movs.forEach(function (m) {
-      if (m.tipo === 'compra') {
+      if (m.tipo === tipos.compra) {
         qtd += m.qtd;
         custoTotal += m.qtd * m.px + m.fee;
         taxasPagas += m.fee;
         compras++;
-      } else if (m.tipo === 'venda') {
+      } else if (m.tipo === tipos.venda) {
         var q = m.qtd;
         if (q > qtd + 1e-12) {
           alertas.push({
@@ -269,6 +280,25 @@
       .map(function (a) {
         var p = C.posicao(st, a.id, precos[a.cg] != null ? precos[a.cg] : a.last);
         p.tk = a.tk; p.cg = a.cg; p.cart = a.cart; p.lastAt = a.lastAt || null;
+        return p;
+      })
+      .filter(function (p) { return p.nTx > 0; });
+  };
+
+  /* RWA = ação tokenizada. Mesma matemática do HOLD, lista própria — quem
+     compra NVDA tokenizada não está fazendo a mesma coisa que quem compra
+     SOL, e misturar as duas na mesma tabela esconde de que lado está o
+     patrimônio. */
+  C.posicoesRWA = function (st, precos, cart) {
+    precos = precos || {};
+    return (st.rwa || [])
+      .filter(function (a) { return !cart || cart === 'all' || a.cart === cart; })
+      .map(function (a) {
+        var p = C.posicao(st, a.id, precos[a.cg] != null ? precos[a.cg] : a.last,
+                          { compra: 'rwa_compra', venda: 'rwa_venda' });
+        p.tk = a.tk; p.nome = a.nome; p.plataforma = a.plataforma;
+        p.cg = a.cg; p.cart = a.cart; p.lastAt = a.lastAt || null;
+        p.pm = p.custoMedio;
         return p;
       })
       .filter(function (p) { return p.nTx > 0; });
@@ -448,6 +478,15 @@
         lendReal += r.resultado;
       });
 
+    var rwaPos = C.posicoesRWA(st, precos, cart);
+    var rwaValor = 0, rwaCusto = 0, rwaNaoReal = 0, rwaReal = 0;
+    rwaPos.forEach(function (p) {
+      rwaValor += p.valor;
+      rwaCusto += p.custoTotal;
+      rwaNaoReal += p.naoRealizado;
+      rwaReal += p.realizado;
+    });
+
     var tr = C.tradeResumo(st, cart);
 
     /* FIX 3 (fase 2): patrimônio total é caixa + investido — caixa parado
@@ -464,10 +503,10 @@
       caixaTotal = C.caixaDe(st, cart);
     }
 
-    var patrimonio = holdValor + poolValor + lendValor + tr.banca + caixaTotal;
-    var investido = holdCusto + poolCusto + lendCusto + Math.max(0, tr.depositos - tr.saques);
-    var naoRealizado = holdNaoReal + poolNaoReal;
-    var realizado = holdReal + poolReal + lendReal + tr.resultado;
+    var patrimonio = holdValor + poolValor + lendValor + rwaValor + tr.banca + caixaTotal;
+    var investido = holdCusto + poolCusto + lendCusto + rwaCusto + Math.max(0, tr.depositos - tr.saques);
+    var naoRealizado = holdNaoReal + poolNaoReal + rwaNaoReal;
+    var realizado = holdReal + poolReal + lendReal + rwaReal + tr.resultado;
 
     return {
       patrimonio: patrimonio,
@@ -482,6 +521,7 @@
       defi:  { valor: poolValor + lendValor, custo: poolCusto + lendCusto,
                naoRealizado: poolNaoReal, realizado: poolReal + lendReal, taxas: taxas },
       trade: { valor: tr.banca, custo: Math.max(0, tr.depositos - tr.saques), realizado: tr.resultado },
+      rwa:   { valor: rwaValor, custo: rwaCusto, naoRealizado: rwaNaoReal, realizado: rwaReal },
 
       /* já dentro de `realizado` — exibir sempre como detalhe, nunca somado */
       taxasDeFi: taxas,

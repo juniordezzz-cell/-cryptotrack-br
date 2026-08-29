@@ -782,6 +782,50 @@ C.addMov(sup4, { tipo: 'transf', ref: 'perdida', cart: 'w1', usd: 40, px: -1, dt
 eqv('transferencia manca acusada',
   S.conferir(sup4).achados.filter(function (a) { return a.chave === 'transf-manca'; }).length, 1);
 
+/* ══════════════════════════════════════════════════════════════
+   RWA — ações tokenizadas. Mesmo motor do HOLD, aba separada.
+   ══════════════════════════════════════════════════════════════ */
+sec('RWA: acoes tokenizadas');
+
+var stR = C.novoEstado();
+stR.carteiras.push({ id: 'w1', nome: 'Phantom' });
+stR.rwa.push({ id: 'r1', tk: 'NVDAx', nome: 'Nvidia', plataforma: 'xStocks',
+               cg: 'nvidia-x', cart: 'w1', last: 120 });
+C.addMov(stR, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-01-01' });
+
+/* À mão: compra 10 @ 100 = 1000, fee 5 -> custo 1005, preco medio 100,50
+   caixa: 5000 − 1005 = 3995                                          */
+C.addMov(stR, { tipo: 'rwa_compra', ref: 'r1', cart: 'w1', qtd: 10, px: 100, fee: 5, dt: '2026-01-02' });
+var pR = C.posicoesRWA(stR, { 'nvidia-x': 120 }, 'all')[0];
+eq('RWA preco medio (1005/10)', pR.pm, 100.5);
+eq('RWA valor a 120 (10x120)', pR.valor, 1200);
+eq('RWA nao realizado (1200-1005)', pR.naoRealizado, 195);
+eq('caixa apos compra de RWA', C.caixaDe(stR, 'w1'), 3995);
+
+/* venda de 4 @ 150 = 600; baixa de custo 4 x 100,50 = 402
+   realizado = 600 − 402 = 198;  caixa 3995 + 600 = 4595              */
+C.addMov(stR, { tipo: 'rwa_venda', ref: 'r1', cart: 'w1', qtd: 4, px: 150, dt: '2026-01-03' });
+var pR2 = C.posicoesRWA(stR, { 'nvidia-x': 120 }, 'all')[0];
+eq('RWA realizado (600-402)', pR2.realizado, 198);
+eq('RWA qtd restante', pR2.qtd, 6);
+eq('caixa apos venda de RWA', C.caixaDe(stR, 'w1'), 4595);
+
+/* o RWA entra no patrimonio total e no seu proprio bloco */
+var TR = C.totais(stR, { 'nvidia-x': 120 }, 'all');
+eq('totais.rwa.valor (6 x 120)', TR.rwa.valor, 720);
+eq('totais.rwa.realizado', TR.rwa.realizado, 198);
+/* patrimonio = caixa 4595 + rwa 720 = 5315 */
+eq('patrimonio inclui RWA', TR.patrimonio, 5315);
+
+/* os tipos novos NAO sao fluxo externo (senao repetem o bug de XIRR) */
+eqv('rwa_compra nao e externo', C.TIPOS.rwa_compra.externo, false);
+eqv('rwa_venda nao e externo', C.TIPOS.rwa_venda.externo, false);
+eqv('rwa_compra tira do caixa', C.TIPOS.rwa_compra.sinal, -1);
+eqv('rwa_venda devolve ao caixa', C.TIPOS.rwa_venda.sinal, 1);
+
+/* HOLD e RWA nao se misturam */
+eqv('posicoes() do HOLD ignora RWA', C.posicoes(stR, {}, 'all').length, 0);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
