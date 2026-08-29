@@ -385,6 +385,11 @@ P.atualizaSync = function () {
 /* ═══════════ BOOT ═══════════ */
 P.boot = function (active, renderFn) {
   P.load();
+  /* Cura dados de antes da fase 2: posição sem depósito que a explique
+     vira caixa negativo, e o supervisor acusaria um erro que é da
+     migração, não do usuário. Idempotente — some sozinha quando não
+     há mais o que migrar, então pode rodar em todo boot. */
+  if (C.aberturaDeSaldo(P.st) > 0) P.save();
   P.render = renderFn;
   P.syncPlano();
   P.shell(active);
@@ -452,6 +457,164 @@ P.optCarteiras = function (sel) {
   return P.st.carteiras.map(function (c) {
     return '<option value="' + c.id + '"' + (sel === c.id ? ' selected' : '') + '>' + P.esc(c.nome) + '</option>';
   }).join('');
+};
+
+/* ═══════════ caixa da carteira: cartão, ações e extrato ═══════════
+   A fase 1 desenhou a barra Investido/Caixa do cartão de carteira sem
+   ter caixa para preencher. Ela existe agora — sempre lida via
+   C.caixaDe, nunca guardada — e as quatro ações (depositar, sacar,
+   transferir, swap) são a interface para o ledger que a explica. */
+
+/* Não bloqueia: a trava dura de verdade mora nos dados — C.transferir
+   já recusa sozinho quando falta caixa (Task 2). Aqui, para saque e
+   aberturas de posição que NÃO têm trava própria no núcleo, a tela só
+   avisa QUANTO falta e deixa a pessoa decidir — é o mesmo papel que o
+   comentário de C.podeGastar, em portfolio-core.js, descreve para
+   "a tela". Registrar mesmo assim é válido: é para isso que existe
+   C.aberturaDeSaldo, que resolve o caixa negativo resultante depois. */
+P.avisoCaixa = function (cartId, usd) {
+  var pode = C.podeGastar(P.st, cartId, usd);
+  if (pode.ok) return true;
+  return confirm('Caixa insuficiente em ' + P.nomeCart(cartId) + ': faltam ' + P.money(pode.falta) + '. Registrar mesmo assim?');
+};
+
+/* Cartão de uma carteira: total (posições + caixa) e a barra dividida
+   Investido | Caixa — roxo é o que está no mercado, ciano é o que está
+   parado à espera (cor de informação neutra, nunca verde/vermelho:
+   isto não é ganho ou perda). */
+P.wcardHTML = function (c) {
+  var e = P.esc;
+  var t = C.totais(P.st, P.precos, c.id);
+  var caixa = C.caixaDe(P.st, c.id);
+  var total = t.patrimonio + caixa;
+  var base = t.investido + Math.max(caixa, 0);
+  var pctInv = base > 0 ? (t.investido / base * 100) : 0;
+  var pctCx = base > 0 ? (Math.max(caixa, 0) / base * 100) : 0;
+  var multi = P.st.carteiras.length >= 2;
+  return '<div class="wcard" data-cart="' + c.id + '">'
+    + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
+    + '<span style="font-weight:600">👛 ' + e(c.nome) + '</span>'
+    + '<span class="mono" style="font-weight:700">' + P.money(total) + '</span></div>'
+    + '<div class="wcard-bar"><span style="width:' + pctInv.toFixed(1) + '%"></span>'
+    + '<span class="seg-cx" style="width:' + pctCx.toFixed(1) + '%"></span></div>'
+    + '<div class="mc-sub">Investido ' + P.money(t.investido) + ' · Caixa <b class="' + (caixa < 0 ? 'down' : '') + '">' + P.money(caixa) + '</b></div>'
+    + '<div class="wcard-acts">'
+    + '<button class="btn btn-g btn-sm" data-wact="extrato">Extrato</button>'
+    + '<button class="btn btn-g btn-sm" data-wact="dep">+ Depositar</button>'
+    + '<button class="btn btn-g btn-sm" data-wact="saq">− Sacar</button>'
+    + (multi ? '<button class="btn btn-g btn-sm" data-wact="transf">⇄ Transferir</button>' : '')
+    + '<button class="btn btn-g btn-sm" data-wact="swap">↺ Swap</button>'
+    + '</div></div>';
+};
+
+/* Liga os botões de todo cartão de carteira presente na tela — funciona
+   para quantas carteiras houver, sem depender de IDs fixos por cartão. */
+P.wireWcards = function () {
+  document.querySelectorAll('.wcard[data-cart]').forEach(function (el) {
+    var id = el.dataset.cart;
+    el.querySelectorAll('[data-wact]').forEach(function (b) {
+      b.onclick = function () {
+        var a = b.dataset.wact;
+        if (a === 'extrato') P.verExtratoCarteira(id);
+        else if (a === 'dep') P.formDeposito(id);
+        else if (a === 'saq') P.formSaque(id);
+        else if (a === 'transf') P.formTransferirCarteira(id);
+        else if (a === 'swap') P.formSwap(id);
+      };
+    });
+  });
+};
+
+P.formDeposito = function (cartId) {
+  P.modal('Depositar — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota" placeholder="Ex: Aporte mensal"></div>',
+    { footer: '<button class="btn btn-p" id="okCx">Depositar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    C.addMov(P.st, { tipo: 'deposito', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+P.formSaque = function (cartId) {
+  P.modal('Sacar — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota"></div>'
+    + '<div class="fhint">Caixa disponível: ' + P.money(C.caixaDe(P.st, cartId)) + '</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Sacar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    if (!P.avisoCaixa(cartId, usd)) return;
+    C.addMov(P.st, { tipo: 'saque', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+/* Só é chamada quando o cartão já decidiu mostrar o botão (2+ carteiras),
+   mas confere de novo aqui — nenhuma trava nova, é a mesma regra do
+   P.limCart()/P.upsell() que já existe para criar a 2ª carteira. */
+P.formTransferirCarteira = function (cartId) {
+  var outras = P.st.carteiras.filter(function (c) { return c.id !== cartId; });
+  if (!outras.length) return;
+  P.modal('Transferir — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Para</label><select id="fTrPara">' + outras.map(function (c) {
+      return '<option value="' + c.id + '">' + P.esc(c.nome) + '</option>';
+    }).join('') + '</select></div>'
+    + '<div class="fg"><label>Valor (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(opcional)</small></label><input id="fCxNota"></div>'
+    + '<div class="fhint">Caixa disponível: ' + P.money(C.caixaDe(P.st, cartId)) + '</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Transferir</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    var r = C.transferir(P.st, { de: cartId, para: P.val('fTrPara'), usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    if (!r.ok) return alert('Caixa insuficiente. Faltam ' + P.money(r.falta) + '.');
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+P.formSwap = function (cartId) {
+  P.modal('Troca de ativo — ' + P.esc(P.nomeCart(cartId)),
+    '<div class="fg"><label>Valor da troca (US$)</label><input id="fCxUsd" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fCxDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div>'
+    + '<div class="fg"><label>Nota <small>(ex: 0,5 SOL → 75 USDC)</small></label><input id="fCxNota" placeholder="O que trocou por quê"></div>'
+    + '<div class="fhint">Swap é só um registro: trocar um ativo por outro dentro da carteira não move o caixa.</div>',
+    { footer: '<button class="btn btn-p" id="okCx">Registrar</button>' });
+  document.getElementById('okCx').onclick = function () {
+    var usd = P.num('fCxUsd'); if (!usd || usd <= 0) return alert('Informe um valor positivo.');
+    C.addMov(P.st, { tipo: 'swap', cart: cartId, usd: usd, dt: P.val('fCxDt') || C.hoje(), nota: P.val('fCxNota') });
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+/* Extrato de UMA carteira, em ordem cronológica, com saldo corrente —
+   a prova visual de que o caixa é consequência dos eventos, não um
+   campo editável. */
+P.verExtratoCarteira = function (cartId) {
+  var e = P.esc;
+  var movs = C.movsDe(P.st, { cart: cartId });
+  var saldo = 0;
+  var linhas = movs.map(function (m) {
+    var t = C.TIPOS[m.tipo] || {};
+    var s = (m.tipo === 'transf') ? (m.px < 0 ? -1 : 1) : (t.sinal || 0);
+    var delta = s * m.usd;
+    saldo += delta;
+    var cls = delta > 0 ? 'up' : (delta < 0 ? 'down' : '');
+    var sinal = delta > 0 ? '+' : (delta < 0 ? '−' : '');
+    return '<tr><td class="mono" style="color:var(--mut)">' + P.dBR(m.dt) + '</td>'
+      + '<td>' + e(t.lbl || m.tipo) + (m.nota ? '<small class="blk">' + e(m.nota) + '</small>' : '') + '</td>'
+      + '<td class="num mono ' + cls + '">' + sinal + P.money(Math.abs(delta)) + '</td>'
+      + '<td class="num mono ' + (saldo < 0 ? 'down' : '') + '">' + P.money(saldo) + '</td></tr>';
+  }).join('');
+
+  P.modal('Extrato — ' + e(P.nomeCart(cartId)),
+    '<div class="tblw"><table style="min-width:520px"><thead><tr><th>Data</th><th>Tipo</th><th class="num">Valor</th><th class="num">Saldo</th></tr></thead><tbody>'
+    + (linhas || '<tr><td colspan="4"><div class="empty">Nenhuma movimentação nesta carteira</div></td></tr>')
+    + '</tbody></table></div>',
+    { wide: true });
 };
 
 /* ══════════════════════════════════════════════════════════════════
@@ -693,17 +856,10 @@ P.vDash = function () {
         : '<div class="empty">Ainda não há histórico — o gráfico se forma a partir de um registro por dia do seu patrimônio. Volte amanhã e o primeiro trecho da curva já aparece.</div>')
     + '</div></div>';
 
-  /* ═══ carteiras: total + % do patrimônio, sem caixa/investido ═══ */
-  var patTotal = T.patrimonio;
-  var wcards = P.st.carteiras.map(function (c) {
-    var t = C.totais(P.st, P.precos, c.id);
-    var pctPat = patTotal > 0 ? (t.patrimonio / patTotal * 100) : 0;
-    return '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
-      + '<span style="font-weight:600">👛 ' + e(c.nome) + '</span>'
-      + '<span class="mono" style="font-weight:700">' + P.money(t.patrimonio) + '</span></div>'
-      + '<div class="wcard-bar"><span style="width:' + pctPat.toFixed(1) + '%"></span></div>'
-      + '<div class="mc-sub">' + pctPat.toFixed(1) + '% do patrimônio</div></div>';
-  }).join('');
+  /* ═══ carteiras: total (posições + caixa) e a barra Investido | Caixa —
+     a fase 1 desenhou esta barra sem ter o que preencher; caixa é o que
+     faltava. ═══ */
+  var wcards = P.st.carteiras.map(function (c) { return P.wcardHTML(c); }).join('');
 
   html += '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div>'
     + '<div class="right"><button class="btn btn-g btn-sm" id="btnCart">+ Nova carteira</button></div></div>'
@@ -733,6 +889,7 @@ P.vDash = function () {
     P.formCarteira();
   };
   document.getElementById('btnExtrato').onclick = P.verExtrato;
+  P.wireWcards();
   document.querySelectorAll('[data-per]').forEach(function (b) {
     b.onclick = function () { P.periodo = b.dataset.per; P.render(); };
   });
@@ -1108,6 +1265,8 @@ P.formTx = function (pre) {
       a = P.st.ativos.filter(function (x) { return x.id === aid; })[0];
       if (!a) return;
     }
+    /* compra tira do caixa (qtd × preço + taxa); venda devolve, sem checagem */
+    if (tipo === 'compra' && !P.avisoCaixa(a.cart, q * pr + fee)) return;
     C.addMov(P.st, { tipo: tipo, ref: a.id, cart: a.cart, qtd: q, px: pr, fee: fee, dt: dt });
     P.save(); P.closeModal(); P.render();
     P.loadPrices().then(P.render);
@@ -1343,6 +1502,7 @@ P.formPool = function () {
     var par = P.val('fPar').toUpperCase(); if (!par) return alert('Informe o par da pool.');
     var dep = P.num('fDep'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (dep && !P.avisoCaixa(cart, dep)) return;
     var pp = P.partesDoPar(par);
     var p = {
       id: C.uid(), par: par, proto: P.val('fProto') || '—', chain: P.val('fChain') || '—',
@@ -1403,6 +1563,7 @@ P.poolAcao = function (p, tipo) {
     var dt = P.val('aDt') || C.hoje(), usd = P.num('aUsd'), txt = P.val('aTxt'), tok = P.val('aTok');
     if (cfg[2]) {
       if (!usd) return alert('Informe o valor.');
+      if (tipo === 'dep' && !P.avisoCaixa(p.cart, usd)) return;
       C.addMov(P.st, { tipo: cfg[2], ref: p.id, cart: p.cart, usd: usd, dt: dt, nota: tok });
       /* o valor atual acompanha aportes e retiradas */
       if (tipo === 'dep') p.cur.usd = (Number(p.cur.usd) || 0) + usd;
@@ -1552,6 +1713,7 @@ P.formLend = function () {
     var tk = P.val('fTk').toUpperCase(); if (!tk) return alert('Informe o token.');
     var usd = P.num('fUsd'), dt = P.val('fDt') || C.hoje();
     var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (usd && !P.avisoCaixa(cart, usd)) return;
     var l = { id: C.uid(), plat: P.val('fPlat') || '—', chain: P.val('fChain') || '—', tipo: P.val('fTipo') || 's', tk: tk, cart: cart, apy: P.num('fApy'), st: 'a', ab: dt };
     P.st.lend.push(l);
     if (usd) C.addMov(P.st, { tipo: 'lend_sup', ref: l.id, cart: cart, usd: usd, dt: dt });
@@ -1775,7 +1937,9 @@ P.formBanca = function (tipo) {
     { footer: '<button class="btn btn-p" id="okB">Salvar</button>' });
   document.getElementById('okB').onclick = function () {
     var v = P.num('fV'); if (!v || v <= 0) return alert('Informe um valor positivo.');
-    C.addMov(P.st, { tipo: dep ? 'trade_dep' : 'trade_saq', cart: P.val('fCart') || P.st.carteiras[0].id, usd: v, dt: P.val('fDt') || C.hoje() });
+    var cart = P.val('fCart') || P.st.carteiras[0].id;
+    if (dep && !P.avisoCaixa(cart, v)) return;
+    C.addMov(P.st, { tipo: dep ? 'trade_dep' : 'trade_saq', cart: cart, usd: v, dt: P.val('fDt') || C.hoje() });
     P.save(); P.closeModal(); P.render();
   };
 };

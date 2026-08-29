@@ -631,6 +631,27 @@ C.addMov(stb, { tipo: 'deposito', cart: 'w2', usd: 100, dt: '2026-03-01' });
 eqv('carteira saudavel nao migra', C.aberturaDeSaldo(stb), 0);
 eq('caixa intacto', C.caixaDe(stb, 'w2'), 100);
 
+/* empate de data: a abertura tem que vir ANTES da compra que ela explica,
+   senão o saldo corrente do extrato fica negativo por uma linha (achado
+   da revisão da Task 4) */
+var stc = C.novoEstado();
+stc.carteiras.push({ id: 'w3', nome: 'Empate' });
+stc.ativos.push({ id: 'a10', tk: 'ETH', cg: 'ethereum', cart: 'w3', last: 3000 });
+C.addMov(stc, { tipo: 'compra', ref: 'a10', cart: 'w3', qtd: 1, px: 2000, dt: '2026-04-01' });
+C.aberturaDeSaldo(stc);
+var movsC = C.movsDe(stc, { cart: 'w3' });
+eqv('mesma data: abertura vem antes da compra', movsC[0].tipo, 'deposito');
+eqv('compra fica em segundo', movsC[1].tipo, 'compra');
+/* saldo corrente nunca fica negativo em nenhum ponto do extrato */
+var saldoC = 0, negativo = false;
+movsC.forEach(function (m) {
+  var t = C.TIPOS[m.tipo];
+  var s = (m.tipo === 'transf') ? ((m.px < 0) ? -1 : 1) : t.sinal;
+  saldoC += s * m.usd;
+  if (saldoC < -0.005) negativo = true;
+});
+eqv('saldo corrente nunca fica negativo', negativo, false);
+
 /* ══════════════════════════════════════════════════════════════
    14. SUPERVISOR — confere, nao calcula
    ══════════════════════════════════════════════════════════════ */

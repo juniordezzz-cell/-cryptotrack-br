@@ -176,10 +176,17 @@
       if (caixa >= 0) return;
       var movs = C.movsDe(st, { cart: c.id });
       var dt = movs.length ? movs[0].dt : C.hoje();
-      C.addMov(st, {
+      var m = C.addMov(st, {
         tipo: 'deposito', cart: c.id, usd: Math.abs(caixa), dt: dt,
         nota: 'Abertura de saldo — posições registradas antes do controle de caixa'
       });
+      /* Quando a data da abertura EMPATA com a primeira movimentação da
+         carteira (o caso comum: ela é datada dessa mesma movimentação),
+         addMov deu a ela o `seq` mais alto de todos — e o sort cronológico
+         desempata por seq, então a posição apareceria ANTES do depósito
+         no extrato, com o saldo corrente negativo por uma linha. Um seq
+         negativo garante que a abertura sempre vem primeiro no empate. */
+      m.seq = -1 - n;
       n++;
     });
     return n;
