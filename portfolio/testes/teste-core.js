@@ -600,6 +600,37 @@ eq('nada mudou apos recusa', C.caixaDe(str, 'w2'), 400);
 /* não dá para transferir para a mesma carteira */
 eqv('mesma carteira e recusada', C.transferir(str, { de: 'w1', para: 'w1', usd: 10 }).ok, false);
 
+/* ══════════════════════════════════════════════════════════════
+   13. ABERTURA DE SALDO (dados anteriores a fase 2)
+   ══════════════════════════════════════════════════════════════ */
+sec('Abertura de saldo (dados anteriores a fase 2)');
+
+var sta = C.novoEstado();
+sta.carteiras.push({ id: 'w1', nome: 'Antiga' });
+sta.ativos.push({ id: 'a9', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 60000 });
+/* posição antiga: compra sem nenhum depósito que a explique */
+C.addMov(sta, { tipo: 'compra', ref: 'a9', cart: 'w1', qtd: 0.1, px: 50000, dt: '2026-02-10' });
+eq('antes da abertura, caixa negativo', C.caixaDe(sta, 'w1'), -5000);
+
+var n = C.aberturaDeSaldo(sta);
+eqv('uma carteira recebeu abertura', n, 1);
+eq('depois da abertura, caixa zerado', C.caixaDe(sta, 'w1'), 0);
+
+/* a abertura é datada do primeiro evento da carteira, não de hoje */
+var ab = sta.mov.filter(function (m) { return m.tipo === 'deposito' && m.nota.indexOf('Abertura') === 0; })[0];
+eqv('abertura datada do primeiro evento', ab.dt, '2026-02-10');
+
+/* roda de novo: não duplica, porque não há mais o que migrar */
+eqv('idempotente — nao duplica', C.aberturaDeSaldo(sta), 0);
+eq('caixa continua zerado', C.caixaDe(sta, 'w1'), 0);
+
+/* carteira saudável (com depósito) não recebe abertura nenhuma */
+var stb = C.novoEstado();
+stb.carteiras.push({ id: 'w2', nome: 'Nova' });
+C.addMov(stb, { tipo: 'deposito', cart: 'w2', usd: 100, dt: '2026-03-01' });
+eqv('carteira saudavel nao migra', C.aberturaDeSaldo(stb), 0);
+eq('caixa intacto', C.caixaDe(stb, 'w2'), 100);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

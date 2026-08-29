@@ -165,6 +165,26 @@
     return { ok: true, ref: ref, falta: 0 };
   };
 
+  /* Portfólio anterior à fase 2 tem posições sem evento de caixa que as
+     explique — o caixa daria negativo e o supervisor acusaria um erro que
+     é da migração, não do usuário. A abertura de saldo é a resposta, e ela
+     SOME SOZINHA quando não há o que migrar (carteira com caixa >= 0). */
+  C.aberturaDeSaldo = function (st) {
+    var n = 0;
+    (st.carteiras || []).forEach(function (c) {
+      var caixa = C.caixaDe(st, c.id);
+      if (caixa >= 0) return;
+      var movs = C.movsDe(st, { cart: c.id });
+      var dt = movs.length ? movs[0].dt : C.hoje();
+      C.addMov(st, {
+        tipo: 'deposito', cart: c.id, usd: Math.abs(caixa), dt: dt,
+        nota: 'Abertura de saldo — posições registradas antes do controle de caixa'
+      });
+      n++;
+    });
+    return n;
+  };
+
   /* ═══════════════════ HOLD — CUSTO MÉDIO PONDERADO ═══════════════════
      Método de custo médio (o mesmo que a Receita usa no Brasil).
      A venda NÃO altera o custo médio; ela baixa custo proporcional
