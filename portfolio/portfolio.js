@@ -470,40 +470,14 @@ P.demoNote = function () {
 };
 
 P.duoBanners = function () {
-  return '<div class="duo">'
-    +   '<div class="duo-card duo-free">'
-    +     '<div class="duo-tag duo-tag-free">Grátis</div>'
-    +     '<h3 class="duo-h">Crie sua conta e comece</h3>'
-    +     '<p class="duo-p">Os números desta tela são <b>fictícios</b> — é só um exemplo. Entre para criar a <b>sua</b> carteira e acompanhar os seus próprios números.</p>'
-    +     '<div class="duo-list">'
-    +       '<div class="duo-item"><span class="up">✓</span><span class="duo-txt"><b>Uma carteira</b>, com ativos, pools e operações ilimitados</span></div>'
-    +       '<div class="duo-item"><span class="up">✓</span><span class="duo-txt">Todas as ferramentas do site, de graça</span></div>'
-    +       '<div class="duo-item"><span class="up">✓</span><span class="duo-txt">Histórico completo, sem corte por tempo</span></div>'
-    +       '<div class="duo-item"><span class="up">✓</span><span class="duo-txt">Cotação ao vivo, sincronizada entre celular e computador</span></div>'
-    +     '</div>'
-    +     '<button class="btn btn-p duo-btn" id="demoLogin">Criar conta grátis</button>'
-    +     '<a class="duo-alt" href="/portfolio/hold.html">ou começar sem conta →</a>'
-    +   '</div>'
-    +   '<div class="duo-card duo-pro">'
-    +     '<div class="duo-tag duo-tag-pro">⚡ PRO</div>'
-    +     '<h3 class="duo-h">Para quem separa o patrimônio</h3>'
-    +     '<div class="duo-price">R$ 19,90 <small>/mês</small></div>'
-    +     '<div class="duo-list">'
-    +       '<div class="duo-item"><span class="pro-c">✓</span><span class="duo-txt"><b>Carteiras ilimitadas</b> — corretora, cold wallet e DeFi, cada uma na sua</span></div>'
-    +       '<div class="duo-item"><span class="pro-c">✓</span><span class="duo-txt">O <b>Nexus</b> respondendo sobre os seus próprios números</span></div>'
-    +       '<div class="duo-item"><span class="pro-c">✓</span><span class="duo-txt">Exportar tudo em <b>CSV</b>, quando quiser</span></div>'
-    +       '<div class="duo-item"><span class="pro-c">✓</span><span class="duo-txt">Tudo o que o grátis já tem, sem limite de carteiras</span></div>'
-    +     '</div>'
-    +     '<a class="btn btn-g duo-btn" href="/planos.html">Ver o PRO</a>'
-    +   '</div>'
-    + '</div>';
+  /* O par de banners e' do site inteiro (banner.js), nao do portfolio. */
+  return window.MDFBanner ? MDFBanner.duo() : '';
 };
 
 /* Liga os dois gatilhos de login da prévia (nota do topo e botão do banner). */
 P.duoWire = function () {
-  var entrar = function (ev) { if (ev) ev.preventDefault(); if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
-  var a = document.getElementById('demoLogin'); if (a) a.onclick = entrar;
-  var b = document.getElementById('demoTop'); if (b) b.onclick = entrar;
+  var entrar = function () { if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  if (window.MDFBanner) MDFBanner.wire(entrar, ['demoTop']);
 };
 
 /* Deslogado e sem dados? A tela mostra a prévia em vez do estado vazio. */
