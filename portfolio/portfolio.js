@@ -546,7 +546,9 @@ P.wcardHTML = function (c) {
   var e = P.esc;
   var t = C.totais(P.st, P.precos, c.id);
   var caixa = C.caixaDe(P.st, c.id);
-  var total = t.patrimonio + caixa;
+  /* t.patrimonio já inclui o caixa desta carteira (FIX 3, portfolio-core.js)
+     — somar de novo aqui contaria o mesmo dinheiro duas vezes. */
+  var total = t.patrimonio;
   var base = t.investido + Math.max(caixa, 0);
   var pctInv = base > 0 ? (t.investido / base * 100) : 0;
   var pctCx = base > 0 ? (Math.max(caixa, 0) / base * 100) : 0;
@@ -873,7 +875,7 @@ P.vDash = function () {
   html += '<div class="hero">'
     + '<div><div class="mc-lbl">Patrimônio total</div>'
     + '<div class="hero-big mono" data-cv="' + T.patrimonio + '" data-t="m">' + P.money(T.patrimonio) + '</div>'
-    + '<div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    + '<div class="mc-sub">HOLD + DeFi + Trade + Caixa</div></div>'
     + '<div style="text-align:right">'
     + '<div class="mc-lbl">Não realizado</div>'
     + '<div class="mc-val ' + P.cls(T.naoRealizado) + '" data-cv="' + T.naoRealizado + '" data-t="m">' + P.money(T.naoRealizado) + '</div>'
@@ -1315,18 +1317,22 @@ P.formTx = function (pre) {
     var dt = P.val('fDt') || C.hoje(), tipo = P.val('fT') || 'compra';
     if (!q || q <= 0) return alert('Informe a quantidade.');
     if (pr < 0) return alert('O preço não pode ser negativo.');
-    var a;
+    var a, ativoNovo = false;
     if (aid === '__novo') {
       var tk = P.val('fTk').toUpperCase();
       if (!tk) return alert('Informe o ticker do ativo.');
       a = { id: C.uid(), tk: tk, cg: P.val('fCg').toLowerCase(), cart: P.val('fCart') || P.st.carteiras[0].id, last: pr, lastAt: null };
-      P.st.ativos.push(a);
+      ativoNovo = true;
     } else {
       a = P.st.ativos.filter(function (x) { return x.id === aid; })[0];
       if (!a) return;
     }
-    /* compra tira do caixa (qtd × preço + taxa); venda devolve, sem checagem */
+    /* compra tira do caixa (qtd × preço + taxa); venda devolve, sem checagem.
+       A trava tem que rodar ANTES de tocar em qualquer array — senão um
+       "＋ Novo ativo…" recusado pela trava deixava o ativo órfão em
+       memória, e o próximo P.save() qualquer o gravava vazio pra sempre. */
     if (tipo === 'compra' && !P.travaCaixa(a.cart, q * pr + fee)) return;
+    if (ativoNovo) P.st.ativos.push(a);
     C.addMov(P.st, { tipo: tipo, ref: a.id, cart: a.cart, qtd: q, px: pr, fee: fee, dt: dt });
     P.save(); P.closeModal(); P.render();
     P.loadPrices().then(P.render);

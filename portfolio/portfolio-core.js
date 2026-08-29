@@ -142,7 +142,11 @@
     var caixa = C.caixaDe(st, cartId);
     var v = Math.abs(num(usd));
     var falta = v - caixa;
-    return { ok: falta <= 0, caixa: caixa, falta: falta > 0 ? falta : 0 };
+    /* mesma tolerância do supervisor (0.005): resíduo de float sub-centavo
+       não pode recusar um saque legítimo do saldo cheio. `falta` reportada
+       nunca é negativa nem carrega esse ruído — ou é zero, ou é a falta
+       real. */
+    return { ok: falta <= 0.005, caixa: caixa, falta: falta > 0.005 ? falta : 0 };
   };
 
   /* Transferência é UM evento com DUAS pernas unidas pelo mesmo `ref`.
@@ -446,7 +450,21 @@
 
     var tr = C.tradeResumo(st, cart);
 
-    var patrimonio = holdValor + poolValor + lendValor + tr.banca;
+    /* FIX 3 (fase 2): patrimônio total é caixa + investido — caixa parado
+       também é patrimônio da pessoa. Sem isso, uma carteira com um
+       depósito grande ainda sem posição aberta aparecia quase zerada no
+       KPI principal, enquanto o card da própria carteira (que já somava
+       caixa por fora) mostrava o número certo — dois totais diferentes
+       na mesma tela. Agora o caixa entra aqui, uma vez só, e quem exibe
+       não soma de novo. */
+    var caixaTotal = 0;
+    if (!cart || cart === 'all') {
+      (st.carteiras || []).forEach(function (c) { caixaTotal += C.caixaDe(st, c.id); });
+    } else {
+      caixaTotal = C.caixaDe(st, cart);
+    }
+
+    var patrimonio = holdValor + poolValor + lendValor + tr.banca + caixaTotal;
     var investido = holdCusto + poolCusto + lendCusto + Math.max(0, tr.depositos - tr.saques);
     var naoRealizado = holdNaoReal + poolNaoReal;
     var realizado = holdReal + poolReal + lendReal + tr.resultado;
@@ -688,16 +706,30 @@
      O XIRR resolve isso — é a taxa que zera o valor presente dos fluxos. */
   C.fluxos = function (st, precos, cart) {
     var f = [];
+    /* FIX 1 (fase 2 — CRÍTICO): antes de existir caixa, compra/venda/
+       pool_dep/pool_ret/lend_sup/lend_ret/trade_dep/trade_saq eram usados
+       como PROXY de aporte externo (por isso `C.TIPOS[...].externo` ainda
+       marca todos eles `true` — não mexemos nesse dado, mudaria o
+       significado de todo portfólio salvo). Agora que depósito e saque
+       existem de verdade, a fronteira real do portfólio é o caixa: um
+       depósito FINANCIA a compra que vem depois, então contar os dois
+       como fluxo faz um cancelar o outro (a compra deixa de ser um fluxo
+       "de fora" — é dinheiro que já estava dentro, só mudou de forma).
+       Por isso aqui o filtro é explícito por tipo, não por `externo`. */
     C.movsDe(st, { cart: cart }).forEach(function (m) {
-      var t = C.TIPOS[m.tipo];
-      if (!t || !t.externo || t.sinal === 0) return;
-      /* sinal -1 = dinheiro saiu do bolso para a posição.
-         A taxa SEMPRE subtrai: numa compra ela aumenta o desembolso,
-         numa venda ela reduz o que você recebe. */
-      f.push({ dt: m.dt, valor: t.sinal * m.usd - m.fee });
+      if (m.tipo !== 'deposito' && m.tipo !== 'saque') return;
+      /* Sinal do XIRR é o OPOSTO do sinal de caixa: dinheiro saindo do
+         BOLSO DA PESSOA para dentro do portfólio é negativo (depósito),
+         dinheiro voltando pro bolso é positivo (saque). Inverter isso
+         inverte todo retorno calculado — daí o comentário. */
+      var sinalXirr = m.tipo === 'deposito' ? -1 : +1;
+      /* taxa sempre reduz o bolso: num depósito aumenta o que saiu,
+         num saque reduz o que voltou. */
+      f.push({ dt: m.dt, valor: sinalXirr * m.usd - m.fee });
     });
     if (!f.length) return f;
-    /* valor de mercado hoje entra como resgate final */
+    /* valor de mercado hoje entra como resgate final — e já inclui caixa
+       (FIX 3), então o resgate é riqueza total, não só posições. */
     var T = C.totais(st, precos, cart);
     f.push({ dt: C.hoje(), valor: T.patrimonio });
     return f;

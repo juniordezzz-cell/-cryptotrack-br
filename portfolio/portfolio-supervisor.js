@@ -52,6 +52,37 @@
       }
     });
 
+    /* invariante do patrimônio: caixa + investido tem que bater com
+       depositado − sacado + resultado. `resultado` aqui é só o REALIZADO
+       (C.totais com precos={} não usa cotação nenhuma) — de propósito,
+       porque `investido` é custo, não valor de mercado, e comparar custo
+       com valor exigiria cotação que este supervisor não recebe.
+       Checado no AGREGADO do portfólio, não carteira por carteira: uma
+       transferência entre carteiras muda o caixa de cada lado sem gerar
+       depósito/saque nenhum, então olhar carteira a carteira acusaria
+       toda transferência legítima como um furo. Somando tudo, as duas
+       pernas (−X de um lado, +X do outro) se cancelam sozinhas, e só
+       sobra incoerência de verdade — como dinheiro que saiu do caixa
+       para uma posição que não existe mais em `st.pools`/`st.lend`/
+       `st.ativos` (apagada sem limpar o ledger). */
+    if (st.mov.length) {
+      var caixaTotal = 0;
+      (st.carteiras || []).forEach(function (c) { caixaTotal += C.caixaDe(st, c.id); });
+      var tAgg = C.totais(st, {}, 'all');
+      var depositado = 0, sacado = 0;
+      st.mov.forEach(function (m) {
+        if (m.tipo === 'deposito') depositado += m.usd;
+        else if (m.tipo === 'saque') sacado += m.usd;
+      });
+      var esperado = depositado - sacado + tAgg.realizado;
+      var real = caixaTotal + tAgg.investido;
+      if (Math.abs(real - esperado) > 0.01) {
+        achados.push({ chave: 'patrimonio-nao-fecha', grave: true,
+          txt: 'O patrimônio não fecha: caixa + investido (' + real.toFixed(2) +
+               ') deveria ser depositado − sacado + resultado (' + esperado.toFixed(2) + ').' });
+      }
+    }
+
     return { ok: achados.length === 0, achados: achados };
   };
 
