@@ -460,42 +460,17 @@ P.optCarteiras = function (sel) {
 P.saud = function () { var h = new Date().getHours(); return h < 6 ? 'Boa noite' : h < 12 ? 'Bom dia' : h < 18 ? 'Boa tarde' : 'Boa noite'; };
 P.periodo = '30d';
 
-/* PRÉVIA para quem chega deslogado e sem dados: em vez de tela crua OU de
-   um cadeado na cara, mostra o dashboard CHEIO com dados de EXEMPLO (cor
-   normal, nada de escurecer) pra pessoa ver o produto, com uma nota discreta
-   no topo e um convite amigavel EMBAIXO. Uma carteira e' gratis; o login
-   serve pra ver os SEUS numeros e sincronizar. */
-P.vDashTeaser = function () {
-  var demo = ''
-    + '<div class="demo-note"><span class="demo-dot"></span> Você está vendo um <b>exemplo</b>. '
-    +   '<a href="#" id="demoTop">Entre</a> para acompanhar o seu — grátis com uma carteira.</div>'
-    + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
-    +   '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
-    +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
-    +   '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
-    + '<div class="kpis">'
-    +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
-    +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
-    + '</div>'
-    + '<div class="grid2b">'
-    +   '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
-    +     '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
-    +   '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
-    +     '<div class="card-bd"><div class="tzbar">'
-    +       '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
-    +       '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
-    +       '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
-    +       '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
-    +     '</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div></div>'
-    +   '<div class="card-bd"><div class="wcards">'
-    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 Phantom</span><span class="mono" style="font-weight:700">$10.300</span></div><div class="wcard-bar"><span style="width:55%"></span></div><div class="mc-sub">55,0% do patrimônio</div></div>'
-    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 MetaMask</span><span class="mono" style="font-weight:700">$8.440</span></div><div class="wcard-bar"><span style="width:45%"></span></div><div class="mc-sub">45,0% do patrimônio</div></div>'
-    +   '</div></div></div>'
-    + '<div class="duo">'
+/* ═══════════ PRÉVIA DESLOGADA — peças compartilhadas ═══════════
+   Dashboard, HOLD, DeFi e Trade usam as MESMAS tres pecas: a nota do topo,
+   os dois banners (gratis e PRO) e o wiring do login. Elas vivem aqui uma
+   vez so — quatro copias divergiriam no primeiro ajuste de texto. */
+P.demoNote = function () {
+  return '<div class="demo-note"><span class="demo-dot"></span> Você está vendo um <b>exemplo</b>. '
+    + '<a href="#" id="demoTop">Entre</a> para acompanhar o seu — grátis com uma carteira.</div>';
+};
+
+P.duoBanners = function () {
+  return '<div class="duo">'
     +   '<div class="duo-card duo-free">'
     +     '<div class="duo-tag duo-tag-free">Grátis</div>'
     +     '<h3 class="duo-h">Crie sua conta e comece</h3>'
@@ -522,10 +497,55 @@ P.vDashTeaser = function () {
     +     '<a class="btn btn-g duo-btn" href="/planos.html">Ver o PRO</a>'
     +   '</div>'
     + '</div>';
-  document.getElementById('pg').innerHTML = demo;
+};
+
+/* Liga os dois gatilhos de login da prévia (nota do topo e botão do banner). */
+P.duoWire = function () {
   var entrar = function (ev) { if (ev) ev.preventDefault(); if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
-  var d1 = document.getElementById('demoLogin'); if (d1) d1.onclick = entrar;
-  var d2 = document.getElementById('demoTop'); if (d2) d2.onclick = entrar;
+  var a = document.getElementById('demoLogin'); if (a) a.onclick = entrar;
+  var b = document.getElementById('demoTop'); if (b) b.onclick = entrar;
+};
+
+/* Deslogado e sem dados? A tela mostra a prévia em vez do estado vazio. */
+P.modoDemo = function () { return !(window.NexusAuth && window.NexusAuth.user); };
+
+/* PRÉVIA para quem chega deslogado e sem dados: em vez de tela crua OU de
+   um cadeado na cara, mostra o dashboard CHEIO com dados de EXEMPLO (cor
+   normal, nada de escurecer) pra pessoa ver o produto, com uma nota discreta
+   no topo e um convite amigavel EMBAIXO. Uma carteira e' gratis; o login
+   serve pra ver os SEUS numeros e sincronizar. */
+P.vDashTeaser = function () {
+  var demo = ''
+    + P.demoNote()
+    + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
+    +   '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
+    +   '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
+    + '<div class="kpis">'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
+    + '</div>'
+    + '<div class="grid2b">'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
+    +     '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
+    +   '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
+    +     '<div class="card-bd"><div class="tzbar">'
+    +       '<span style="width:44%;background:#F5B614"></span><span style="width:22%;background:#9945FF"></span>'
+    +       '<span style="width:18%;background:#22D3EE"></span><span style="width:16%;background:#14F195"></span></div>'
+    +       '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 44%</span><span><i style="background:#9945FF"></i>SOL 22%</span>'
+    +       '<span><i style="background:#22D3EE"></i>ETH 18%</span><span><i style="background:#14F195"></i>USDC 16%</span></div>'
+    +     '</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div></div>'
+    +   '<div class="card-bd"><div class="wcards">'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 Phantom</span><span class="mono" style="font-weight:700">$10.300</span></div><div class="wcard-bar"><span style="width:55%"></span></div><div class="mc-sub">55,0% do patrimônio</div></div>'
+    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 MetaMask</span><span class="mono" style="font-weight:700">$8.440</span></div><div class="wcard-bar"><span style="width:45%"></span></div><div class="mc-sub">45,0% do patrimônio</div></div>'
+    +   '</div></div></div>'
+    + P.duoBanners();
+  document.getElementById('pg').innerHTML = demo;
+  P.duoWire();
   P.mkChart('chEvoDemo', {
     type: 'line',
     data: { labels: ['','','','','','','','','','','',''],
@@ -536,6 +556,81 @@ P.vDashTeaser = function () {
       plugins: { legend: { display: false }, tooltip: { enabled: false } },
       scales: { x: { grid: { display: false }, ticks: { display: false } }, y: { grid: P.gGrid(), ticks: { display: false } } } }
   });
+};
+
+/* Prévias dos módulos: mesma ideia do dashboard — números de exemplo nos
+   componentes reais da tela, nota no topo e os dois banners embaixo. */
+P.vHoldTeaser = function () {
+  var linha = function (tk, ic, cor, bg, qtd, pm, pa, val, res, pct) {
+    return '<tr><td><div class="tk"><span class="ic" style="background:' + bg + ';color:' + cor + '">' + ic + '</span>'
+      + '<div><div style="font-weight:600">' + tk + '</div><div class="q">exemplo</div></div></div></td>'
+      + '<td class="r mono">' + qtd + '</td><td class="r mono" style="color:var(--mut)">' + pm + '</td>'
+      + '<td class="r mono">' + pa + '</td><td class="r mono">' + val + '</td>'
+      + '<td class="r mono up">' + res + '<div style="font-size:11px;font-weight:400">' + pct + '</div></td></tr>';
+  };
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">Valor em HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">3 ativos</div></div>'
+    +   '<div class="kpi k-hold"><div class="mc-lbl">Investido</div><div class="kpi-v mono">$9.900</div><div class="mc-sub">custo das posições abertas</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Não realizado</div><div class="kpi-v mono up">+$2.580</div><div class="mc-sub"><span class="up">+26,1%</span></div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Realizado</div><div class="kpi-v mono up">+$1.980</div><div class="mc-sub">de vendas já feitas</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Ativo</th>'
+    +   '<th class="r">Qtd</th><th class="r">Preço médio</th><th class="r">Preço atual</th><th class="r">Valor</th><th class="r">Não realizado</th></tr></thead><tbody>'
+    +   linha('BTC', '₿', 'var(--gold,#F5B614)', 'var(--gold-soft)', '0,08', '$61.200', '$67.800', '$5.424', '+$528', '+10,8%')
+    +   linha('SOL', '◎', 'var(--purple-txt,#A96BFF)', 'var(--purple-soft)', '25,0', '$132,40', '$168,20', '$4.205', '+$895', '+27,0%')
+    +   linha('ETH', 'Ξ', 'var(--blue,#4D9FFF)', 'var(--mdf-blue-soft,rgba(77,159,255,.12))', '0,85', '$3.010', '$3.340', '$2.839', '+$280', '+11,0%')
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
+P.vDefiTeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">Valor em pools</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">capital aplicado: $3.900</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">Taxas coletadas</div><div class="kpi-v mono">$180</div><div class="mc-sub">renda real em dólar</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Resultado DeFi</div><div class="kpi-v mono up">+$480</div><div class="mc-sub">pools abertas + encerradas</div></div>'
+    +   '<div class="kpi k-defi"><div class="mc-lbl">APR médio das taxas</div><div class="kpi-v mono">18,4%</div><div class="mc-sub">2 pools abertas</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Posição</th>'
+    +   '<th class="r">Capital</th><th class="r">Taxas</th><th class="r">APR real</th><th class="r">Resultado</th></tr></thead><tbody>'
+    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--purple-soft);color:var(--purple-txt,#A96BFF)">◎</span>'
+    +     '<div><div style="font-weight:600">SOL/USDC</div><div class="q">Orca · Solana</div></div></div></td>'
+    +     '<td class="r mono">$2.400</td><td class="r mono up">+$118</td><td class="r mono">19,1%</td><td class="r mono up">+$312</td></tr>'
+    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--cyan-soft);color:var(--cyan,#00E5FF)">🏦</span>'
+    +     '<div><div style="font-weight:600">USDC</div><div class="q">Kamino · lending</div></div></div></td>'
+    +     '<td class="r mono">$1.500</td><td class="r mono up">+$62</td><td class="r mono">8,4%</td><td class="r mono up">+$168</td></tr>'
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
+P.vTradeTeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Banca atual</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">aportado: $1.800</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Resultado dos trades</div><div class="kpi-v mono up">+$260</div><div class="mc-sub"><span class="up">+14,4%</span> sobre o aportado</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Win rate</div><div class="kpi-v mono">62%</div><div class="mc-sub">8 ganhos · 5 perdas</div></div>'
+    +   '<div class="kpi k-ret"><div class="mc-lbl">Expectativa / operação</div><div class="kpi-v mono up">+$20,00</div><div class="mc-sub">quanto se espera ganhar por trade</div></div>'
+    + '</div>'
+    + '<div class="kpis">'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Profit factor</div><div class="kpi-v mono up">1,90</div><div class="mc-sub">sistema ganhador</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Payoff</div><div class="kpi-v mono">1,45</div><div class="mc-sub">ganho médio $78,00</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Drawdown máximo</div><div class="kpi-v mono">6,2%</div><div class="mc-sub">maior perda $54,00</div></div>'
+    +   '<div class="kpi k-trade"><div class="mc-lbl">Operações</div><div class="kpi-v mono">13</div><div class="mc-sub">amostra ainda pequena</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Operações</div></div>'
+    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Data</th>'
+    +   '<th>Ativo</th><th>Direção</th><th class="r">Alav.</th><th class="r">Resultado</th></tr></thead><tbody>'
+    +   '<tr><td class="mono">12/08</td><td style="font-weight:600">BTC</td><td>Long</td><td class="r mono">3x</td><td class="r mono up">+$120</td></tr>'
+    +   '<tr><td class="mono">09/08</td><td style="font-weight:600">SOL</td><td>Short</td><td class="r mono">2x</td><td class="r mono down">−$54</td></tr>'
+    +   '<tr><td class="mono">05/08</td><td style="font-weight:600">ETH</td><td>Long</td><td class="r mono">2x</td><td class="r mono up">+$96</td></tr>'
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
 };
 
 P.vDash = function () {
@@ -553,7 +648,7 @@ P.vDash = function () {
     /* Deslogado e sem dados: mostra a PRÉVIA (dados de exemplo) com convite a
        entrar — os numeros reais so aparecem logado. Quem ja tem dados locais
        (sem login) NAO cai aqui, porque T.vazio fica falso. */
-    if (!(window.NexusAuth && window.NexusAuth.user)) { P.vDashTeaser(); return; }
+    if (P.modoDemo()) { P.vDashTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Seu portfólio começa aqui',
       'Registre sua primeira compra e o MundoDeFi passa a calcular patrimônio, preço médio, lucro realizado e não realizado — atualizados com a cotação do mercado.',
@@ -1052,6 +1147,7 @@ P.vHold = function () {
 
   var pos = P.posicoes();
   if (!pos.length) {
+    if (P.modoDemo()) { P.vHoldTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhum ativo registrado',
       'Registre sua primeira compra. A partir dela o MundoDeFi calcula preço médio ponderado, quanto você já realizou de lucro e quanto ainda está em aberto.',
@@ -1544,6 +1640,7 @@ P.vDefi = function () {
 
   var pools = P.poolsFiltradas(), lends = P.lendFiltrado();
   if (!pools.length && !lends.length) {
+    if (P.modoDemo()) { P.vDefiTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma posição DeFi',
       'Registre uma pool de liquidez ou uma posição de lending. O MundoDeFi acompanha capital, taxas coletadas e o APR que você está realmente obtendo — não o APR anunciado.',
@@ -1716,6 +1813,7 @@ P.vTrade = function () {
   document.getElementById('btnAdd').onclick = P.formOp;
 
   if (!S.n && !S.depositos) {
+    if (P.modoDemo()) { P.vTradeTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma operação registrada',
       'Aporte na banca e registre suas operações. Você passa a ver win rate, profit factor, expectativa por operação e drawdown máximo — as métricas que dizem se o sistema é ganhador.',
