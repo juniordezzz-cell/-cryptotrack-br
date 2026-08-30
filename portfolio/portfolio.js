@@ -2368,12 +2368,28 @@ P.carregarExemplo = function () {
   C.addMov(st, { tipo: 'deposito', cart: c2.id, usd: 1300, dt: m(6), nota: 'Aporte para RWA de exemplo' });
   C.addMov(st, { tipo: 'rwa_compra', ref: nvdax.id, cart: c2.id, qtd: 10, px: 118, fee: 6, dt: m(5) });
 
-  /* META: alvo de patrimônio com prazo alguns meses à frente — a tela
-     de Meta só existe pra ter o que mostrar na demo, o cálculo é 100%
-     de C.metaCalc a partir do ledger acima. */
+  /* META: três metas (exatamente o teto grátis, P.limMetas() — não crie
+     uma quarta) mostrando os três tipos que a fase 4 passou a aceitar. O
+     cálculo é 100% de C.metaCalc a partir do ledger acima; os alvos aqui
+     são literais estáticos escolhidos pra render um progresso real (nem
+     0% nem 100%), nunca derivados do estado do usuário. */
   st.metas = st.metas || [];
-  st.metas.push({ id: C.uid(), nome: 'Meus primeiros $50 mil em cripto', alvo: 50000,
-                  prazo: C.somaMeses(C.hoje(), 8), escopo: 'total', criadaEm: C.hoje() });
+  st.metas.push(
+    /* patrimônio total, em dólar — ~20,6k atual vira ~59% */
+    { id: C.uid(), nome: 'Patrimônio em US$ 35 mil', tipo: 'patrimonio', ativoTk: '',
+      medida: 'valor', alvo: 35000, moeda: 'usd',
+      prazo: C.somaMeses(C.hoje(), 10), escopo: 'total', criadaEm: C.hoje() },
+    /* ativo por quantidade — o próprio exemplo do dono: juntar 1 BTC
+       inteiro a partir dos 0,12 BTC que a carteira já tem (~12%) */
+    { id: C.uid(), nome: '1 BTC inteiro', tipo: 'ativo', ativoTk: 'BTC',
+      medida: 'qtd', alvo: 1, moeda: 'usd',
+      prazo: C.somaMeses(C.hoje(), 14), escopo: 'total', criadaEm: C.hoje() },
+    /* patrimônio total, mas declarada em real — mostra a moeda guardada
+       na meta e o aviso de câmbio (~R$111k atuais vira ~74%) */
+    { id: C.uid(), nome: 'R$ 150 mil em cripto', tipo: 'patrimonio', ativoTk: '',
+      medida: 'valor', alvo: 150000, moeda: 'brl',
+      prazo: C.somaMeses(C.hoje(), 12), escopo: 'total', criadaEm: C.hoje() }
+  );
 
   /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
      equivalente — sem isto toda carteira de exemplo nasceria com caixa
@@ -2668,16 +2684,18 @@ P.vMetaTeaser = function () {
     +     '<div class="card"><div class="card-bd">'
     +       '<div class="mcard-hd"><div class="mcard-ico">🎯</div><div class="mcard-title">Chegar em $30 mil de patrimônio</div></div>'
     +       '<div class="mc-sub">Patrimônio total · até 31/12/2026</div>'
-    +       '<div class="mcard-pct">+62,50%</div>'
+    +       '<div class="mcard-pct">62,5%</div>'
     +       '<div class="wcard-bar"><span style="width:62%"></span></div>'
-    +       '<div class="mc-sub" style="margin-top:.6rem">Faltam <b>$11.260,00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
+    +       '<div class="mc-sub" style="margin-top:.6rem">Faltam <b>$11,260.00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
     +       '<div class="mgrid-5" style="margin-top:.9rem">'
-    +         '<div class="mc sm"><div class="mc-lbl">Atual</div><div class="mc-val">$18.740,00</div></div>'
-    +         '<div class="mc sm"><div class="mc-lbl">Aporte mensal</div><div class="mc-val up">$1.520,00/mês</div></div>'
-    +         '<div class="mc sm"><div class="mc-lbl">Faltam</div><div class="mc-val">$11.260,00</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Atual</div><div class="mc-val">$18,740.00</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Aporte mensal</div><div class="mc-val up">$1,520.00/mês</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Faltam</div><div class="mc-val">$11,260.00</div></div>'
     +         '<div class="mc sm"><div class="mc-lbl">Conclusão estimada</div><div class="mc-val">04/2027</div></div>'
-    +         '<div class="mc sm mc-hi"><div class="mc-lbl">Objetivo</div><div class="mc-val">$30.000,00</div></div>'
-    +       '</div></div></div>'
+    +         '<div class="mc sm mc-hi"><div class="mc-lbl">Objetivo</div><div class="mc-val">$30,000.00</div></div>'
+    +       '</div>'
+    +       '<div class="fhint" style="margin-top:.7rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>'
+    +       '</div></div>'
     +   '</div></div></div>'
     + '<div class="card" style="margin-top:1rem"><div class="card-hd"><div class="card-title">Metas concluídas</div></div>'
     +   '<div class="card-bd"><div class="empty">Não há metas concluídas</div></div></div>'
