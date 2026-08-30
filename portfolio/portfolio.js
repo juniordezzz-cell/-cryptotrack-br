@@ -793,9 +793,9 @@ P.vHoldTeaser = function () {
     + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
     +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Ativo</th>'
     +   '<th class="r">Qtd</th><th class="r">Preço médio</th><th class="r">Preço atual</th><th class="r">Valor</th><th class="r">Não realizado</th></tr></thead><tbody>'
-    +   linha('BTC', '₿', 'var(--gold,#F5B614)', 'var(--gold-soft)', '0,08', '$61.200', '$67.800', '$5.424', '+$528', '+10,8%')
-    +   linha('SOL', '◎', 'var(--purple-txt,#A96BFF)', 'var(--purple-soft)', '25,0', '$132,40', '$168,20', '$4.205', '+$895', '+27,0%')
-    +   linha('ETH', 'Ξ', 'var(--blue,#4D9FFF)', 'var(--mdf-blue-soft,rgba(77,159,255,.12))', '0,85', '$3.010', '$3.340', '$2.839', '+$280', '+11,0%')
+    +   linha('BTC', '₿', 'var(--gold,#F5B614)', 'var(--gold-soft)', '0,08', '$55.000', '$67.800', '$5.424', '+$1.024', '+23,3%')
+    +   linha('SOL', '◎', 'var(--purple-txt,#A96BFF)', 'var(--purple-soft)', '25,0', '$124,80', '$168,00', '$4.200', '+$1.080', '+34,6%')
+    +   linha('ETH', 'Ξ', 'var(--blue,#4D9FFF)', 'var(--mdf-blue-soft,rgba(77,159,255,.12))', '0,85', '$2.800', '$3.360', '$2.856', '+$476', '+20,0%')
     +   '</tbody></table></div></div>'
     + P.duoBanners();
   P.duoWire();
@@ -1584,7 +1584,7 @@ P.vRWATeaser = function () {
     +     '<td>Tesla</td><td class="num mono">4,00</td><td class="num mono">$210,00</td><td class="num mono">$245,00</td>'
     +     '<td class="num mono">$980,00</td><td class="num mono up">+$140,00</td></tr>'
     +   '<tr><td><div class="tk"><div class="tk-ic">AAP</div><div><b>AAPLx</b><small>exemplo</small></div></div></td>'
-    +     '<td>Apple</td><td class="num mono">4,00</td><td class="num mono">$185,00</td><td class="num mono">$200,00</td>'
+    +     '<td>Apple</td><td class="num mono">4,00</td><td class="num mono">$170,00</td><td class="num mono">$200,00</td>'
     +     '<td class="num mono">$800,00</td><td class="num mono up">+$120,00</td></tr>'
     +   '</tbody></table></div></div>'
     + P.duoBanners();
