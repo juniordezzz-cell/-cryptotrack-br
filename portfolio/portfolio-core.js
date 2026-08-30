@@ -881,10 +881,45 @@
     return alvo.toISOString().slice(0, 10);
   };
 
-  C.metaCalc = function (st, precos, meta) {
+  C.metaCalc = function (st, precos, meta, rate) {
     var esc = meta.escopo || 'total';
-    var T = C.totais(st, precos, esc === 'total' ? 'all' : esc);
-    var atual = T.patrimonio;
+    var escArg = esc === 'total' ? 'all' : esc;
+
+    /* Migração por leitura: metas salvas pelo v1 não tinham tipo/moeda/
+       medida. Nunca reescrevemos o que está guardado — só preenchemos o
+       default no momento de calcular. */
+    var tipoLido = meta.tipo || 'patrimonio';
+    var moeda = meta.moeda || 'usd';
+    var medida = meta.medida || 'valor';
+
+    var atual;
+    if (tipoLido === 'ativo') {
+      /* Ação tokenizada também é um ativo que a pessoa pode ter como meta,
+         por isso procuramos nas duas listas (HOLD e RWA). */
+      var tk = String(meta.ativoTk || '').toUpperCase();
+      var todas = C.posicoes(st, precos, escArg).concat(C.posicoesRWA(st, precos, escArg));
+      var pos = null;
+      for (var i = 0; i < todas.length; i++) {
+        if (String(todas[i].tk || '').toUpperCase() === tk) { pos = todas[i]; break; }
+      }
+      atual = pos ? (medida === 'qtd' ? pos.qtd : pos.valor) : 0;
+    } else {
+      var T = C.totais(st, precos, escArg);
+      atual = T.patrimonio;
+    }
+
+    /* Meta em quantidade não tem moeda — a unidade é a do próprio ativo.
+       Meta em BRL converte o `atual` (que está em USD) usando a taxa
+       recebida; a meta guarda o alvo na moeda que a pessoa digitou, nunca
+       convertemos o alvo — só o que medimos contra ele. */
+    var avisoCambio = false;
+    if (medida !== 'qtd' && moeda === 'brl') {
+      avisoCambio = true;
+      if (isFinite(rate) && rate > 0) atual = atual * rate;
+      /* rate ausente/inválida: não inventamos taxa, atual segue em USD
+         mesmo assim — mas avisoCambio continua true pra tela avisar. */
+    }
+
     var alvo = num(meta.alvo);
     var falta = alvo - atual;
     var bateu = falta <= 0;
@@ -929,11 +964,13 @@
       : (ritmoReal >= aporteNecessario ? 'no-ritmo' : 'abaixo');
 
     return {
-      atual: atual, alvo: alvo, falta: bateu ? 0 : falta,
+      atual: atual, alvo: alvo, moeda: moeda, medida: medida, tipoLido: tipoLido,
+      falta: bateu ? 0 : falta,
       pct: alvo > 0 ? Math.min(100, atual / alvo * 100) : 0,
+      diasRest: diasRest,
       mesesRestantes: mesesRestantes, aporteNecessario: aporteNecessario,
       ritmoReal: ritmoReal, situacao: situacao,
-      encerrada: encerrada, bateu: bateu
+      encerrada: encerrada, bateu: bateu, avisoCambio: avisoCambio
     };
   };
 

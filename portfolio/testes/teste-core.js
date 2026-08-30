@@ -912,6 +912,51 @@ eqv('meta reta final: prazo ainda nao passou', m5.encerrada, false);
 eq('meta reta final: aporte necessario NAO zera (8000 / (10/30.44))', m5.aporteNecessario, 24352);
 eqv('meta reta final: situacao abaixo, nunca no-ritmo mentiroso', m5.situacao, 'abaixo');
 
+/* ══════════════════════════════════════════════════════════════
+   META v2 — tipos, medida e moeda (fase 4)
+   ══════════════════════════════════════════════════════════════ */
+sec('Meta v2: tipos, medida e moeda');
+
+var stq = C.novoEstado();
+stq.carteiras.push({ id: 'w1', nome: 'W' });
+stq.ativos.push({ id: 'ab', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 50000 });
+C.addMov(stq, { tipo: 'deposito', cart: 'w1', usd: 30000, dt: '2026-01-01' });
+/* compra 0,4 BTC a 50.000 = 20.000; sobra 10.000 de caixa */
+C.addMov(stq, { tipo: 'compra', ref: 'ab', cart: 'w1', qtd: 0.4, px: 50000, dt: '2026-01-02' });
+var pxq = { bitcoin: 50000 };
+
+/* META DE ATIVO POR QUANTIDADE: quer 1 BTC, tem 0,4 -> 40%, faltam 0,6 */
+var q1 = C.metaCalc(stq, pxq, { id:'q1', nome:'1 BTC', tipo:'ativo', ativoTk:'BTC',
+                                medida:'qtd', alvo:1, prazo:C.somaMeses(C.hoje(),12) });
+eq('meta ativo qtd: atual', q1.atual, 0.4);
+eq('meta ativo qtd: pct', q1.pct, 40);
+eq('meta ativo qtd: falta', q1.falta, 0.6);
+eqv('meta ativo qtd: medida', q1.medida, 'qtd');
+
+/* META DE ATIVO POR VALOR: quer 30.000 em BTC, tem 0,4 x 50.000 = 20.000 */
+var q2 = C.metaCalc(stq, pxq, { id:'q2', nome:'BTC em dolar', tipo:'ativo', ativoTk:'BTC',
+                                medida:'valor', alvo:30000, moeda:'usd', prazo:C.somaMeses(C.hoje(),12) });
+eq('meta ativo valor: atual', q2.atual, 20000);
+eq('meta ativo valor: falta', q2.falta, 10000);
+
+/* META DE PATRIMONIO EM BRL: patrimonio = caixa 10.000 + BTC 20.000 = 30.000 USD;
+   com dolar a 5,00 -> 150.000 BRL; alvo 300.000 BRL -> 50% */
+var b1 = C.metaCalc(stq, pxq, { id:'b1', nome:'R$300 mil', tipo:'patrimonio',
+                                alvo:300000, moeda:'brl', escopo:'total',
+                                prazo:C.somaMeses(C.hoje(),12) }, 5);
+eq('meta BRL: atual convertido', b1.atual, 150000);
+eq('meta BRL: pct', b1.pct, 50);
+eqv('meta BRL: avisa do cambio', b1.avisoCambio, true);
+eqv('meta USD nao avisa do cambio', q2.avisoCambio, false);
+
+/* MIGRACAO v1: meta sem tipo/moeda le como patrimonio em USD */
+var v1m = C.metaCalc(stq, pxq, { id:'v1', nome:'Antiga', alvo:60000,
+                                 escopo:'total', prazo:C.somaMeses(C.hoje(),12) });
+eqv('v1 vira patrimonio', v1m.tipoLido, 'patrimonio');
+eqv('v1 vira usd', v1m.moeda, 'usd');
+eq('v1 atual em USD', v1m.atual, 30000);
+eq('v1 pct', v1m.pct, 50);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));
