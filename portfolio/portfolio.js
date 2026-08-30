@@ -1439,6 +1439,168 @@ P.excluirMov = function (id) {
 };
 
 /* ══════════════════════════════════════════════════════════════════
+   RWA — ações tokenizadas
+   Mesmo motor de preço médio do HOLD (C.posicoesRWA delega a C.posicao),
+   aba própria: quem compra NVDA tokenizada não está na mesma decisão de
+   quem compra SOL, e misturar as duas tabelas esconde de que lado está
+   o patrimônio. `st.rwa` guarda só o metadado do ativo — ticker, ação
+   representada, plataforma (xStocks/Ondo/Backed) — nunca saldo.
+   ══════════════════════════════════════════════════════════════════ */
+P.formTxRWA = function (pre) {
+  if (P.precisaCarteira(function () { P.formTxRWA(pre); })) return;
+  var e = P.esc; pre = pre || {};
+  var ops = (P.st.rwa || []).map(function (a) {
+    return '<option value="' + a.id + '"' + (pre.aid === a.id ? ' selected' : '') + '>' + e(a.tk) + ' — ' + e(a.nome) + '</option>';
+  }).join('');
+  P.modal('Nova transação — RWA',
+    '<div class="fg"><label>Ativo</label><select id="fAid"><option value="__novo">＋ Novo ativo…</option>' + ops + '</select></div>'
+    + '<div id="novoWrap"><div class="frow"><div class="fg"><label>Ticker</label><input id="fTk" placeholder="Ex: NVDAx" style="text-transform:uppercase"></div>'
+    + '<div class="fg"><label>Ação representada</label><input id="fNome" placeholder="Ex: Nvidia"></div></div>'
+    + '<div class="frow"><div class="fg"><label>Plataforma</label><input id="fPlat" placeholder="Ex: xStocks, Ondo, Backed"></div>'
+    + '<div class="fg"><label>ID CoinGecko <small>(preço automático)</small></label><input id="fCg" placeholder="ex: nvidia-tokenized-stock-xstocks"></div></div>'
+    + '<div class="fg"><label>Carteira</label><select id="fCart">' + P.optCarteiras() + '</select></div></div>'
+    + '<div class="frow3"><div class="fg"><label>Tipo</label><select id="fT"><option value="compra">Compra</option><option value="venda">Venda</option></select></div>'
+    + '<div class="fg"><label>Quantidade</label><input id="fQ" type="number" step="any" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Preço unit. (US$)</label><input id="fPr" type="number" step="any" inputmode="decimal"></div></div>'
+    + '<div class="frow"><div class="fg"><label>Taxa paga (US$)</label><input id="fFee" type="number" step="any" value="0" inputmode="decimal"></div>'
+    + '<div class="fg"><label>Data</label><input id="fDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div></div>'
+    + '<div class="fhint">A taxa entra no custo na compra e reduz o que você recebe na venda — mesma regra do preço médio do HOLD.</div>',
+    { footer: '<button class="btn btn-p" id="okTx">Salvar</button>' });
+
+  var sel = document.getElementById('fAid');
+  if (pre.aid) sel.value = pre.aid;
+  function tog() { document.getElementById('novoWrap').style.display = sel.value === '__novo' ? 'block' : 'none'; }
+  sel.onchange = tog; tog();
+
+  document.getElementById('okTx').onclick = function () {
+    var aid = sel.value, q = P.num('fQ'), pr = P.num('fPr'), fee = P.num('fFee');
+    var dt = P.val('fDt') || C.hoje(), tipo = P.val('fT') || 'compra';
+    if (!q || q <= 0) return alert('Informe a quantidade.');
+    if (pr < 0) return alert('O preço não pode ser negativo.');
+    var a, ativoNovo = false;
+    if (aid === '__novo') {
+      var tk = P.val('fTk').toUpperCase();
+      var nome = P.val('fNome');
+      if (!tk) return alert('Informe o ticker do ativo.');
+      if (!nome) return alert('Informe qual ação este token representa.');
+      a = { id: C.uid(), tk: tk, nome: nome, plataforma: P.val('fPlat') || '—', cg: P.val('fCg').toLowerCase(), cart: P.val('fCart') || P.st.carteiras[0].id, last: pr, lastAt: null };
+      ativoNovo = true;
+    } else {
+      a = (P.st.rwa || []).filter(function (x) { return x.id === aid; })[0];
+      if (!a) return;
+    }
+    /* a trava tem que rodar ANTES de tocar em qualquer array — senão um
+       "＋ Novo ativo…" recusado pela trava deixa o ativo órfão em memória
+       (o mesmo bug real corrigido em P.formTx na fase 2). */
+    if (tipo === 'compra' && !P.travaCaixa(a.cart, q * pr + fee)) return;
+    if (ativoNovo) (P.st.rwa = P.st.rwa || []).push(a);
+    C.addMov(P.st, { tipo: tipo === 'venda' ? 'rwa_venda' : 'rwa_compra', ref: a.id, cart: a.cart, qtd: q, px: pr, fee: fee, dt: dt });
+    P.save(); P.closeModal(); P.render();
+    P.loadPrices().then(P.render);
+  };
+};
+
+/* Tabela de posições RWA — mesmo desenho de P.tabelaAtivos, com duas
+   colunas extras que a HOLD não tem (ação representada, plataforma),
+   porque aqui o token sozinho não diz o que a pessoa comprou. */
+P.tabelaRWA = function (pos) {
+  var e = P.esc;
+  var abertas = pos.filter(function (p) { return p.qtd > 0; });
+  var fechadas = pos.filter(function (p) { return p.qtd === 0; });
+
+  var rows = abertas.map(function (p) {
+    var resultado = p.naoRealizado + p.realizado;
+    return '<tr><td><div class="tk"><div class="tk-ic">' + e(p.tk.slice(0, 3)) + '</div><div><b>' + e(p.tk) + '</b><small>' + e(P.nomeCart(p.cart)) + '</small></div></div></td>'
+      + '<td>' + e(p.nome || '—') + '</td>'
+      + '<td>' + e(p.plataforma || '—') + '</td>'
+      + '<td class="num mono">' + p.qtd.toLocaleString('pt-BR', { maximumFractionDigits: 8 }) + '</td>'
+      + '<td class="num mono">' + P.money(p.pm, 2) + '</td>'
+      + '<td class="num mono">' + P.money(p.precoAtual, 2) + '</td>'
+      + '<td class="num mono">' + P.money(p.valor) + '</td>'
+      + '<td class="num mono ' + P.cls(resultado) + '">' + P.money(resultado) + '</td>'
+      + '<td class="num"><button class="btn btn-g btn-sm" data-tx="' + p.id + '">+ Transação</button></td></tr>';
+  }).join('');
+
+  var head = '<tr><th>Token</th><th>Ação representada</th><th>Plataforma</th><th class="num">Qtd</th>'
+    + '<th class="num">Preço médio</th><th class="num">Preço atual</th><th class="num">Valor</th><th class="num">Resultado</th><th></th></tr>';
+
+  var html = '<div class="card"><div class="card-hd"><div class="card-title">Posições em RWA</div>'
+    + '<div class="right">' + P.exportBtn('rwa') + '</div></div>'
+    + '<div class="tblw"><table class="dtable" style="min-width:920px"><thead>' + head + '</thead><tbody>'
+    + (rows || '<tr><td colspan="9"><div class="empty">Nenhuma posição aberta</div></td></tr>')
+    + '</tbody></table></div></div>';
+
+  if (fechadas.length) {
+    var fr = fechadas.map(function (p) {
+      return '<tr><td><div class="tk"><div class="tk-ic dim">' + e(p.tk.slice(0, 3)) + '</div><div><b>' + e(p.tk) + '</b><small>' + e(P.nomeCart(p.cart)) + '</small></div></div></td>'
+        + '<td>' + e(p.nome || '—') + '</td><td>' + e(p.plataforma || '—') + '</td>'
+        + '<td class="num mono">' + p.nTx + '</td>'
+        + '<td class="num mono ' + P.cls(p.realizado) + '">' + P.money(p.realizado) + '</td>'
+        + '<td class="num"><button class="btn btn-g btn-sm" data-tx="' + p.id + '">+ Transação</button></td></tr>';
+    }).join('');
+    html += '<div class="card" style="margin-top:1rem"><div class="card-hd"><div class="card-title">Posições encerradas</div>'
+      + '<div class="right"><span class="mut" style="font-size:12px">o lucro delas continua contando no seu resultado</span></div></div>'
+      + '<div class="tblw"><table style="min-width:600px"><thead><tr><th>Token</th><th>Ação representada</th><th>Plataforma</th>'
+      + '<th class="num">Transações</th><th class="num">Resultado realizado</th><th></th></tr></thead><tbody>'
+      + fr + '</tbody></table></div></div>';
+  }
+  return html;
+};
+
+P.vRWA = function () {
+  document.getElementById('pgTitle').textContent = 'RWA';
+  document.getElementById('pgSub').textContent = 'Ações tokenizadas — preço médio, resultado realizado e não realizado, separado do HOLD';
+  document.getElementById('btnAdd').onclick = function () { P.formTxRWA(); };
+
+  var pos = C.posicoesRWA(P.st, P.precos, P.cart());
+  if (!pos.length) {
+    document.getElementById('pg').innerHTML = P.vazio(
+      'Nenhuma ação tokenizada registrada',
+      'Registre sua primeira compra de RWA — ações tokenizadas via xStocks, Ondo ou Backed. O MundoDeFi calcula preço médio ponderado, lucro já realizado e o que ainda está em aberto, com o mesmo motor do HOLD.',
+      '<div class="zero-acts"><button class="btn btn-p" id="btnPrimeiraRWA">Registrar primeira compra</button></div>'
+    ) + P.planosCTA();
+    document.getElementById('btnPrimeiraRWA').onclick = function () { P.formTxRWA(); };
+    return;
+  }
+
+  var t = C.totais(P.st, P.precos, P.cart()).rwa;
+  var rent = t.custo > 0 ? t.naoRealizado / t.custo * 100 : 0;
+
+  var html = P.avisoPrecos();
+  html += '<div class="kpis">'
+    + '<div class="kpi k-rwa"><div class="mc-lbl">Valor em RWA</div>'
+    + '<div class="kpi-v" data-cv="' + t.valor + '" data-t="m">' + P.money(t.valor) + '</div></div>'
+    + '<div class="kpi k-rwa"><div class="mc-lbl">Investido</div>'
+    + '<div class="kpi-v" data-cv="' + t.custo + '" data-t="m">' + P.money(t.custo) + '</div>'
+    + '<div class="mc-sub">custo das posições abertas</div></div>'
+    + '<div class="kpi k-rwa"><div class="mc-lbl">Não realizado</div>'
+    + '<div class="kpi-v ' + P.cls(t.naoRealizado) + '" data-cv="' + t.naoRealizado + '" data-t="m">' + P.money(t.naoRealizado) + '</div>'
+    + '<div class="mc-sub"><span class="' + P.cls(rent) + '">' + P.pct(rent) + '</span></div></div>'
+    + '<div class="kpi k-rwa"><div class="mc-lbl">Realizado</div>'
+    + '<div class="kpi-v ' + P.cls(t.realizado) + '" data-cv="' + t.realizado + '" data-t="m">' + P.money(t.realizado) + '</div>'
+    + '<div class="mc-sub">de vendas já feitas</div></div>'
+    + '</div>';
+
+  html += P.tabelaRWA(pos);
+  html += P.planosCTA();
+  document.getElementById('pg').innerHTML = html;
+
+  document.querySelectorAll('[data-tx]').forEach(function (b) { b.onclick = function () { P.formTxRWA({ aid: b.dataset.tx }); }; });
+
+  P.exporters = {
+    rwa: function () {
+      var L = [['Token', 'Acao representada', 'Plataforma', 'Carteira', 'Quantidade', 'Preco medio USD', 'Preco atual USD', 'Valor USD', 'Nao realizado USD', 'Realizado USD']];
+      C.posicoesRWA(P.st, P.precos, P.cart()).forEach(function (p) {
+        L.push([p.tk, p.nome, p.plataforma, P.nomeCart(p.cart), p.qtd, p.pm.toFixed(2), p.precoAtual.toFixed(2), p.valor.toFixed(2), p.naoRealizado.toFixed(2), p.realizado.toFixed(2)]);
+      });
+      P.exportCSV('mundodefi-rwa', L);
+    }
+  };
+
+  P.countUps();
+};
+
+/* ══════════════════════════════════════════════════════════════════
    DEFI
    ══════════════════════════════════════════════════════════════════ */
 P.dTab = 'pools';
@@ -2167,5 +2329,6 @@ P.pageDash  = function () { P.boot('dash',  P.vDash);  };
 P.pageHold  = function () { P.boot('hold',  P.vHold);  };
 P.pageDefi  = function () { P.boot('defi',  P.vDefi);  };
 P.pageTrade = function () { P.boot('trade', P.vTrade); };
+P.pageRWA   = function () { P.boot('rwa',   P.vRWA);   };
 
 })();

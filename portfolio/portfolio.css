@@ -309,6 +309,7 @@ button{font-family:var(--font);cursor:pointer}
 .kpi{padding:15px 16px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--rl,14px);border-top-width:2px}
 .kpi.k-hold{border-top-color:var(--purple,#9945FF)} .kpi.k-defi{border-top-color:var(--cyan,#00E5FF)}
 .kpi.k-trade{border-top-color:var(--gold,#F5B614)} .kpi.k-ret{border-top-color:var(--green,#14F195)}
+.kpi.k-rwa{border-top-color:var(--blue,#4D9FFF)}
 .kpi-v{font-size:22px;font-weight:600;margin-top:8px}
 .wcards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
 .wcard{display:flex;flex-direction:column;gap:8px;padding:13px;border:1px solid var(--line);

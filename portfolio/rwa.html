@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script src="/mundodefi-api.js?v=1"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=1"></script>
+<link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
+<title>Carteira RWA: Ações Tokenizadas com Preço Médio | MundoDeFi</title>
+<meta name="description" content="Acompanhe suas ações tokenizadas (xStocks, Ondo, Backed) com preço médio pelo custo médio ponderado, lucro realizado separado do não realizado, na mesma régua do HOLD.">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/rwa.html">
+<meta property="og:title" content="Carteira RWA: Ações Tokenizadas com Preço Médio | MundoDeFi">
+<meta property="og:image" content="https://mundodefi.com.br/og/portfolio-rwa.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Portfólio MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/portfolio-rwa.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Acompanhe suas ações tokenizadas (xStocks, Ondo, Backed) com preço médio pelo custo médio ponderado, lucro realizado separado do não realizado, na mesma régua do HOLD.">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/rwa.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=1">
+<link rel="stylesheet" href="/banner.css?v=1">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=1">
+<link rel="stylesheet" href="/nexus/nexus.css?v=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/rwa.html#app",
+   "name": "MundoDeFi — Carteira RWA",
+   "url": "https://mundodefi.com.br/portfolio/rwa.html",
+   "description": "Ações tokenizadas com preço médio pelo custo médio ponderado e lucro realizado separado do não realizado.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Carteira RWA",
+     "item": "https://mundodefi.com.br/portfolio/rwa.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "Ação tokenizada é a mesma coisa que a ação de verdade?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É um token na blockchain que representa (ou é lastreado por) a ação — emitido por plataformas como xStocks, Ondo ou Backed. Por isso o portfólio pede qual ação cada token representa: sem esse dado, NVDAx é só uma sigla."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "Por que RWA fica separado do HOLD se o cálculo é o mesmo?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Porque a decisão é diferente. Comprar NVDA tokenizada não é a mesma aposta que comprar SOL, mesmo usando o mesmo motor de preço médio por trás. Misturar as duas tabelas escondia de que lado do patrimônio o dinheiro estava."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
+</head>
+<body>
+<div class="app" id="app"></div>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Carteira RWA: ações tokenizadas com preço médio de verdade</h1>
+    <p class="pf-sub">NVDA, GOOGL, AAPL tokenizadas — o mesmo rigor de conta que o HOLD já tem, numa aba própria.</p>
+    <h2>Por que RWA não entra na mesma tabela do HOLD</h2>
+    <p>Comprar uma ação tokenizada via xStocks, Ondo ou Backed é uma decisão diferente de comprar SOL ou BTC — mesmo que, por baixo do capô, o cálculo de preço médio seja idêntico. Juntar as duas tabelas esconderia de que lado do seu patrimônio o dinheiro realmente está: cripto nativa ou exposição tokenizada a ações.</p>
+    <p>Por isso o RWA tem tela própria, com as mesmas contas do HOLD — <strong>lucro realizado</strong> separado do <strong>não realizado</strong> — e um dado a mais que o HOLD não precisa: qual ação cada token representa e em qual plataforma ele foi emitido.</p>
+    <h2>Como o preço médio funciona</h2>
+    <p>Custo médio ponderado, o mesmo método usado no HOLD e o mesmo que a Receita usa no Brasil. Cada compra soma quantidade e custo — com a taxa dentro, porque taxa faz parte do que você pagou. A venda não mexe no preço médio: baixa o custo proporcional e materializa o ganho daquela operação.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>Ação tokenizada é a mesma coisa que a ação de verdade?</h3>
+    <p>É um token na blockchain que representa (ou é lastreado por) a ação — emitido por plataformas como xStocks, Ondo ou Backed. Por isso o portfólio pede qual ação cada token representa: sem esse dado, NVDAx é só uma sigla.</p>
+    <h3>Por que RWA fica separado do HOLD se o cálculo é o mesmo?</h3>
+    <p>Porque a decisão é diferente. Comprar NVDA tokenizada não é a mesma aposta que comprar SOL, mesmo usando o mesmo motor de preço médio por trás. Misturar as duas tabelas escondia de que lado do patrimônio o dinheiro estava.</p>
+  </div>
+</section>
+
+<!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
+<script src="/nexus/nexus-auth.js?v=1"></script>
+<script src="/portfolio/portfolio-core.js?v=1"></script>
+<script src="/portfolio/portfolio-supervisor.js?v=1"></script>
+<script src="/portfolio/portfolio-store.js?v=1"></script>
+<script src="/banner.js?v=1"></script>
+<script src="/portfolio/portfolio.js?v=1"></script>
+<script>P.pageRWA();</script>
+<script src="/nexus/nexus-motor.js?v=1"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=1"></script>
+<script src="/nexus/nexus-core.js?v=1"></script>
+</body>
+</html>
