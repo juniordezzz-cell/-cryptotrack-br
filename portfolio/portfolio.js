@@ -2449,6 +2449,14 @@ P.metaMesAno = function (ym) {
   var p = String(ym).split('-');
   return (p[1] || '—') + '/' + (p[0] || '—');
 };
+/* Percentual de PROGRESSO, nunca de resultado — por isso nunca usa P.pct
+   (que prefixa "+"/"-" porque foi feito pra ganho/perda). Chegar a 12% de
+   uma meta não é lucro, é só progresso; o "+" ali leria como se fosse. */
+P.metaPct = function (v) {
+  if (v == null || isNaN(v)) return '—';
+  var t = v.toFixed(1) + '%';
+  return (P.st && P.st.cfg.moeda === 'brl') ? t.replace('.', ',') : t;
+};
 
 /* Meta sobre patrimônio total OU sobre um ativo específico, em quantidade
    ou em valor (com moeda). Campos que não valem para a escolha atual ficam
@@ -2569,9 +2577,13 @@ P.metaCardHTML = function (meta, r, concluida) {
     + '<button class="avmenu-link danger" data-meta-del="' + meta.id + '">Excluir</button>'
     + '</div></div>';
 
+  /* meta de ativo não tem "escopo" (patrimônio total ou uma carteira) —
+     o que a identifica é o próprio ativo. Mostrar "Patrimônio total" numa
+     meta de 1 BTC era a tela inventando um escopo que a meta não tem. */
+  var escopoTxt = r.tipoLido === 'ativo' ? (meta.ativoTk || '—') : P.metaEscopoNome(meta.escopo);
   var head = '<div class="mcard-hd"><div class="mcard-ico">🎯</div>'
     + '<div class="mcard-title">' + e(meta.nome) + '</div>' + menu + '</div>'
-    + '<div class="mc-sub">' + e(P.metaEscopoNome(meta.escopo)) + ' · até ' + P.dBR(meta.prazo) + '</div>';
+    + '<div class="mc-sub">' + e(escopoTxt) + ' · até ' + P.dBR(meta.prazo) + '</div>';
 
   /* avisoCambio: regra de honestidade #4 — presente sempre que o núcleo
      sinalizar que o progresso desta meta se move com o câmbio. */
@@ -2597,9 +2609,14 @@ P.metaCardHTML = function (meta, r, concluida) {
     var tiles = '<div class="mgrid-5" style="margin-top:.9rem">'
       + tile('Atual', fmt(r.atual))
       /* regra #2: ritmoReal nulo nunca vira "R$ 0/mês" — é uma frase, não
-         um número, porque zero afirmaria que a pessoa não aportou nada. */
-      + tile('Aporte mensal', semRitmo ? '—' : fmt(r.ritmoReal) + '/mês', ritmoCls, false,
-             semRitmo ? 'ainda não dá para medir seu ritmo' : '')
+         um número, porque zero afirmaria que a pessoa não aportou nada.
+         ritmoReal é SEMPRE dinheiro (aporte líquido medido no livro) —
+         nunca passa por fmt()/metaFmt, que trocaria pra unidade do ativo
+         numa meta de qtd e diria, por exemplo, "4.445 BTC/mês" quando o
+         que existe é dinheiro entrando, não bitcoin sendo comprado. */
+      + tile('Aporte mensal', semRitmo ? '—' : P.moneyMeta(r.ritmoReal, r.moeda) + '/mês', ritmoCls, false,
+             semRitmo ? 'ainda não dá para medir seu ritmo'
+               : (r.medida === 'qtd' ? 'aporte em dinheiro — a meta é em quantidade' : ''))
       + tile('Faltam', fmt(r.falta))
       /* regra #1: conclusaoEstimada nula vira "—" + o motivo em texto claro. */
       + tile('Conclusão estimada', r.conclusaoEstimada ? P.metaMesAno(r.conclusaoEstimada) : '—', '', false,
@@ -2610,7 +2627,7 @@ P.metaCardHTML = function (meta, r, concluida) {
     /* regra #3: onde aporteNecessario/conclusaoEstimada aparecem (aqui, a
        linha de status e o tile de conclusão), o aviso de mercado parado
        tem que estar no mesmo cartão. */
-    corpo = '<div class="mcard-pct">' + P.pct(r.pct) + '</div>'
+    corpo = '<div class="mcard-pct">' + P.metaPct(r.pct) + '</div>'
       + '<div class="wcard-bar"><span style="width:' + pct.toFixed(1) + '%"></span></div>'
       + statusLine + cambioNote + tiles
       + '<div class="fhint" style="margin-top:.7rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>';
