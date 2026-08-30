@@ -971,9 +971,18 @@
       }
     }
 
+    /* meta em qtd: `ritmoReal` é SEMPRE dinheiro (aporte líquido medido no
+       livro) e `aporteNecessario`, aqui, é uma QUANTIDADE do ativo (ex.:
+       0,075 BTC/mês) — comparar os dois seria comparar dólar com bitcoin.
+       Convertê-los pra mesma unidade exigiria prever preço, e prever
+       preço é exatamente o que este produto recusa a fazer (mesma regra
+       que já trava `conclusaoEstimada` pra medida:'qtd' logo abaixo).
+       Por isso uma meta em qtd nunca produz veredito 'no-ritmo'/'abaixo'
+       — cai em 'sem-medida', o mesmo estado que a tela já usa quando o
+       ritmo não pode ser medido. */
     var situacao = bateu ? 'batida'
       : encerrada ? 'encerrada'
-      : ritmoReal == null ? 'sem-medida'
+      : (medida === 'qtd' || ritmoReal == null) ? 'sem-medida'
       : (ritmoReal >= aporteNecessario ? 'no-ritmo' : 'abaixo');
 
     /* Conclusão estimada: assume mercado PARADO e aporte constante no

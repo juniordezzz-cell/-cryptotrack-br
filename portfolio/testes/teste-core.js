@@ -932,6 +932,43 @@ eq('meta ativo qtd: atual', q1.atual, 0.4);
 eq('meta ativo qtd: pct', q1.pct, 40);
 eq('meta ativo qtd: falta', q1.falta, 0.6);
 eqv('meta ativo qtd: medida', q1.medida, 'qtd');
+eqv('meta ativo qtd sem historico: ritmoReal null (unico deposito)', q1.ritmoReal, null);
+
+/* ══════════════════════════════════════════════════════════════
+   REGRESSAO CRITICA: meta em qtd com RITMO MEDIDO nao pode comparar
+   dinheiro com quantidade. `q1` acima tem um unico depósito, entao
+   ritmoReal fica null e nunca exercita a comparação — este caso
+   reproduz o bug do review: pelo menos 30 dias de histórico de
+   depósito, pra ritmoReal sair medido (em dinheiro) enquanto
+   aporteNecessario continua em BTC (quantidade).
+   Reprodução do review: alvo 1 BTC, tem 0,1 BTC, deposita 5.000/mes
+   (mesma cadencia Jan-Abr, span 90 dias, ja validada em
+   'Meta: alvo e plano de aporte' e na regressao de moeda acima).
+   ritmoReal (dinheiro) = 20000/(90/30.44) = 6764,4444 USD/mes.
+   aporteNecessario (quantidade) = falta/mesesRestantes = 0,9/12 = 0,075 BTC/mes.
+   6764,44 >= 0,075 é sempre verdade — se `situacao` comparasse os
+   dois direto, daria 'no-ritmo' quase não importa a realidade.
+   O núcleo TEM que recusar essa comparação e cair em 'sem-medida'. */
+sec('Meta v2: qtd com ritmo medido nao compara dinheiro com quantidade (regressao)');
+
+var stq3 = C.novoEstado();
+stq3.carteiras.push({ id: 'w1', nome: 'W' });
+stq3.ativos.push({ id: 'ab3', tk: 'BTC', cg: 'bitcoin', cart: 'w1', last: 50000 });
+C.addMov(stq3, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-01-01' });
+C.addMov(stq3, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-02-01' });
+C.addMov(stq3, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-03-01' });
+C.addMov(stq3, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-04-01' });
+/* compra 0,1 BTC a 50.000 = 5.000; sobra 15.000 de caixa (irrelevante pra meta qtd) */
+C.addMov(stq3, { tipo: 'compra', ref: 'ab3', cart: 'w1', qtd: 0.1, px: 50000, dt: '2026-01-02' });
+var pxq3 = { bitcoin: 50000 };
+var q3 = C.metaCalc(stq3, pxq3, { id:'q3', nome:'1 BTC', tipo:'ativo', ativoTk:'BTC',
+                                   medida:'qtd', alvo:1, prazo:C.somaMeses(C.hoje(),12) });
+eq('meta qtd c/ ritmo: falta (0,9 BTC)', q3.falta, 0.9);
+eq('meta qtd c/ ritmo: aporteNecessario (0,9/12 BTC)', q3.aporteNecessario, 0.075);
+eq('meta qtd c/ ritmo: ritmoReal medido em dinheiro (20000/(90/30.44))', q3.ritmoReal, 6764.4444);
+eqv('meta qtd c/ ritmo: situacao NAO vira no-ritmo (dinheiro x quantidade)', q3.situacao !== 'no-ritmo', true);
+eqv('meta qtd c/ ritmo: situacao NAO vira abaixo (dinheiro x quantidade)', q3.situacao !== 'abaixo', true);
+eqv('meta qtd c/ ritmo: situacao cai em sem-medida', q3.situacao, 'sem-medida');
 
 /* META DE ATIVO POR VALOR: quer 30.000 em BTC, tem 0,4 x 50.000 = 20.000 */
 var q2 = C.metaCalc(stq, pxq, { id:'q2', nome:'BTC em dolar', tipo:'ativo', ativoTk:'BTC',

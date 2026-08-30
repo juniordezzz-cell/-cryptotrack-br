@@ -2556,13 +2556,25 @@ P.formMeta = function (meta) {
         alvo: alvo, moeda: moeda, prazo: prazo, escopo: escopo, criadaEm: C.hoje()
       });
     }
-    P.save(); P.closeModal(); P.render();
+    /* meta em BRL recém-criada/editada precisa de P.rate FRESCA antes do
+       próximo render — P.rate começa em 1 na carga da página e só é
+       atualizada por loadRate(); sem esperar por ela aqui, a primeira meta
+       BRL da sessão calcularia o progresso com dólar a R$1,00 (subestima
+       ~5x, silenciosamente, porque rate=1 passa no guard rateOk). Mesmo
+       padrão já usado no toggle de moeda (P.mUsd/P.mBrl acima). loadRate()
+       pula o fetch sozinho quando não há meta em BRL (P.temMetaBrl). */
+    P.save();
+    P.loadRate().then(function () { P.closeModal(); P.render(); });
   };
 };
 
 P.excluirMeta = function (id) {
   if (!confirm('Excluir esta meta? Isso não mexe nas suas movimentações, só apaga o alvo e o prazo.')) return;
   P.st.metas = (P.st.metas || []).filter(function (m) { return m.id !== id; });
+  /* excluir não precisa de rate fresca pra ESTA meta (ela sumiu), mas se
+     ainda sobrar outra meta em BRL na lista, P.render() vai recalculá-la
+     com a P.rate que já estiver em memória — não regride o Fix 2 acima,
+     só não paga o custo de um fetch numa ação que não criou/editou nada. */
   P.save(); P.render();
 };
 
@@ -2612,7 +2624,11 @@ P.metaCardHTML = function (meta, r, concluida) {
       + cambioNote;
   } else {
     var semRitmo = r.ritmoReal == null;
-    var ritmoCls = semRitmo ? '' : (r.situacao === 'abaixo' ? 'down' : 'up');
+    /* só pinta o tile quando `situacao` de fato deu um veredito de ritmo
+       (no-ritmo/abaixo) — meta em qtd tem ritmoReal medido em dinheiro mas
+       `situacao` vem 'sem-medida' (núcleo nunca compara dinheiro com
+       quantidade), então cai no '' e o tile fica neutro, não verde. */
+    var ritmoCls = r.situacao === 'abaixo' ? 'down' : (r.situacao === 'no-ritmo' ? 'up' : '');
 
     /* regra #5: prazo vencido e não batida NUNCA some da lista — só troca
        a linha de status por "prazo encerrado" e quanto faltou. */
