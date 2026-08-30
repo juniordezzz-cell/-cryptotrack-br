@@ -1044,6 +1044,38 @@ var c4 = C.metaCalc(stc, {}, { id:'c4', nome:'1 BTC', tipo:'ativo', ativoTk:'BTC
 eqv('qtd: previsao nula', c4.conclusaoEstimada, null);
 eqv('qtd: motivo', c4.motivoSemPrevisao, 'qtd-nao-projetavel');
 
+/* TRAVA 4 (fase 4): ritmo positivo mas insuficiente -- teto de 1200 meses.
+   Bug real: deposito e saque quase se cancelam na janela medida, entao
+   ritmoReal fica positivo e minusculo. Sem teto, `meses` explode e
+   Math.ceil(meses) faz C.somaMeses estourar (RangeError: Invalid time
+   value) ou devolver string corrompida tipo "+010359" em vez de AAAA-MM. */
+var stI = C.novoEstado(); stI.carteiras.push({ id:'w1', nome:'W' });
+C.addMov(stI, { tipo:'deposito', cart:'w1', usd:1000,   dt:'2026-01-01' });
+C.addMov(stI, { tipo:'saque',    cart:'w1', usd:999.99, dt:'2026-02-05' });
+/* patrimonio (so caixa) = 1000 - 999,99 = 0,01; alvo 50.000 -> falta 49.999,99.
+   span = dias(01/01 -> 05/02) = 35 dias (>=30, ritmo mensuravel).
+   liquido = 1000 - 999,99 = 0,01; ritmoReal = 0,01/(35/30,44) ~= 0,0087 USD/mes.
+   meses = 49999,99/0,0087 ~= 5.750.000 meses -- muito acima do teto de 1200,
+   entao a previsao tem que vir nula com o motivo novo, e a chamada NUNCA
+   pode lancar. */
+var c5;
+var lancou = false;
+try {
+  c5 = C.metaCalc(stI, {}, { id:'c5', nome:'Quase cancelou', tipo:'patrimonio',
+                             alvo:50000, moeda:'usd', escopo:'total',
+                             prazo:C.somaMeses(C.hoje(),24) });
+} catch (e) { lancou = true; }
+eqv('ritmo insuficiente: nao lanca', lancou, false);
+eqv('ritmo insuficiente: previsao nula', c5.conclusaoEstimada, null);
+eqv('ritmo insuficiente: motivo novo', c5.motivoSemPrevisao, 'ritmo-insuficiente');
+
+/* controle: o teto NAO pode mexer no caminho feliz -- c1 (acima) ainda
+   projeta uma data AAAA-MM normal: falta 6.000, ritmoReal do stc ~1.352,89
+   (4 aportes de 1.000, span 90 dias), meses = 6000/1352,89 = 4,43 ->
+   Math.ceil = 5 meses, bem dentro do teto de 1200. */
+eqv('teto nao quebra o caminho feliz: mesmos 5 meses de sempre',
+    c1.conclusaoEstimada, C.somaMeses(C.hoje(), 5).slice(0, 7));
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

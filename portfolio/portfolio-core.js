@@ -1002,7 +1002,25 @@
       /* falta e ritmoReal já estão na MESMA moeda (fix da fase 4/task 1),
          então essa divisão não precisa de nenhuma conversão extra. */
       var meses = falta / ritmoReal;
-      conclusaoEstimada = C.somaMeses(hoje, Math.ceil(meses)).slice(0, 7);
+      /* Teto de 1200 meses (100 anos): ritmoReal pode ser um número
+         positivo minúsculo quando depósito e saque quase se cancelam na
+         janela medida (ex.: depositou 1000, sacou 999,99 — ritmo real de
+         poucos centavos por mês) — comum pra quem reforçou e depois
+         aparou a posição. Nesse caso `meses` explode e Math.ceil(meses)
+         ou estoura o range de Date (RangeError: Invalid time value) ou
+         vira um número grande o bastante pra corromper a string devolvida
+         por somaMeses (ex. "+010359" em vez de AAAA-MM). 1200 meses fica
+         muito além de qualquer meta financeira real, mas ainda muito
+         longe do limite de Date (±273.790 anos), então nunca chega perto
+         de estourar. isFinite cobre também NaN/Infinity de qualquer
+         caminho futuro — a função nunca deve lançar, só devolver um
+         motivo em vez de data. */
+      var TETO_MESES_PROJECAO = 1200;
+      if (!isFinite(meses) || meses > TETO_MESES_PROJECAO) {
+        motivoSemPrevisao = 'ritmo-insuficiente';
+      } else {
+        conclusaoEstimada = C.somaMeses(hoje, Math.ceil(meses)).slice(0, 7);
+      }
     }
 
     return {
