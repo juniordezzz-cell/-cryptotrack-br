@@ -873,7 +873,7 @@ P.vDash = function () {
   html += '<div class="hero">'
     + '<div><div class="mc-lbl">Patrimônio total</div>'
     + '<div class="hero-big mono" data-cv="' + T.patrimonio + '" data-t="m">' + P.money(T.patrimonio) + '</div>'
-    + '<div class="mc-sub">HOLD + DeFi + Trade + Caixa</div></div>'
+    + '<div class="mc-sub">HOLD + DeFi + Trade + RWA + Caixa</div></div>'
     + '<div style="text-align:right">'
     + '<div class="mc-lbl">Não realizado</div>'
     + '<div class="mc-val ' + P.cls(T.naoRealizado) + '" data-cv="' + T.naoRealizado + '" data-t="m">' + P.money(T.naoRealizado) + '</div>'
@@ -2340,6 +2340,22 @@ P.carregarExemplo = function () {
     st.trades.push({ id: C.uid(), dt: t[4], ativo: t[0], dir: t[1], alav: t[2], res: t[3], txt: 'Operação de exemplo', cart: c1.id });
     C.addMov(st, { tipo: 'trade_res', cart: c1.id, usd: Math.abs(t[3]), px: t[3] >= 0 ? 1 : -1, dt: t[4], nota: t[0] });
   });
+
+  /* RWA: uma ação tokenizada (mesmo motor de preço médio do HOLD), com
+     depósito próprio cobrindo a compra — sem isto a carteira nasceria
+     no vermelho, o mesmo erro que a fase 2 cometeu. */
+  var nvdax = { id: C.uid(), tk: 'NVDAx', nome: 'Nvidia', plataforma: 'xStocks',
+                cg: 'nvidia-x', cart: c2.id, last: 132, lastAt: null };
+  st.rwa.push(nvdax);
+  C.addMov(st, { tipo: 'deposito', cart: c2.id, usd: 1300, dt: m(6), nota: 'Aporte para RWA de exemplo' });
+  C.addMov(st, { tipo: 'rwa_compra', ref: nvdax.id, cart: c2.id, qtd: 10, px: 118, fee: 6, dt: m(5) });
+
+  /* META: alvo de patrimônio com prazo alguns meses à frente — a tela
+     de Meta só existe pra ter o que mostrar na demo, o cálculo é 100%
+     de C.metaCalc a partir do ledger acima. */
+  st.metas = st.metas || [];
+  st.metas.push({ id: C.uid(), nome: 'Meu primeiro R$50 mil', alvo: 50000,
+                  prazo: C.somaMeses(C.hoje(), 8), escopo: 'total', criadaEm: C.hoje() });
 
   /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
      equivalente — sem isto toda carteira de exemplo nasceria com caixa
