@@ -296,6 +296,41 @@ button{font-family:var(--font);cursor:pointer}
 .grid2,.grid2b{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 
 /* ══════════════════════════════════════════════════════════════════
+   META — cartão por meta (fase 4/task 5), layout de referência:
+   ícone/título/menu, percentual grande, barra, tiles embaixo.
+   Nada de cor nova: reusa --purple/--gold/--panel3 já tokenizados.
+   ══════════════════════════════════════════════════════════════════ */
+.mcard-hd{display:flex;align-items:center;gap:10px;margin-bottom:.4rem}
+.mcard-ico{
+  width:32px;height:32px;border-radius:10px;flex-shrink:0;
+  background:var(--purple-soft);display:flex;align-items:center;justify-content:center;font-size:15px;
+}
+.mcard-title{font-weight:700;font-size:14.5px;flex:1;min-width:0}
+.mcard-menu{position:relative;flex-shrink:0}
+.mcard-menu-btn{
+  background:none;border:none;color:var(--mut2);font-size:18px;line-height:1;
+  padding:3px 8px;border-radius:6px;transition:background var(--mdf-t-fast,.13s),color var(--mdf-t-fast,.13s);
+}
+.mcard-menu-btn:hover{background:var(--panel3);color:var(--txt)}
+/* mesma peça do menu do avatar (.avmenu), só mais estreita — aqui são
+   só 2 ações (editar/excluir), não um painel de conta. */
+.avmenu.mcard-dropdown{width:150px;right:0;top:calc(100% + 6px)}
+.avmenu-link.danger:hover{background:var(--red-soft);color:var(--red,#FF4D6A)}
+/* percentual grande, como na referência — mesma linguagem do .hero-big,
+   só menor, porque aqui é um cartão entre vários, não o herói da página. */
+.mcard-pct{font-family:var(--mono);font-weight:700;font-size:2rem;letter-spacing:-.03em;line-height:1}
+/* linha de 5 tiles embaixo da barra: Atual · Aporte mensal · Faltam ·
+   Conclusão estimada · Objetivo. Mesma escala de breakpoints do resto
+   do arquivo (1220/768/960/560), só que com 5 colunas em vez de 4/6. */
+.mgrid-5{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+/* Objetivo é o único tile preenchido/escuro, como na referência — dourado
+   porque é exatamente "o número que a pessoa veio ver" (ver nota de cores
+   no topo do arquivo), nunca uma cor inventada. */
+.mc.mc-hi{background:var(--panel3);border-color:rgba(245,182,20,.35)}
+.mc.mc-hi .mc-lbl{color:var(--gold,#F5B614)}
+.mc.mc-hi .mc-val{color:var(--gold,#F5B614)}
+
+/* ══════════════════════════════════════════════════════════════════
    DASHBOARD RESTILIZADO — herói, KPIs, carteiras, tabela de ativos
    Componentes reusados a partir da Task 3 (HOLD/DeFi/Trade).
    ══════════════════════════════════════════════════════════════════ */
@@ -648,12 +683,14 @@ a.up-item:hover{border-color:var(--purple,#9945FF)}
 @media(max-width:1220px){
   .mgrid{grid-template-columns:repeat(2,1fr)}
   .mgrid-6{grid-template-columns:repeat(3,1fr)}
+  .mgrid-5{grid-template-columns:repeat(3,1fr)}
 }
 @media(max-width:960px){
   .grid2,.grid2b{grid-template-columns:1fr}
 }
 @media(max-width:560px){
   .mgrid,.mgrid-6{grid-template-columns:1fr 1fr}
+  .mgrid-5{grid-template-columns:1fr 1fr}
   .frow,.frow3{grid-template-columns:1fr}
   .pool-nums{grid-template-columns:1fr 1fr}
   .cc-val{display:none}

@@ -430,6 +430,12 @@ P.shell = function (active) {
   document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') P.closeModal(); });
   document.addEventListener('click', function (ev) {
     if (!ev.target.closest('.avwrap') && !avEl.hasAttribute('hidden')) { avEl.setAttribute('hidden', ''); avBtn.setAttribute('aria-expanded', 'false'); }
+    /* menu ⋮ dos cartões de meta: mesmo padrão do avatar — fecha ao
+       clicar fora do próprio menu. */
+    if (!ev.target.closest('.mcard-menu')) {
+      document.querySelectorAll('.mcard-dropdown:not([hidden])').forEach(function (dd) { dd.setAttribute('hidden', ''); });
+      document.querySelectorAll('[data-meta-menubtn][aria-expanded="true"]').forEach(function (b) { b.setAttribute('aria-expanded', 'false'); });
+    }
     if (ev.target.closest('.lockbtn') || ev.target.closest('.lockrow')) { P.upsell(); return; }
     var ex = ev.target.closest('[data-exp]');
     if (ex && P.exporters && P.exporters[ex.dataset.exp]) P.exporters[ex.dataset.exp]();
@@ -2392,12 +2398,56 @@ P.carregarExemplo = function () {
       só que marcada "prazo encerrado" + se bateu ou quanto faltou.
    st.metas pode não existir em estados salvos antes desta fase — por
    isso todo acesso é via (P.st.metas || []).
+
+   Fase 4/task 5: layout em cards (Metas em andamento + Metas concluídas).
+   Meta batida SAI da lista ativa e aparece em "concluídas" — nunca some.
    ══════════════════════════════════════════════════════════════════ */
 P.AVISO_APORTE = 'Esta conta assume que o valor de mercado das suas posições fica parado — ela mede só o dinheiro novo que falta entrar, nunca uma previsão de preço.';
+/* avisoCambio: meta em BRL mede um patrimônio que nasce em USD — o câmbio
+   sozinho move o progresso, sem a pessoa comprar ou vender nada. Quem não
+   souber disso lê a barra como mérito ou fracasso quando às vezes é só a
+   cotação do dólar. */
+P.AVISO_CAMBIO = 'Esta meta é em reais, mas seu patrimônio é calculado em dólar — o progresso se move com a cotação, mesmo sem você comprar ou vender nada.';
+/* Os 4 motivos que C.metaCalc devolve quando não há data pra prever —
+   nenhuma conta nova aqui, só a tradução em texto claro. */
+P.META_MOTIVO_TXT = {
+  'sem-ritmo': 'sem histórico de aporte para estimar',
+  'ritmo-parado': 'não chega no ritmo atual',
+  'ritmo-insuficiente': 'no ritmo atual, levaria mais de 100 anos',
+  'qtd-nao-projetavel': 'depende do preço, não dá para estimar'
+};
 
 P.metaEscopoNome = function (esc) {
   if (!esc || esc === 'total') return 'Patrimônio total';
   return P.nomeCart(esc);
+};
+
+/* Dinheiro na moeda QUE A META DECLAROU — nunca a moeda da tela. Uma meta
+   em R$ 100 mil continua em R$ mesmo com a tela em US$ (e vice-versa):
+   quem escreveu o alvo escolheu a moeda, a tela não pode reescrever isso.
+   C.metaCalc já devolve `atual`/`ritmoReal` convertidos pra moeda da meta
+   quando é o caso — aqui só formata, nunca multiplica por P.rate de novo. */
+P.moneyMeta = function (v, moeda, dec) {
+  if (v == null || isNaN(v)) return '—';
+  var brl = moeda === 'brl';
+  if (dec == null) dec = Math.abs(v) >= 1000 ? 0 : 2;
+  return (v < 0 ? '-' : '') + (brl ? 'R$ ' : '$')
+    + Math.abs(v).toLocaleString(brl ? 'pt-BR' : 'en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+};
+/* Meta em quantidade mostra quantidade, nunca dinheiro — a unidade é do
+   próprio ativo (ex.: "0,5 BTC"), formatador de dinheiro nunca entra aqui. */
+P.metaFmt = function (v, r, meta) {
+  if (v == null || isNaN(v)) return '—';
+  if (r.medida === 'qtd') {
+    return v.toLocaleString('pt-BR', { maximumFractionDigits: 8 }) + (meta && meta.ativoTk ? ' ' + meta.ativoTk : '');
+  }
+  return P.moneyMeta(v, r.moeda);
+};
+/* "2027-03" -> "03/2027". C.metaCalc já devolve o mês truncado (slice 0,7). */
+P.metaMesAno = function (ym) {
+  if (!ym) return '—';
+  var p = String(ym).split('-');
+  return (p[1] || '—') + '/' + (p[0] || '—');
 };
 
 /* Meta sobre patrimônio total OU sobre um ativo específico, em quantidade
@@ -2492,51 +2542,94 @@ P.excluirMeta = function (id) {
   P.save(); P.render();
 };
 
-/* Um cartão por meta: nome/alvo/prazo, barra de progresso, quanto falta,
-   aporte necessário/mês, o ritmo real (ou a frase honesta quando ainda
-   não há ritmo pra medir) e a situação — inclusive quando o prazo já
-   passou, caso em que a meta NÃO some da lista. */
-P.metaCardHTML = function (meta) {
+/* Um cartão por meta: ícone/título/menu, percentual grande, barra de
+   progresso e uma linha de tiles (Atual · Aporte mensal · Faltam ·
+   Conclusão estimada · Objetivo, com Objetivo destacado). `r` já vem
+   calculado por C.metaCalc — este cartão só escreve o que o núcleo
+   decidiu, nunca inventa conta nova.
+   `concluida` (true quando r.bateu) troca a linha de tiles por um resumo
+   simples: uma meta batida não precisa mais de ritmo nem de previsão. */
+P.metaCardHTML = function (meta, r, concluida) {
   var e = P.esc;
-  var r = C.metaCalc(P.st, P.precos, meta, P.rate);
   var pct = Math.max(0, Math.min(100, r.pct));
+  function fmt(v) { return P.metaFmt(v, r, meta); }
 
-  var corpo;
-  if (r.bateu) {
-    corpo = '<div class="notice"><b>✓ Meta batida.</b> Você já tem ' + P.money(r.atual) + ', acima do alvo de ' + P.money(r.alvo) + '.'
-      + (r.encerrada ? ' Prazo encerrado.' : '') + '</div>';
-  } else if (r.encerrada) {
-    corpo = '<div class="warn"><b>Prazo encerrado.</b> Faltaram ' + P.money(r.falta) + ' para o alvo de ' + P.money(r.alvo) + '.</div>';
-  } else {
-    var semRitmo = r.ritmoReal == null;
-    var ritmoTxt = semRitmo ? 'ainda não dá para medir seu ritmo' : (P.money(r.ritmoReal) + '/mês');
-    var ritmoCls = semRitmo ? '' : (r.situacao === 'abaixo' ? 'down' : 'up');
-    corpo = '<div class="mc-sub">Faltam <b>' + P.money(r.falta) + '</b> · ' + r.mesesRestantes + ' mes(es) até o prazo'
-      + (r.situacao === 'abaixo' ? ' · <span class="down">abaixo do ritmo necessário</span>'
-        : r.situacao === 'no-ritmo' ? ' · <span class="up">no ritmo</span>' : '') + '</div>'
-      + '<div class="grid2" style="margin-top:.7rem">'
-      + '<div><div class="mc-lbl">Aporte necessário/mês</div><div class="mc-val" style="font-size:1.05rem">' + P.money(r.aporteNecessario) + '</div></div>'
-      + '<div><div class="mc-lbl">Seu ritmo real</div><div class="' + (semRitmo ? 'mc-sub' : 'mc-val ' + ritmoCls) + '"'
-      + (semRitmo ? '' : ' style="font-size:1.05rem"') + '>' + ritmoTxt + '</div></div>'
-      + '</div>'
-      + '<div class="fhint" style="margin-top:.6rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>';
+  function tile(lbl, val, cls, hi, sub) {
+    return '<div class="mc sm' + (hi ? ' mc-hi' : '') + '">'
+      + '<div class="mc-lbl">' + lbl + '</div>'
+      + '<div class="mc-val' + (cls ? ' ' + cls : '') + '">' + val + '</div>'
+      + (sub ? '<div class="mc-sub">' + sub + '</div>' : '')
+      + '</div>';
   }
 
-  return '<div class="card"><div class="card-bd">'
-    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem">'
-    + '<div><div style="font-weight:700;font-size:14.5px">' + e(meta.nome) + '</div>'
-    + '<div class="mc-sub">' + e(P.metaEscopoNome(meta.escopo)) + ' · alvo ' + P.money(r.alvo) + ' até ' + P.dBR(meta.prazo) + '</div></div>'
-    + '<div style="display:flex;gap:6px;flex-shrink:0">'
-    + '<button class="btn btn-g btn-sm" data-meta-edit="' + meta.id + '">Editar</button>'
-    + '<button class="btn-x" data-meta-del="' + meta.id + '" title="Excluir meta">×</button>'
-    + '</div></div>'
-    + '<div class="wcard-bar"><span style="width:' + pct.toFixed(1) + '%"></span></div>'
-    + '<div class="mc-sub" style="margin:.35rem 0 .8rem">' + P.money(r.atual) + ' de ' + P.money(r.alvo) + ' (' + P.pct(r.pct) + ')</div>'
-    + corpo
+  var menu = '<div class="mcard-menu">'
+    + '<button class="mcard-menu-btn" data-meta-menubtn="' + meta.id + '" aria-haspopup="true" aria-expanded="false" title="Opções">⋮</button>'
+    + '<div class="avmenu mcard-dropdown" hidden>'
+    + '<button class="avmenu-link" data-meta-edit="' + meta.id + '">Editar</button>'
+    + '<button class="avmenu-link danger" data-meta-del="' + meta.id + '">Excluir</button>'
     + '</div></div>';
+
+  var head = '<div class="mcard-hd"><div class="mcard-ico">🎯</div>'
+    + '<div class="mcard-title">' + e(meta.nome) + '</div>' + menu + '</div>'
+    + '<div class="mc-sub">' + e(P.metaEscopoNome(meta.escopo)) + ' · até ' + P.dBR(meta.prazo) + '</div>';
+
+  /* avisoCambio: regra de honestidade #4 — presente sempre que o núcleo
+     sinalizar que o progresso desta meta se move com o câmbio. */
+  var cambioNote = r.avisoCambio ? '<div class="fhint" style="margin-top:.5rem">' + P.AVISO_CAMBIO + '</div>' : '';
+
+  var corpo;
+  if (concluida) {
+    corpo = '<div class="notice" style="margin-top:.8rem"><b>✓ Meta batida.</b> Você já tem ' + fmt(r.atual) + ', acima do alvo de ' + fmt(r.alvo) + '.'
+      + (r.encerrada ? ' Prazo encerrado.' : '') + '</div>'
+      + cambioNote;
+  } else {
+    var semRitmo = r.ritmoReal == null;
+    var ritmoCls = semRitmo ? '' : (r.situacao === 'abaixo' ? 'down' : 'up');
+
+    /* regra #5: prazo vencido e não batida NUNCA some da lista — só troca
+       a linha de status por "prazo encerrado" e quanto faltou. */
+    var statusLine = r.encerrada
+      ? '<div class="warn" style="margin-top:.7rem"><b>Prazo encerrado.</b> Faltaram ' + fmt(r.falta) + ' para o alvo de ' + fmt(r.alvo) + '.</div>'
+      : '<div class="mc-sub" style="margin-top:.6rem">Faltam <b>' + fmt(r.falta) + '</b> · ' + r.mesesRestantes + ' mes(es) até o prazo'
+        + (r.situacao === 'abaixo' ? ' · <span class="down">abaixo do ritmo necessário</span>'
+          : r.situacao === 'no-ritmo' ? ' · <span class="up">no ritmo</span>' : '') + '</div>';
+
+    var tiles = '<div class="mgrid-5" style="margin-top:.9rem">'
+      + tile('Atual', fmt(r.atual))
+      /* regra #2: ritmoReal nulo nunca vira "R$ 0/mês" — é uma frase, não
+         um número, porque zero afirmaria que a pessoa não aportou nada. */
+      + tile('Aporte mensal', semRitmo ? '—' : fmt(r.ritmoReal) + '/mês', ritmoCls, false,
+             semRitmo ? 'ainda não dá para medir seu ritmo' : '')
+      + tile('Faltam', fmt(r.falta))
+      /* regra #1: conclusaoEstimada nula vira "—" + o motivo em texto claro. */
+      + tile('Conclusão estimada', r.conclusaoEstimada ? P.metaMesAno(r.conclusaoEstimada) : '—', '', false,
+             r.conclusaoEstimada ? '' : (P.META_MOTIVO_TXT[r.motivoSemPrevisao] || ''))
+      + tile('Objetivo', fmt(r.alvo), '', true)
+      + '</div>';
+
+    /* regra #3: onde aporteNecessario/conclusaoEstimada aparecem (aqui, a
+       linha de status e o tile de conclusão), o aviso de mercado parado
+       tem que estar no mesmo cartão. */
+    corpo = '<div class="mcard-pct">' + P.pct(r.pct) + '</div>'
+      + '<div class="wcard-bar"><span style="width:' + pct.toFixed(1) + '%"></span></div>'
+      + statusLine + cambioNote + tiles
+      + '<div class="fhint" style="margin-top:.7rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>';
+  }
+
+  return '<div class="card"><div class="card-bd">' + head + corpo + '</div></div>';
 };
 
 P.wireMetas = function () {
+  document.querySelectorAll('[data-meta-menubtn]').forEach(function (b) {
+    b.onclick = function (ev) {
+      ev.stopPropagation();
+      var dd = b.parentNode.querySelector('.mcard-dropdown');
+      var abrir = dd.hasAttribute('hidden');
+      document.querySelectorAll('.mcard-dropdown').forEach(function (x) { x.setAttribute('hidden', ''); });
+      document.querySelectorAll('[data-meta-menubtn]').forEach(function (x) { x.setAttribute('aria-expanded', 'false'); });
+      if (abrir) { dd.removeAttribute('hidden'); b.setAttribute('aria-expanded', 'true'); }
+    };
+  });
   document.querySelectorAll('[data-meta-edit]').forEach(function (b) {
     b.onclick = function () {
       var m = (P.st.metas || []).filter(function (x) { return x.id === b.dataset.metaEdit; })[0];
@@ -2549,24 +2642,31 @@ P.wireMetas = function () {
 };
 
 /* Prévia deslogada da Meta — mesmo padrao dos outros modulos: nota no topo,
-   um cartao de meta com numeros de EXEMPLO no mesmo componente da tela real. */
+   as duas seções com números de EXEMPLO nos mesmos componentes da tela real. */
 P.vMetaTeaser = function () {
   document.getElementById('pg').innerHTML = P.demoNote()
-    + '<div style="display:flex;flex-direction:column;gap:12px">'
-    +   '<div class="card"><div class="card-bd">'
-    +     '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem">'
-    +     '<div><div style="font-weight:700;font-size:14.5px">Chegar em $30 mil de patrimônio</div>'
-    +     '<div class="mc-sub">Patrimônio total · alvo $30.000,00 até 31/12/2026</div></div></div>'
-    +     '<div class="wcard-bar"><span style="width:62%"></span></div>'
-    +     '<div class="mc-sub" style="margin:.35rem 0 .8rem">$18.740,00 de $30.000,00 (62,5%)</div>'
-    +     '<div class="mc-sub">Faltam <b>$11.260,00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
-    +     '<div class="grid2" style="margin-top:.7rem">'
-    +       '<div><div class="mc-lbl">Aporte necessário/mês</div><div class="mc-val" style="font-size:1.05rem">$1.407,50</div></div>'
-    +       '<div><div class="mc-lbl">Seu ritmo real</div><div class="mc-val up" style="font-size:1.05rem">$1.520,00/mês</div></div>'
-    +     '</div>'
-    +   '</div></div>'
-    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Metas em andamento</div>'
+    +   '<div class="right"><button class="btn btn-p btn-sm" id="btnNovaMetaDemo">+ Criar nova meta</button></div></div>'
+    +   '<div class="card-bd"><div style="display:flex;flex-direction:column;gap:12px">'
+    +     '<div class="card"><div class="card-bd">'
+    +       '<div class="mcard-hd"><div class="mcard-ico">🎯</div><div class="mcard-title">Chegar em $30 mil de patrimônio</div></div>'
+    +       '<div class="mc-sub">Patrimônio total · até 31/12/2026</div>'
+    +       '<div class="mcard-pct">+62,50%</div>'
+    +       '<div class="wcard-bar"><span style="width:62%"></span></div>'
+    +       '<div class="mc-sub" style="margin-top:.6rem">Faltam <b>$11.260,00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
+    +       '<div class="mgrid-5" style="margin-top:.9rem">'
+    +         '<div class="mc sm"><div class="mc-lbl">Atual</div><div class="mc-val">$18.740,00</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Aporte mensal</div><div class="mc-val up">$1.520,00/mês</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Faltam</div><div class="mc-val">$11.260,00</div></div>'
+    +         '<div class="mc sm"><div class="mc-lbl">Conclusão estimada</div><div class="mc-val">04/2027</div></div>'
+    +         '<div class="mc sm mc-hi"><div class="mc-lbl">Objetivo</div><div class="mc-val">$30.000,00</div></div>'
+    +       '</div></div></div>'
+    +   '</div></div></div>'
+    + '<div class="card" style="margin-top:1rem"><div class="card-hd"><div class="card-title">Metas concluídas</div></div>'
+    +   '<div class="card-bd"><div class="empty">Não há metas concluídas</div></div></div>'
     + P.duoBanners();
+  var btn = document.getElementById('btnNovaMetaDemo');
+  if (btn) btn.onclick = function () { P.formMeta(); };
   P.duoWire();
 };
 
@@ -2587,9 +2687,31 @@ P.vMeta = function () {
     return;
   }
 
-  var html = '<div style="display:flex;flex-direction:column;gap:12px">' + metas.map(P.metaCardHTML).join('') + '</div>';
+  /* Meta batida (r.bateu) SAI da lista ativa e vira "concluída" — nunca
+     desaparece. Prazo vencido sem bater (encerrada && !bateu) fica em
+     "andamento", só marcada como encerrada (regra #5). */
+  var calc = metas.map(function (m) { return { meta: m, r: C.metaCalc(P.st, P.precos, m, P.rate) }; });
+  var ativas = calc.filter(function (x) { return !x.r.bateu; });
+  var concluidas = calc.filter(function (x) { return x.r.bateu; });
+
+  var html = '<div class="card"><div class="card-hd"><div class="card-title">Metas em andamento</div>'
+    + '<div class="right"><button class="btn btn-p btn-sm" id="btnNovaMeta">+ Criar nova meta</button></div></div>'
+    + '<div class="card-bd">'
+    + (ativas.length
+        ? '<div style="display:flex;flex-direction:column;gap:12px">' + ativas.map(function (x) { return P.metaCardHTML(x.meta, x.r, false); }).join('') + '</div>'
+        : '<div class="empty">Nenhuma meta em andamento</div>')
+    + '</div></div>';
+
+  html += '<div class="card" style="margin-top:1rem"><div class="card-hd"><div class="card-title">Metas concluídas</div></div>'
+    + '<div class="card-bd">'
+    + (concluidas.length
+        ? '<div style="display:flex;flex-direction:column;gap:12px">' + concluidas.map(function (x) { return P.metaCardHTML(x.meta, x.r, true); }).join('') + '</div>'
+        : '<div class="empty">Não há metas concluídas</div>')
+    + '</div></div>';
+
   html += P.planosCTA();
   document.getElementById('pg').innerHTML = html;
+  document.getElementById('btnNovaMeta').onclick = function () { P.formMeta(); };
   P.wireMetas();
 };
 
