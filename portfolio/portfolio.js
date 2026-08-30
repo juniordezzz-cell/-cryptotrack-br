@@ -12,6 +12,7 @@ window.MDF_PLANOS = {
   gratis: {
     nome: 'Grátis',
     carteiras: 1,          // ÚNICA trava do grátis: 1 carteira
+    metas: 3,              // até 3 metas no grátis
     historico: 999999,     // histórico completo (sem trava)
     graficosAvancados: true,
     exportar: false        // exportar CSV é exclusivo PRO
@@ -19,6 +20,7 @@ window.MDF_PLANOS = {
   pro: {
     nome: 'PRO',           // R$ 19,90 — carro-chefe
     carteiras: 9999,
+    metas: 9999,
     historico: 999999,
     graficosAvancados: true,
     exportar: true
@@ -30,6 +32,7 @@ window.MDF_PLANOS = {
   premium: {
     nome: 'PRO',
     carteiras: 9999,
+    metas: 9999,
     historico: 999999,
     graficosAvancados: true,
     exportar: true
@@ -103,8 +106,12 @@ P.quandoInformado = function (d) {
   return ', informado há ' + d + ' dias';
 };
 P.rt = function () { return P.st.cfg.moeda === 'brl' ? P.rate : 1; };
+/* A tela pode estar em dólar e ainda assim ter uma meta declarada em real
+   (fase 4) — sem a cotação real, C.metaCalc cairia na taxa de emergência
+   (5) sem a pessoa saber. Por isso o gatilho não é só P.st.cfg.moeda. */
+P.temMetaBrl = function () { return (P.st.metas || []).some(function (m) { return m.moeda === 'brl'; }); };
 P.loadRate = function () {
-  if (P.st.cfg.moeda !== 'brl') return Promise.resolve();
+  if (P.st.cfg.moeda !== 'brl' && !P.temMetaBrl()) return Promise.resolve();
   var c = cget('mdf.brl'); if (c) { P.rate = c; return Promise.resolve(); }
   return jfetch(CG + '/simple/price?ids=tether&vs_currencies=brl', 2).then(function (d) {
     P.rate = (d.tether && d.tether.brl) || 5; cset('mdf.brl', P.rate, 10 * 60 * 1000);
@@ -175,6 +182,7 @@ P.planoAtual = 'gratis';
 P.plan = function () { return window.MDF_PLANOS[P.planoAtual] || window.MDF_PLANOS.gratis; };
 P.isFree = function () { return P.planoAtual === 'gratis'; };
 P.limCart = function () { return P.plan().carteiras; };
+P.limMetas = function () { return P.plan().metas; };
 P.histLim = function () { return P.plan().historico; };
 P.canExport = function () { return !!P.plan().exportar; };
 
@@ -2412,6 +2420,7 @@ P.formMeta = function (meta) {
     if (editando) {
       meta.nome = nome; meta.alvo = alvo; meta.prazo = prazo; meta.escopo = escopo;
     } else {
+      if ((P.st.metas || []).length >= P.limMetas()) return P.upsell();
       P.st.metas.push({ id: C.uid(), nome: nome, alvo: alvo, prazo: prazo, escopo: escopo, criadaEm: C.hoje() });
     }
     P.save(); P.closeModal(); P.render();
@@ -2430,7 +2439,7 @@ P.excluirMeta = function (id) {
    passou, caso em que a meta NÃO some da lista. */
 P.metaCardHTML = function (meta) {
   var e = P.esc;
-  var r = C.metaCalc(P.st, P.precos, meta);
+  var r = C.metaCalc(P.st, P.precos, meta, P.rate);
   var pct = Math.max(0, Math.min(100, r.pct));
 
   var corpo;
