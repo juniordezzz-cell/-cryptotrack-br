@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<script src="/mundodefi-api.js?v=1"></script><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/mundodefi-api.js?v=1"></script>
+<link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
+<title>Meta de Patrimônio: Quanto Aportar por Mês | MundoDeFi</title>
+<meta name="description" content="Defina um alvo em dinheiro e um prazo. O MundoDeFi calcula quanto falta aportar por mês usando o seu ritmo real de depósitos — nunca uma previsão de mercado.">
+<link rel="canonical" href="https://mundodefi.com.br/portfolio/meta.html">
+<meta property="og:title" content="Meta de Patrimônio: Quanto Aportar por Mês | MundoDeFi">
+<meta property="og:image" content="https://mundodefi.com.br/og/portfolio-meta.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Portfólio MundoDeFi">
+<meta name="twitter:image" content="https://mundodefi.com.br/og/portfolio-meta.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:description" content="Defina um alvo em dinheiro e um prazo. O MundoDeFi calcula quanto falta aportar por mês usando o seu ritmo real de depósitos — nunca uma previsão de mercado.">
+<meta property="og:url" content="https://mundodefi.com.br/portfolio/meta.html">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="MundoDeFi">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=1">
+<link rel="stylesheet" href="/banner.css?v=1">
+<link rel="stylesheet" href="/portfolio/portfolio.css?v=1">
+<link rel="stylesheet" href="/nexus/nexus.css?v=1">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@graph": [
+  {
+   "@id": "https://mundodefi.com.br/#organizacao",
+   "@type": "Organization"
+  },
+  {
+   "@type": "WebApplication",
+   "@id": "https://mundodefi.com.br/portfolio/meta.html#app",
+   "name": "MundoDeFi — Meta",
+   "url": "https://mundodefi.com.br/portfolio/meta.html",
+   "description": "Alvo de patrimônio com prazo: quanto falta aportar por mês, calculado sobre o ritmo real de depósitos, nunca uma previsão de mercado.",
+   "applicationCategory": "FinanceApplication",
+   "operatingSystem": "Web",
+   "browserRequirements": "Requer JavaScript",
+   "inLanguage": "pt-BR",
+   "isAccessibleForFree": true,
+   "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "BRL"
+   },
+   "publisher": {
+    "@id": "https://mundodefi.com.br/#organizacao"
+   },
+   "isPartOf": {
+    "@id": "https://mundodefi.com.br/#site"
+   }
+  },
+  {
+   "@type": "BreadcrumbList",
+   "itemListElement": [
+    {
+     "@type": "ListItem",
+     "position": 1,
+     "name": "Início",
+     "item": "https://mundodefi.com.br/"
+    },
+    {
+     "@type": "ListItem",
+     "position": 2,
+     "name": "Portfólio",
+     "item": "https://mundodefi.com.br/portfolio/index.html"
+    },
+    {
+     "@type": "ListItem",
+     "position": 3,
+     "name": "Meta",
+     "item": "https://mundodefi.com.br/portfolio/meta.html"
+    }
+   ]
+  },
+  {
+   "@type": "FAQPage",
+   "mainEntity": [
+    {
+     "@type": "Question",
+     "name": "O MundoDeFi promete que eu vou bater a minha meta?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "Não. A conta de quanto aportar por mês assume que o valor de mercado das suas posições fica parado — ela mede só o dinheiro novo que falta entrar, nunca uma previsão de preço. Se o mercado subir ou cair, o número muda; o MundoDeFi não tenta adivinhar isso."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "O que significa 'ainda não dá para medir seu ritmo'?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "É o que aparece quando ainda não há histórico suficiente de depósitos para calcular um ritmo real (menos de 30 dias entre o primeiro e o último aporte). É diferente de mostrar R$ 0 por mês, que afirmaria que você não aportou nada — quando na verdade falta dado, não falta aporte."
+     }
+    },
+    {
+     "@type": "Question",
+     "name": "O que acontece quando o prazo de uma meta vence?",
+     "acceptedAnswer": {
+      "@type": "Answer",
+      "text": "A meta não some da tela nem vira erro. Ela passa a mostrar 'prazo encerrado' e diz se você bateu o alvo ou quanto ainda faltava — para você decidir se cria um novo prazo ou ajusta o valor."
+     }
+    }
+   ]
+  }
+ ]
+}
+</script>
+<!-- /schema:auto -->
+</head>
+<body>
+<div class="app" id="app"></div>
+<!-- ═══ CONTEUDO DA PAGINA ═══════════════════════════════════════════
+     Fica ABAIXO do aplicativo, visivel para quem rola. Nao e texto
+     escondido para robo: e a mesma pagina para todo mundo, no padrao
+     que as calculadoras ja usam. -->
+<section class="pf-sobre">
+  <div class="pf-sobre-in">
+    <h1>Meta de patrimônio: quanto aportar por mês, sem previsão de mercado</h1>
+    <p class="pf-sub">Defina um alvo em dinheiro e um prazo. O MundoDeFi calcula o resto usando o que você já fez de verdade — nunca o que o mercado pode fazer.</p>
+    <h2>Por que a conta assume o mercado parado</h2>
+    <p>Prometer "você vai chegar lá" exigiria prever o preço dos seus ativos — algo que nenhuma calculadora deveria fingir que sabe fazer. Por isso o MundoDeFi responde uma pergunta diferente e honesta: assumindo que o valor de mercado do que você já tem fica exatamente onde está hoje, quanto dinheiro novo falta entrar por mês para o alvo ser alcançado no prazo? É uma conta de aritmética sobre aportes, não uma projeção de investimento.</p>
+    <h2>O que é o "ritmo real"</h2>
+    <p>É a média dos seus depósitos e saques líquidos por mês, medida sobre o histórico que o próprio portfólio já registrou — nunca uma meta que você diz que vai cumprir. Sem pelo menos 30 dias de histórico entre o primeiro e o último movimento, não há ritmo suficiente para medir, e a tela diz exatamente isso: "ainda não dá para medir seu ritmo". Mostrar R$ 0 no lugar seria afirmar que você não aportou nada, quando o que falta é dado, não aporte.</p>
+    <h2>Metas com prazo vencido não desaparecem</h2>
+    <p>Quando o prazo passa, a meta continua na lista — só que marcada como "prazo encerrado", junto com a informação de que você bateu o alvo ou de quanto ainda faltava. Esconder uma meta vencida seria mais fácil de programar, mas mentiria por omissão sobre um compromisso que você mesmo definiu.</p>
+    <h2>Perguntas frequentes</h2>
+    <h3>O MundoDeFi promete que eu vou bater a minha meta?</h3>
+    <p>Não. A conta de quanto aportar por mês assume que o valor de mercado das suas posições fica parado — ela mede só o dinheiro novo que falta entrar, nunca uma previsão de preço. Se o mercado subir ou cair, o número muda; o MundoDeFi não tenta adivinhar isso.</p>
+    <h3>O que significa "ainda não dá para medir seu ritmo"?</h3>
+    <p>É o que aparece quando ainda não há histórico suficiente de depósitos para calcular um ritmo real (menos de 30 dias entre o primeiro e o último aporte). É diferente de mostrar R$ 0 por mês, que afirmaria que você não aportou nada — quando na verdade falta dado, não falta aporte.</p>
+    <h3>O que acontece quando o prazo de uma meta vence?</h3>
+    <p>A meta não some da tela nem vira erro. Ela passa a mostrar "prazo encerrado" e diz se você bateu o alvo ou quanto ainda faltava — para você decidir se cria um novo prazo ou ajusta o valor.</p>
+  </div>
+</section>
+
+<!-- auth primeiro: o plano vem do Firestore, nao do localStorage -->
+<script src="/nexus/nexus-auth.js?v=1"></script>
+<script src="/portfolio/portfolio-core.js?v=1"></script>
+<script src="/portfolio/portfolio-supervisor.js?v=1"></script>
+<script src="/portfolio/portfolio-store.js?v=1"></script>
+<script src="/banner.js?v=1"></script>
+<script src="/portfolio/portfolio.js?v=1"></script>
+<script>P.pageMeta();</script>
+<script src="/nexus/nexus-motor.js?v=1"></script>
+<script src="/nexus/nexus-portfolio-kb.js?v=1"></script>
+<script src="/nexus/nexus-core.js?v=1"></script>
+</body>
+</html>

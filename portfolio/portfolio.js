@@ -2324,11 +2324,143 @@ P.carregarExemplo = function () {
   P.render();
 };
 
+/* ══════════════════════════════════════════════════════════════════
+   META
+   A tela só escreve o que C.metaCalc (portfolio-core.js) já calculou —
+   nenhuma conta nova mora aqui. Três regras de honestidade que o
+   markup abaixo cumpre, não só o núcleo:
+   1) ritmoReal null vira a frase "ainda não dá para medir seu ritmo",
+      NUNCA "R$ 0/mês" — zero afirmaria que a pessoa não aportou nada.
+   2) todo card que mostra aporteNecessario also mostra, ao lado, que a
+      conta assume o valor de mercado parado (P.AVISO_APORTE).
+   3) meta com prazo vencido (situacao 'encerrada') continua na lista,
+      só que marcada "prazo encerrado" + se bateu ou quanto faltou.
+   st.metas pode não existir em estados salvos antes desta fase — por
+   isso todo acesso é via (P.st.metas || []).
+   ══════════════════════════════════════════════════════════════════ */
+P.AVISO_APORTE = 'Esta conta assume que o valor de mercado das suas posições fica parado — ela mede só o dinheiro novo que falta entrar, nunca uma previsão de preço.';
+
+P.metaEscopoNome = function (esc) {
+  if (!esc || esc === 'total') return 'Patrimônio total';
+  return P.nomeCart(esc);
+};
+
+P.formMeta = function (meta) {
+  var editando = !!meta;
+  meta = meta || {};
+  P.modal(editando ? 'Editar meta' : 'Nova meta',
+    '<div class="fg"><label>Nome</label><input id="fMNome" placeholder="Ex: Reserva de emergência" value="' + P.esc(meta.nome || '') + '"></div>'
+    + '<div class="frow"><div class="fg"><label>Alvo (US$)</label><input id="fMAlvo" type="number" step="any" inputmode="decimal" value="' + (meta.alvo || '') + '"></div>'
+    + '<div class="fg"><label>Prazo</label><input id="fMPrazo" type="date" value="' + (meta.prazo || '') + '"></div></div>'
+    + '<div class="fg"><label>Escopo</label><select id="fMEscopo"><option value="total"' + (!meta.escopo || meta.escopo === 'total' ? ' selected' : '') + '>Patrimônio total</option>' + P.optCarteiras(meta.escopo) + '</select></div>'
+    + '<div class="fhint">' + P.AVISO_APORTE + '</div>',
+    { footer: '<button class="btn btn-p" id="okMeta">' + (editando ? 'Salvar' : 'Criar meta') + '</button>' });
+  document.getElementById('okMeta').onclick = function () {
+    var nome = P.val('fMNome'), alvo = P.num('fMAlvo'), prazo = P.val('fMPrazo');
+    if (!nome) return alert('Dê um nome para a meta.');
+    if (!(alvo > 0)) return alert('Informe um alvo maior que zero.');
+    if (!prazo) return alert('Informe um prazo.');
+    var escopo = P.val('fMEscopo') || 'total';
+    P.st.metas = P.st.metas || [];
+    if (editando) {
+      meta.nome = nome; meta.alvo = alvo; meta.prazo = prazo; meta.escopo = escopo;
+    } else {
+      P.st.metas.push({ id: C.uid(), nome: nome, alvo: alvo, prazo: prazo, escopo: escopo, criadaEm: C.hoje() });
+    }
+    P.save(); P.closeModal(); P.render();
+  };
+};
+
+P.excluirMeta = function (id) {
+  if (!confirm('Excluir esta meta? Isso não mexe nas suas movimentações, só apaga o alvo e o prazo.')) return;
+  P.st.metas = (P.st.metas || []).filter(function (m) { return m.id !== id; });
+  P.save(); P.render();
+};
+
+/* Um cartão por meta: nome/alvo/prazo, barra de progresso, quanto falta,
+   aporte necessário/mês, o ritmo real (ou a frase honesta quando ainda
+   não há ritmo pra medir) e a situação — inclusive quando o prazo já
+   passou, caso em que a meta NÃO some da lista. */
+P.metaCardHTML = function (meta) {
+  var e = P.esc;
+  var r = C.metaCalc(P.st, P.precos, meta);
+  var pct = Math.max(0, Math.min(100, r.pct));
+
+  var corpo;
+  if (r.bateu) {
+    corpo = '<div class="notice"><b>✓ Meta batida.</b> Você já tem ' + P.money(r.atual) + ', acima do alvo de ' + P.money(r.alvo) + '.'
+      + (r.encerrada ? ' Prazo encerrado.' : '') + '</div>';
+  } else if (r.encerrada) {
+    corpo = '<div class="warn"><b>Prazo encerrado.</b> Faltaram ' + P.money(r.falta) + ' para o alvo de ' + P.money(r.alvo) + '.</div>';
+  } else {
+    var semRitmo = r.ritmoReal == null;
+    var ritmoTxt = semRitmo ? 'ainda não dá para medir seu ritmo' : (P.money(r.ritmoReal) + '/mês');
+    var ritmoCls = semRitmo ? '' : (r.situacao === 'abaixo' ? 'down' : 'up');
+    corpo = '<div class="mc-sub">Faltam <b>' + P.money(r.falta) + '</b> · ' + r.mesesRestantes + ' mes(es) até o prazo'
+      + (r.situacao === 'abaixo' ? ' · <span class="down">abaixo do ritmo necessário</span>'
+        : r.situacao === 'no-ritmo' ? ' · <span class="up">no ritmo</span>' : '') + '</div>'
+      + '<div class="grid2" style="margin-top:.7rem">'
+      + '<div><div class="mc-lbl">Aporte necessário/mês</div><div class="mc-val" style="font-size:1.05rem">' + P.money(r.aporteNecessario) + '</div></div>'
+      + '<div><div class="mc-lbl">Seu ritmo real</div><div class="' + (semRitmo ? 'mc-sub' : 'mc-val ' + ritmoCls) + '"'
+      + (semRitmo ? '' : ' style="font-size:1.05rem"') + '>' + ritmoTxt + '</div></div>'
+      + '</div>'
+      + '<div class="fhint" style="margin-top:.6rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>';
+  }
+
+  return '<div class="card"><div class="card-bd">'
+    + '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem">'
+    + '<div><div style="font-weight:700;font-size:14.5px">' + e(meta.nome) + '</div>'
+    + '<div class="mc-sub">' + e(P.metaEscopoNome(meta.escopo)) + ' · alvo ' + P.money(r.alvo) + ' até ' + P.dBR(meta.prazo) + '</div></div>'
+    + '<div style="display:flex;gap:6px;flex-shrink:0">'
+    + '<button class="btn btn-g btn-sm" data-meta-edit="' + meta.id + '">Editar</button>'
+    + '<button class="btn-x" data-meta-del="' + meta.id + '" title="Excluir meta">×</button>'
+    + '</div></div>'
+    + '<div class="wcard-bar"><span style="width:' + pct.toFixed(1) + '%"></span></div>'
+    + '<div class="mc-sub" style="margin:.35rem 0 .8rem">' + P.money(r.atual) + ' de ' + P.money(r.alvo) + ' (' + P.pct(r.pct) + ')</div>'
+    + corpo
+    + '</div></div>';
+};
+
+P.wireMetas = function () {
+  document.querySelectorAll('[data-meta-edit]').forEach(function (b) {
+    b.onclick = function () {
+      var m = (P.st.metas || []).filter(function (x) { return x.id === b.dataset.metaEdit; })[0];
+      if (m) P.formMeta(m);
+    };
+  });
+  document.querySelectorAll('[data-meta-del]').forEach(function (b) {
+    b.onclick = function () { P.excluirMeta(b.dataset.metaDel); };
+  });
+};
+
+P.vMeta = function () {
+  document.getElementById('pgTitle').textContent = 'Meta';
+  document.getElementById('pgSub').textContent = 'Quanto falta aportar por mês para chegar no seu alvo — usando seu ritmo real de aportes, nunca uma previsão de mercado';
+  document.getElementById('btnAdd').onclick = function () { P.formMeta(); };
+
+  var metas = P.st.metas || [];
+  if (!metas.length) {
+    document.getElementById('pg').innerHTML = P.vazio(
+      'Nenhuma meta ainda',
+      'Defina um alvo em dinheiro e um prazo. O MundoDeFi calcula quanto falta aportar por mês, usando o ritmo real dos seus depósitos — sem prever o mercado.',
+      '<div class="zero-acts"><button class="btn btn-p" id="btnPrimeiraMeta">Criar minha primeira meta</button></div>'
+    ) + P.planosCTA();
+    document.getElementById('btnPrimeiraMeta').onclick = function () { P.formMeta(); };
+    return;
+  }
+
+  var html = '<div style="display:flex;flex-direction:column;gap:12px">' + metas.map(P.metaCardHTML).join('') + '</div>';
+  html += P.planosCTA();
+  document.getElementById('pg').innerHTML = html;
+  P.wireMetas();
+};
+
 /* ══════════════════ PÁGINAS ══════════════════ */
 P.pageDash  = function () { P.boot('dash',  P.vDash);  };
 P.pageHold  = function () { P.boot('hold',  P.vHold);  };
 P.pageDefi  = function () { P.boot('defi',  P.vDefi);  };
 P.pageTrade = function () { P.boot('trade', P.vTrade); };
 P.pageRWA   = function () { P.boot('rwa',   P.vRWA);   };
+P.pageMeta  = function () { P.boot('meta',  P.vMeta);  };
 
 })();
