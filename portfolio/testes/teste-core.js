@@ -827,6 +827,26 @@ eqv('rwa_venda devolve ao caixa', C.TIPOS.rwa_venda.sinal, 1);
 eqv('posicoes() do HOLD ignora RWA', C.posicoes(stR, {}, 'all').length, 0);
 
 /* ══════════════════════════════════════════════════════════════
+   SOMA DE MESES — utilitário puro usado para montar prazos de meta
+   ══════════════════════════════════════════════════════════════ */
+sec('somaMeses: avanca meses e trava no fim do mes de destino');
+
+/* passo simples: dia 15 existe em fevereiro, nada a travar */
+eqv('15/jan + 1 mes = 15/fev', C.somaMeses('2026-01-15', 1), '2026-02-15');
+
+/* fim de mes: fevereiro de 2026 (nao bissexto) so tem 28 dias.
+   setUTCMonth cru rolaria pra marco; o dia tem que travar em 28 */
+eqv('31/jan + 1 mes trava em 28/fev (2026 nao e bissexto)', C.somaMeses('2026-01-31', 1), '2026-02-28');
+
+/* fim de mes em ano bissexto: 2028 e bissexto (divisivel por 4, nao e
+   secular), entao fevereiro tem 29 dias */
+eqv('31/jan + 1 mes trava em 29/fev (2028 e bissexto)', C.somaMeses('2028-01-31', 1), '2028-02-29');
+
+/* virada de ano: novembro + 2 meses cai em janeiro do ano seguinte,
+   e dia 30 existe em janeiro, entao nao trava */
+eqv('30/nov + 2 meses = 30/jan do ano seguinte', C.somaMeses('2026-11-30', 2), '2027-01-30');
+
+/* ══════════════════════════════════════════════════════════════
    META — aritmética sobre os aportes REAIS, nunca previsão
    ══════════════════════════════════════════════════════════════ */
 sec('Meta: alvo e plano de aporte');

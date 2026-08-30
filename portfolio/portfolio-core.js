@@ -869,8 +869,16 @@
      mercado PARADO — e quem exibe é obrigado a dizer isso. */
   C.somaMeses = function (iso, n) {
     var d = new Date(iso + 'T00:00:00Z');
-    d.setUTCMonth(d.getUTCMonth() + n);
-    return d.toISOString().slice(0, 10);
+    var dia = d.getUTCDate();
+    /* setUTCMonth ROLA o excesso em vez de travar: 31/jan + 1 mês vira
+       3/mar (fev só tem 28/29), não o fim de fevereiro que a pessoa quis
+       dizer. Por isso construímos o alvo pelo dia 1 do mês de destino e só
+       então grudamos o dia, travado no último dia daquele mês — é assim
+       que "um mês a partir do dia 31" nunca pula um mês inteiro. */
+    var alvo = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + n, 1));
+    var ultimoDia = new Date(Date.UTC(alvo.getUTCFullYear(), alvo.getUTCMonth() + 1, 0)).getUTCDate();
+    alvo.setUTCDate(Math.min(dia, ultimoDia));
+    return alvo.toISOString().slice(0, 10);
   };
 
   C.metaCalc = function (st, precos, meta) {
