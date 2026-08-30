@@ -892,6 +892,26 @@ var m4 = C.metaCalc(stV, {}, { id:'m4', nome:'Nova', alvo:5000,
 eqv('ritmo sem historico e null', m4.ritmoReal, null);
 eqv('situacao sem medida', m4.situacao, 'sem-medida');
 
+/* reta final (< 1 mes): Math.round(diasRest/30.44) zera pra 0 meses,
+   mas o prazo NAO passou -- aporteNecessario nao pode zerar junto,
+   senao a tela mente "R$0 / no ritmo" bem na hora que a verdade importa.
+   prazo 10 dias a frente (diasRest = 10 exato, ISO date-only em UTC dos
+   dois lados). patrimonio de stM = 4000 (so caixa, dos 4 depositos de
+   1000 acima); alvo 12.000 -> falta 8.000.
+   conta a mao: aporteNecessario = falta / Math.max(diasRest/30.44, 1/30.44)
+              = 8000 / (10/30.44) = 8000 * 3.044 = 24352
+   ritmoReal de stM (4 depositos de 1000, jan-abr, span 90 dias):
+     liquido=4000, ritmoReal = 4000/(90/30.44) = 1353,28 -- bem abaixo dos
+     24.352 exigidos, entao situacao tem que vir 'abaixo', nunca 'no-ritmo'. */
+var prazoPerto10 = new Date(Date.now() + 10 * 86400000).toISOString().slice(0, 10);
+var m5 = C.metaCalc(stM, {}, { id:'m5', nome:'Reta final', alvo:12000,
+                               prazo: prazoPerto10, escopo:'total' });
+eq('meta reta final: falta', m5.falta, 8000);
+eq('meta reta final: meses restantes arredonda pra 0', m5.mesesRestantes, 0);
+eqv('meta reta final: prazo ainda nao passou', m5.encerrada, false);
+eq('meta reta final: aporte necessario NAO zera (8000 / (10/30.44))', m5.aporteNecessario, 24352);
+eqv('meta reta final: situacao abaixo, nunca no-ritmo mentiroso', m5.situacao, 'abaixo');
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

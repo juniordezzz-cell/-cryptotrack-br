@@ -116,6 +116,8 @@ P.loadRate = function () {
 P.loadPrices = function () {
   var ids = [];
   P.st.ativos.forEach(function (a) { if (a.cg && ids.indexOf(a.cg) < 0) ids.push(a.cg); });
+  /* RWA (ações tokenizadas) usa a mesma cadeia de preço do HOLD. */
+  (P.st.rwa || []).forEach(function (a) { if (a.cg && ids.indexOf(a.cg) < 0) ids.push(a.cg); });
   /* Os tokens das pools também precisam de cotação: sem eles não dá para
      calcular impermanent loss. */
   P.st.pools.forEach(function (x) {
@@ -136,6 +138,8 @@ P.loadPrices = function () {
       cset(k, { px: px, em: P.precosEm }, 5 * 60 * 1000);
       /* espelha no ativo para servir de última cotação conhecida offline */
       P.st.ativos.forEach(function (a) { if (px[a.cg]) { a.last = px[a.cg]; a.lastAt = P.precosEm; } });
+      /* idem para o RWA: mesma cadeia de preço do HOLD */
+      (P.st.rwa || []).forEach(function (a) { if (px[a.cg]) { a.last = px[a.cg]; a.lastAt = P.precosEm; } });
       /* idem para os tokens das pools: sem isso o IL some quando a API falha */
       P.st.pools.forEach(function (x) {
         if (!x.il) return;
@@ -2346,7 +2350,7 @@ P.carregarExemplo = function () {
      no vermelho, o mesmo erro que a fase 2 cometeu. */
   var nvdax = { id: C.uid(), tk: 'NVDAx', nome: 'Nvidia', plataforma: 'xStocks',
                 cg: 'nvidia-x', cart: c2.id, last: 132, lastAt: null };
-  st.rwa.push(nvdax);
+  (st.rwa = st.rwa || []).push(nvdax);
   C.addMov(st, { tipo: 'deposito', cart: c2.id, usd: 1300, dt: m(6), nota: 'Aporte para RWA de exemplo' });
   C.addMov(st, { tipo: 'rwa_compra', ref: nvdax.id, cart: c2.id, qtd: 10, px: 118, fee: 6, dt: m(5) });
 

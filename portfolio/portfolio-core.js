@@ -894,7 +894,17 @@
     var mesesRestantes = Math.max(0, Math.round(diasRest / 30.44));
 
     var aporteNecessario = 0;
-    if (!bateu && !encerrada && mesesRestantes > 0) aporteNecessario = falta / mesesRestantes;
+    if (!bateu && !encerrada) {
+      if (mesesRestantes > 0) {
+        aporteNecessario = falta / mesesRestantes;
+      } else {
+        /* menos de ~15 dias: o mês arredondado zerou pra 0 e zeraria a
+           conta também, mas o prazo real ainda não passou — falta inteira
+           ainda precisa entrar nesse tempo. Dividir pelo tempo real (nunca
+           por zero) evita a mentira "R$0 / no ritmo" bem na reta final. */
+        aporteNecessario = falta / Math.max(diasRest / 30.44, 1 / 30.44);
+      }
+    }
 
     /* ritmo real: aportes líquidos por mês, medidos do livro.
        Sem pelo menos 30 dias entre o primeiro e o último evento não há
