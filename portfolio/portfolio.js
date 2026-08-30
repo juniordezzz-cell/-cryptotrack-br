@@ -2358,7 +2358,7 @@ P.carregarExemplo = function () {
      de Meta só existe pra ter o que mostrar na demo, o cálculo é 100%
      de C.metaCalc a partir do ledger acima. */
   st.metas = st.metas || [];
-  st.metas.push({ id: C.uid(), nome: 'Meu primeiro R$50 mil', alvo: 50000,
+  st.metas.push({ id: C.uid(), nome: 'Meus primeiros $50 mil em cripto', alvo: 50000,
                   prazo: C.somaMeses(C.hoje(), 8), escopo: 'total', criadaEm: C.hoje() });
 
   /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
@@ -2396,7 +2396,7 @@ P.formMeta = function (meta) {
   var editando = !!meta;
   meta = meta || {};
   P.modal(editando ? 'Editar meta' : 'Nova meta',
-    '<div class="fg"><label>Nome</label><input id="fMNome" placeholder="Ex: Reserva de emergência" value="' + P.esc(meta.nome || '') + '"></div>'
+    '<div class="fg"><label>Nome</label><input id="fMNome" placeholder="Ex: 1 BTC, R$ 100 mil em cripto, aposentadoria" value="' + P.esc(meta.nome || '') + '"></div>'
     + '<div class="frow"><div class="fg"><label>Alvo (US$)</label><input id="fMAlvo" type="number" step="any" inputmode="decimal" value="' + (meta.alvo || '') + '"></div>'
     + '<div class="fg"><label>Prazo</label><input id="fMPrazo" type="date" value="' + (meta.prazo || '') + '"></div></div>'
     + '<div class="fg"><label>Escopo</label><select id="fMEscopo"><option value="total"' + (!meta.escopo || meta.escopo === 'total' ? ' selected' : '') + '>Patrimônio total</option>' + P.optCarteiras(meta.escopo) + '</select></div>'
@@ -2487,7 +2487,7 @@ P.vMetaTeaser = function () {
     + '<div style="display:flex;flex-direction:column;gap:12px">'
     +   '<div class="card"><div class="card-bd">'
     +     '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem">'
-    +     '<div><div style="font-weight:700;font-size:14.5px">Reserva de emergência</div>'
+    +     '<div><div style="font-weight:700;font-size:14.5px">Chegar em $30 mil de patrimônio</div>'
     +     '<div class="mc-sub">Patrimônio total · alvo $30.000,00 até 31/12/2026</div></div></div>'
     +     '<div class="wcard-bar"><span style="width:62%"></span></div>'
     +     '<div class="mc-sub" style="margin:.35rem 0 .8rem">$18.740,00 de $30.000,00 (62,5%)</div>'
