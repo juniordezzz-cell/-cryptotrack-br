@@ -1113,6 +1113,44 @@ eqv('ritmo insuficiente: motivo novo', c5.motivoSemPrevisao, 'ritmo-insuficiente
 eqv('teto nao quebra o caminho feliz: mesmos 5 meses de sempre',
     c1.conclusaoEstimada, C.somaMeses(C.hoje(), 5).slice(0, 7));
 
+/* ── PREVIA DESLOGADA: o card de exemplo tem que fechar sozinho ──
+   A versao antiga do teaser escrevia os cinco numeros a mao, com o prazo
+   numa data literal (31/12/2026). Os valores foram dimensionados pra um
+   horizonte de 8 meses; o calendario andou ate sobrarem 4, e a tela que
+   TODO visitante deslogado ve passou a afirmar "no ritmo" ao lado de uma
+   conclusao 4 meses depois do proprio prazo. Este teste repete o livro de
+   P.exemploMeta (portfolio.js) e cobra a coerencia interna do card: se
+   alguem mexer nos aportes do exemplo e quebrar a historia, falha aqui em
+   vez de mentir no ar. */
+function exemploDaPrevia() {
+  function m(n) { var d = new Date(); d.setMonth(d.getMonth() - n); return d.toISOString().slice(0, 10); }
+  var st = { carteiras:[{id:'demo',nome:'Carteira de exemplo'}], ativos:[], pools:[],
+             lend:[], trades:[], rwa:[], mov:[], metas:[] };
+  [[9,6000],[7,4180],[5,4000],[2,1520],[1,1520],[0,1520]].forEach(function (d) {
+    C.addMov(st, { tipo:'deposito', cart:'demo', usd:d[1], dt:m(d[0]) });
+  });
+  return { st: st, meta: { id:'demo-meta', nome:'Chegar em $30 mil de patrimonio',
+                           tipo:'patrimonio', ativoTk:'', medida:'valor', alvo:30000,
+                           moeda:'usd', prazo:C.somaMeses(C.hoje(),8), escopo:'total',
+                           criadaEm:C.hoje() } };
+}
+var ex = exemploDaPrevia();
+var rp = C.metaCalc(ex.st, {}, ex.meta, 1);
+
+/* aportes a mao: 6000+4180+4000+1520+1520+1520 = 18.740 de caixa */
+eq('previa: atual e a soma dos depositos', rp.atual, 18740);
+eq('previa: falta = 30.000 - 18.740', rp.falta, 11260);
+eq('previa: pct = 18.740/30.000', rp.pct, 62.4667, 0.001);
+eqv('previa: prazo a 8 meses de hoje, nunca uma data fixa', rp.mesesRestantes, 8);
+eq('previa: aporte necessario = 11.260/8', rp.aporteNecessario, 1407.5);
+
+/* as duas afirmacoes que se contradiziam no ar */
+eqv('previa: veredito de ritmo', rp.situacao, 'no-ritmo');
+eqv('previa: "no ritmo" exige ritmo >= necessario',
+    rp.ritmoReal >= rp.aporteNecessario, true);
+eqv('previa: "no ritmo" nao pode concluir DEPOIS do prazo',
+    rp.conclusaoEstimada <= ex.meta.prazo.slice(0, 7), true);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

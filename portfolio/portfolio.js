@@ -2585,7 +2585,7 @@ P.excluirMeta = function (id) {
    decidiu, nunca inventa conta nova.
    `concluida` (true quando r.bateu) troca a linha de tiles por um resumo
    simples: uma meta batida não precisa mais de ritmo nem de previsão. */
-P.metaCardHTML = function (meta, r, concluida) {
+P.metaCardHTML = function (meta, r, concluida, semMenu) {
   var e = P.esc;
   var pct = Math.max(0, Math.min(100, r.pct));
   function fmt(v) { return P.metaFmt(v, r, meta); }
@@ -2598,7 +2598,9 @@ P.metaCardHTML = function (meta, r, concluida) {
       + '</div>';
   }
 
-  var menu = '<div class="mcard-menu">'
+  /* a prévia deslogada reusa este card pra provar o motor, mas ali as
+     metas não são de ninguém — editar/excluir não teria o que salvar. */
+  var menu = semMenu ? '' : '<div class="mcard-menu">'
     + '<button class="mcard-menu-btn" data-meta-menubtn="' + meta.id + '" aria-haspopup="true" aria-expanded="false" title="Opções">⋮</button>'
     + '<div class="avmenu mcard-dropdown" hidden>'
     + '<button class="avmenu-link" data-meta-edit="' + meta.id + '">Editar</button>'
@@ -2692,26 +2694,38 @@ P.wireMetas = function () {
 
 /* Prévia deslogada da Meta — mesmo padrao dos outros modulos: nota no topo,
    as duas seções com números de EXEMPLO nos mesmos componentes da tela real. */
+/* Estado de exemplo da prévia deslogada. Existe porque a versão anterior
+   escrevia os cinco números do card à mão, com o prazo numa data literal:
+   os valores foram calculados pra um horizonte de 8 meses, o calendário
+   andou, e o card passou a dizer "no ritmo" ao lado de uma conclusão 4
+   meses DEPOIS do próprio prazo. Aqui o exemplo é um livro de verdade e
+   quem preenche o card é C.metaCalc — o mesmo motor da tela logada. Um
+   número errado aqui vira teste vermelho, não texto desatualizado. */
+P.exemploMeta = function () {
+  function m(n) { var d = new Date(); d.setMonth(d.getMonth() - n); return d.toISOString().slice(0, 10); }
+  var st = { carteiras: [], ativos: [], pools: [], lend: [], trades: [], rwa: [], mov: [], metas: [] };
+  var c = { id: 'demo', nome: 'Carteira de exemplo' };
+  st.carteiras.push(c);
+  /* só depósitos: o patrimônio do exemplo é caixa, então o card não
+     depende de preço de mercado nenhum pra fechar a conta. */
+  [[9, 6000], [7, 4180], [5, 4000], [2, 1520], [1, 1520], [0, 1520]].forEach(function (d) {
+    C.addMov(st, { tipo: 'deposito', cart: c.id, usd: d[1], dt: m(d[0]) });
+  });
+  var meta = { id: 'demo-meta', nome: 'Chegar em $30 mil de patrimônio', tipo: 'patrimonio',
+               ativoTk: '', medida: 'valor', alvo: 30000, moeda: 'usd',
+               prazo: C.somaMeses(C.hoje(), 8), escopo: 'total', criadaEm: C.hoje() };
+  st.metas.push(meta);
+  return { st: st, meta: meta };
+};
+
 P.vMetaTeaser = function () {
+  var ex = P.exemploMeta();
+  var r = C.metaCalc(ex.st, {}, ex.meta, P.rate);
   document.getElementById('pg').innerHTML = P.demoNote()
     + '<div class="card"><div class="card-hd"><div class="card-title">Metas em andamento</div>'
     +   '<div class="right"><button class="btn btn-p btn-sm" id="btnNovaMetaDemo">+ Criar nova meta</button></div></div>'
     +   '<div class="card-bd"><div style="display:flex;flex-direction:column;gap:12px">'
-    +     '<div class="card"><div class="card-bd">'
-    +       '<div class="mcard-hd"><div class="mcard-ico">🎯</div><div class="mcard-title">Chegar em $30 mil de patrimônio</div></div>'
-    +       '<div class="mc-sub">Patrimônio total · até 31/12/2026</div>'
-    +       '<div class="mcard-pct">62,5%</div>'
-    +       '<div class="wcard-bar"><span style="width:62%"></span></div>'
-    +       '<div class="mc-sub" style="margin-top:.6rem">Faltam <b>$11,260.00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
-    +       '<div class="mgrid-5" style="margin-top:.9rem">'
-    +         '<div class="mc sm"><div class="mc-lbl">Atual</div><div class="mc-val">$18,740.00</div></div>'
-    +         '<div class="mc sm"><div class="mc-lbl">Aporte mensal</div><div class="mc-val up">$1,520.00/mês</div></div>'
-    +         '<div class="mc sm"><div class="mc-lbl">Faltam</div><div class="mc-val">$11,260.00</div></div>'
-    +         '<div class="mc sm"><div class="mc-lbl">Conclusão estimada</div><div class="mc-val">04/2027</div></div>'
-    +         '<div class="mc sm mc-hi"><div class="mc-lbl">Objetivo</div><div class="mc-val">$30,000.00</div></div>'
-    +       '</div>'
-    +       '<div class="fhint" style="margin-top:.7rem;margin-bottom:0">' + P.AVISO_APORTE + '</div>'
-    +       '</div></div>'
+    +     P.metaCardHTML(ex.meta, r, false, true)
     +   '</div></div></div>'
     + '<div class="card" style="margin-top:1rem"><div class="card-hd"><div class="card-title">Metas concluídas</div></div>'
     +   '<div class="card-bd"><div class="empty">Não há metas concluídas</div></div></div>'
