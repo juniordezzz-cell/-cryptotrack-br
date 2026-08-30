@@ -123,6 +123,15 @@ button{font-family:var(--font);cursor:pointer}
 }
 @media(max-width:768px){
   .tnav{gap:12px;padding:10px 14px}
+  /* No telefone o cluster da direita somava 428px de conteudo rigido
+     (seletor 168 + moeda 96 + Adicionar 103 + avatar 32 + gaps) dentro
+     de uma tela de 375: ele esticava a .tnav, e como as abas rolam com
+     `width:100%` desse pai esticado, a pagina inteira ficava arrastavel
+     de lado. Deixar so o seletor encolher resolve na origem sem
+     esconder controle nenhum e sem somar altura ao cabecalho fixo,
+     que num telefone ja custa caro. */
+  .tnav-right{min-width:0}
+  .tnav-right .fsel{flex:1 1 150px;min-width:0}
   .main{padding:18px 14px 60px}
 }
 
