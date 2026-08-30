@@ -327,6 +327,13 @@ button{font-family:var(--font);cursor:pointer}
 .dtable .r{text-align:right}
 @media(max-width:768px){.kpis{grid-template-columns:repeat(2,1fr)}}
 
+/* dashboard tem 5 pilares (HOLD/DeFi/Trade/RWA/Retorno) — repeat(4,1fr) sobraria
+   um tile orfao. kpis-5 e' so' pro dashboard; as telas de 4 tiles (HOLD/DeFi/
+   Trade/RWA) continuam em .kpis puro, sem mexer no layout delas. */
+.kpis.kpis-5{grid-template-columns:repeat(5,1fr)}
+@media(max-width:980px){.kpis.kpis-5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:768px){.kpis.kpis-5{grid-template-columns:1fr}}
+
 /* ══════════════════════════════════════════════════════════════════
    GRÁFICOS
    ══════════════════════════════════════════════════════════════════ */

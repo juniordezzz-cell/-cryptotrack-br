@@ -357,8 +357,8 @@ P.atualizaSuper = function () {
 P.shell = function (active) {
   var e = P.esc;
   var items = [['dash', '📊', 'Dashboard', '/portfolio/index.html'], ['hold', '💎', 'HOLD', '/portfolio/hold.html'],
-               ['defi', '🌊', 'DeFi', '/portfolio/defi.html'], ['trade', '⚡', 'Trade', '/portfolio/trade.html']];
-  var soon = [['rwa', '🏛', 'RWA'], ['meta', '🎯', 'Meta']];
+               ['defi', '🌊', 'DeFi', '/portfolio/defi.html'], ['trade', '⚡', 'Trade', '/portfolio/trade.html'],
+               ['rwa', '🏛', 'RWA', '/portfolio/rwa.html'], ['meta', '🎯', 'Meta', '/portfolio/meta.html']];
   /* O plano é apenas EXIBIDO aqui. A fonte de verdade é o Firestore, lido
      por nexus-auth.js. Nunca torne isto editável pelo usuário. */
   var planoLbl = P.PLAN_LBL[P.planoAtual] || 'Grátis';
@@ -366,9 +366,6 @@ P.shell = function (active) {
   var tabs = items.map(function (it) {
     return '<a class="tnav-tab' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '" role="tab"'
       + (active === it[0] ? ' aria-selected="true"' : ' aria-selected="false"') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
-  }).join('') + soon.map(function (it) {
-    return '<span class="tnav-tab soon" role="tab" aria-disabled="true"><span class="ico">' + it[1] + '</span>'
-      + it[2] + '<span class="tnav-badge">breve</span></span>';
   }).join('');
 
   var carts = '<select class="fsel" id="cartSel"><option value="all">Todas as carteiras</option>'
@@ -717,13 +714,14 @@ P.vDashTeaser = function () {
   var demo = ''
     + P.demoNote()
     + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
-    +   '<div class="hero-big mono">$18.740</div><div class="mc-sub">HOLD + DeFi + Trade</div></div>'
+    +   '<div class="hero-big mono">$20.520</div><div class="mc-sub">HOLD + DeFi + Trade + RWA</div></div>'
     +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
     +   '<div class="mc-val up">+$4.120</div><div class="mc-sub"><span class="up">+28,1%</span> sobre o investido · realizado: <b class="up">+$1.980</b></div></div></div>'
-    + '<div class="kpis">'
+    + '<div class="kpis kpis-5">'
     +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
     +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
     +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$140</span></div></div>'
+    +   '<div class="kpi k-rwa"><div class="mc-lbl">RWA</div><div class="kpi-v mono">$1.780</div><div class="mc-sub">investido: $1.520</div></div>'
     +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$6.100</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
     + '</div>'
     + '<div class="grid2b">'
@@ -883,8 +881,8 @@ P.vDash = function () {
     + ' · realizado: <b class="' + P.cls(T.realizado) + '">' + P.money(T.realizado) + '</b></div>'
     + '</div></div>';
 
-  /* ═══ KPIS: os 4 pilares do patrimônio ═══ */
-  html += '<div class="kpis">'
+  /* ═══ KPIS: os 5 pilares do patrimônio ═══ */
+  html += '<div class="kpis kpis-5">'
     + '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div>'
     + '<div class="kpi-v" data-cv="' + T.hold.valor + '" data-t="m">' + P.money(T.hold.valor) + '</div>'
     + '<div class="mc-sub">investido: ' + P.money(T.hold.custo) + '</div></div>'
@@ -894,6 +892,9 @@ P.vDash = function () {
     + '<div class="kpi k-trade"><div class="mc-lbl">Trade</div>'
     + '<div class="kpi-v" data-cv="' + T.trade.valor + '" data-t="m">' + P.money(T.trade.valor) + '</div>'
     + '<div class="mc-sub">resultado: <span class="' + P.cls(T.trade.realizado) + '">' + P.money(T.trade.realizado) + '</span></div></div>'
+    + '<div class="kpi k-rwa"><div class="mc-lbl">RWA</div>'
+    + '<div class="kpi-v" data-cv="' + T.rwa.valor + '" data-t="m">' + P.money(T.rwa.valor) + '</div>'
+    + '<div class="mc-sub">investido: ' + P.money(T.rwa.custo) + '</div></div>'
     + '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div>'
     + '<div class="kpi-v ' + P.cls(T.resultadoTotal) + '" data-cv="' + T.resultadoTotal + '" data-t="m">' + P.money(T.resultadoTotal) + '</div>'
     + '<div class="mc-sub">' + (xirr == null ? 'sem XIRR — precisa de mais histórico'
@@ -1547,6 +1548,31 @@ P.tabelaRWA = function (pos) {
   return html;
 };
 
+/* Prévia deslogada do RWA — mesmo padrao dos quatro modulos: nota no topo,
+   KPIs e tabela com numeros de EXEMPLO nos componentes reais da tela. */
+P.vRWATeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div class="kpis">'
+    +   '<div class="kpi k-rwa"><div class="mc-lbl">Valor em RWA</div><div class="kpi-v mono">$1.780</div></div>'
+    +   '<div class="kpi k-rwa"><div class="mc-lbl">Investido</div><div class="kpi-v mono">$1.520</div><div class="mc-sub">custo das posições abertas</div></div>'
+    +   '<div class="kpi k-rwa"><div class="mc-lbl">Não realizado</div><div class="kpi-v mono up">+$260</div><div class="mc-sub"><span class="up">+17,1%</span></div></div>'
+    +   '<div class="kpi k-rwa"><div class="mc-lbl">Realizado</div><div class="kpi-v mono">$0</div><div class="mc-sub">de vendas já feitas</div></div>'
+    + '</div>'
+    + '<div class="card"><div class="card-hd"><div class="card-title">Posições em RWA</div></div>'
+    +   '<div class="tblw"><table class="dtable" style="min-width:760px"><thead><tr><th>Token</th>'
+    +   '<th>Ação representada</th><th class="num">Qtd</th><th class="num">Preço médio</th><th class="num">Preço atual</th>'
+    +   '<th class="num">Valor</th><th class="num">Resultado</th></tr></thead><tbody>'
+    +   '<tr><td><div class="tk"><div class="tk-ic">TSL</div><div><b>TSLAx</b><small>exemplo</small></div></div></td>'
+    +     '<td>Tesla</td><td class="num mono">4,00</td><td class="num mono">$210,00</td><td class="num mono">$245,00</td>'
+    +     '<td class="num mono">$980,00</td><td class="num mono up">+$140,00</td></tr>'
+    +   '<tr><td><div class="tk"><div class="tk-ic">AAP</div><div><b>AAPLx</b><small>exemplo</small></div></div></td>'
+    +     '<td>Apple</td><td class="num mono">4,00</td><td class="num mono">$185,00</td><td class="num mono">$200,00</td>'
+    +     '<td class="num mono">$800,00</td><td class="num mono up">+$120,00</td></tr>'
+    +   '</tbody></table></div></div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
 P.vRWA = function () {
   document.getElementById('pgTitle').textContent = 'RWA';
   document.getElementById('pgSub').textContent = 'Ações tokenizadas — preço médio, resultado realizado e não realizado, separado do HOLD';
@@ -1554,6 +1580,7 @@ P.vRWA = function () {
 
   var pos = C.posicoesRWA(P.st, P.precos, P.cart());
   if (!pos.length) {
+    if (P.modoDemo()) { P.vRWATeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma ação tokenizada registrada',
       'Registre sua primeira compra de RWA — ações tokenizadas via xStocks, Ondo ou Backed. O MundoDeFi calcula preço médio ponderado, lucro já realizado e o que ainda está em aberto, com o mesmo motor do HOLD.',
@@ -2433,6 +2460,28 @@ P.wireMetas = function () {
   });
 };
 
+/* Prévia deslogada da Meta — mesmo padrao dos outros modulos: nota no topo,
+   um cartao de meta com numeros de EXEMPLO no mesmo componente da tela real. */
+P.vMetaTeaser = function () {
+  document.getElementById('pg').innerHTML = P.demoNote()
+    + '<div style="display:flex;flex-direction:column;gap:12px">'
+    +   '<div class="card"><div class="card-bd">'
+    +     '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:.5rem">'
+    +     '<div><div style="font-weight:700;font-size:14.5px">Reserva de emergência</div>'
+    +     '<div class="mc-sub">Patrimônio total · alvo $30.000,00 até 31/12/2026</div></div></div>'
+    +     '<div class="wcard-bar"><span style="width:62%"></span></div>'
+    +     '<div class="mc-sub" style="margin:.35rem 0 .8rem">$18.740,00 de $30.000,00 (62,5%)</div>'
+    +     '<div class="mc-sub">Faltam <b>$11.260,00</b> · 8 mes(es) até o prazo · <span class="up">no ritmo</span></div>'
+    +     '<div class="grid2" style="margin-top:.7rem">'
+    +       '<div><div class="mc-lbl">Aporte necessário/mês</div><div class="mc-val" style="font-size:1.05rem">$1.407,50</div></div>'
+    +       '<div><div class="mc-lbl">Seu ritmo real</div><div class="mc-val up" style="font-size:1.05rem">$1.520,00/mês</div></div>'
+    +     '</div>'
+    +   '</div></div>'
+    + '</div>'
+    + P.duoBanners();
+  P.duoWire();
+};
+
 P.vMeta = function () {
   document.getElementById('pgTitle').textContent = 'Meta';
   document.getElementById('pgSub').textContent = 'Quanto falta aportar por mês para chegar no seu alvo — usando seu ritmo real de aportes, nunca uma previsão de mercado';
@@ -2440,6 +2489,7 @@ P.vMeta = function () {
 
   var metas = P.st.metas || [];
   if (!metas.length) {
+    if (P.modoDemo()) { P.vMetaTeaser(); return; }
     document.getElementById('pg').innerHTML = P.vazio(
       'Nenhuma meta ainda',
       'Defina um alvo em dinheiro e um prazo. O MundoDeFi calcula quanto falta aportar por mês, usando o ritmo real dos seus depósitos — sem prever o mercado.',
