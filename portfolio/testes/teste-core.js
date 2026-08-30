@@ -1006,6 +1006,44 @@ eq('regressao BRL: aporteNecessario', rBrl.aporteNecessario, 16666.6667);
 eqv('regressao BRL: situacao igual a USD (nao mais oposta)', rBrl.situacao, rUsd.situacao);
 eq('regressao BRL: ritmoReal e 5x o ritmoReal em USD', rBrl.ritmoReal, rUsd.ritmoReal * 5);
 
+sec('Meta v2: conclusao estimada e suas travas');
+
+var stc = C.novoEstado();
+stc.carteiras.push({ id: 'w1', nome: 'W' });
+/* 4 meses de aporte real de 1.000/mes */
+['2026-01-01','2026-02-01','2026-03-01','2026-04-01'].forEach(function (d) {
+  C.addMov(stc, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: d });
+});
+
+var c1 = C.metaCalc(stc, {}, { id:'c1', nome:'X', tipo:'patrimonio', alvo:10000,
+                               moeda:'usd', escopo:'total', prazo:C.somaMeses(C.hoje(),24) });
+/* patrimonio 4.000; faltam 6.000; ha ritmo medido -> existe previsao */
+eqv('tem previsao quando ha ritmo', c1.conclusaoEstimada != null, true);
+eqv('sem motivo de bloqueio', c1.motivoSemPrevisao, null);
+
+/* TRAVA 1: sem historico suficiente -> sem previsao */
+var stv = C.novoEstado(); stv.carteiras.push({ id:'w1', nome:'W' });
+C.addMov(stv, { tipo:'deposito', cart:'w1', usd:500, dt:C.hoje() });
+var c2 = C.metaCalc(stv, {}, { id:'c2', nome:'Y', tipo:'patrimonio', alvo:5000,
+                               moeda:'usd', escopo:'total', prazo:C.somaMeses(C.hoje(),12) });
+eqv('sem ritmo: previsao nula', c2.conclusaoEstimada, null);
+eqv('sem ritmo: motivo', c2.motivoSemPrevisao, 'sem-ritmo');
+
+/* TRAVA 2: ritmo menor ou igual a zero (sacou tudo que depositou) */
+var stn = C.novoEstado(); stn.carteiras.push({ id:'w1', nome:'W' });
+C.addMov(stn, { tipo:'deposito', cart:'w1', usd:5000, dt:'2026-01-01' });
+C.addMov(stn, { tipo:'saque',    cart:'w1', usd:5000, dt:'2026-04-01' });
+var c3 = C.metaCalc(stn, {}, { id:'c3', nome:'Z', tipo:'patrimonio', alvo:50000,
+                               moeda:'usd', escopo:'total', prazo:C.somaMeses(C.hoje(),12) });
+eqv('ritmo parado: previsao nula', c3.conclusaoEstimada, null);
+eqv('ritmo parado: motivo', c3.motivoSemPrevisao, 'ritmo-parado');
+
+/* TRAVA 3: meta de ativo em QUANTIDADE nao e' projetavel por aporte em dinheiro */
+var c4 = C.metaCalc(stc, {}, { id:'c4', nome:'1 BTC', tipo:'ativo', ativoTk:'BTC',
+                               medida:'qtd', alvo:1, prazo:C.somaMeses(C.hoje(),12) });
+eqv('qtd: previsao nula', c4.conclusaoEstimada, null);
+eqv('qtd: motivo', c4.motivoSemPrevisao, 'qtd-nao-projetavel');
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

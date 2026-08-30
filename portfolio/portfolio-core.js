@@ -976,6 +976,35 @@
       : ritmoReal == null ? 'sem-medida'
       : (ritmoReal >= aporteNecessario ? 'no-ritmo' : 'abaixo');
 
+    /* Conclusão estimada: assume mercado PARADO e aporte constante no
+       ritmo medido — é projeção do comportamento da PESSOA, nunca do
+       mercado. Três travas evitam prometer uma data que não podemos
+       sustentar, nessa ordem de precedência:
+       1) já bateu -> nada a prever;
+       2) meta em qtd -> aportar dinheiro não diz quantos tokens isso
+          compra sem prever preço, e prever preço é exatamente o que
+          este produto recusa a fazer;
+       3) sem ritmo medido (< 30 dias de histórico) -> não inventamos
+          data a partir do nada;
+       4) ritmo <= 0 (parou de aportar ou está sacando) -> nunca uma
+          data no infinito. */
+    var conclusaoEstimada = null;
+    var motivoSemPrevisao = null;
+    if (bateu) {
+      /* nada a prever */
+    } else if (medida === 'qtd') {
+      motivoSemPrevisao = 'qtd-nao-projetavel';
+    } else if (ritmoReal == null) {
+      motivoSemPrevisao = 'sem-ritmo';
+    } else if (ritmoReal <= 0) {
+      motivoSemPrevisao = 'ritmo-parado';
+    } else {
+      /* falta e ritmoReal já estão na MESMA moeda (fix da fase 4/task 1),
+         então essa divisão não precisa de nenhuma conversão extra. */
+      var meses = falta / ritmoReal;
+      conclusaoEstimada = C.somaMeses(hoje, Math.ceil(meses)).slice(0, 7);
+    }
+
     return {
       atual: atual, alvo: alvo, moeda: moeda, medida: medida, tipoLido: tipoLido,
       falta: bateu ? 0 : falta,
@@ -983,7 +1012,8 @@
       diasRest: diasRest,
       mesesRestantes: mesesRestantes, aporteNecessario: aporteNecessario,
       ritmoReal: ritmoReal, situacao: situacao,
-      encerrada: encerrada, bateu: bateu, avisoCambio: avisoCambio
+      encerrada: encerrada, bateu: bateu, avisoCambio: avisoCambio,
+      conclusaoEstimada: conclusaoEstimada, motivoSemPrevisao: motivoSemPrevisao
     };
   };
 
