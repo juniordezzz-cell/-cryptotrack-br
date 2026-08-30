@@ -2400,28 +2400,87 @@ P.metaEscopoNome = function (esc) {
   return P.nomeCart(esc);
 };
 
+/* Meta sobre patrimônio total OU sobre um ativo específico, em quantidade
+   ou em valor (com moeda). Campos que não valem para a escolha atual ficam
+   ESCONDIDOS (display none), nunca desabilitados — a troca de tipo/medida
+   reage no próprio modal, sem fechar. Metas do v1 não tinham tipo/medida/
+   moeda gravados; o pré-preenchimento aqui usa o MESMO default de leitura
+   que C.metaCalc aplica (patrimonio/valor/usd), pra edição nunca inventar
+   um valor diferente do que a tela de resultado já está assumindo. */
 P.formMeta = function (meta) {
   var editando = !!meta;
   meta = meta || {};
+  var e = P.esc;
+  var tipoAtual = meta.tipo || 'patrimonio';
+  var medidaAtual = meta.medida || 'valor';
+  var moedaAtual = meta.moeda || 'usd';
+
+  /* tickers já em carteira (HOLD + RWA) viram sugestão, mas o campo
+     continua um texto livre — a meta pode ser comprar algo que a pessoa
+     ainda não tem. */
+  var tks = {};
+  (P.st.ativos || []).forEach(function (a) { tks[a.tk] = true; });
+  (P.st.rwa || []).forEach(function (a) { tks[a.tk] = true; });
+  var tkOps = Object.keys(tks).sort().map(function (tk) { return '<option value="' + e(tk) + '">'; }).join('');
+
   P.modal(editando ? 'Editar meta' : 'Nova meta',
-    '<div class="fg"><label>Nome</label><input id="fMNome" placeholder="Ex: 1 BTC, R$ 100 mil em cripto, aposentadoria" value="' + P.esc(meta.nome || '') + '"></div>'
-    + '<div class="frow"><div class="fg"><label>Alvo (US$)</label><input id="fMAlvo" type="number" step="any" inputmode="decimal" value="' + (meta.alvo || '') + '"></div>'
-    + '<div class="fg"><label>Prazo</label><input id="fMPrazo" type="date" value="' + (meta.prazo || '') + '"></div></div>'
-    + '<div class="fg"><label>Escopo</label><select id="fMEscopo"><option value="total"' + (!meta.escopo || meta.escopo === 'total' ? ' selected' : '') + '>Patrimônio total</option>' + P.optCarteiras(meta.escopo) + '</select></div>'
+    '<div class="fg"><label>Nome</label><input id="fMNome" placeholder="Ex: 1 BTC, R$ 100 mil em cripto, aposentadoria" value="' + e(meta.nome || '') + '"></div>'
+    + '<div class="fg"><label>Tipo</label><select id="fMTipo">'
+    + '<option value="patrimonio"' + (tipoAtual === 'patrimonio' ? ' selected' : '') + '>Patrimônio</option>'
+    + '<option value="ativo"' + (tipoAtual === 'ativo' ? ' selected' : '') + '>Ativo</option>'
+    + '</select></div>'
+    + '<div class="frow" id="fMAtivoWrap">'
+    + '<div class="fg"><label>Ativo</label><input id="fMAtivo" list="fMAtivoList" placeholder="Ex: BTC" style="text-transform:uppercase" value="' + e(meta.ativoTk || '') + '"><datalist id="fMAtivoList">' + tkOps + '</datalist></div>'
+    + '<div class="fg"><label>Medida</label><select id="fMMedida">'
+    + '<option value="qtd"' + (medidaAtual === 'qtd' ? ' selected' : '') + '>Quantidade</option>'
+    + '<option value="valor"' + (medidaAtual === 'valor' ? ' selected' : '') + '>Valor</option>'
+    + '</select></div></div>'
+    + '<div class="frow"><div class="fg"><label>Alvo</label><input id="fMAlvo" type="number" step="any" inputmode="decimal" value="' + (meta.alvo || '') + '"></div>'
+    + '<div class="fg" id="fMMoedaWrap"><label>Moeda</label><select id="fMMoeda">'
+    + '<option value="usd"' + (moedaAtual === 'usd' ? ' selected' : '') + '>US$</option>'
+    + '<option value="brl"' + (moedaAtual === 'brl' ? ' selected' : '') + '>R$</option>'
+    + '</select></div></div>'
+    + '<div class="fg"><label>Prazo</label><input id="fMPrazo" type="date" value="' + (meta.prazo || '') + '"></div>'
+    + '<div class="fg" id="fMEscopoWrap"><label>Escopo</label><select id="fMEscopo"><option value="total"' + (!meta.escopo || meta.escopo === 'total' ? ' selected' : '') + '>Patrimônio total</option>' + P.optCarteiras(meta.escopo) + '</select></div>'
     + '<div class="fhint">' + P.AVISO_APORTE + '</div>',
     { footer: '<button class="btn btn-p" id="okMeta">' + (editando ? 'Salvar' : 'Criar meta') + '</button>' });
+
+  function tog() {
+    var tipo = P.val('fMTipo') || 'patrimonio';
+    var medida = tipo === 'ativo' ? (P.val('fMMedida') || 'valor') : 'valor';
+    document.getElementById('fMAtivoWrap').style.display = tipo === 'ativo' ? 'grid' : 'none';
+    document.getElementById('fMEscopoWrap').style.display = tipo === 'patrimonio' ? 'flex' : 'none';
+    document.getElementById('fMMoedaWrap').style.display = medida === 'valor' ? 'flex' : 'none';
+  }
+  document.getElementById('fMTipo').onchange = tog;
+  document.getElementById('fMMedida').onchange = tog;
+  tog();
+
   document.getElementById('okMeta').onclick = function () {
-    var nome = P.val('fMNome'), alvo = P.num('fMAlvo'), prazo = P.val('fMPrazo');
+    var nome = P.val('fMNome');
+    var alvo = P.num('fMAlvo');
+    var prazo = P.val('fMPrazo');
+    var tipo = P.val('fMTipo') || 'patrimonio';
+    var ativoTk = P.val('fMAtivo').toUpperCase();
     if (!nome) return alert('Dê um nome para a meta.');
     if (!(alvo > 0)) return alert('Informe um alvo maior que zero.');
     if (!prazo) return alert('Informe um prazo.');
-    var escopo = P.val('fMEscopo') || 'total';
+    if (tipo === 'ativo' && !ativoTk) return alert('Informe qual ativo é a meta.');
+
+    var medida = tipo === 'ativo' ? (P.val('fMMedida') || 'valor') : 'valor';
+    var moeda = medida === 'valor' ? (P.val('fMMoeda') || 'usd') : 'usd';
+    var escopo = tipo === 'patrimonio' ? (P.val('fMEscopo') || 'total') : 'total';
+
     P.st.metas = P.st.metas || [];
     if (editando) {
-      meta.nome = nome; meta.alvo = alvo; meta.prazo = prazo; meta.escopo = escopo;
+      meta.nome = nome; meta.tipo = tipo; meta.ativoTk = tipo === 'ativo' ? ativoTk : '';
+      meta.medida = medida; meta.alvo = alvo; meta.moeda = moeda; meta.prazo = prazo; meta.escopo = escopo;
     } else {
       if ((P.st.metas || []).length >= P.limMetas()) return P.upsell();
-      P.st.metas.push({ id: C.uid(), nome: nome, alvo: alvo, prazo: prazo, escopo: escopo, criadaEm: C.hoje() });
+      P.st.metas.push({
+        id: C.uid(), nome: nome, tipo: tipo, ativoTk: tipo === 'ativo' ? ativoTk : '', medida: medida,
+        alvo: alvo, moeda: moeda, prazo: prazo, escopo: escopo, criadaEm: C.hoje()
+      });
     }
     P.save(); P.closeModal(); P.render();
   };
