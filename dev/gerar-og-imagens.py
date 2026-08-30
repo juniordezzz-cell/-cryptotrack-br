@@ -194,6 +194,10 @@ if __name__ == '__main__':
          u'As taxas cobriram o impermanent loss? Essa é a conta que importa.'),
         ('trade', u'Diário de trade: banca e drawdown',
          u'Win rate alto não significa lucro. Aqui dá para ver a diferença.'),
+        ('rwa', u'Carteira RWA: ações tokenizadas',
+         u'Nvidia e Google pelos trilhos da cripto, no mesmo preço médio do resto.'),
+        ('meta', u'Meta: quanto aportar por mês',
+         u'A conta sai do seu ritmo real de aportes, nunca de uma previsão de preço.'),
     ]
     for slug, t, s in PF:
         total += gravar(cartao(t, s, u'GRÁTIS COM UMA CARTEIRA', CIANO), 'portfolio-%s.png' % slug)
