@@ -71,7 +71,7 @@ for (const item of cat.itens) {
 /* ── portfólio ─────────────────────────────────────────────
    Ficou fora enquanto as páginas serviam HTML vazio. Agora cada uma tem
    texto próprio abaixo do aplicativo — ver o comentário no robots.txt. */
-for (const pg of ['index', 'hold', 'defi', 'trade']) {
+for (const pg of ['index', 'hold', 'defi', 'trade', 'rwa', 'meta']) {
   add('/portfolio/' + pg + '.html', null, 'weekly', pg === 'index' ? '0.9' : '0.8');
 }
 
