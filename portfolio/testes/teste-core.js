@@ -957,6 +957,55 @@ eqv('v1 vira usd', v1m.moeda, 'usd');
 eq('v1 atual em USD', v1m.atual, 30000);
 eq('v1 pct', v1m.pct, 50);
 
+/* ══════════════════════════════════════════════════════════════
+   REGRESSAO: ritmoReal e aporteNecessario tem que estar na MESMA
+   moeda dentro de `situacao` — bug achado no review do Task 1
+   (fase 4): `atual` era convertido pra BRL mas `ritmoReal` ficava
+   sempre em USD, e ritmoReal >= aporteNecessario comparava moedas
+   diferentes. Duas metas ECONOMICAMENTE IDENTICAS (dolar a 5,00,
+   60.000 USD == 300.000 BRL) tem que dar a MESMA situacao.
+   ══════════════════════════════════════════════════════════════ */
+sec('Meta v2: ritmoReal e aporteNecessario na mesma moeda (regressao)');
+
+var stR = C.novoEstado();
+stR.carteiras.push({ id: 'w1', nome: 'W' });
+/* 4 meses de aportes reais: 5000/mes (mesma cadencia Jan1->Abr1, span de
+   90 dias, ja validada na secao 'Meta: alvo e plano de aporte' acima —
+   so que 5x maior, pra bater com o exemplo do review) */
+C.addMov(stR, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-01-01' });
+C.addMov(stR, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-02-01' });
+C.addMov(stR, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-03-01' });
+C.addMov(stR, { tipo: 'deposito', cart: 'w1', usd: 5000, dt: '2026-04-01' });
+/* patrimonio (so caixa) = 20.000 USD.
+   ritmoReal (USD) = liquido/(span/30.44) = 20000/(90/30.44)
+                    = 20000*30.44/90 = 6764,4444...
+   prazo = +12 meses -> mesesRestantes = 12 (mesmo padrao ja validado
+   em 'Meta: alvo e plano de aporte' acima, com C.somaMeses(hoje,n)
+   dando exatamente n meses restantes). */
+var prazoR = C.somaMeses(C.hoje(), 12);
+
+/* meta em USD: alvo 60.000 -> falta 40.000 -> aporteNecessario = 40000/12 = 3333,3333
+   ritmoReal 6764,4444 >= 3333,3333 -> no-ritmo */
+var rUsd = C.metaCalc(stR, {}, { id:'rUsd', nome:'Economica USD', tipo:'patrimonio',
+                                 alvo:60000, moeda:'usd', escopo:'total', prazo:prazoR });
+eq('regressao USD: ritmoReal', rUsd.ritmoReal, 6764.4444);
+eq('regressao USD: aporteNecessario', rUsd.aporteNecessario, 3333.3333);
+eqv('regressao USD: situacao', rUsd.situacao, 'no-ritmo');
+
+/* MESMA meta economica, escrita em BRL (dolar a 5,00): 60.000 USD == 300.000 BRL.
+   atual convertido = 20000*5 = 100.000; falta = 300000-100000 = 200.000;
+   aporteNecessario = 200000/12 = 16666,6667.
+   ritmoReal TEM que converter junto: 6764,4444 * 5 = 33822,2222,
+   que ainda e >= 16666,6667 -> tambem no-ritmo (mesma resposta da meta USD).
+   Antes do fix, ritmoReal ficava em USD (6764,44) comparado contra
+   16666,67 em BRL e dava 'abaixo' — resposta oposta pro mesmo aporte real. */
+var rBrl = C.metaCalc(stR, {}, { id:'rBrl', nome:'Economica BRL', tipo:'patrimonio',
+                                 alvo:300000, moeda:'brl', escopo:'total', prazo:prazoR }, 5);
+eq('regressao BRL: ritmoReal', rBrl.ritmoReal, 33822.2222);
+eq('regressao BRL: aporteNecessario', rBrl.aporteNecessario, 16666.6667);
+eqv('regressao BRL: situacao igual a USD (nao mais oposta)', rBrl.situacao, rUsd.situacao);
+eq('regressao BRL: ritmoReal e 5x o ritmoReal em USD', rBrl.ritmoReal, rUsd.ritmoReal * 5);
+
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
 console.log(fail === 0 ? ('TODOS OS ' + ok + ' TESTES PASSARAM') : (ok + ' ok, ' + fail + ' FALHARAM'));

@@ -911,11 +911,19 @@
     /* Meta em quantidade não tem moeda — a unidade é a do próprio ativo.
        Meta em BRL converte o `atual` (que está em USD) usando a taxa
        recebida; a meta guarda o alvo na moeda que a pessoa digitou, nunca
-       convertemos o alvo — só o que medimos contra ele. */
+       convertemos o alvo — só o que medimos contra ele.
+       `ritmoReal` PRECISA passar pela mesma conversão, com o mesmo guard —
+       senão `situacao` compara ritmo em USD contra necessidade em BRL (ou
+       vice-versa), e uma meta "no ritmo" e a mesma meta escrita em outra
+       moeda respondem coisas opostas pro mesmo aporte real. Por isso
+       guardamos aqui se a conversão é pra acontecer e se a taxa é
+       utilizável — os dois lados usam exatamente o mesmo teste. */
+    var converterBrl = medida !== 'qtd' && moeda === 'brl';
+    var rateOk = isFinite(rate) && rate > 0;
     var avisoCambio = false;
-    if (medida !== 'qtd' && moeda === 'brl') {
+    if (converterBrl) {
       avisoCambio = true;
-      if (isFinite(rate) && rate > 0) atual = atual * rate;
+      if (rateOk) atual = atual * rate;
       /* rate ausente/inválida: não inventamos taxa, atual segue em USD
          mesmo assim — mas avisoCambio continua true pra tela avisar. */
     }
@@ -955,6 +963,11 @@
         var liquido = 0;
         movs.forEach(function (m) { liquido += C.TIPOS[m.tipo].sinal * num(m.usd); });
         ritmoReal = liquido / (span / 30.44);
+        /* mesmo guard e mesma taxa usados em `atual` acima — os dois lados
+           da comparação em `situacao` têm que estar na mesma moeda. Taxa
+           inutilizável: os dois ficam em USD (nunca um convertido e o
+           outro não). */
+        if (converterBrl && rateOk) ritmoReal = ritmoReal * rate;
       }
     }
 
