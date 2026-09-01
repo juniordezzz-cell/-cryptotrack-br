@@ -275,21 +275,6 @@ P.countUps = function () {
   });
 };
 
-/* ═══════════ componentes reutilizados ═══════════ */
-P.card = function (lbl, valor, cor, sub, cv, tipo) {
-  return '<div class="mc"><div class="mc-accent" style="background:' + cor + '"></div>'
-    + '<div class="mc-lbl">' + lbl + '</div>'
-    + '<div class="mc-val ' + (cv != null && tipo !== 'n' ? P.cls(cv) : '') + '"'
-    + (cv != null ? ' data-cv="' + cv + '"' + (tipo ? ' data-t="' + tipo + '"' : '') : '') + '>' + valor + '</div>'
-    + (sub ? '<div class="mc-sub">' + sub + '</div>' : '') + '</div>';
-};
-P.cardNeutro = function (lbl, valor, cor, sub, cv, tipo) {
-  return '<div class="mc"><div class="mc-accent" style="background:' + cor + '"></div>'
-    + '<div class="mc-lbl">' + lbl + '</div>'
-    + '<div class="mc-val"' + (cv != null ? ' data-cv="' + cv + '"' + (tipo ? ' data-t="' + tipo + '"' : '') : '') + '>' + valor + '</div>'
-    + (sub ? '<div class="mc-sub">' + sub + '</div>' : '') + '</div>';
-};
-
 /* Estado vazio de verdade: explica o que fazer e oferece um caminho.
    O v1 no lugar disso injetava carteiras e ativos falsos que a pessoa
    confundia com os próprios. */
@@ -342,8 +327,10 @@ P.supCorpo = function () {
   if (r.ok) {
     return '<div class="notice"><p>As contas fecham. O que foi conferido:</p>'
       + '<ul class="sup-lista"><li>Nenhuma carteira gastou mais do que recebeu em depósitos e transferências (caixa negativo).</li>'
+      + '<li>O capital aberto de cada carteira fecha com o caixa e o resultado já realizado.</li>'
       + '<li>Não sobrou movimentação presa numa carteira já apagada.</li>'
-      + '<li>Toda transferência tem as duas pernas — origem e destino.</li></ul></div>'
+      + '<li>Toda transferência tem as duas pernas — origem e destino.</li>'
+      + '<li>A foto diária da tela bate com o livro de movimentos.</li></ul></div>'
       + '<p class="sup-status">Status: <strong>tudo certo</strong></p>';
   }
 
@@ -723,130 +710,54 @@ P.duoWire = function () {
 /* Deslogado e sem dados? A tela mostra a prévia em vez do estado vazio. */
 P.modoDemo = function () { return !(window.NexusAuth && window.NexusAuth.user); };
 
-/* PRÉVIA para quem chega deslogado e sem dados: em vez de tela crua OU de
-   um cadeado na cara, mostra o dashboard CHEIO com dados de EXEMPLO (cor
-   normal, nada de escurecer) pra pessoa ver o produto, com uma nota discreta
-   no topo e um convite amigavel EMBAIXO. Uma carteira e' gratis; o login
-   serve pra ver os SEUS numeros e sincronizar. */
-P.vDashTeaser = function () {
-  var demo = ''
-    + P.demoNote()
-    + '<div class="hero"><div><div class="mc-lbl">Patrimônio total</div>'
-    +   '<div class="hero-big mono">$20.520</div><div class="mc-sub">HOLD + DeFi + Trade + RWA</div></div>'
-    +   '<div style="text-align:right"><div class="mc-lbl">Não realizado</div>'
-    +   '<div class="mc-val up">+$3.140</div><div class="mc-sub"><span class="up">+18,3%</span> sobre o investido · realizado: <b class="up">+$2.420</b></div></div></div>'
-    + '<div class="kpis kpis-5">'
-    +   '<div class="kpi k-hold"><div class="mc-lbl">HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">investido: $9.900</div></div>'
-    +   '<div class="kpi k-defi"><div class="mc-lbl">DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">taxas coletadas: $180</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Trade</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">resultado: <span class="up">+$260</span></div></div>'
-    +   '<div class="kpi k-rwa"><div class="mc-lbl">RWA</div><div class="kpi-v mono">$1.780</div><div class="mc-sub">investido: $1.520</div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Retorno</div><div class="kpi-v mono up">+$5.560</div><div class="mc-sub"><span class="up">+64,3%</span> ao ano (XIRR)</div></div>'
-    + '</div>'
-    + '<div class="grid2b">'
-    +   '<div class="card"><div class="card-hd"><div class="card-title">Evolução do patrimônio</div></div>'
-    +     '<div class="card-bd"><div class="chart-box"><canvas id="chEvoDemo"></canvas></div></div></div>'
-    +   '<div class="card"><div class="card-hd"><div class="card-title">Onde está seu risco</div></div>'
-    +     '<div class="card-bd"><div class="tzbar">'
-    +       '<span style="width:33%;background:#F5B614"></span><span style="width:33%;background:#9945FF"></span>'
-    +       '<span style="width:17%;background:#22D3EE"></span><span style="width:17%;background:#14F195"></span></div>'
-    +       '<div class="tzleg"><span><i style="background:#F5B614"></i>BTC 33%</span><span><i style="background:#9945FF"></i>SOL 33%</span>'
-    +       '<span><i style="background:#22D3EE"></i>ETH 17%</span><span><i style="background:#14F195"></i>USDC 17%</span></div>'
-    +     '</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Carteiras</div></div>'
-    +   '<div class="card-bd"><div class="wcards">'
-    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 Phantom</span><span class="mono" style="font-weight:700">$11.290</span></div><div class="wcard-bar"><span style="width:55%"></span></div><div class="mc-sub">55,0% do patrimônio</div></div>'
-    +     '<div class="wcard"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span style="font-weight:600">👛 MetaMask</span><span class="mono" style="font-weight:700">$9.230</span></div><div class="wcard-bar"><span style="width:45%"></span></div><div class="mc-sub">45,0% do patrimônio</div></div>'
-    +   '</div></div></div>'
-    + P.duoBanners();
-  document.getElementById('pg').innerHTML = demo;
-  P.duoWire();
-  P.mkChart('chEvoDemo', {
-    type: 'line',
-    data: { labels: ['','','','','','','','','','','',''],
-      datasets: [{ data: [100, 104, 102, 110, 116, 113, 124, 131, 127, 142, 150, 161],
-        borderColor: '#22D3EE', borderWidth: 2.2, pointRadius: 0, tension: .35, fill: true,
-        backgroundColor: function (c) { var ch = c.chart, g = ch.ctx.createLinearGradient(0, 0, 0, ch.height || 300); g.addColorStop(0, 'rgba(34,211,238,.30)'); g.addColorStop(1, 'rgba(34,211,238,0)'); return g; } }] },
-    options: { responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { display: false }, tooltip: { enabled: false } },
-      scales: { x: { grid: { display: false }, ticks: { display: false } }, y: { grid: P.gGrid(), ticks: { display: false } } } }
-  });
+P.exemploEstado = function () {
+  if (!window.PExemplo || !PExemplo.montar) return C.novoEstado();
+  return PExemplo.montar(C);
 };
 
-/* Prévias dos módulos: mesma ideia do dashboard — números de exemplo nos
-   componentes reais da tela, nota no topo e os dois banners embaixo. */
-P.vHoldTeaser = function () {
-  var linha = function (tk, ic, cor, bg, qtd, pm, pa, val, res, pct) {
-    return '<tr><td><div class="tk"><span class="ic" style="background:' + bg + ';color:' + cor + '">' + ic + '</span>'
-      + '<div><div style="font-weight:600">' + tk + '</div><div class="q">exemplo</div></div></div></td>'
-      + '<td class="r mono">' + qtd + '</td><td class="r mono" style="color:var(--mut)">' + pm + '</td>'
-      + '<td class="r mono">' + pa + '</td><td class="r mono">' + val + '</td>'
-      + '<td class="r mono up">' + res + '<div style="font-size:11px;font-weight:400">' + pct + '</div></td></tr>';
-  };
-  document.getElementById('pg').innerHTML = P.demoNote()
-    + '<div class="kpis">'
-    +   '<div class="kpi k-hold"><div class="mc-lbl">Valor em HOLD</div><div class="kpi-v mono">$12.480</div><div class="mc-sub">3 ativos</div></div>'
-    +   '<div class="kpi k-hold"><div class="mc-lbl">Investido</div><div class="kpi-v mono">$9.900</div><div class="mc-sub">custo das posições abertas</div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Não realizado</div><div class="kpi-v mono up">+$2.580</div><div class="mc-sub"><span class="up">+26,1%</span></div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Realizado</div><div class="kpi-v mono up">+$1.980</div><div class="mc-sub">de vendas já feitas</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
-    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Ativo</th>'
-    +   '<th class="r">Qtd</th><th class="r">Preço médio</th><th class="r">Preço atual</th><th class="r">Valor</th><th class="r">Não realizado</th></tr></thead><tbody>'
-    +   linha('BTC', '₿', 'var(--gold,#F5B614)', 'var(--gold-soft)', '0,08', '$55.000', '$67.800', '$5.424', '+$1.024', '+23,3%')
-    +   linha('SOL', '◎', 'var(--purple-txt,#A96BFF)', 'var(--purple-soft)', '25,0', '$124,80', '$168,00', '$4.200', '+$1.080', '+34,6%')
-    +   linha('ETH', 'Ξ', 'var(--blue,#4D9FFF)', 'var(--mdf-blue-soft,rgba(77,159,255,.12))', '0,85', '$2.800', '$3.360', '$2.856', '+$476', '+20,0%')
-    +   '</tbody></table></div></div>'
-    + P.duoBanners();
-  P.duoWire();
+P.demoReadOnlyWire = function () {
+  var app = document.getElementById('app');
+  if (!app) return;
+  if (app.dataset.demoReadonlyWired === '1') return;
+  app.dataset.demoReadonlyWired = '1';
+  var entrar = function () { if (window.NexusAuth && NexusAuth.login) NexusAuth.login(); };
+  app.addEventListener('click', function (ev) {
+    if (!P.modoDemo()) return;
+    var t = ev.target;
+    if (!t) return;
+    if (t.closest('#demoTop') || t.closest('.tnav-tab') || t.closest('.tnav-logo') || t.closest('a[href="/planos.html"]')) return;
+    var lock = t.closest('button,select,input,textarea,[data-ativo],[data-wact],[data-tx],[data-del],[data-p],[data-lj],[data-le],[data-per],.tab,[data-exp],[data-meta-menubtn],[data-meta-edit],[data-meta-del],#avBtn,.avmenu-link,#cartSel,#mUsd,#mBrl,#btnAdd');
+    if (!lock) return;
+    ev.preventDefault();
+    ev.stopPropagation();
+    entrar();
+  }, true);
 };
 
-P.vDefiTeaser = function () {
-  document.getElementById('pg').innerHTML = P.demoNote()
-    + '<div class="kpis">'
-    +   '<div class="kpi k-defi"><div class="mc-lbl">Valor em DeFi</div><div class="kpi-v mono">$4.200</div><div class="mc-sub">capital aplicado: $3.900</div></div>'
-    +   '<div class="kpi k-defi"><div class="mc-lbl">Taxas coletadas</div><div class="kpi-v mono">$180</div><div class="mc-sub">renda real em dólar</div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Resultado DeFi</div><div class="kpi-v mono up">+$480</div><div class="mc-sub">pools abertas + encerradas</div></div>'
-    +   '<div class="kpi k-defi"><div class="mc-lbl">APR médio das taxas</div><div class="kpi-v mono">15,0%</div><div class="mc-sub">1 pool · 1 lending</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Posições abertas</div></div>'
-    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Posição</th>'
-    +   '<th class="r">Capital</th><th class="r">Taxas</th><th class="r">APR real</th><th class="r">Resultado</th></tr></thead><tbody>'
-    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--purple-soft);color:var(--purple-txt,#A96BFF)">◎</span>'
-    +     '<div><div style="font-weight:600">SOL/USDC</div><div class="q">Orca · Solana</div></div></div></td>'
-    +     '<td class="r mono">$2.400</td><td class="r mono up">+$118</td><td class="r mono">19,1%</td><td class="r mono up">+$418</td></tr>'
-    +   '<tr><td><div class="tk"><span class="ic" style="background:var(--cyan-soft);color:var(--cyan,#00E5FF)">🏦</span>'
-    +     '<div><div style="font-weight:600">USDC</div><div class="q">Kamino · lending</div></div></div></td>'
-    +     '<td class="r mono">$1.500</td><td class="r mono up">+$62</td><td class="r mono">8,4%</td><td class="r mono up">+$62</td></tr>'
-    +   '</tbody></table></div></div>'
-    + P.duoBanners();
+P.vDemoTeaser = function (renderFn) {
+  var stReal = P.st;
+  var precosReal = P.precos;
+  var precosEmReal = P.precosEm;
+  var precosFalhouReal = P.precosFalhou;
+  P.st = P.exemploEstado();
+  P.precos = {};
+  P.precosEm = Date.now();
+  P.precosFalhou = false;
+  renderFn();
+  var pg = document.getElementById('pg');
+  if (pg) pg.innerHTML = P.demoNote() + pg.innerHTML + P.duoBanners();
   P.duoWire();
+  P.demoReadOnlyWire();
+  P.st = stReal;
+  P.precos = precosReal;
+  P.precosEm = precosEmReal;
+  P.precosFalhou = precosFalhouReal;
 };
 
-P.vTradeTeaser = function () {
-  document.getElementById('pg').innerHTML = P.demoNote()
-    + '<div class="kpis">'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Banca atual</div><div class="kpi-v mono">$2.060</div><div class="mc-sub">aportado: $1.800</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Resultado dos trades</div><div class="kpi-v mono up">+$260</div><div class="mc-sub"><span class="up">+14,4%</span> sobre o aportado</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Win rate</div><div class="kpi-v mono">62%</div><div class="mc-sub">8 ganhos · 5 perdas</div></div>'
-    +   '<div class="kpi k-ret"><div class="mc-lbl">Expectativa / operação</div><div class="kpi-v mono up">+$20,00</div><div class="mc-sub">quanto se espera ganhar por trade</div></div>'
-    + '</div>'
-    + '<div class="kpis">'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Profit factor</div><div class="kpi-v mono up">2,30</div><div class="mc-sub">sistema ganhador</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Payoff</div><div class="kpi-v mono">1,44</div><div class="mc-sub">ganho médio $57,50</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Drawdown máximo</div><div class="kpi-v mono">6,2%</div><div class="mc-sub">maior perda $54,00</div></div>'
-    +   '<div class="kpi k-trade"><div class="mc-lbl">Operações</div><div class="kpi-v mono">13</div><div class="mc-sub">amostra ainda pequena</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Últimas operações</div></div>'
-    +   '<div class="card-bd" style="padding:.4rem .6rem"><table class="dtable"><thead><tr><th>Data</th>'
-    +   '<th>Ativo</th><th>Direção</th><th class="r">Alav.</th><th class="r">Resultado</th></tr></thead><tbody>'
-    +   '<tr><td class="mono">12/08</td><td style="font-weight:600">BTC</td><td>Long</td><td class="r mono">3x</td><td class="r mono up">+$120</td></tr>'
-    +   '<tr><td class="mono">09/08</td><td style="font-weight:600">SOL</td><td>Short</td><td class="r mono">2x</td><td class="r mono down">−$54</td></tr>'
-    +   '<tr><td class="mono">05/08</td><td style="font-weight:600">ETH</td><td>Long</td><td class="r mono">2x</td><td class="r mono up">+$96</td></tr>'
-    +   '</tbody></table></div></div>'
-    + P.duoBanners();
-  P.duoWire();
-};
+P.vDashTeaser = function () { P.vDemoTeaser(P.vDash); };
+P.vHoldTeaser = function () { P.vDemoTeaser(P.vHold); };
+P.vDefiTeaser = function () { P.vDemoTeaser(P.vDefi); };
+P.vTradeTeaser = function () { P.vDemoTeaser(P.vTrade); };
 
 P.vDash = function () {
   var e = P.esc, T = P.totais();
@@ -1566,30 +1477,7 @@ P.tabelaRWA = function (pos) {
   return html;
 };
 
-/* Prévia deslogada do RWA — mesmo padrao dos quatro modulos: nota no topo,
-   KPIs e tabela com numeros de EXEMPLO nos componentes reais da tela. */
-P.vRWATeaser = function () {
-  document.getElementById('pg').innerHTML = P.demoNote()
-    + '<div class="kpis">'
-    +   '<div class="kpi k-rwa"><div class="mc-lbl">Valor em RWA</div><div class="kpi-v mono">$1.780</div></div>'
-    +   '<div class="kpi k-rwa"><div class="mc-lbl">Investido</div><div class="kpi-v mono">$1.520</div><div class="mc-sub">custo das posições abertas</div></div>'
-    +   '<div class="kpi k-rwa"><div class="mc-lbl">Não realizado</div><div class="kpi-v mono up">+$260</div><div class="mc-sub"><span class="up">+17,1%</span></div></div>'
-    +   '<div class="kpi k-rwa"><div class="mc-lbl">Realizado</div><div class="kpi-v mono">$0</div><div class="mc-sub">de vendas já feitas</div></div>'
-    + '</div>'
-    + '<div class="card"><div class="card-hd"><div class="card-title">Posições em RWA</div></div>'
-    +   '<div class="tblw"><table class="dtable" style="min-width:760px"><thead><tr><th>Token</th>'
-    +   '<th>Ação representada</th><th class="num">Qtd</th><th class="num">Preço médio</th><th class="num">Preço atual</th>'
-    +   '<th class="num">Valor</th><th class="num">Resultado</th></tr></thead><tbody>'
-    +   '<tr><td><div class="tk"><div class="tk-ic">TSL</div><div><b>TSLAx</b><small>exemplo</small></div></div></td>'
-    +     '<td>Tesla</td><td class="num mono">4,00</td><td class="num mono">$210,00</td><td class="num mono">$245,00</td>'
-    +     '<td class="num mono">$980,00</td><td class="num mono up">+$140,00</td></tr>'
-    +   '<tr><td><div class="tk"><div class="tk-ic">AAP</div><div><b>AAPLx</b><small>exemplo</small></div></div></td>'
-    +     '<td>Apple</td><td class="num mono">4,00</td><td class="num mono">$170,00</td><td class="num mono">$200,00</td>'
-    +     '<td class="num mono">$800,00</td><td class="num mono up">+$120,00</td></tr>'
-    +   '</tbody></table></div></div>'
-    + P.duoBanners();
-  P.duoWire();
-};
+P.vRWATeaser = function () { P.vDemoTeaser(P.vRWA); };
 
 P.vRWA = function () {
   document.getElementById('pgTitle').textContent = 'RWA';
@@ -2319,82 +2207,8 @@ P.vTrade = function () {
    ══════════════════════════════════════════════════════════════════ */
 P.carregarExemplo = function () {
   if (P.st.mov.length && !confirm('Isso adiciona dados de exemplo ao que você já tem. Continuar?')) return;
-  function m(n) { var d = new Date(); d.setMonth(d.getMonth() - n); return d.toISOString().slice(0, 10); }
-  var st = P.st;
-  var c1 = { id: C.uid(), nome: 'Phantom (exemplo)' };
-  var c2 = { id: C.uid(), nome: 'MetaMask (exemplo)' };
-  st.carteiras.push(c1, c2);
-
-  var btc = { id: C.uid(), tk: 'BTC', cg: 'bitcoin', cart: c2.id, last: 61000 };
-  var eth = { id: C.uid(), tk: 'ETH', cg: 'ethereum', cart: c2.id, last: 1700 };
-  var sol = { id: C.uid(), tk: 'SOL', cg: 'solana', cart: c1.id, last: 80 };
-  st.ativos.push(btc, eth, sol);
-
-  C.addMov(st, { tipo: 'compra', ref: btc.id, cart: c2.id, qtd: 0.08, px: 44500, fee: 12, dt: m(9) });
-  C.addMov(st, { tipo: 'compra', ref: btc.id, cart: c2.id, qtd: 0.04, px: 56800, fee: 9, dt: m(3) });
-  C.addMov(st, { tipo: 'compra', ref: eth.id, cart: c2.id, qtd: 1.5, px: 2350, fee: 7, dt: m(8) });
-  C.addMov(st, { tipo: 'compra', ref: sol.id, cart: c1.id, qtd: 60, px: 68, fee: 5, dt: m(10) });
-  C.addMov(st, { tipo: 'venda',  ref: sol.id, cart: c1.id, qtd: 15, px: 112, fee: 4, dt: m(2) });
-
-  var p1 = { id: C.uid(), par: 'SOL/USDC', proto: 'Orca', chain: 'Solana', cart: c1.id, st: 'e', ab: m(10), en: m(7),
-             cur: { usd: 0, tok: '', at: m(7) }, di: { obj: 'Renda em dólar com par líquido' }, notas: [], reb: [] };
-  var p2 = { id: C.uid(), par: 'SOL/USDC', proto: 'Orca', chain: 'Solana', cart: c1.id, st: 'a', ab: m(2), en: null,
-             cur: { usd: 3120, tok: '21,4 SOL + 1.310 USDC', at: C.hoje() }, di: { obj: 'Range médio' }, notas: [], reb: [],
-             il: { a: { cg: 'solana', sym: 'SOL', px0: 112 }, b: { cg: 'usd-coin', sym: 'USDC', px0: 1 }, w: 0.5 } };
-  st.pools.push(p1, p2);
-  C.addMov(st, { tipo: 'pool_dep', ref: p1.id, cart: c1.id, usd: 2000, dt: m(10) });
-  C.addMov(st, { tipo: 'pool_fee', ref: p1.id, cart: c1.id, usd: 133, dt: m(8) });
-  C.addMov(st, { tipo: 'pool_ret', ref: p1.id, cart: c1.id, usd: 2245, dt: m(7) });
-  C.addMov(st, { tipo: 'pool_dep', ref: p2.id, cart: c1.id, usd: 3000, dt: m(2) });
-  C.addMov(st, { tipo: 'pool_fee', ref: p2.id, cart: c1.id, usd: 96, dt: m(1) });
-
-  var l1 = { id: C.uid(), plat: 'Kamino', chain: 'Solana', tipo: 's', tk: 'USDC', cart: c1.id, apy: 8.4, st: 'a', ab: m(4) };
-  st.lend.push(l1);
-  C.addMov(st, { tipo: 'lend_sup', ref: l1.id, cart: c1.id, usd: 1500, dt: m(4) });
-  C.addMov(st, { tipo: 'lend_juros', ref: l1.id, cart: c1.id, usd: 42, dt: m(1) });
-
-  C.addMov(st, { tipo: 'trade_dep', cart: c1.id, usd: 1000, dt: m(3) });
-  [['BTC', 'L', 5, 120, m(2)], ['SOL', 'S', 3, -45, m(2)], ['ETH', 'L', 5, 105, m(1)]].forEach(function (t) {
-    st.trades.push({ id: C.uid(), dt: t[4], ativo: t[0], dir: t[1], alav: t[2], res: t[3], txt: 'Operação de exemplo', cart: c1.id });
-    C.addMov(st, { tipo: 'trade_res', cart: c1.id, usd: Math.abs(t[3]), px: t[3] >= 0 ? 1 : -1, dt: t[4], nota: t[0] });
-  });
-
-  /* RWA: uma ação tokenizada (mesmo motor de preço médio do HOLD), com
-     depósito próprio cobrindo a compra — sem isto a carteira nasceria
-     no vermelho, o mesmo erro que a fase 2 cometeu. */
-  var nvdax = { id: C.uid(), tk: 'NVDAx', nome: 'Nvidia', plataforma: 'xStocks',
-                cg: 'nvidia-x', cart: c2.id, last: 132, lastAt: null };
-  (st.rwa = st.rwa || []).push(nvdax);
-  C.addMov(st, { tipo: 'deposito', cart: c2.id, usd: 1300, dt: m(6), nota: 'Aporte para RWA de exemplo' });
-  C.addMov(st, { tipo: 'rwa_compra', ref: nvdax.id, cart: c2.id, qtd: 10, px: 118, fee: 6, dt: m(5) });
-
-  /* META: três metas (exatamente o teto grátis, P.limMetas() — não crie
-     uma quarta) mostrando os três tipos que a fase 4 passou a aceitar. O
-     cálculo é 100% de C.metaCalc a partir do ledger acima; os alvos aqui
-     são literais estáticos escolhidos pra render um progresso real (nem
-     0% nem 100%), nunca derivados do estado do usuário. */
-  st.metas = st.metas || [];
-  st.metas.push(
-    /* patrimônio total, em dólar — ~20,6k atual vira ~59% */
-    { id: C.uid(), nome: 'Patrimônio em US$ 35 mil', tipo: 'patrimonio', ativoTk: '',
-      medida: 'valor', alvo: 35000, moeda: 'usd',
-      prazo: C.somaMeses(C.hoje(), 10), escopo: 'total', criadaEm: C.hoje() },
-    /* ativo por quantidade — o próprio exemplo do dono: juntar 1 BTC
-       inteiro a partir dos 0,12 BTC que a carteira já tem (~12%) */
-    { id: C.uid(), nome: '1 BTC inteiro', tipo: 'ativo', ativoTk: 'BTC',
-      medida: 'qtd', alvo: 1, moeda: 'usd',
-      prazo: C.somaMeses(C.hoje(), 14), escopo: 'total', criadaEm: C.hoje() },
-    /* patrimônio total, mas declarada em real — mostra a moeda guardada
-       na meta e o aviso de câmbio (~R$111k atuais vira ~74%) */
-    { id: C.uid(), nome: 'R$ 150 mil em cripto', tipo: 'patrimonio', ativoTk: '',
-      medida: 'valor', alvo: 150000, moeda: 'brl',
-      prazo: C.somaMeses(C.hoje(), 12), escopo: 'total', criadaEm: C.hoje() }
-  );
-
-  /* o exemplo lança compra/pool_dep/lend_sup/trade_dep sem depósito
-     equivalente — sem isto toda carteira de exemplo nasceria com caixa
-     negativo. Mesma cura do boot, chamada aqui porque este caminho
-     grava e renderiza direto, sem passar por P.boot. */
+  if (!window.PExemplo || !PExemplo.aplicar) return;
+  PExemplo.aplicar(P.st, C);
   C.aberturaDeSaldo(P.st);
   P.save();
   P.loadPrices().then(function () { P.render(); });

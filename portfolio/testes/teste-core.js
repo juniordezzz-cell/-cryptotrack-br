@@ -10,6 +10,7 @@
    Sai com código 1 se qualquer caso falhar — dá para plugar em CI.
    ───────────────────────────────────────────────────────────────── */
 var C = require('../portfolio-core.js');
+var Ex = require('../portfolio-exemplo.js');
 
 var ok = 0, fail = 0;
 function eq(nome, real, esperado, tol) {
@@ -782,6 +783,30 @@ C.addMov(sup4, { tipo: 'transf', ref: 'perdida', cart: 'w1', usd: 40, px: -1, dt
 eqv('transferencia manca acusada',
   S.conferir(sup4).achados.filter(function (a) { return a.chave === 'transf-manca'; }).length, 1);
 
+/* capital saiu do caixa mas a posição sumiu da entidade (estado corrompido) */
+var sup5 = C.novoEstado();
+sup5.carteiras.push({ id: 'w1', nome: 'Corrompida' });
+C.addMov(sup5, { tipo: 'deposito', cart: 'w1', usd: 1000, dt: '2026-01-01' });
+/* compra referencia ativo que não existe mais em st.ativos */
+C.addMov(sup5, { tipo: 'compra', ref: 'ativo-apagado', cart: 'w1', qtd: 1, px: 500, dt: '2026-01-02' });
+eqv('capital x caixa acusa livro corrompido',
+  S.conferir(sup5).achados.filter(function (a) { return a.chave === 'capital-caixa'; }).length, 1);
+
+/* cache de tela (snapshot diário) divergente deve ser reescrito pelo supervisor */
+var sup6 = C.novoEstado();
+sup6.carteiras.push({ id: 'w1', nome: 'Tela' });
+C.addMov(sup6, { tipo: 'deposito', cart: 'w1', usd: 700, dt: '2026-01-01' });
+sup6.snaps.push({ dt: C.hoje(), pat: 1, inv: 2, real: 3, naoReal: 4 });
+var r6sup = S.conferir(sup6);
+eqv('tela: divergencia do snapshot acusada',
+  r6sup.achados.filter(function (a) { return a.chave === 'tela-cache'; }).length, 1);
+var t6 = C.totais(sup6, {}, 'all');
+var snap6 = sup6.snaps[sup6.snaps.length - 1];
+eq('tela: snapshot pat reescrito', snap6.pat, t6.patrimonio);
+eq('tela: snapshot inv reescrito', snap6.inv, t6.investido);
+eq('tela: snapshot real reescrito', snap6.real, t6.realizado);
+eq('tela: snapshot naoReal reescrito', snap6.naoReal, t6.naoRealizado);
+
 /* ══════════════════════════════════════════════════════════════
    RWA — ações tokenizadas. Mesmo motor do HOLD, aba separada.
    ══════════════════════════════════════════════════════════════ */
@@ -1150,6 +1175,30 @@ eqv('previa: "no ritmo" exige ritmo >= necessario',
     rp.ritmoReal >= rp.aporteNecessario, true);
 eqv('previa: "no ritmo" nao pode concluir DEPOIS do prazo',
     rp.conclusaoEstimada <= ex.meta.prazo.slice(0, 7), true);
+
+/* ── EXEMPLO COMPARTILHADO: o seed usado no teaser e no "carregar exemplo"
+   tem que fechar como livro contábil único, para não voltar a divergir entre
+   telas deslogadas e logadas. */
+sec('EXEMPLO: coerencia do estado compartilhado');
+var sx = Ex.montar(C);
+var tx = C.totais(sx, {}, 'all');
+var caixaX = sx.carteiras.reduce(function (s, c) { return s + C.caixaDe(sx, c.id); }, 0);
+var somaPilares = tx.hold.valor + tx.defi.valor + tx.trade.valor + tx.rwa.valor + caixaX;
+eq('patrimonio = HOLD + DeFi + Trade + RWA + caixa', tx.patrimonio, somaPilares);
+eq('resultado total = realizado + nao realizado', tx.resultadoTotal, tx.realizado + tx.naoRealizado);
+
+var somaCarteiras = sx.carteiras.reduce(function (s, c) {
+  return s + C.totais(sx, {}, c.id).patrimonio;
+}, 0);
+eq('soma das carteiras = patrimonio total', somaCarteiras, tx.patrimonio);
+
+var trX = C.tradeResumo(sx, 'all');
+eq('trade do total bate tradeResumo', tx.trade.valor, trX.banca);
+eq('meta de patrimonio do exemplo segue calculavel', C.metaCalc(sx, {}, sx.metas[0], 1).motivoSemPrevisao ? 1 : 0, 0);
+var cx = C.concentracao(sx, {}, 'all');
+eqv('exemplo: concentracao inclui banca de trade', cx.linhas.some(function (l) { return l.tipo === 'trade' && l.nome === 'Banca de trade'; }), true);
+eqv('exemplo: concentracao inclui pool aberta', cx.linhas.some(function (l) { return l.tipo === 'pool'; }), true);
+eqv('exemplo: concentracao tem ao menos 5 fatias', cx.n >= 5, true);
 
 /* ══════════════════════════════════════════════════════════════ */
 console.log('\n' + '═'.repeat(62));
