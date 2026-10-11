@@ -34,9 +34,10 @@ from PIL import Image, ImageDraw, ImageFont
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Mesmas cores do gradiente de favicon.svg e de .nav-logo-mark no CSS.
-FUNDO = (25, 42, 57)
-BORDA = (65, 101, 123)
-TINTA = (217, 233, 240)
+OURO_CLARO = (255, 212, 79)
+OURO_MEIO = (245, 182, 20)
+OURO_ESCURO = (181, 126, 4)
+TINTA = (36, 26, 4)
 
 # Arial Bold tem o U+20BF. Georgia NÃO tem — conferido quando o símbolo
 # saiu como retângulo vazio na imagem de compartilhamento.
@@ -48,18 +49,31 @@ def marca(lado):
     S = lado * 4
     img = Image.new('RGBA', (S, S), (0, 0, 0, 0))
 
-    base = Image.new('RGB', (S, S), FUNDO)
+    # gradiente diagonal, do canto superior esquerdo ao inferior direito
+    grad = Image.new('RGB', (S, S))
+    px = grad.load()
+    for y in range(S):
+        for x in range(S):
+            t = (x + y) / float(2 * (S - 1))
+            if t <= 0.52:
+                k = t / 0.52
+                a, b = OURO_CLARO, OURO_MEIO
+            else:
+                k = (t - 0.52) / 0.48
+                a, b = OURO_MEIO, OURO_ESCURO
+            px[x, y] = (int(a[0] + (b[0] - a[0]) * k),
+                        int(a[1] + (b[1] - a[1]) * k),
+                        int(a[2] + (b[2] - a[2]) * k))
 
     # máscara de quadrado arredondado — raio 141/512, igual ao SVG
     mascara = Image.new('L', (S, S), 0)
     ImageDraw.Draw(mascara).rounded_rectangle([0, 0, S - 1, S - 1],
                                               radius=int(S * 141 / 512.0), fill=255)
-    img.paste(base, (0, 0), mascara)
+    img.paste(grad, (0, 0), mascara)
 
     # o símbolo, centralizado pela caixa real do glifo (não pela métrica
     # da fonte, que deixa o desenho visivelmente alto dentro do quadrado)
     d = ImageDraw.Draw(img)
-    d.rounded_rectangle([S * .015, S * .015, S * .985, S * .985], radius=int(S * 141 / 512.0), outline=BORDA, width=max(1, int(S * .025)))
     fonte = ImageFont.truetype(FONTE, int(S * 0.60))
     cx0, cy0, cx1, cy1 = d.textbbox((0, 0), u'M', font=fonte)
     d.text((S / 2.0 - (cx0 + cx1) / 2.0, S / 2.0 - (cy0 + cy1) / 2.0),

@@ -1,4 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MundoDeFi">
-  <rect x="8" y="8" width="496" height="496" rx="112" fill="#192A39" stroke="#41657B" stroke-width="16"/>
-  <path d="M126 368V144h55l75 107 75-107h55v224h-55V228l-75 103-75-103v140z" fill="#D9E9F0"/>
+  <!-- Monograma M com a paleta dourada original do MundoDeFi. -->
+  <defs>
+    <linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FFD44F"/>
+      <stop offset="0.52" stop-color="#F5B614"/>
+      <stop offset="1" stop-color="#B57E04"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="141" ry="141" fill="url(#ouro)"/>
+  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
+        font-family="Arial, 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif" font-size="330" font-weight="700"
+        fill="#241A04">M</text>
 </svg>

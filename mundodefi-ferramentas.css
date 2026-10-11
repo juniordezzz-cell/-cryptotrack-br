@@ -348,9 +348,8 @@ details p strong{color:var(--text)}
 .tool-hdr{display:flex;align-items:center;gap:9px}
 .tool-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .tool-icon .mdf-icon{width:17px;height:17px}
-.logo{display:inline-flex;align-items:center;gap:9px;background:none!important;-webkit-text-fill-color:currentColor!important;color:var(--text)!important;letter-spacing:-.035em}
-.logo em{color:var(--purple-txt,#9AC0D8)}
-.logo-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:7px;background:#192A39;border:1px solid #41657B;color:#D9E9F0;font-size:15px;letter-spacing:0;-webkit-text-fill-color:#D9E9F0}
+.logo{display:inline-flex;align-items:center;gap:9px}
+.logo-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:7px;background:linear-gradient(135deg,#FFD44F,var(--gold,#F5B614) 52%,#b57e04);color:#241a04;font-size:15px;letter-spacing:0;-webkit-text-fill-color:#241a04}
 .tool-name{font-size:.95rem;font-weight:700;letter-spacing:-.01em}
 .tool-desc{font-size:.82rem;color:var(--muted);line-height:1.55;flex:1}
 .tool-foot{display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:6px}

@@ -516,12 +516,12 @@
 
 /* Acesso ao Nexus como controle de produto, sem animação decorativa. */
 .nexus-fab{width:auto;height:44px;min-width:104px;padding:0 14px;border-radius:9px;
-  display:flex;gap:9px;background:#1A2B3A;border:1px solid #527B96;color:#E3EFF5;
+  display:flex;gap:9px;background:var(--panel2,#131926);border:1px solid rgba(34,211,238,.5);color:var(--text,#f5f7f8);
   box-shadow:0 8px 22px rgba(0,0,0,.22);animation:none;transition:background .15s,border-color .15s}
-.nexus-fab:hover{animation:none;transform:none;background:#233C4F;border-color:#86B0C9}
+.nexus-fab:hover{animation:none;transform:none;background:var(--panel3,#1A2130);border-color:var(--cyan,#22D3EE)}
 .nexus-fab:active{transform:none}
 .nexus-fab::before,.nexus-fab::after{display:none}
-.nexus-fab-icon{font-size:13px;font-weight:700;animation:none;filter:none;border:1px solid #6B91A8;
+.nexus-fab-icon{font-size:13px;font-weight:700;animation:none;filter:none;border:1px solid rgba(34,211,238,.5);
   width:22px;height:22px;border-radius:5px}
 .nexus-fab-label,.nexus-fab:hover .nexus-fab-label{position:static;transform:none;opacity:1;
   border:0;background:none;padding:0;border-radius:0;color:inherit;font-size:12px;font-weight:600}
