@@ -5,18 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/mundodefi-api.js?v=e78ef39697"></script>
 <link rel="icon" href="/favicon.svg?v=e78ef39697" type="image/svg+xml">
-<title>MundoDeFi — As melhores ferramentas de cripto do Brasil</title>
-<meta name="description" content="Ferramentas para investir em cripto com números: impermanent loss, staking, juros compostos e portfólio completo. Em português, a maioria grátis.">
+<title>MundoDeFi — Seu cripto, com mais clareza</title>
+<meta name="description" content="Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores de cripto em português, a maioria grátis.">
 <link rel="canonical" href="https://mundodefi.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MundoDeFi">
-<meta property="og:title" content="MundoDeFi — As melhores ferramentas de cripto do Brasil">
+<meta property="og:title" content="MundoDeFi — Seu cripto, com mais clareza">
 <meta property="og:image" content="https://mundodefi.com.br/og/home.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="MundoDeFi — ferramentas de cripto em português">
 <meta name="twitter:image" content="https://mundodefi.com.br/og/home.png">
-<meta property="og:description" content="Calcule impermanent loss, projete staking e acompanhe seu patrimônio. 11 ferramentas em português, a maioria gratuita.">
+<meta property="og:description" content="Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores de cripto em português.">
 <meta property="og:url" content="https://mundodefi.com.br/">
 <meta property="og:locale" content="pt_BR">
 <meta name="twitter:card" content="summary_large_image">
@@ -269,6 +269,52 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 .user-menu a:hover,.user-menu button:hover{background:rgba(255,255,255,.05)}
 .user-menu #userLogout{color:#ff6b6b}
 @media(max-width:900px){.nav-right .user-chip{display:none}}
+/* Home: uma entrada clara, com navegação visual e cards uniformes. */
+.hero{padding:clamp(4rem,7vw,6.4rem) 0 4.6rem;background:linear-gradient(180deg,#0c1020 0%,var(--bg) 100%)}
+.hero::before{background:radial-gradient(620px 410px at 78% 27%,rgba(153,69,255,.16),transparent 70%),radial-gradient(450px 280px at 9% 0%,rgba(0,229,255,.08),transparent 72%)}
+.hero-layout{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1.04fr) minmax(360px,.96fr);align-items:center;gap:clamp(2.5rem,6vw,6rem)}
+.hero-in{max-width:none;padding:0}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:9px;color:var(--cyan);font:700 11px var(--mono);letter-spacing:.1em;margin-bottom:1.35rem}
+.hero-dot,.preview-status i{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px rgba(20,241,149,.7)}
+.hero-h1{font-size:clamp(2.8rem,5.2vw,4.8rem);line-height:1.02;letter-spacing:-.055em;max-width:11ch;margin-bottom:1.4rem}
+.hero-h1 span{color:var(--cyan)}
+.hero-p{font-size:clamp(1rem,1.4vw,1.15rem);line-height:1.65;max-width:48ch;margin-bottom:2rem}
+.hero-cta{gap:12px;margin-bottom:2.5rem}
+.hero-cta .btn{min-height:50px}
+.btn-p{background:var(--purple);color:#fff;box-shadow:0 8px 26px rgba(153,69,255,.24)}
+.btn-p:hover{background:#a761ff;transform:translateY(-2px)}
+.hero-nums{gap:0;border-top:1px solid var(--line2);padding-top:1.35rem;max-width:520px}
+.hn{display:flex;flex-direction:column;align-items:flex-start;gap:0;min-width:125px;padding-right:1.4rem;margin-right:1.4rem;border-right:1px solid var(--line2)}
+.hn:last-child{border:0;margin-right:0;padding-right:0}
+.hn b{font-size:1.35rem}.hn span{font-size:11.5px}
+.hero-preview{display:block;position:relative;overflow:hidden;border:1px solid rgba(153,69,255,.35);border-radius:22px;padding:28px;background:linear-gradient(145deg,#17132d 0%,#0f1626 58%,#0a101d 100%);box-shadow:0 28px 80px rgba(0,0,0,.42),0 0 48px rgba(153,69,255,.08);transition:transform .2s,border-color .2s}
+.hero-preview:hover{transform:translateY(-5px);border-color:var(--purple)}
+.preview-top,.preview-rows,.preview-foot{display:flex;justify-content:space-between;align-items:center}
+.preview-kicker,.preview-status{font:700 10px var(--mono);letter-spacing:.06em;color:var(--mut2)}
+.preview-status{display:flex;align-items:center;gap:7px;color:var(--green)}
+.preview-status i{width:6px;height:6px}
+.preview-title{font-size:clamp(1.5rem,2.4vw,2.1rem);font-weight:700;letter-spacing:-.04em;margin-top:2.8rem}
+.preview-intro{font-size:13.5px;color:var(--mut);max-width:32ch;margin-top:.4rem}
+.preview-chart{height:130px;display:flex;align-items:flex-end;gap:9px;margin:2.2rem 0 1.7rem;padding:0 4px}
+.preview-chart span{flex:1;min-width:0;border-radius:5px 5px 0 0;background:linear-gradient(180deg,#29edda 0%,#0c696f 100%);opacity:.85}
+.preview-chart span:nth-child(2n){background:linear-gradient(180deg,#ab69ff 0%,#493077 100%)}
+.preview-divider{height:1px;background:var(--line2)}
+.preview-rows{gap:8px;margin-top:1.3rem;color:var(--mut);font-size:12px;font-weight:700}
+.preview-rows>span{display:flex;align-items:center;gap:7px}
+.preview-icon{width:25px;height:25px;border-radius:7px;display:grid;place-items:center;font-size:14px;font-style:normal}
+.preview-icon.hold{color:var(--gold);background:var(--gold-soft)}.preview-icon.defi{color:var(--green);background:var(--green-soft)}.preview-icon.trade{color:var(--cyan);background:var(--cyan-soft)}
+.preview-foot{margin-top:2rem;color:var(--cyan);font-size:13px;font-weight:700}
+#ferramentas{padding-top:3.5rem}
+.sec-head{align-items:end;margin-bottom:1.8rem}.sec-title{line-height:1.2}.sec-subtitle{font-size:14px;color:var(--mut);margin-top:7px}
+.tools-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.tool-feat{grid-column:auto}.tool-feat .tool-vis{height:150px}
+.tool-card:nth-child(n+7){display:none}
+.tool-card{background:#101522;border-color:var(--line2);border-radius:16px;will-change:auto}
+.tool-card:hover{transform:translateY(-4px) scale(1.01);box-shadow:0 16px 36px rgba(0,0,0,.35)}
+.tool-vis{height:150px}.tool-bd{padding:1.2rem}.tool-ds{font-size:13px}
+@media(max-width:1000px){.hero-layout{grid-template-columns:1fr 1fr;gap:2rem}.hero-h1{font-size:clamp(2.7rem,5vw,3.8rem)}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.hero{padding:3.5rem 0 2.8rem}.hero-layout{grid-template-columns:1fr}.hero-preview{max-width:560px;width:100%;margin:auto}.hero-h1{max-width:14ch}}
+@media(max-width:640px){.hero{padding:3rem 0 2rem}.hero-in{padding:0}.hero-h1{font-size:clamp(2.65rem,11vw,3.5rem)}.hero-cta{flex-direction:column}.hero-cta .btn-big{width:100%;flex:none}.hero-nums{justify-content:space-between;gap:8px}.hn{min-width:0;flex:1;margin:0;padding:0 8px;border:0}.hn:first-child{padding-left:0}.hero-preview{padding:22px}.preview-title{margin-top:1.7rem}.preview-chart{height:100px;margin:1.5rem 0}.tools-grid{grid-template-columns:1fr}.sec-head{align-items:start}.sec-link{margin-top:.4rem}}
 </style>
 <!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
 <script type="application/ld+json">
@@ -382,16 +428,26 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 
 <!-- ═══ HERO ═══ -->
 <section class="hero">
-  <div class="wrap hero-in">
-    <h1 class="hero-h1">As melhores ferramentas<br>de cripto do Brasil</h1>
-    <p class="hero-p">Calcule impermanent loss, projete staking, descubra se aquela operação
-      valeu a pena e acompanhe todo o seu patrimônio. <b>11 ferramentas em português</b>,
-      a maioria gratuita e sem cadastro.</p>
-    <div class="hero-cta">
-      <a href="#ferramentas" class="btn btn-p btn-big">Ver as ferramentas</a>
-      <a href="/portfolio/index.html" class="btn btn-ghost btn-big">Montar meu portfólio</a>
+  <div class="wrap hero-layout">
+    <div class="hero-in">
+      <div class="hero-eyebrow"><span class="hero-dot"></span> FERRAMENTAS PARA INVESTIR MELHOR</div>
+      <h1 class="hero-h1">Seu cripto, com <span>mais clareza.</span></h1>
+      <p class="hero-p">Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores em um só lugar, em português.</p>
+      <div class="hero-cta">
+        <a href="/portfolio/index.html" class="btn btn-p btn-big">Abrir meu portfólio <span aria-hidden="true">↗</span></a>
+        <a href="#ferramentas" class="btn btn-ghost btn-big">Explorar ferramentas</a>
+      </div>
+      <div class="hero-nums" id="heroNums"></div>
     </div>
-    <div class="hero-nums" id="heroNums"></div>
+    <a class="hero-preview" href="/portfolio/index.html" aria-label="Conhecer o portfólio MundoDeFi">
+      <div class="preview-top"><span class="preview-kicker">MUNDODEFI / PORTFÓLIO</span><span class="preview-status"><i></i> VISÃO GERAL</span></div>
+      <div class="preview-title">Tudo no seu lugar.</div>
+      <p class="preview-intro">HOLD, DeFi e Trade organizados numa visão que faz sentido.</p>
+      <div class="preview-chart" aria-hidden="true"><span style="height:39%"></span><span style="height:52%"></span><span style="height:45%"></span><span style="height:68%"></span><span style="height:59%"></span><span style="height:79%"></span><span style="height:71%"></span><span style="height:91%"></span><span style="height:82%"></span><span style="height:100%"></span></div>
+      <div class="preview-divider"></div>
+      <div class="preview-rows"><span><i class="preview-icon hold">◆</i> HOLD</span><span><i class="preview-icon defi">◈</i> DeFi</span><span><i class="preview-icon trade">↗</i> Trade</span></div>
+      <div class="preview-foot">Conhecer o portfólio <span aria-hidden="true">→</span></div>
+    </a>
   </div>
 </section>
 
@@ -399,7 +455,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 <section id="ferramentas">
   <div class="wrap">
     <div class="sec-head">
-      <div><div class="sec-eyebrow">O que você pode fazer aqui</div><div class="sec-title">Ferramentas</div></div>
+      <div><div class="sec-eyebrow">COMECE POR AQUI</div><h2 class="sec-title">Ferramentas para cada decisão</h2><p class="sec-subtitle">Do primeiro cálculo ao acompanhamento do seu portfólio.</p></div>
       <a href="/ferramentas/ferramentas.html" class="sec-link">Ver todas →</a>
     </div>
     <!-- As cartas vêm de /mundodefi-catalogo.js + /mundodefi-previas.js.
