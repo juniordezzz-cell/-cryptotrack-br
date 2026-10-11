@@ -65,7 +65,6 @@ function lerCatalogo() {
    máquina é o que separa aparecer de não aparecer numa comparação. */
 function appDaFerramenta(item) {
   const url = SITE + item.url;
-  const gratis = item.plano !== 'pro';
   return {
     '@type': 'WebApplication',
     '@id': url + '#app',
@@ -76,12 +75,11 @@ function appDaFerramenta(item) {
     operatingSystem: 'Web',
     browserRequirements: 'Requer JavaScript',
     inLanguage: 'pt-BR',
-    isAccessibleForFree: gratis,
+    isAccessibleForFree: true,
     offers: {
       '@type': 'Offer',
-      price: gratis ? '0' : '19.90',
-      priceCurrency: 'BRL',
-      ...(gratis ? {} : { category: 'Assinatura MundoDeFi PRO' })
+      price: '0',
+      priceCurrency: 'BRL'
     },
     featureList: item.tags,
     publisher: { '@id': ORG_ID },
@@ -230,29 +228,6 @@ for (const [slug, nome, descricao] of PORTFOLIO) {
 }
 
 
-/* ── planos: o produto pago, com preço legível por máquina ─────────── */
-aplicar('planos.html', [
-  { '@id': ORG_ID, '@type': 'Organization' },
-  {
-    '@type': 'WebApplication',
-    '@id': SITE + '/planos.html#pro',
-    name: 'MundoDeFi PRO',
-    url: SITE + '/planos.html',
-    description: 'Carteiras ilimitadas no portfólio, o Nexus respondendo sobre os seus números, '
-               + 'Entradas e Saídas, Simulador de Trade e exportação em CSV.',
-    applicationCategory: 'FinanceApplication',
-    operatingSystem: 'Web',
-    inLanguage: 'pt-BR',
-    isAccessibleForFree: false,
-    offers: {
-      '@type': 'Offer', price: '19.90', priceCurrency: 'BRL',
-      availability: 'https://schema.org/InStock',
-      url: SITE + '/planos.html'
-    },
-    publisher: { '@id': ORG_ID }
-  }
-]);
-
 /* ── Nexus: página de produto ──────────────────────────────────────── */
 aplicar('nexus/index.html', [
   { '@id': ORG_ID, '@type': 'Organization' },
@@ -266,8 +241,8 @@ aplicar('nexus/index.html', [
     applicationCategory: 'FinanceApplication',
     operatingSystem: 'Web',
     inLanguage: 'pt-BR',
-    isAccessibleForFree: false,
-    offers: { '@type': 'Offer', price: '19.90', priceCurrency: 'BRL' },
+    isAccessibleForFree: true,
+    offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
     publisher: { '@id': ORG_ID }
   }
 ]);

@@ -1,18 +1,15 @@
 /* ============================================================
-   NEXUS CORE — motor do widget (esfera + chat + gating PRO)
+   NEXUS CORE — motor do widget (esfera + chat gratuito)
    ------------------------------------------------------------
    Como usar em qualquer página:
      <link rel="stylesheet" href="/nexus/nexus.css">
      <script src="/nexus/nexus-portfolio-kb.js"></script>  (a base de conhecimento)
-     <script src="/nexus/nexus-auth.js"></script>          (plano via Firebase)
+     <script src="/nexus/nexus-auth.js"></script>          (conta opcional)
      <script src="/nexus/nexus-core.js"></script>          (este arquivo)
 
    Regras:
    • A esfera aparece para todo mundo (brilhando e orbitando).
-   • Ao clicar:
-       - não logado  → convite para entrar com Google
-       - plano grátis → tela "recurso PRO" com CTA /planos.html
-       - PRO/Premium → chat liberado
+   • O chat está disponível para todos.
    • O Nexus é DETERMINÍSTICO por escolha: as respostas saem de
      regras declaradas em nexus-regras.json avaliadas contra os
      números reais do portfólio. Não é modelo de linguagem — e
@@ -33,8 +30,6 @@
     mode: "local", /* "local" | "api" */
     api: { endpoint: "", timeoutMs: 15000, headers: { "Content-Type": "application/json" } },
     chat: { maxHistorico: 30, delayDigitandoMs: [450, 900] },
-    requerPro: true,
-    planosUrl: "/planos.html",
     historyKey: "nexus-chat-" + (document.body.getAttribute("data-nexus-page") || location.pathname)
   };
   window.NEXUS_CORE_CONFIG = CONFIG;
@@ -107,41 +102,6 @@
       '</section>';
     document.body.appendChild(root);
     return root;
-  }
-
-  function telaGate(body, estado) {
-    var html =
-      '<div class="nexus-gate">' +
-        '<div class="nexus-gate-orb">◆</div>' +
-        '<span class="nexus-gate-pro">EXCLUSIVO PRO</span>';
-    if (estado === "loading") {
-      html += '<h3>Um segundo…</h3><p>Verificando seu acesso ao Nexus.</p>';
-    } else if (estado === "deslogado") {
-      html += '<h3>Entre para falar com o Nexus</h3>' +
-        '<p>O Nexus lê seu portfólio e responde sobre patrimônio, pools, HOLD e trade. Entre com sua conta para eu verificar seu plano.</p>' +
-        '<button class="nexus-gate-btn cyan" type="button" data-nexus-login>Entrar com Google</button>' +
-        '<p class="nexus-gate-sub">Ainda não tem conta? O login cria uma na hora.</p>';
-    } else {
-      html += '<h3>O Nexus é do plano PRO</h3>' +
-        '<p>Assinantes PRO conversam com o Nexus sobre o próprio portfólio: melhor ativo, pool que mais rende, winrate no trade e muito mais.</p>' +
-        '<a class="nexus-gate-btn" href="' + CONFIG.planosUrl + '">Assinar MundoDeFi PRO</a>' +
-        '<p class="nexus-gate-sub">R$ 19,90/mês · cancele quando quiser</p>';
-    }
-    html += '</div>';
-    body.innerHTML = html;
-    var btn = body.querySelector("[data-nexus-login]");
-    if (btn) {
-      btn.addEventListener("click", function () {
-        btn.disabled = true;
-        btn.textContent = "Abrindo login…";
-        if (window.NexusAuth) {
-          NexusAuth.login().catch(function () {
-            btn.disabled = false;
-            btn.textContent = "Entrar com Google";
-          });
-        }
-      });
-    }
   }
 
   function telaChat(body) {
@@ -232,14 +192,6 @@
     setTimeout(function () { input.focus(); }, 50);
   }
 
-  function estadoAtual() {
-    if (!CONFIG.requerPro) return "pro";
-    var A = window.NexusAuth;
-    if (!A || !A.ready) return "loading";
-    if (!A.user) return "deslogado";
-    return A.isPro() ? "pro" : "gratis";
-  }
-
   function init() {
     var root = buildUI();
     var fab = root.querySelector(".nexus-fab");
@@ -249,11 +201,10 @@
     var renderizado = null;
 
     function render() {
-      var estado = estadoAtual();
+      var estado = "disponivel";
       if (estado === renderizado) return;
       renderizado = estado;
-      if (estado === "pro") telaChat(body);
-      else telaGate(body, estado);
+      telaChat(body);
     }
 
     function toggle(open) {
@@ -270,11 +221,6 @@
       if (e.key === "Escape" && !panel.hidden) toggle(false);
     });
 
-    /* quando o Firebase resolver o plano, atualiza o painel se estiver aberto */
-    document.addEventListener("nexus-auth-changed", function () {
-      if (!panel.hidden) { renderizado = null; render(); }
-      else renderizado = null;
-    });
   }
 
   /* estilo do corpo flexível */

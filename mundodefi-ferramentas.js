@@ -3,7 +3,6 @@
    ---------------------------------------------------------------------
    Injeta os BLOCOS REPETIDOS de toda ferramenta:
      • cabeçalho (header)
-     • bloco de planos PRO / Premium (fica no fim da página)
      • rodapé (footer)
 
    Mexeu aqui  ->  muda o texto e os links em TODAS as ferramentas de
@@ -12,7 +11,6 @@
 
    Como usar em cada ferramenta — basta ter estas âncoras vazias:
      <div data-mdf="header"></div>   (logo no começo do <body>)
-     <div data-mdf="pro"></div>      (no fim, antes do aviso, se quiser)
      <div data-mdf="footer"></div>   (no fim do <body>)
    ...e a tag do script antes de fechar o </body>:
      <script src="/mundodefi-ferramentas.js" defer></script>
@@ -32,7 +30,6 @@
       inicio:      '/index.html',
       ferramentas: '/ferramentas/ferramentas.html',
       portfolio:   '/portfolio/',
-      planos:      '/planos.html',
       cadastro:    '/cadastro.html',
     },
 
@@ -41,35 +38,6 @@
       { texto: 'Ferramentas', link: '/ferramentas/ferramentas.html' },
       { texto: 'Portfólio',   link: '/portfolio/' },
     ],
-    botaoPro: { texto: '⚡ PRO', link: '/planos.html' },
-
-    // Bloco PRO (roxo)
-    pro: {
-      tag:   '⚡ PRO',
-      preco: 'R$ 19,90',
-      ciclo: '/mês',
-      desc:  'Carteiras ilimitadas, o Nexus respondendo sobre o seu portfólio, Entradas e Saídas e exportação em CSV.',
-      cta:   'Assinar PRO',
-      link:  '/planos.html',
-    },
-
-    // Bloco PREMIUM (dourado)
-    premium: {
-      badge: 'Mentoria individual',
-      tag:   'PREMIUM',
-      preco: 'R$ 49,90',
-      ciclo: '/mês',
-      desc:  'Tudo do PRO + estratégias avançadas + 1 encontro individual por mês — vagas limitadas.',
-      cta:   'Em breve',
-      link:  '/planos.html',
-    },
-
-    // Rodapé do bloco de planos (a linha azul-ciano embaixo dos dois cards)
-    planosFoot: {
-      texto: 'Cancele quando quiser · garantia de 7 dias · ',
-      linkTexto: 'ou crie sua conta gratuita →',
-      link: '/cadastro.html',
-    },
 
     // Bloco "Outras ferramentas" — 4 cards fixos, NA ORDEM definida aqui.
     // Troque texto, cor, etiqueta, link ou a ordem -> muda em todas as ferramentas.
@@ -79,7 +47,7 @@
       titulo: 'Outras ferramentas gratuitas',
       sub: 'Tudo o que você precisa para operar cripto com método — grátis e em português.',
       cards: [
-        { preview: 'financas',   emoji: '💰', cor: '#9945FF', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: '⚡ PRO', link: '/ferramentas/entradas-saidas/' },
+        { preview: 'financas',   emoji: '💰', cor: '#9945FF', nome: 'Entradas e Saídas',    desc: 'Controle financeiro completo com gráficos e o Nexus, seu analista.', badge: 'Grátis', link: '/ferramentas/entradas-saidas/' },
         { preview: 'comparador', emoji: '📊', cor: '#00e5ff', nome: 'Comparador de Ativos', desc: 'Compare cripto com ouro, ações, índices e CDI.',               badge: 'Grátis',  link: '/ferramentas/comparador-de-ativos.html' },
         { preview: 'juros',      emoji: '📈', cor: '#14f195', nome: 'Juros Compostos',      desc: 'Simule o crescimento do patrimônio com aportes mensais.',      badge: 'Grátis',  link: '/ferramentas/juros-compostos.html' },
         { preview: 'lucro',      emoji: '🪙', cor: '#4d9fff', nome: 'Lucro Cripto',         desc: 'Calcule o lucro real com preço de entrada, saída e taxas.', badge: 'Grátis',  link: '/ferramentas/lucro-cripto.html' },
@@ -93,7 +61,6 @@
       links: [
         { texto: 'Início',      link: '/index.html' },
         { texto: 'Ferramentas', link: '/ferramentas/ferramentas.html' },
-        { texto: 'Planos',      link: '/planos.html' },
       ],
       nota: 'Conteúdo educacional — não é recomendação de investimento',
     },
@@ -135,33 +102,9 @@
     <a href="${url(CONFIG.links.inicio)}" class="logo">₿ Mundo<em>DeFi</em></a>
     <nav class="nav-links">
       ${itens}
-      <a href="${url(CONFIG.botaoPro.link)}" class="btn-pro">${esc(CONFIG.botaoPro.texto)}</a>
     </nav>
   </div>
 </header>`;
-  }
-
-  function htmlPlanos() {
-    const p = CONFIG.pro, pr = CONFIG.premium, f = CONFIG.planosFoot;
-    return `
-<section>
-  <div class="planos">
-    <div class="plano pro">
-      <span class="tag">${esc(p.tag)}</span>
-      <div class="preco">${esc(p.preco)} <small>${esc(p.ciclo)}</small></div>
-      <p class="desc">${esc(p.desc)}</p>
-      <a class="btn" href="${url(p.link)}">${esc(p.cta)}</a>
-    </div>
-    <div class="plano premium">
-      <span class="badge">${esc(pr.badge)}</span>
-      <span class="tag">${esc(pr.tag)}</span>
-      <div class="preco">${esc(pr.preco)} <small>${esc(pr.ciclo)}</small></div>
-      <p class="desc">${esc(pr.desc)}</p>
-      <a class="btn" href="${url(pr.link)}">${esc(pr.cta)}</a>
-    </div>
-  </div>
-  <p class="planos-foot">${esc(f.texto)}<a href="${url(f.link)}">${esc(f.linkTexto)}</a></p>
-</section>`;
   }
 
   function htmlRodape() {
@@ -218,7 +161,7 @@
       emoji: i.icone,
       nome: i.nome,
       desc: i.curto || i.resumo,
-      badge: i.plano === 'pro' ? '⚡ PRO' : 'Grátis',
+      badge: 'Grátis',
       link: i.url
     }));
   }
@@ -253,7 +196,6 @@
   function iniciar() {
     montar('[data-mdf="header"]', htmlCabecalho());
     montar('[data-mdf="outras"]', htmlOutras());
-    montar('[data-mdf="pro"]',    htmlPlanos());
     montar('[data-mdf="footer"]', htmlRodape());
   }
 

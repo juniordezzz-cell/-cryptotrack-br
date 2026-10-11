@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=e78ef39697"></script>
-<link rel="icon" href="/favicon.svg?v=e78ef39697" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=40ddca9a91"></script>
+<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
 <title>MundoDeFi — Acompanhe seu patrimônio. Decida com mais clareza.</title>
-<meta name="description" content="Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores de cripto em português, a maioria grátis.">
+<meta name="description" content="Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores de cripto em português, tudo gratuito.">
 <link rel="canonical" href="https://mundodefi.com.br/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="MundoDeFi">
@@ -23,9 +23,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=e78ef39697">
-<script src="/mundodefi-catalogo.js?v=e78ef39697"></script>
-<script src="/mundodefi-previas.js?v=e78ef39697"></script>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
+<script src="/mundodefi-catalogo.js?v=40ddca9a91"></script>
+<script src="/mundodefi-previas.js?v=40ddca9a91"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -383,7 +383,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
           </div>
           <div class="mega-col">
             <div class="mega-title">Gerenciar</div>
-            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">📋</div><div><div class="mega-name">Minhas Pools<span class="badge b-pro">PRO</span></div><div class="mega-desc">Rastreie suas posições DeFi</div></div></a>
+            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">📋</div><div><div class="mega-name">Minhas Pools</div><div class="mega-desc">Rastreie suas posições DeFi</div></div></a>
             <div class="mega-link mega-soon"><div class="mega-ico">🚀</div><div><div class="mega-name">Hub de Liquidez<span class="badge b-soon">Em breve</span></div><div class="mega-desc">O centro de liquidez DeFi do Brasil</div></div></div>
           </div>
         </div>
@@ -395,8 +395,8 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
             <div class="mega-title">Seu patrimônio</div>
             <a href="/portfolio/index.html" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">📊</div><div><div class="mega-name">Dashboard</div><div class="mega-desc">Visão consolidada de tudo</div></div></a>
             <a href="/portfolio/hold.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">💎</div><div><div class="mega-name">HOLD</div><div class="mega-desc">Ativos de longo prazo</div></div></a>
-            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">🌊</div><div><div class="mega-name">DeFi<span class="badge b-pro">PRO</span></div><div class="mega-desc">Pools, staking e rendimentos</div></div></a>
-            <a href="/portfolio/trade.html" class="mega-link"><div class="mega-ico" style="background:var(--red-soft)">⚡</div><div><div class="mega-name">Trade<span class="badge b-pro">PRO</span></div><div class="mega-desc">Operações, banca e win rate</div></div></a>
+            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">🌊</div><div><div class="mega-name">DeFi</div><div class="mega-desc">Pools, staking e rendimentos</div></div></a>
+            <a href="/portfolio/trade.html" class="mega-link"><div class="mega-ico" style="background:var(--red-soft)">⚡</div><div><div class="mega-name">Trade</div><div class="mega-desc">Operações, banca e win rate</div></div></a>
           </div>
         </div>
       </div>
@@ -415,11 +415,9 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="user-menu" id="userMenu" role="menu">
           <a href="/portfolio/index.html" role="menuitem">📊 Meu Portfólio</a>
           <button type="button" role="menuitem" id="userTrocaAvatar">🎭 Trocar avatar</button>
-          <a href="/planos.html" role="menuitem">⭐ Assinar PRO</a>
           <button type="button" role="menuitem" id="userLogout">↩ Sair da conta</button>
         </div>
       </div>
-      <a href="/planos.html" class="btn btn-pro" data-cta="nav-pro">⭐ PRO</a>
       <button class="burger" type="button" aria-label="Abrir menu" onclick="document.body.classList.toggle('mnav')">☰</button>
     </div>
   </div>
@@ -481,29 +479,12 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   </div>
 </section>
 
-<!-- ═══ PLANOS (padrão do site) ═══ -->
-<section class="plans" id="pro">
-  <div class="wrap">
-    <div class="plans-head">
-      <div class="sec-eyebrow">Planos MundoDeFi</div>
-      <h2>O portfólio é grátis. O PRO é para quando uma carteira não basta</h2>
-    </div>
-    <div class="plans-grid">
-      <div class="plan plan-pro">
-        <div class="plan-tag">⚡ PRO</div>
-        <div class="plan-price">R$ 19,90 <small>/mês</small></div>
-        <p>Carteiras ilimitadas, o Nexus respondendo sobre o seu portfólio e seus dados em CSV.</p>
-        <a href="/planos.html" class="btn btn-purple" data-cta="home-planos-pro">Assinar PRO</a>
-      </div>
-      <div class="plan plan-prem">
-        <div class="plan-pill">👑 Mentoria individual</div>
-        <div class="plan-tag">PREMIUM</div>
-        <div class="plan-price">R$ 49,90 <small>/mês</small></div>
-        <p>Tudo do PRO + estratégias avançadas + 1 encontro individual por mês — vagas limitadas.</p>
-        <span class="btn btn-gold" style="opacity:.55;cursor:default;pointer-events:none">Em breve</span>
-      </div>
-    </div>
-    <div class="plans-foot">Cancele quando quiser · garantia de 7 dias · <a href="/cadastro.html" data-cta="home-planos-gratis">ou crie sua conta gratuita →</a></div>
+<section class="plans" id="gratis">
+  <div class="wrap plans-head">
+    <div class="sec-eyebrow">ACESSO LIVRE</div>
+    <h2>Todas as ferramentas são gratuitas.</h2>
+    <p class="sec-subtitle">Crie uma conta gratuita para manter seus dados sincronizados.</p>
+    <a href="/cadastro.html" class="btn btn-p btn-big" style="margin-top:1.4rem">Criar conta gratuita</a>
   </div>
 </section>
 
@@ -519,7 +500,6 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="foot-title">Plataforma</div>
         <a href="/portfolio/index.html">Portfólio</a>
         <a href="/ferramentas/ferramentas.html">Ferramentas</a>
-        <a href="/planos.html">Planos</a>
       </div>
       <div class="foot-col">
         <div class="foot-title">Ferramentas</div>
@@ -570,8 +550,8 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 </script>
 
 <!-- ═══ AUTH: a home passa a reconhecer quem está logado ═══ -->
-<script src="/nexus/nexus-auth.js?v=e78ef39697"></script>
-<script src="/mdf-avatars.js?v=e78ef39697"></script>
+<script src="/nexus/nexus-auth.js?v=40ddca9a91"></script>
+<script src="/mdf-avatars.js?v=40ddca9a91"></script>
 <script>
 (function(){
   var criarConta = document.getElementById('btnCriarConta');
@@ -638,9 +618,7 @@ document.getElementById('navMenu').addEventListener('click',function(e){
   function esc(t){return String(t==null?'':t).replace(/[<>&"]/g,function(c){
     return {'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
   function carta(i,largo){
-    var selo=i.plano==='pro'
-      ? '<span class="tsel tsel-pro">PRO</span>'
-      : '<span class="tsel tsel-free">GRATUITO</span>';
+    var selo='<span class="tsel tsel-free">GRATUITO</span>';
     return '<a href="'+i.url+'" class="tool-card'+(largo?' tool-feat':'')+'">'
       +(P[i.slug]?'<div class="tool-vis">'+P[i.slug]+'</div>':'')
       +'<div class="tool-bd">'
@@ -675,7 +653,7 @@ document.getElementById('navMenu').addEventListener('click',function(e){
             return '<a href="'+i.url+'" class="mega-link">'
               +'<div class="mega-ico">'+i.icone+'</div>'
               +'<div><div class="mega-name">'+esc(i.nome)
-              +(i.plano==='pro'?'<span class="badge b-pro">PRO</span>':'')+'</div>'
+              +'</div>'
               +'<div class="mega-desc">'+esc(i.curto||i.resumo)+'</div></div></a>';
           }).join('')
         +'</div>';

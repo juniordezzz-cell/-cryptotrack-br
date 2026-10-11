@@ -1,18 +1,12 @@
 /* ============================================================
-   NEXUS AUTH — quem é o usuário e qual o plano dele
+   NEXUS AUTH — identidade da conta gratuita
    ------------------------------------------------------------
    • Carrega o Firebase sozinho (não precisa mexer nas páginas).
-   • Lê o plano REAL em Firestore: users/{uid}.plano
-       "gratis" (padrão) | "pro" | "premium"
-   • Se existir uma compra pendente da Kiwify para o e-mail
-     logado (pendentes_pro/{email}), ativa o PRO sozinho.
-   • O Portfólio ouve "nexus-auth-changed" e se sincroniza sozinho —
-     o Firestore manda, o localStorage é só espelho.
+   • O Portfólio ouve "nexus-auth-changed" para sincronizar a conta.
    • Expõe window.NexusAuth:
        .ready   → já sabemos quem é? (true/false)
        .user    → usuário do Firebase (ou null)
-       .plano   → "gratis" | "pro" | "premium"
-       .isPro() → true se pro ou premium
+       .plano   → "gratis" (compatibilidade com páginas antigas)
        .login() → abre o popup do Google
    • Dispara o evento "nexus-auth-changed" no document a cada
      mudança — o nexus-core escuta e atualiza o painel.
@@ -34,7 +28,7 @@
     ready: false,
     user: null,
     plano: "gratis",
-    isPro: function () { return A.plano === "pro" || A.plano === "premium"; },
+    isPro: function () { return false; },
     login: function () {
       if (!window.firebase || !firebase.auth) return Promise.reject(new Error("Firebase indisponível"));
       return firebase.auth().signInWithPopup(new firebase.auth.GoogleAuthProvider());
@@ -59,43 +53,6 @@
     });
   }
 
-  /* O Portfólio se sincroniza sozinho ouvindo "nexus-auth-changed"
-     (ver P.syncPlano em portfolio.js). Não escreva em P.st daqui:
-     dois donos do mesmo campo fazem o portfólio deixar de redesenhar
-     quando o plano muda. */
-
-  /* Se a Kiwify registrou a compra antes do usuário logar,
-     o resgate acontece aqui, sozinho. */
-  function resgatarCompraPendente(db, user) {
-    var email = (user.email || "").toLowerCase();
-    if (!email) return Promise.resolve(false);
-    var ref = db.collection("pendentes_pro").doc(email);
-    return ref.get().then(function (snap) {
-      if (!snap.exists) return false;
-      var dados = snap.data() || {};
-      var plano = dados.plano === "premium" ? "premium" : "pro";
-      return db.collection("users").doc(user.uid)
-        .set({ plano: plano, planoOrigem: "kiwify", planoAtivadoEm: new Date().toISOString() }, { merge: true })
-        .then(function () { return ref.delete().catch(function () {}); })
-        .then(function () { return true; });
-    }).catch(function () { return false; });
-  }
-
-  function carregarPlano(db, user) {
-    return db.collection("users").doc(user.uid).get().then(function (snap) {
-      var plano = snap.exists && snap.data() && snap.data().plano ? snap.data().plano : "gratis";
-      if (plano !== "pro" && plano !== "premium") {
-        /* Não é PRO ainda — verifica se há compra da Kiwify esperando */
-        return resgatarCompraPendente(db, user).then(function (ativou) {
-          return ativou ? (db.collection("users").doc(user.uid).get().then(function (s2) {
-            return (s2.exists && s2.data().plano) || "pro";
-          })) : "gratis";
-        });
-      }
-      return plano;
-    });
-  }
-
   function init() {
     var jobs;
     if (window.firebase && firebase.apps) {
@@ -112,29 +69,14 @@
 
     jobs.then(function () {
       if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-      var db = firebase.firestore();
-
       firebase.auth().onAuthStateChanged(function (user) {
         A.user = user || null;
-        if (!user) {
-          A.plano = "gratis";
-          A.ready = true;
-          emit();
-          return;
-        }
-        carregarPlano(db, user).then(function (plano) {
-          A.plano = plano || "gratis";
-          A.ready = true;
-          emit();
-        }).catch(function () {
-          A.plano = "gratis";
-          A.ready = true;
-          emit();
-        });
+        A.plano = "gratis";
+        A.ready = true;
+        emit();
       });
     }).catch(function () {
-      /* Sem internet ou Firebase fora do ar: Nexus fica bloqueado
-         com convite para login (comportamento seguro). */
+      /* As ferramentas locais continuam disponíveis se Firebase falhar. */
       A.ready = true;
       emit();
     });

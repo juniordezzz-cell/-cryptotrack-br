@@ -19,8 +19,8 @@ var MDFI = (function () {
   var saveTimer = null;
   var STORAGE_KEY = 'mundodefi_state';
 
-  var PLAN_LIMITS = { free: 1, pro: 3, premium: Infinity };
-  var PLAN_LABELS = { free: 'Gratuito', pro: 'PRO', premium: 'Premium' };
+  var PLAN_LIMITS = { free: Infinity, pro: Infinity, premium: Infinity };
+  var PLAN_LABELS = { free: 'Gratuito', pro: 'Gratuito', premium: 'Gratuito' };
 
   function emptyWallet(nome) {
     return {
@@ -133,7 +133,7 @@ var MDFI = (function () {
   /* CARTEIRAS */
   function getPlano() { return st.plano || 'free'; }
   function planoLabel() { return PLAN_LABELS[getPlano()] || 'Gratuito'; }
-  function limiteCarteiras() { return PLAN_LIMITS[getPlano()] != null ? PLAN_LIMITS[getPlano()] : 1; }
+  function limiteCarteiras() { return PLAN_LIMITS[getPlano()] != null ? PLAN_LIMITS[getPlano()] : Infinity; }
   function podeAddCarteira() { return st.carteiras.length < limiteCarteiras(); }
   function listarCarteiras() { return st.carteiras; }
   function carteiraAtivaId() { return st.carteiraAtiva; }
@@ -274,8 +274,7 @@ var MDFI = (function () {
         (st.carteiras.length > 1 ? '<button class="wd-mini del" title="Excluir" onclick="MDFI.promptExcluir(\'' + w.id + '\',event)">🗑</button>' : '') + '</span></div>';
     }).join('');
     if (podeAddCarteira()) html += '<div class="wd-add" onclick="MDFI.promptCriar(event)">＋ Nova carteira</div>';
-    else html += '<div class="wd-upgrade" onclick="window.location.href=\'/planos.html\'">🔒 Limite do plano ' + planoLabel() + ' atingido<br><b>Fazer upgrade →</b></div>';
-    html += '<div class="wd-plan">Plano atual: <b>' + planoLabel() + '</b></div>';
+    html += '<div class="wd-plan">Acesso gratuito</div>';
     dd.innerHTML = html;
   }
   function toggleWalletMenu(ev) { if (ev) ev.stopPropagation(); var dd = document.getElementById('wallet-dropdown'); if (dd) dd.classList.toggle('open'); }
@@ -290,10 +289,7 @@ var MDFI = (function () {
     var nome = prompt('Nome da nova carteira:', 'Carteira ' + (st.carteiras.length + 1));
     if (nome == null) return;
     var r = criarCarteira(nome.trim() || ('Carteira ' + (st.carteiras.length + 1)));
-    if (!r.ok && r.motivo === 'limite') {
-      if (confirm('Seu plano ' + planoLabel() + ' permite ' + r.limite + ' carteira(s).\nDeseja ver os planos PRO/Premium?')) window.location.href = '/planos.html';
-      return;
-    }
+    if (!r.ok) return;
     renderWalletDropdown();
     var nm = document.getElementById('ws-name'); if (nm) nm.textContent = wallet().nome;
     if (typeof window.onWalletChange === 'function') window.onWalletChange();

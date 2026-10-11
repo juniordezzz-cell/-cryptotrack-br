@@ -54,7 +54,6 @@ function add(loc, arquivo, changefreq, priority) {
 add('/', 'index.html', 'daily', '1.0');
 add('/ferramentas/ferramentas.html', null, 'weekly', '0.9');
 add('/nexus/index.html', null, 'monthly', '0.7');
-add('/planos.html', null, 'monthly', '0.7');
 add('/cadastro.html', null, 'yearly', '0.5');
 add('/politica-de-privacidade.html', null, 'yearly', '0.3');
 

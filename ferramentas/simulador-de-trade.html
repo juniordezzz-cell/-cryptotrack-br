@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=e78ef39697"></script>
-<script src="/ferramentas-core.js?v=e78ef39697"></script>
-<link rel="icon" href="/favicon.svg?v=e78ef39697" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=40ddca9a91"></script>
+<script src="/ferramentas-core.js?v=40ddca9a91"></script>
+<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
 <title>Simulador de Trade com Alavancagem e Gestão de Banca | MundoDeFi</title>
 <meta name="description" content="Simule trades com alavancagem, long e short: lucro, prejuízo, stop loss e preço de liquidação em tempo real, com gestão de banca.">
 <meta name="keywords" content="simulador de trade, calculadora de alavancagem, gestão de banca, long short cripto, preço de liquidação, stop loss, take profit, simulador de banca cripto">
@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=e78ef39697">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
 <style>
 :root{
   /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
@@ -83,12 +83,6 @@ header{
 .nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}
-.btn-pro{
-  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
-  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
-  transition:transform .15s ease, box-shadow .15s ease;
-}
-.btn-pro:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(153,69,255,.35);text-decoration:none}
 
 /* ===== Hero ===== */
 .hero{padding:40px 0 14px;animation:fadeUp .5s ease both}
@@ -97,7 +91,7 @@ header{
 .hero h1 span{color:var(--verde)}
 .hero p{color:var(--muted);font-size:.95rem;max-width:680px}
 
-/* ===== Selo PRO ===== */
+/* ===== Selo gratuito ===== */
 .pro-tag{
   display:inline-flex;align-items:center;gap:5px;
   background:rgba(153,69,255,.14);border:1px solid rgba(153,69,255,.4);
@@ -300,32 +294,6 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
 
-/* ===== PRO-GATE — vitrine bloqueada + faixa de assinatura ===== */
-.pro-banner{
-  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  background:linear-gradient(135deg,rgba(153,69,255,.14),rgba(153,69,255,.05));
-  border:1px solid rgba(153,69,255,.35);border-radius:12px;
-  padding:12px 18px;margin-bottom:16px;
-}
-.pro-banner-icon{font-size:1.1rem}
-.pro-banner-text{flex:1;min-width:200px;font-size:.86rem;color:var(--text)}
-.pro-banner-text strong{color:#c9a3ff}
-.pro-banner-btn{
-  flex:0 0 auto;padding:9px 18px;border-radius:10px;font-weight:700;font-size:.84rem;
-  color:#fff;background:linear-gradient(135deg,var(--roxo),#6c2bd9);text-decoration:none;
-  box-shadow:0 6px 18px rgba(153,69,255,.3);transition:transform .15s ease,box-shadow .15s ease;
-}
-.pro-banner-btn:hover{transform:translateY(-1px);box-shadow:0 10px 24px rgba(153,69,255,.4);text-decoration:none}
-
-/* Zonas de edição travadas — a pessoa vê, mas não mexe */
-body.mdf-locked [data-mdf-lock-zone]{
-  position:relative;pointer-events:none;opacity:.55;filter:grayscale(.3);user-select:none;
-}
-body.mdf-locked [data-mdf-lock-zone]::after{
-  content:"👑 Exclusivo PRO";position:absolute;top:10px;right:10px;
-  background:rgba(153,69,255,.9);color:#fff;font-size:.66rem;font-weight:800;
-  letter-spacing:.04em;padding:4px 10px;border-radius:999px;pointer-events:none;z-index:8;
-}
 </style>
 <!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
 <script type="application/ld+json">
@@ -346,12 +314,11 @@ body.mdf-locked [data-mdf-lock-zone]::after{
    "operatingSystem": "Web",
    "browserRequirements": "Requer JavaScript",
    "inLanguage": "pt-BR",
-   "isAccessibleForFree": false,
+   "isAccessibleForFree": true,
    "offers": {
     "@type": "Offer",
-    "price": "19.90",
-    "priceCurrency": "BRL",
-    "category": "Assinatura MundoDeFi PRO"
+    "price": "0",
+    "priceCurrency": "BRL"
    },
    "featureList": [
     "Long e short",
@@ -401,7 +368,6 @@ body.mdf-locked [data-mdf-lock-zone]::after{
     <nav class="nav-links">
       <a href="https://mundodefi.com.br/ferramentas.html">Ferramentas</a>
       <a href="https://mundodefi.com.br/portfolio/">Portfólio</a>
-      <a href="https://mundodefi.com.br/planos.html" class="btn-pro">👑 PRO</a>
     </nav>
   </div>
 </header>
@@ -409,7 +375,7 @@ body.mdf-locked [data-mdf-lock-zone]::after{
 <main class="container-wide">
 
   <section class="hero">
-    <span class="eyebrow">Trade com alavancagem</span><span class="pro-tag">👑 Ferramenta PRO</span>
+    <span class="eyebrow">Trade com alavancagem</span><span class="pro-tag">Gratuito</span>
     <h1>Simulador de <span>Trade</span> com Gestão de Banca</h1>
     <p>Simule operações long e short com alavancagem, veja lucro, prejuízo, stop loss e preço de liquidação — desenhe direto no gráfico, arraste as linhas ou digite os valores, e acompanhe a sua banca crescer entrada após entrada.</p>
   </section>
@@ -648,14 +614,12 @@ body.mdf-locked [data-mdf-lock-zone]::after{
     <div class="f-links">
       <a href="https://mundodefi.com.br/ferramentas.html">Ferramentas</a>
       <a href="https://mundodefi.com.br/portfolio/">Portfólio</a>
-      <a href="https://mundodefi.com.br/planos.html">Planos PRO</a>
     </div>
     <p class="f-copy">© 2026 MundoDeFi · <a href="/politica-de-privacidade.html">Política de Privacidade</a> · Ferramenta educacional · Não é recomendação de investimento · Dados: CoinPaprika / DefiLlama / Binance</p>
   </div>
 </footer>
 
-<script src="/nexus/nexus-auth.js?v=e78ef39697"></script>
-<script src="/pro-gate.js?v=e78ef39697"></script>
+<script src="/nexus/nexus-auth.js?v=40ddca9a91"></script>
 <script>
 /* ══════════════════════════════════════
    ESTADO

@@ -51,7 +51,7 @@ for (const grupo of cat.agrupado()) {
   L.push(`## ${c.nome} — "${c.pergunta}"`);
   L.push('');
   for (const it of grupo.itens) {
-    const selo = it.plano === 'pro' ? ' (assinatura PRO)' : ' (grátis)';
+    const selo = ' (grátis)';
     /* Aplicativo de uma pagina so: o HTML servido esta praticamente vazio e
        o robots.txt bloqueia o rastreio. Avisar poupa a maquina de buscar
        uma pagina que nao vai lhe dizer nada. */
@@ -80,9 +80,7 @@ L.push('');
 L.push('## Páginas');
 L.push('');
 L.push(`- [Todas as ferramentas](${SITE}/ferramentas/ferramentas.html)`);
-L.push(`- [Planos e preços](${SITE}/planos.html): o portfólio completo é grátis com uma carteira; `
-     + 'o PRO (R$ 19,90/mês) libera carteiras ilimitadas, o Nexus, Entradas e Saídas, Simulador '
-     + 'de Trade e exportação em CSV.');
+L.push('- Todas as ferramentas, o portfólio e o Nexus são gratuitos. A conta gratuita permite sincronizar os dados.');
 L.push(`- [Nexus](${SITE}/nexus/index.html): lê os números do portfólio e responde sobre `
      + 'concentração, resultado e pools. É um motor de regras determinístico em JSON, auditável — '
      + 'não é modelo de linguagem e não gera texto.');

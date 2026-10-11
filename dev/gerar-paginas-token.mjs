@@ -72,7 +72,7 @@ function ferramentas(id, sym) {
       texto: `Converta entre ${sym}, real, dólar e euro com cotação ao vivo, e veja a tabela de valores mais procurados.` },
     { url: '/portfolio/index.html',
       titulo: `Acompanhe seu ${sym} no portfólio`,
-      texto: `Preço médio, lucro realizado e retorno anualizado de verdade. Grátis, com uma carteira.` }
+      texto: `Preço médio, lucro realizado e retorno anualizado de verdade. Carteiras ilimitadas, tudo gratuito.` }
   ];
 }
 
@@ -225,7 +225,6 @@ ${cards}
     </div>
 
     <div data-mdf="outras"></div>
-    <div data-mdf="pro"></div>
 
     <p class="aviso">Conteúdo educacional, sem recomendação de compra ou venda. Criptomoedas envolvem
       risco alto e você pode perder o valor investido. O MundoDeFi não realiza intermediação de compra

@@ -76,11 +76,6 @@ header{
 .nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}
-.btn-pro{
-  background:linear-gradient(135deg,var(--roxo),#6c2bd9);
-  color:#fff;padding:7px 16px;border-radius:8px;font-weight:600;
-}
-.btn-pro:hover{opacity:.9;text-decoration:none}
 
 /* ── 3. HERO ────────────────────────────────────────────────────────── */
 .hero{padding:46px 0 8px;text-align:center}
@@ -377,31 +372,6 @@ details p strong{color:var(--text)}
 .cta-btn-ghost{border:1px solid var(--border);color:var(--text);font-weight:600;padding:11px 24px;border-radius:10px}
 .cta-btn-ghost:hover{border-color:var(--roxo);text-decoration:none}
 .cta-foot{font-size:.76rem;color:var(--muted);margin-top:14px;opacity:.8}
-/* Bloco PRO / Premium — injetado pelo mundodefi-ferramentas.js no fim de
-   toda ferramenta. Regra de cor fixa da marca: PRO = roxo · PREMIUM = dourado */
-.planos{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
-@media(max-width:680px){.planos{grid-template-columns:1fr}}
-.plano{position:relative;background:var(--card);border:1px solid var(--border);
-  border-radius:18px;padding:26px 24px;display:flex;flex-direction:column;gap:14px}
-.plano.premium{border-color:rgba(245,182,20,.45);box-shadow:0 0 50px rgba(245,182,20,.10)}
-.plano .badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
-  background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305;
-  font-size:.66rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
-  padding:5px 16px;border-radius:999px;white-space:nowrap}
-.plano .tag{font-size:.8rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-.plano.pro .tag{color:var(--roxo-txt)}
-.plano.premium .tag{color:var(--dourado)}
-.plano .preco{font-size:2rem;font-weight:700}
-.plano .preco small{font-size:.9rem;color:var(--muted);font-weight:500}
-.plano .desc{color:var(--muted);font-size:.9rem;line-height:1.5}
-.plano ul{list-style:none;color:var(--muted);font-size:.9rem;display:flex;flex-direction:column;gap:7px}
-.plano ul li::before{content:"✓ ";color:var(--verde);font-weight:700}
-.plano .btn{margin-top:auto;text-align:center;font-weight:700;padding:13px 0;border-radius:999px;color:#fff;font-size:.92rem}
-.plano.pro .btn{background:linear-gradient(135deg,var(--roxo),#6c2bd9)}
-.plano.premium .btn{background:linear-gradient(135deg,var(--dourado),#ffd95e);color:#1a1305}
-.plano .btn:hover{opacity:.92;text-decoration:none}
-.planos-foot{text-align:center;color:var(--muted);font-size:.82rem;margin-top:16px}
-.planos-foot a{color:var(--ciano);font-weight:600}
 
 /* ── 18. AVISO + RODAPÉ ─────────────────────────────────────────────── */
 .aviso{margin-top:44px;font-size:.78rem;color:var(--muted);border-top:1px solid var(--border);padding-top:18px;opacity:.8}
@@ -422,14 +392,7 @@ footer a:hover{color:var(--text)}
   html{scroll-behavior:auto}
 }
 
-/* ═══ NAV EM TELA ESTREITA ═══
-   Os links de texto e o botão PRO não cabiam abaixo de ~420px e faziam a
-   página inteira rolar de lado por poucos pixels — o tipo de defeito que
-   ninguém reporta mas todo mundo sente. */
+/* ═══ NAV EM TELA ESTREITA ═══ */
 @media(max-width:520px){
   header .nav-links{gap:12px;font-size:.82rem}
-  header .btn-pro{padding:6px 11px;font-size:.78rem}
-}
-@media(max-width:400px){
-  header .nav-links a:not(.btn-pro){display:none}
 }

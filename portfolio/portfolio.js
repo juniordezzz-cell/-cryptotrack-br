@@ -8,36 +8,13 @@
    ║                                                                      ║
    ║  Regras de plano: veja MDF_PLANOS logo abaixo.                       ║
    ╚══════════════════════════════════════════════════════════════════════╝ */
-window.MDF_PLANOS = {
-  gratis: {
-    nome: 'Grátis',
-    carteiras: 1,          // ÚNICA trava do grátis: 1 carteira
-    metas: 3,              // até 3 metas no grátis
-    historico: 999999,     // histórico completo (sem trava)
-    graficosAvancados: true,
-    exportar: false        // exportar CSV é exclusivo PRO
-  },
-  pro: {
-    nome: 'PRO',           // R$ 19,90 — carro-chefe
-    carteiras: 9999,
-    metas: 9999,
-    historico: 999999,
-    graficosAvancados: true,
-    exportar: true
-  },
-  /* A mentoria (Premium, R$ 49,90) é um SERVIÇO, não um nível de software.
-     Quem assina mentoria tem exatamente o acesso do PRO na plataforma.
-     Este alias existe para que plano:"premium" vindo do Firestore continue
-     funcionando. Não crie recursos exclusivos aqui. */
-  premium: {
-    nome: 'PRO',
-    carteiras: 9999,
-    metas: 9999,
-    historico: 999999,
-    graficosAvancados: true,
-    exportar: true
-  }
+/* Os nomes antigos são aceitos para ler contas já existentes. Os recursos
+   disponíveis são iguais para todos. */
+var MDF_ACESSO_GRATUITO = {
+  nome: 'Grátis', carteiras: Infinity, metas: Infinity,
+  historico: Infinity, graficosAvancados: true, exportar: true
 };
+window.MDF_PLANOS = { gratis: MDF_ACESSO_GRATUITO, pro: MDF_ACESSO_GRATUITO, premium: MDF_ACESSO_GRATUITO };
 
 (function () {
 'use strict';
@@ -177,7 +154,7 @@ P.nomeCart = function (id) {
 };
 
 /* ═══════════ plano ═══════════ */
-P.PLAN_LBL = { gratis: 'Grátis', pro: 'PRO', premium: 'PRO' };
+P.PLAN_LBL = { gratis: 'Grátis', pro: 'Grátis', premium: 'Grátis' };
 P.planoAtual = 'gratis';
 P.plan = function () { return window.MDF_PLANOS[P.planoAtual] || window.MDF_PLANOS.gratis; };
 P.isFree = function () { return P.planoAtual === 'gratis'; };
@@ -197,18 +174,7 @@ P.syncPlano = function () {
   return true;
 };
 
-P.upsell = function () {
-  P.modal('Recurso do plano PRO',
-    '<div class="up-hero"><div class="big">⚡</div>'
-    + '<h3>Vire PRO e desbloqueie</h3>'
-    + '<p>O plano PRO libera carteiras ilimitadas, gráficos avançados e exportação dos seus dados.</p></div>'
-    + '<div class="up-list">'
-    + '<div class="up-item"><span>✓</span>Carteiras ilimitadas</div>'
-    + '<div class="up-item"><span>✓</span>Gráficos avançados</div>'
-    + '<div class="up-item"><span>✓</span>Histórico completo + exportação (CSV)</div>'
-    + '</div>',
-    { footer: '<a href="/planos.html" class="btn btn-p">Ver planos</a>' });
-};
+P.upsell = function () { P.modal('Recurso disponível', '<p>Este recurso é gratuito para todas as contas.</p>'); };
 
 /* ═══════════ modal ═══════════ */
 P.modal = function (title, body, opts) {
@@ -372,8 +338,7 @@ P.shell = function (active) {
 
   var avMenu = '<div class="avmenu" id="avMenu" hidden>'
     + '<div class="avmenu-sync" id="sbSync">' + P.statusSync() + '</div>'
-    + '<div class="avmenu-plan"><div><div class="avmenu-cap">Seu plano</div><div class="avmenu-val">' + e(planoLbl) + '</div></div>'
-    + (P.isFree() ? '<a class="btn btn-p" href="/planos.html">Assinar</a>' : '<span class="avmenu-pro">⚡ PRO</span>') + '</div>'
+    + '<div class="avmenu-plan"><div><div class="avmenu-cap">Acesso</div><div class="avmenu-val">Gratuito</div></div></div>'
     + '<a class="avmenu-link" href="#" id="sbSuper">🛡 Supervisão das contas</a>'
     + '<a class="avmenu-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
     + '<a class="avmenu-link" href="/">← Voltar ao site</a>'
@@ -482,14 +447,7 @@ P.boot = function (active, renderFn) {
 };
 
 /* ═══════════ CTA de planos ═══════════ */
-P.planosCTA = function () {
-  if (!P.isFree()) return '';
-  return '<div class="plans-cta">'
-    + '<div class="pc-card"><div class="pc-tag">⚡ PRO</div><div class="pc-price">R$ 19,90 <small>/mês</small></div>'
-    + '<p>Carteiras ilimitadas, gráficos avançados e exportação dos seus dados.</p>'
-    + '<a href="/planos.html" class="btn btn-p" style="width:100%">Assinar PRO</a></div>'
-    + '</div>';
-};
+P.planosCTA = function () { return ''; };
 
 /* ═══════════ carteiras ═══════════ */
 P.formCarteira = function (depois) {
@@ -689,11 +647,11 @@ P.periodo = '30d';
 
 /* ═══════════ PRÉVIA DESLOGADA — peças compartilhadas ═══════════
    Dashboard, HOLD, DeFi e Trade usam as MESMAS tres pecas: a nota do topo,
-   os dois banners (gratis e PRO) e o wiring do login. Elas vivem aqui uma
+   o convite de conta gratuita e o wiring do login. Elas vivem aqui uma
    vez so — quatro copias divergiriam no primeiro ajuste de texto. */
 P.demoNote = function () {
   return '<div class="demo-note"><span class="demo-dot"></span> Você está vendo um <b>exemplo</b>. '
-    + '<a href="#" id="demoTop">Entre</a> para acompanhar o seu — grátis com uma carteira.</div>';
+    + '<a href="#" id="demoTop">Entre</a> para sincronizar o seu — tudo gratuito.</div>';
 };
 
 P.duoBanners = function () {
@@ -707,8 +665,8 @@ P.duoWire = function () {
   if (window.MDFBanner) MDFBanner.wire(entrar, ['demoTop']);
 };
 
-/* Deslogado e sem dados? A tela mostra a prévia em vez do estado vazio. */
-P.modoDemo = function () { return !(window.NexusAuth && window.NexusAuth.user); };
+/* Visitantes também podem criar e editar o portfólio com armazenamento local. */
+P.modoDemo = function () { return false; };
 
 P.exemploEstado = function () {
   if (!window.PExemplo || !PExemplo.montar) return C.novoEstado();
@@ -725,7 +683,7 @@ P.demoReadOnlyWire = function () {
     if (!P.modoDemo()) return;
     var t = ev.target;
     if (!t) return;
-    if (t.closest('#demoTop') || t.closest('.tnav-tab') || t.closest('.tnav-logo') || t.closest('a[href="/planos.html"]')) return;
+    if (t.closest('#demoTop') || t.closest('.tnav-tab') || t.closest('.tnav-logo')) return;
     var lock = t.closest('button,select,input,textarea,[data-ativo],[data-wact],[data-tx],[data-del],[data-p],[data-lj],[data-le],[data-per],.tab,[data-exp],[data-meta-menubtn],[data-meta-edit],[data-meta-del],#avBtn,.avmenu-link,#cartSel,#mUsd,#mBrl,#btnAdd');
     if (!lock) return;
     ev.preventDefault();

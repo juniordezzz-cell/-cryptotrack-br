@@ -125,8 +125,7 @@
     return state;
   }
 
-  /* Estado zerado — é o que um assinante PRO novo recebe na
-     primeira vez (sem herdar nenhum dado de demonstração). */
+  /* Estado zerado para uma pessoa começar com seus próprios dados. */
   function freshState() {
     const fresh = clone(defaultState);
     fresh.entries = [];
@@ -140,15 +139,19 @@
     return fresh;
   }
 
-  /* ============================================================
-     MODO NUVEM (PRO) vs MODO VITRINE (todo mundo)
-     ------------------------------------------------------------
-     • Sem nuvem ativa → getState() sempre devolve os dados de
-       DEMONSTRAÇÃO (defaultState), só leitura. Isso é a vitrine.
-     • Com nuvem ativa (pessoa logada e PRO) → getState() e
-       saveState() passam a ler/gravar no Firestore, na conta
-       da pessoa. Nada mais fica salvo no navegador.
-     ============================================================ */
+  /* Dados locais funcionam sem conta. Usuários autenticados também podem
+     sincronizar no Firestore; a cópia local protege contra falhas de rede. */
+  const LOCAL_KEY = "mdf-entradas-saidas-state";
+  function localState(key = LOCAL_KEY) {
+    try {
+      const saved = JSON.parse(localStorage.getItem(key));
+      return saved ? migrateState({ ...freshState(), ...saved }) : freshState();
+    } catch (_) { return freshState(); }
+  }
+  function saveLocal(state, key = LOCAL_KEY) {
+    try { localStorage.setItem(key, JSON.stringify(state)); } catch (_) {}
+  }
+  function accountKey(uid) { return LOCAL_KEY + '-' + uid; }
   let cloudUid = null;
   let cloudCache = null;
   let cloudSaveTimer = null;
@@ -165,11 +168,14 @@
     cloudDocRef(uid)
       .get()
       .then((snap) => {
-        cloudCache = snap.exists && snap.data() && snap.data().state ? migrateState({ ...freshState(), ...snap.data().state }) : freshState();
+        if (cloudUid !== uid) return;
+        cloudCache = snap.exists && snap.data() && snap.data().state ? migrateState({ ...freshState(), ...snap.data().state }) : localState(accountKey(uid));
+        saveLocal(cloudCache, accountKey(uid));
         document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
       })
       .catch(() => {
-        cloudCache = freshState();
+        if (cloudUid !== uid) return;
+        cloudCache = localState(accountKey(uid));
         document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
       });
   }
@@ -184,9 +190,11 @@
     if (!cloudUid || !cloudCache) {
       return;
     }
-    cloudDocRef(cloudUid)
-      .set({ state: cloudCache, atualizadoEm: new Date().toISOString() }, { merge: true })
-      .catch(() => {});
+    const uid = cloudUid;
+    const state = clone(cloudCache);
+    cloudDocRef(uid)
+      .set({ state, atualizadoEm: new Date().toISOString() }, { merge: true })
+      .catch(() => { saveLocal(state, accountKey(uid)); });
   }
 
   function persistirNuvem() {
@@ -199,6 +207,7 @@
       return;
     }
     cloudCache = freshState();
+    saveLocal(cloudCache, accountKey(cloudUid));
     persistirNuvemAgora();
     document.dispatchEvent(new CustomEvent("finance-cloud-ready"));
   }
@@ -207,16 +216,15 @@
     if (cloudUid && cloudCache) {
       return clone(cloudCache);
     }
-    return clone(defaultState);
+    return clone(localState());
   }
 
   function saveState(nextState) {
+    saveLocal(nextState, cloudUid ? accountKey(cloudUid) : LOCAL_KEY);
     if (cloudUid) {
       cloudCache = clone(nextState);
       persistirNuvem();
     }
-    /* Sem nuvem ativa (vitrine): não persiste em lugar nenhum —
-       são só os dados de demonstração, de propósito. */
     return nextState;
   }
 

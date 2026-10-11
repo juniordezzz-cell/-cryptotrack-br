@@ -171,16 +171,16 @@ if __name__ == '__main__':
 
     # ── home ──
     total += gravar(cartao(
-        u'As melhores ferramentas de cripto do Brasil',
-        u'Impermanent loss, staking, juros compostos e portfólio completo. Em português.',
-        u'A MAIORIA GRÁTIS', OURO), 'home.png')
+        u'Acompanhe seu patrimônio. Decida com mais clareza.',
+        u'Portfólio, DeFi e simuladores de cripto em português.',
+        u'TUDO GRATUITO', OURO), 'home.png')
 
     # ── ferramentas, do catalogo ──
     for it in catalogo():
         if it['slug'] == 'portfolio':
             continue
-        acento = ROXO if it.get('plano') == 'pro' else VERDE
-        selo = u'ASSINATURA PRO' if it.get('plano') == 'pro' else u'GRÁTIS · SEM CADASTRO'
+        acento = VERDE
+        selo = u'GRÁTIS · SEM PAGAMENTO'
         total += gravar(cartao(it['nome'], it.get('curto') or it['resumo'], selo, acento),
                         'ferramenta-%s.png' % it['slug'])
 
@@ -200,15 +200,12 @@ if __name__ == '__main__':
          u'A conta sai do seu ritmo real de aportes, nunca de uma previsão de preço.'),
     ]
     for slug, t, s in PF:
-        total += gravar(cartao(t, s, u'GRÁTIS COM UMA CARTEIRA', CIANO), 'portfolio-%s.png' % slug)
+        total += gravar(cartao(t, s, u'TUDO GRATUITO', CIANO), 'portfolio-%s.png' % slug)
 
     # ── paginas soltas ──
-    total += gravar(cartao(u'Planos do MundoDeFi',
-                           u'O portfólio é grátis. O PRO é para quando uma carteira não basta.',
-                           u'PRO POR R$ 19,90/MÊS', ROXO), 'planos.png')
     total += gravar(cartao(u'Nexus: a leitura dos seus números',
                            u'Lê o seu portfólio e responde por regras auditáveis, não por texto gerado.',
-                           u'EXCLUSIVO PRO', ROXO), 'nexus.png')
+                           u'GRATUITO', ROXO), 'nexus.png')
 
     # ── moedas ──
     desc = json.load(io.open(os.path.join(RAIZ, 'token-descricoes.json'), encoding='utf-8'))

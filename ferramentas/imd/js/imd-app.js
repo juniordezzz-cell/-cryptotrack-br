@@ -236,7 +236,7 @@
     var elDiag = document.getElementById("imd-diagnostico");
     if (elDiag) elDiag.textContent = perfil.resumo || "";
 
-    // ----- CTA contextual (v3.1): funil PREMIUM conforme o nível -----
+    // ----- Próximas ferramentas conforme o nível -----
     var ctaTit = document.getElementById("imd-cta-titulo");
     var ctaTxt = document.getElementById("imd-cta-texto");
     if (ctaTit && ctaTxt) {
@@ -249,7 +249,7 @@
       };
       ctaTit.textContent = "Seu nível é " + perfil.nome + " — dá pra evoluir muito mais rápido";
       ctaTxt.textContent = (mapaCta[perfil.nome] || "Com as ferramentas certas, sua evolução acelera de verdade.") +
-        " No Plano PREMIUM você destrava as ferramentas avançadas do MundoDeFi, e nossa equipe usa este diagnóstico pra montar um plano de evolução pro seu momento.";
+        " Explore gratuitamente os simuladores e o portfólio do MundoDeFi para continuar aprendendo.";
     }
 
     // ----- Selo do PERFIL DE RISCO (eixo separado do IMD) -----

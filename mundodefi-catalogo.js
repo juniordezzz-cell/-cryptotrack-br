@@ -56,7 +56,7 @@
       nome: 'Entradas e Saídas',
       url: '/ferramentas/entradas-saidas/',
       categoria: 'gerenciar',
-      plano: 'pro',
+      plano: 'gratis',
       icone: '💰',
       resumo: 'Controle financeiro completo: registre entradas, despesas e investimentos e veja para onde seu dinheiro está indo.',
       curto: 'Seu fluxo de caixa organizado',
@@ -133,7 +133,7 @@
       nome: 'Simulador de Trade',
       url: '/ferramentas/simulador-de-trade.html',
       categoria: 'decidir',
-      plano: 'pro',
+      plano: 'gratis',
       icone: '⚡',
       resumo: 'Long e short com alavancagem, preço de liquidação com margem de manutenção e a banca crescendo operação após operação.',
       curto: 'Alavancagem, liquidação e gestão de banca',
@@ -218,9 +218,7 @@
     },
     /* Selo do plano, usado por home e hub. */
     selo: function (i) {
-      return i.plano === 'pro'
-        ? '<span class="cat-selo cat-selo-pro">PRO</span>'
-        : '<span class="cat-selo cat-selo-free">Grátis</span>';
+      return '<span class="cat-selo cat-selo-free">Grátis</span>';
     },
     total: ITENS.length
   };

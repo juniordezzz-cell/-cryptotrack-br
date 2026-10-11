@@ -9,7 +9,7 @@ Idioma: português do Brasil. Moedas: real e dólar.
 ## Gerenciar — "Onde está meu dinheiro?"
 
 - [Portfólio](https://mundodefi.com.br/portfolio/index.html) (grátis): Acompanhe HOLD, DeFi e Trade num lugar só, com preço médio, lucro realizado e retorno anualizado. — aplicativo web, o conteúdo só existe depois do JavaScript
-- [Entradas e Saídas](https://mundodefi.com.br/ferramentas/entradas-saidas/) (assinatura PRO): Controle financeiro completo: registre entradas, despesas e investimentos e veja para onde seu dinheiro está indo. — aplicativo web, o conteúdo só existe depois do JavaScript
+- [Entradas e Saídas](https://mundodefi.com.br/ferramentas/entradas-saidas/) (grátis): Controle financeiro completo: registre entradas, despesas e investimentos e veja para onde seu dinheiro está indo. — aplicativo web, o conteúdo só existe depois do JavaScript
 
 ## Projetar — "Quanto isso rende?"
 
@@ -21,7 +21,7 @@ Idioma: português do Brasil. Moedas: real e dólar.
 
 - [Lucro Cripto](https://mundodefi.com.br/ferramentas/lucro-cripto.html) (grátis): Seu lucro líquido de verdade: busca o preço ao vivo de qualquer token e desconta as taxas da exchange.
 - [Comparador de Ativos](https://mundodefi.com.br/ferramentas/comparador-de-ativos.html) (grátis): Compare a rentabilidade de cripto, ações e renda fixa lado a lado — qualquer ativo contra o CDI, com dados ao vivo.
-- [Simulador de Trade](https://mundodefi.com.br/ferramentas/simulador-de-trade.html) (assinatura PRO): Long e short com alavancagem, preço de liquidação com margem de manutenção e a banca crescendo operação após operação.
+- [Simulador de Trade](https://mundodefi.com.br/ferramentas/simulador-de-trade.html) (grátis): Long e short com alavancagem, preço de liquidação com margem de manutenção e a banca crescendo operação após operação.
 
 ## Converter — "Quanto dá em reais?"
 
@@ -43,12 +43,12 @@ Idioma: português do Brasil. Moedas: real e dólar.
 ## Páginas
 
 - [Todas as ferramentas](https://mundodefi.com.br/ferramentas/ferramentas.html)
-- [Planos e preços](https://mundodefi.com.br/planos.html): o portfólio completo é grátis com uma carteira; o PRO (R$ 19,90/mês) libera carteiras ilimitadas, o Nexus, Entradas e Saídas, Simulador de Trade e exportação em CSV.
+- Todas as ferramentas, o portfólio e o Nexus são gratuitos. A conta gratuita permite sincronizar os dados.
 - [Nexus](https://mundodefi.com.br/nexus/index.html): lê os números do portfólio e responde sobre concentração, resultado e pools. É um motor de regras determinístico em JSON, auditável — não é modelo de linguagem e não gera texto.
 - [Política de privacidade](https://mundodefi.com.br/politica-de-privacidade.html)
 
 ## Observações
 
 - Conteúdo educacional. O site não faz recomendação de investimento nem intermedia compra e venda de ativos.
-- Cotações vêm da CoinPaprika e da DefiLlama, e da Binance nas páginas de token. O site nao usa chave de API.
+- Cotações vêm da CoinPaprika e da CoinGecko, e da Binance nas páginas de token.
 - Rastreadores de IA são bem-vindos: veja /robots.txt. Se citar, use o link da ferramenta específica — é o que resolve a dúvida de quem perguntou.
