@@ -99,7 +99,7 @@
     return `
 <header>
   <div class="container nav">
-    <a href="${url(CONFIG.links.inicio)}" class="logo">₿ Mundo<em>DeFi</em></a>
+    <a href="${url(CONFIG.links.inicio)}" class="logo"><span class="logo-mark">M</span><span>Mundo<em>DeFi</em></span></a>
     <nav class="nav-links">
       ${itens}
     </nav>
@@ -173,7 +173,7 @@
       .map((c) => `<a class="tool-card" style="--tc:${c.cor}" href="${url(c.link)}">
   <div class="tool-preview">${c.previewHtml != null ? c.previewHtml : (PREVIEWS[c.preview] || '')}</div>
   <div class="tool-body">
-    <div class="tool-hdr"><div class="tool-icon" style="background:${tint(c.cor, 14)}">${c.emoji}</div><div class="tool-name">${esc(c.nome)}</div></div>
+    <div class="tool-hdr"><div class="tool-icon" style="background:${tint(c.cor, 14)}">${window.MDFIcons ? MDFIcons.emoji(c.emoji) : ''}</div><div class="tool-name">${esc(c.nome)}</div></div>
     <div class="tool-desc">${esc(c.desc)}</div>
     <div class="tool-foot"><span class="tool-badge" style="background:${tint(c.cor, 14)};color:${c.cor}">${esc(c.badge)}</span><span class="tool-arrow">→</span></div>
   </div>
@@ -181,7 +181,7 @@
       .join('');
     return `
 <section>
-  <h2><span class="ico">🛠️</span>${esc(o.titulo)}</h2>
+  <h2><span class="ico">${window.MDFIcons ? MDFIcons.svg('calculator') : ''}</span>${esc(o.titulo)}</h2>
   <p class="sub">${esc(o.sub)}</p>
   <div class="tools-grid">${cards}</div>
 </section>`;

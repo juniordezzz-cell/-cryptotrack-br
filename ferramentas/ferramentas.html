@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
+<link rel="icon" href="/favicon.svg?v=05a87b07b1" type="image/svg+xml">
 <title>Ferramentas Cripto em Português | MundoDeFi</title>
 <meta name="description" content="Onze ferramentas gratuitas para investir em cripto com números: portfólio, impermanent loss, staking, juros compostos e conversor. Em português.">
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/ferramentas.html">
@@ -20,8 +20,8 @@
 <meta property="og:locale" content="pt_BR">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=05a87b07b1">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -43,9 +43,9 @@
   --verde:var(--green);
   --vermelho:var(--red);
   --gold2:#D4A017;
-  --font:'Space Grotesk',sans-serif;
-  --display:'Space Grotesk',sans-serif;
-  --mono:'Space Mono',monospace;
+  --font:'Inter',sans-serif;
+  --display:'Inter',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
   --radius:14px;
 }
 html{scroll-behavior:smooth}
@@ -64,8 +64,9 @@ a:hover{text-decoration:underline}
 /* ===== Header ===== */
 header{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav{display:flex;align-items:center;justify-content:space-between;height:62px}
-.logo{font-size:1.15rem;font-weight:700;background:linear-gradient(135deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.logo{font-size:1.1rem;font-weight:700;color:var(--text);display:inline-flex;align-items:center;gap:9px;letter-spacing:-.035em}
 .logo em{font-style:normal}
+.logo-mark{display:grid;place-items:center;width:31px;height:31px;border-radius:7px;background:#192A39;border:1px solid #41657B;color:#D9E9F0;font-size:15px;letter-spacing:0}
 .nav-links{display:flex;gap:18px;align-items:center;font-size:.9rem}
 .nav-links a{color:var(--muted)}
 .nav-links a:hover{color:var(--text);text-decoration:none}
@@ -216,7 +217,7 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 
 <header>
   <div class="container nav">
-    <a href="/index.html" class="logo">₿ Mundo<em>DeFi</em></a>
+    <a href="/index.html" class="logo"><span class="logo-mark">M</span><span>Mundo<em>DeFi</em></span></a>
     <nav class="nav-links">
       <a href="/ferramentas/ferramentas.html">Ferramentas</a>
       <a href="/portfolio/index.html">Portfólio</a>
@@ -253,7 +254,8 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
   </div>
 </footer>
 
-<script src="/mundodefi-catalogo.js?v=40ddca9a91"></script>
+<script src="/mundodefi-icons.js?v=05a87b07b1"></script>
+<script src="/mundodefi-catalogo.js?v=05a87b07b1"></script>
 <script>
 (function(){
   var alvo=document.getElementById('hub-catalogo');
@@ -263,7 +265,7 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
   alvo.innerHTML = MDF_CATALOGO.agrupado().map(function(g){
     return '<section class="hub-sec">'
       +'<div class="hub-sec-hd">'
-        +'<span class="hub-sec-ico">'+g.categoria.icone+'</span>'
+        +'<span class="hub-sec-ico">'+MDFIcons.emoji(g.categoria.icone)+'</span>'
         +'<span class="hub-sec-nome">'+esc(g.categoria.nome)+'</span>'
         +'<span class="hub-sec-perg">'+esc(g.categoria.pergunta)+'</span>'
         +'<span class="hub-sec-n">'+g.itens.length+'</span>'
@@ -272,7 +274,7 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
       + g.itens.map(function(i){
           return '<a class="hub-card" style="--ac:'+g.categoria.cor+'" href="'+i.url+'">'
             +'<span class="hub-free">Grátis</span>'
-            +'<div class="hub-ico">'+i.icone+'</div>'
+            +'<div class="hub-ico">'+MDFIcons.emoji(i.icone)+'</div>'
             +'<div class="hub-name">'+esc(i.nome)+'</div>'
             +'<div class="hub-desc">'+esc(i.resumo)+'</div>'
             +'<div class="hub-tags">'+(i.tags||[]).map(function(t){

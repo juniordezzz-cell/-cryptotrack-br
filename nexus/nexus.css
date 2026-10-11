@@ -513,3 +513,15 @@
 /* dentro da bolha do bot, os blocos ocupam a largura toda */
 .nexus-msg.bot{max-width:100%}
 .nexus-msg.bot p:first-child:last-child{margin:0}
+
+/* Acesso ao Nexus como controle de produto, sem animação decorativa. */
+.nexus-fab{width:auto;height:44px;min-width:104px;padding:0 14px;border-radius:9px;
+  display:flex;gap:9px;background:#1A2B3A;border:1px solid #527B96;color:#E3EFF5;
+  box-shadow:0 8px 22px rgba(0,0,0,.22);animation:none;transition:background .15s,border-color .15s}
+.nexus-fab:hover{animation:none;transform:none;background:#233C4F;border-color:#86B0C9}
+.nexus-fab:active{transform:none}
+.nexus-fab::before,.nexus-fab::after{display:none}
+.nexus-fab-icon{font-size:13px;font-weight:700;animation:none;filter:none;border:1px solid #6B91A8;
+  width:22px;height:22px;border-radius:5px}
+.nexus-fab-label,.nexus-fab:hover .nexus-fab-label{position:static;transform:none;opacity:1;
+  border:0;background:none;padding:0;border-radius:0;color:inherit;font-size:12px;font-weight:600}

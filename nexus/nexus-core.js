@@ -89,8 +89,8 @@
     root.className = "nexus-root";
     root.innerHTML =
       '<button class="nexus-fab" type="button" aria-label="Abrir o Nexus" aria-expanded="false" title="Nexus — a inteligência do MundoDeFi">' +
-        '<span class="nexus-fab-icon">◆</span>' +
-        '<span class="nexus-fab-label">Falar com o Nexus</span>' +
+        '<span class="nexus-fab-icon">N</span>' +
+        '<span class="nexus-fab-label">Nexus</span>' +
       '</button>' +
       '<section class="nexus-panel" role="dialog" aria-label="Chat com o Nexus" hidden>' +
         '<header class="nexus-header">' +

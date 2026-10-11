@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=40ddca9a91"></script>
-<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=05a87b07b1"></script>
+<link rel="icon" href="/favicon.svg?v=05a87b07b1" type="image/svg+xml">
 <title>MundoDeFi — Acompanhe seu patrimônio. Decida com mais clareza.</title>
 <meta name="description" content="Acompanhe seu patrimônio e faça as contas antes de decidir. Portfólio, DeFi e simuladores de cripto em português, tudo gratuito.">
 <link rel="canonical" href="https://mundodefi.com.br/">
@@ -22,10 +22,11 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
-<script src="/mundodefi-catalogo.js?v=40ddca9a91"></script>
-<script src="/mundodefi-previas.js?v=40ddca9a91"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=05a87b07b1">
+<script src="/mundodefi-icons.js?v=05a87b07b1"></script>
+<script src="/mundodefi-catalogo.js?v=05a87b07b1"></script>
+<script src="/mundodefi-previas.js?v=05a87b07b1"></script>
 <style>
 /* ═══════════ MUNDODEFI — HOME 2026 v2 ═══════════
    Cores da marca herdam de /mundodefi-tokens.css (fallbacks locais). */
@@ -315,6 +316,33 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 @media(max-width:1000px){.hero-layout{grid-template-columns:1fr 1fr;gap:2rem}.hero-h1{font-size:clamp(2.5rem,4.2vw,3.4rem)}.tools-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){.hero{padding:3.5rem 0 2.8rem}.hero-layout{grid-template-columns:1fr}.hero-preview{max-width:560px;width:100%;margin:auto}.hero-h1{max-width:14ch}}
 @media(max-width:640px){.hero{padding:3rem 0 2rem}.hero-in{padding:0}.hero-h1{font-size:clamp(2.35rem,9vw,3.1rem)}.hero-cta{flex-direction:column}.hero-cta .btn-big{width:100%;flex:none}.hero-nums{justify-content:space-between;gap:8px}.hn{min-width:0;flex:1;margin:0;padding:0 8px;border:0}.hn:first-child{padding-left:0}.hero-preview{padding:22px}.preview-title{margin-top:1.7rem}.preview-chart{height:100px;margin:1.5rem 0}.tools-grid{grid-template-columns:1fr}.sec-head{align-items:start}.sec-link{margin-top:.4rem}}
+/* Direção visual: painel financeiro sóbrio. */
+.nav-logo-mark{width:36px;height:36px;border-radius:9px;background:#192A39;border:1px solid #41657B;color:#D9E9F0;font-size:19px;box-shadow:none}
+.nav-logo-mark span{transform:none;text-shadow:none;filter:none}
+.nav-logo-text{font-size:20px;letter-spacing:-.045em;background:none;-webkit-text-fill-color:var(--txt);color:var(--txt)}
+.nav-logo-text em{font-style:normal;color:var(--purple-txt)}
+.mega-ico{color:var(--purple-txt)}
+.mega-ico .mdf-icon{width:18px;height:18px}
+.btn{border-radius:9px;font-weight:600}
+.btn-p{box-shadow:none}
+.btn-p:hover{box-shadow:none;filter:brightness(1.1)}
+.hero{background:var(--bg)}
+.hero::before{display:none}
+.hero-dot,.preview-status i{box-shadow:none}
+.hero-h1{letter-spacing:-.045em}
+.hero-h1 span{color:var(--purple-txt)}
+.hero-preview{border-color:var(--line2);border-radius:16px;background:var(--panel);box-shadow:0 16px 45px rgba(0,0,0,.2)}
+.hero-preview:hover{transform:translateY(-2px)}
+.preview-chart span,.preview-chart span:nth-child(2n){background:#5B90A7;opacity:.85}
+.preview-chart span:nth-child(2n){opacity:.48}
+.tool-card,.tool-card:nth-child(n){border-radius:12px}
+.tool-card:hover{transform:translateY(-2px) scale(1);box-shadow:0 10px 28px rgba(0,0,0,.22);border-color:var(--line2)}
+.tool-card:hover .tool-tt .ti{transform:none;box-shadow:none}
+.tool-tt .ti{border-radius:9px;box-shadow:none}
+.tool-tt .ti .mdf-icon{width:19px;height:19px}
+.tool-card:hover .tool-vis svg{transform:none}
+.tsel-free{font-weight:600;border-color:var(--line2);background:var(--panel2);color:var(--mut)}
+.tsel-free::before{display:none}
 </style>
 <!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
 <script type="application/ld+json">
@@ -363,7 +391,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
 <nav>
   <div class="nav-wrap">
     <a href="/" class="nav-logo" aria-label="MundoDeFi — início">
-      <div class="nav-logo-mark"><span>₿</span></div>
+      <div class="nav-logo-mark"><span>M</span></div>
       <div class="nav-logo-text">Mundo<em>DeFi</em></div>
     </a>
     <div class="nav-menu" id="navMenu">
@@ -378,13 +406,13 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="mega">
           <div class="mega-col">
             <div class="mega-title">Explorar</div>
-            <a href="/ferramentas/pool-liquidez.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">💧</div><div><div class="mega-name">Calculadora de Pool</div><div class="mega-desc">Simule retorno de liquidez</div></div></a>
-            <a href="/ferramentas/staking.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">🔒</div><div><div class="mega-name">Simulador de Staking</div><div class="mega-desc">Rendimento passivo em cripto</div></div></a>
+            <a href="/ferramentas/pool-liquidez.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)"><svg class="mdf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="7" cy="12" r="4"/><circle cx="17" cy="12" r="4"/><path d="M11 12h2"/></svg></div><div><div class="mega-name">Calculadora de Pool</div><div class="mega-desc">Simule retorno de liquidez</div></div></a>
+            <a href="/ferramentas/staking.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)"><svg class="mdf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div><div><div class="mega-name">Simulador de Staking</div><div class="mega-desc">Rendimento passivo em cripto</div></div></a>
           </div>
           <div class="mega-col">
             <div class="mega-title">Gerenciar</div>
-            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)">📋</div><div><div class="mega-name">Minhas Pools</div><div class="mega-desc">Rastreie suas posições DeFi</div></div></a>
-            <div class="mega-link mega-soon"><div class="mega-ico">🚀</div><div><div class="mega-name">Hub de Liquidez<span class="badge b-soon">Em breve</span></div><div class="mega-desc">O centro de liquidez DeFi do Brasil</div></div></div>
+            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--purple-soft)"><svg class="mdf-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 17h16"/><circle cx="9" cy="7" r="2"/><circle cx="15" cy="17" r="2"/></svg></div><div><div class="mega-name">Minhas Pools</div><div class="mega-desc">Rastreie suas posições DeFi</div></div></a>
+            <div class="mega-link mega-soon"><div class="mega-ico">↗</div><div><div class="mega-name">Hub de Liquidez<span class="badge b-soon">Em breve</span></div><div class="mega-desc">O centro de liquidez DeFi do Brasil</div></div></div>
           </div>
         </div>
       </div>
@@ -393,16 +421,16 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <div class="mega">
           <div class="mega-col">
             <div class="mega-title">Seu patrimônio</div>
-            <a href="/portfolio/index.html" class="mega-link"><div class="mega-ico" style="background:var(--cyan-soft)">📊</div><div><div class="mega-name">Dashboard</div><div class="mega-desc">Visão consolidada de tudo</div></div></a>
-            <a href="/portfolio/hold.html" class="mega-link"><div class="mega-ico" style="background:var(--gold-soft)">💎</div><div><div class="mega-name">HOLD</div><div class="mega-desc">Ativos de longo prazo</div></div></a>
-            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" style="background:var(--green-soft)">🌊</div><div><div class="mega-name">DeFi</div><div class="mega-desc">Pools, staking e rendimentos</div></div></a>
-            <a href="/portfolio/trade.html" class="mega-link"><div class="mega-ico" style="background:var(--red-soft)">⚡</div><div><div class="mega-name">Trade</div><div class="mega-desc">Operações, banca e win rate</div></div></a>
+            <a href="/portfolio/index.html" class="mega-link"><div class="mega-ico" data-mdf-icon="dashboard" style="background:var(--cyan-soft)"></div><div><div class="mega-name">Dashboard</div><div class="mega-desc">Visão consolidada de tudo</div></div></a>
+            <a href="/portfolio/hold.html" class="mega-link"><div class="mega-ico" data-mdf-icon="hold" style="background:var(--gold-soft)"></div><div><div class="mega-name">HOLD</div><div class="mega-desc">Ativos de longo prazo</div></div></a>
+            <a href="/portfolio/defi.html" class="mega-link"><div class="mega-ico" data-mdf-icon="defi" style="background:var(--green-soft)"></div><div><div class="mega-name">DeFi</div><div class="mega-desc">Pools, staking e rendimentos</div></div></a>
+            <a href="/portfolio/trade.html" class="mega-link"><div class="mega-ico" data-mdf-icon="trade" style="background:var(--red-soft)"></div><div><div class="mega-name">Trade</div><div class="mega-desc">Operações, banca e win rate</div></div></a>
           </div>
         </div>
       </div>
     </div>
     <div class="nav-right">
-      <a href="/portfolio/index.html" class="btn btn-ghost">📊 Portfólio</a>
+      <a href="/portfolio/index.html" class="btn btn-ghost">Portfólio</a>
       <!-- Bloco DESLOGADO (padrão até o Firebase responder) -->
       <a href="/cadastro.html" class="btn btn-ghost" id="btnCriarConta">Criar conta</a>
       <!-- Bloco LOGADO (preenchido por JS; escondido por padrão) -->
@@ -413,8 +441,8 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
           <svg class="user-caret" viewBox="0 0 10 6" aria-hidden="true"><path d="M0 0l5 6 5-6z"/></svg>
         </button>
         <div class="user-menu" id="userMenu" role="menu">
-          <a href="/portfolio/index.html" role="menuitem">📊 Meu Portfólio</a>
-          <button type="button" role="menuitem" id="userTrocaAvatar">🎭 Trocar avatar</button>
+          <a href="/portfolio/index.html" role="menuitem">Meu Portfólio</a>
+          <button type="button" role="menuitem" id="userTrocaAvatar">Trocar avatar</button>
           <button type="button" role="menuitem" id="userLogout">↩ Sair da conta</button>
         </div>
       </div>
@@ -493,7 +521,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <a href="/" class="nav-logo"><div class="nav-logo-mark"><span>₿</span></div><div class="nav-logo-text">Mundo<em>DeFi</em></div></a>
+        <a href="/" class="nav-logo"><div class="nav-logo-mark"><span>M</span></div><div class="nav-logo-text">Mundo<em>DeFi</em></div></a>
         <p>Ferramentas para investir em criptomoedas e DeFi — em português, para investidores brasileiros.</p>
       </div>
       <div class="foot-col">
@@ -516,7 +544,7 @@ footer{border-top:1px solid var(--line);padding:3rem 0 2rem;background:rgba(255,
         <a href="/cadastro.html">Criar conta grátis</a>
       </div>
     </div>
-    <div class="foot-disc">⚠️ O MundoDeFi é uma plataforma de ferramentas. Nada aqui é recomendação de compra ou venda de ativos. Criptomoedas envolvem alto risco — faça sua própria análise e nunca invista o que não pode perder.</div>
+    <div class="foot-disc">O MundoDeFi é uma plataforma de ferramentas. Nada aqui é recomendação de compra ou venda de ativos. Criptomoedas envolvem alto risco — faça sua própria análise e nunca invista o que não pode perder.</div>
     <div class="foot-bottom">
       <span>© <span id="ano"></span> MundoDeFi · mundodefi.com.br</span>
       <span><a href="/politica-de-privacidade.html">Política de Privacidade</a> · @mundodefi</span>
@@ -550,8 +578,8 @@ document.getElementById('navMenu').addEventListener('click',function(e){
 </script>
 
 <!-- ═══ AUTH: a home passa a reconhecer quem está logado ═══ -->
-<script src="/nexus/nexus-auth.js?v=40ddca9a91"></script>
-<script src="/mdf-avatars.js?v=40ddca9a91"></script>
+<script src="/nexus/nexus-auth.js?v=05a87b07b1"></script>
+<script src="/mdf-avatars.js?v=05a87b07b1"></script>
 <script>
 (function(){
   var criarConta = document.getElementById('btnCriarConta');
@@ -622,7 +650,7 @@ document.getElementById('navMenu').addEventListener('click',function(e){
     return '<a href="'+i.url+'" class="tool-card'+(largo?' tool-feat':'')+'">'
       +(P[i.slug]?'<div class="tool-vis">'+P[i.slug]+'</div>':'')
       +'<div class="tool-bd">'
-        +'<div class="tool-tt"><span class="ti">'+i.icone+'</span>'+esc(i.nome)+'</div>'
+        +'<div class="tool-tt"><span class="ti">'+MDFIcons.emoji(i.icone)+'</span>'+esc(i.nome)+'</div>'
         +'<div class="tool-ds">'+esc(i.resumo)+'</div>'
         +'<div class="tool-ft">'+selo+'<span class="tool-arrow">→</span></div>'
       +'</div></a>';
@@ -651,17 +679,20 @@ document.getElementById('navMenu').addEventListener('click',function(e){
         +'<div class="mega-title">'+esc(g.categoria.nome)+'</div>'
         + g.itens.map(function(i){
             return '<a href="'+i.url+'" class="mega-link">'
-              +'<div class="mega-ico">'+i.icone+'</div>'
+              +'<div class="mega-ico">'+MDFIcons.emoji(i.icone)+'</div>'
               +'<div><div class="mega-name">'+esc(i.nome)
               +'</div>'
               +'<div class="mega-desc">'+esc(i.curto||i.resumo)+'</div></div></a>';
           }).join('')
         +'</div>';
     }).join('') + '<div class="mega-col"><div class="mega-title">Tudo</div>'
-      +'<a href="/ferramentas/ferramentas.html" class="mega-link"><div class="mega-ico">🧰</div>'
+      +'<a href="/ferramentas/ferramentas.html" class="mega-link"><div class="mega-ico">'+MDFIcons.svg('calculator')+'</div>'
       +'<div><div class="mega-name">Todas as ferramentas</div>'
       +'<div class="mega-desc">As '+MDF_CATALOGO.total+' em uma página</div></div></a></div>';
   }
+  document.querySelectorAll('[data-mdf-icon]').forEach(function(el){
+    el.innerHTML=MDFIcons.svg(el.getAttribute('data-mdf-icon'));
+  });
 })();
 </script>
 </body>

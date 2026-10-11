@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=40ddca9a91"></script>
-<script src="/ferramentas-core.js?v=40ddca9a91"></script>
-<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=05a87b07b1"></script>
+<script src="/ferramentas-core.js?v=05a87b07b1"></script>
+<link rel="icon" href="/favicon.svg?v=05a87b07b1" type="image/svg+xml">
 <title>Simulador de Trade com Alavancagem e Gestão de Banca | MundoDeFi</title>
 <meta name="description" content="Simule trades com alavancagem, long e short: lucro, prejuízo, stop loss e preço de liquidação em tempo real, com gestão de banca.">
 <meta name="keywords" content="simulador de trade, calculadora de alavancagem, gestão de banca, long short cripto, preço de liquidação, stop loss, take profit, simulador de banca cripto">
@@ -23,8 +23,8 @@
 <link rel="canonical" href="https://mundodefi.com.br/ferramentas/simulador-de-trade.html">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=05a87b07b1">
 <style>
 :root{
   /* Superfícies e texto vêm de /mundodefi-tokens.css — ver o arquivo para
@@ -57,7 +57,7 @@ body{
     radial-gradient(700px 380px at 0% 30%, rgba(20,241,149,.05), transparent 60%);
   background-repeat:no-repeat;
   color:var(--text);
-  font-family:'Space Grotesk',system-ui,sans-serif;
+  font-family:'Inter',system-ui,sans-serif;
   line-height:1.6;
   -webkit-font-smoothing:antialiased;
 }
@@ -65,7 +65,7 @@ a{color:var(--verde);text-decoration:none}
 a:hover{text-decoration:underline}
 .container{max-width:1080px;margin:0 auto;padding:0 20px}
 .container-wide{max-width:1360px;margin:0 auto;padding:0 20px}
-.num{font-family:'Space Mono',monospace}
+.num{font-family:'IBM Plex Mono',monospace}
 
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
@@ -160,7 +160,7 @@ input:focus,select:focus{outline:none;border-color:var(--roxo);box-shadow:0 0 0 
 .asr-item img{width:20px;height:20px;border-radius:50%;flex-shrink:0}
 .asr-item .asr-icon-fallback{width:20px;height:20px;border-radius:50%;background:var(--border2);flex-shrink:0}
 .asr-item .asr-name{font-size:.84rem;font-weight:600}
-.asr-item .asr-sym{font-size:.7rem;color:var(--muted);margin-left:auto;font-family:'Space Mono',monospace}
+.asr-item .asr-sym{font-size:.7rem;color:var(--muted);margin-left:auto;font-family:'IBM Plex Mono',monospace}
 .asr-manual{border-top:1px solid var(--border);color:var(--ciano);font-weight:700;font-size:.82rem}
 .asr-empty,.asr-loading{padding:14px;color:var(--muted);font-size:.82rem;text-align:center}
 
@@ -173,7 +173,7 @@ input:focus,select:focus{outline:none;border-color:var(--roxo);box-shadow:0 0 0 
 /* Slider */
 .slider-box{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:13px}
 .slider-head{display:flex;justify-content:space-between;font-size:.8rem;color:var(--muted);margin-bottom:9px}
-.slider-head b{color:var(--roxo);font-family:'Space Mono',monospace}
+.slider-head b{color:var(--roxo);font-family:'IBM Plex Mono',monospace}
 input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;background:var(--border2);border-radius:3px;padding:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;border-radius:50%;background:var(--roxo);cursor:pointer;box-shadow:0 0 8px rgba(153,69,255,.6);transition:transform .15s}
 input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.15)}
@@ -196,7 +196,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-ra
 .stat{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:12px;transition:border-color .15s}
 .stat:hover{border-color:var(--border2)}
 .stat .st-label{font-size:.68rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
-.stat .st-val{font-size:1.15rem;font-weight:700;font-family:'Space Mono',monospace;margin-top:3px}
+.stat .st-val{font-size:1.15rem;font-weight:700;font-family:'IBM Plex Mono',monospace;margin-top:3px}
 .stat.full{grid-column:1/-1}
 
 /* ===== Gráfico ===== */
@@ -222,7 +222,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-ra
 .chart-badge{
   position:absolute;top:12px;left:12px;background:rgba(10,10,10,.78);
   backdrop-filter:blur(6px);border:1px solid var(--border2);border-radius:10px;
-  padding:8px 12px;font-size:.76rem;font-weight:700;font-family:'Space Mono',monospace;
+  padding:8px 12px;font-size:.76rem;font-weight:700;font-family:'IBM Plex Mono',monospace;
   z-index:5;pointer-events:none;line-height:1.5;
 }
 .chart-badge .badge-long{color:var(--verde)}
@@ -242,7 +242,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-ra
   background:var(--bg2);border:1px dashed var(--border2);border-radius:10px;
   padding:13px 14px;font-size:.86rem;line-height:1.5;margin:4px 0 14px;
 }
-.preview b{font-family:'Space Mono',monospace}
+.preview b{font-family:'IBM Plex Mono',monospace}
 .banca-actions{display:grid;grid-template-columns:1fr auto auto;gap:8px;margin-bottom:8px}
 .btn{border:none;border-radius:10px;font-family:inherit;font-weight:700;cursor:pointer;transition:all .15s;padding:11px 14px;font-size:.85rem}
 .btn-main{background:linear-gradient(135deg,var(--verde),#0fae6f);color:#052416}
@@ -256,15 +256,15 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-ra
 .hist-item{display:flex;align-items:center;justify-content:space-between;background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:8px 11px;font-size:.8rem;transition:border-color .15s}
 .hist-item:hover{border-color:var(--border2)}
 .hist-item .hi-n{color:var(--muted);font-weight:600}
-.hist-item .hi-res{font-family:'Space Mono',monospace;font-weight:700}
-.hist-item .hi-saldo{font-family:'Space Mono',monospace;color:var(--muted)}
+.hist-item .hi-res{font-family:'IBM Plex Mono',monospace;font-weight:700}
+.hist-item .hi-saldo{font-family:'IBM Plex Mono',monospace;color:var(--muted)}
 .hist-empty{color:var(--muted);font-size:.8rem;padding:6px 2px}
 
 .summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin:20px 0}
 .info-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:15px;box-shadow:var(--shadow);transition:transform .2s ease, box-shadow .2s ease}
 .info-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-hover)}
 .info-card p{font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
-.info-card h3{font-size:1.35rem;font-weight:700;margin-top:5px;font-family:'Space Mono',monospace}
+.info-card h3{font-size:1.35rem;font-weight:700;margin-top:5px;font-family:'IBM Plex Mono',monospace}
 
 .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:18px;box-shadow:var(--shadow)}
 .table-head{font-size:.82rem;font-weight:600;padding:13px 16px;background:var(--card2);border-bottom:1px solid var(--border);color:var(--text)}
@@ -272,7 +272,7 @@ input[type=range]::-moz-range-thumb{width:17px;height:17px;border:none;border-ra
 table{width:100%;border-collapse:collapse;font-size:.82rem}
 th,td{padding:11px 14px;text-align:left;white-space:nowrap}
 th{background:rgba(0,0,0,.25);color:var(--muted);font-weight:600;font-size:.68rem;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid var(--border)}
-td{font-family:'Space Mono',monospace}
+td{font-family:'IBM Plex Mono',monospace}
 tr{border-bottom:1px solid rgba(38,38,46,.6)}
 tr:last-child{border-bottom:none}
 tbody tr:hover{background:rgba(255,255,255,.03)}
@@ -364,7 +364,7 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
 
 <header>
   <div class="container nav">
-    <a href="https://mundodefi.com.br/index.html" class="logo">₿ Mundo<em>DeFi</em></a>
+    <a href="https://mundodefi.com.br/index.html" class="logo">Mundo<em>DeFi</em></a>
     <nav class="nav-links">
       <a href="https://mundodefi.com.br/ferramentas.html">Ferramentas</a>
       <a href="https://mundodefi.com.br/portfolio/">Portfólio</a>
@@ -619,7 +619,7 @@ footer{border-top:1px solid var(--border);padding:30px 0 40px;text-align:center;
   </div>
 </footer>
 
-<script src="/nexus/nexus-auth.js?v=40ddca9a91"></script>
+<script src="/nexus/nexus-auth.js?v=05a87b07b1"></script>
 <script>
 /* ══════════════════════════════════════
    ESTADO

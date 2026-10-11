@@ -1,26 +1,4 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-label="MundoDeFi">
-  <!-- Mesma marca que .nav-logo-mark desenha em CSS desde sempre: quadrado
-       arredondado com gradiente dourado e o simbolo do bitcoin. Aqui ela
-       virou arquivo porque o site nao tinha favicon nenhum, e favicon
-       aparece na aba do navegador E no resultado de busca do Google.
-       Proporcoes conferidas com o CSS: raio 11/40, fonte 27/40.
-
-       FONTE: nao use Georgia aqui. Georgia NAO tem o glifo U+20BF (o
-       simbolo do bitcoin) -- ela ja tinha feito o simbolo virar retangulo
-       vazio na imagem de compartilhamento. Como aqui o desenho depende da
-       fonte que cada aparelho resolve usar, o risco volta. Os PNG da raiz
-       (favicon.ico, apple-touch-icon.png) sao gerados por
-       dev/gerar-favicons.py com Arial Bold, que tem o glifo, e nao
-       dependem de fonte nenhuma no dispositivo. -->
-  <defs>
-    <linearGradient id="ouro" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#FFD44F"/>
-      <stop offset="0.52" stop-color="#F5B614"/>
-      <stop offset="1" stop-color="#B57E04"/>
-    </linearGradient>
-  </defs>
-  <rect width="512" height="512" rx="141" ry="141" fill="url(#ouro)"/>
-  <text x="256" y="256" text-anchor="middle" dominant-baseline="central"
-        font-family="Arial, 'Segoe UI Symbol', 'Noto Sans Symbols 2', sans-serif" font-size="330" font-weight="700"
-        fill="#241A04">₿</text>
+  <rect x="8" y="8" width="496" height="496" rx="112" fill="#192A39" stroke="#41657B" stroke-width="16"/>
+  <path d="M126 368V144h55l75 107 75-107h55v224h-55V228l-75 103-75-103v140z" fill="#D9E9F0"/>
 </svg>

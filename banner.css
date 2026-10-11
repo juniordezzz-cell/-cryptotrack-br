@@ -68,7 +68,7 @@
 .mdfb-price{display:flex;align-items:baseline;gap:5px}
 .mdfb-cur{font-size:15px;font-weight:700;color:var(--mdf-text-3,#828CA1)}
 .mdfb-val{
-  font-family:var(--mdf-mono,'Space Mono',monospace);
+  font-family:var(--mdf-mono,'IBM Plex Mono',monospace);
   font-size:2.3rem;font-weight:800;line-height:1;letter-spacing:-.05em;
 }
 .mdfb-free .mdfb-val{color:var(--green,#14F195)}

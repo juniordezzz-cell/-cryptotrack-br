@@ -204,7 +204,7 @@ P.exportCSV = function (nome, linhas) {
   setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
 };
 P.exportBtn = function (id) {
-  return '<button class="btn btn-g btn-sm" data-exp="' + id + '">' + (P.canExport() ? '⬇ Exportar' : '🔒 Exportar') + '</button>';
+  return '<button class="btn btn-g btn-sm" data-exp="' + id + '">Exportar CSV</button>';
 };
 
 /* ═══════════ gráficos ═══════════ */
@@ -321,16 +321,16 @@ P.atualizaSuper = function () {
 /* ═══════════ SHELL ═══════════ */
 P.shell = function (active) {
   var e = P.esc;
-  var items = [['dash', '📊', 'Dashboard', '/portfolio/index.html'], ['hold', '💎', 'HOLD', '/portfolio/hold.html'],
-               ['defi', '🌊', 'DeFi', '/portfolio/defi.html'], ['trade', '⚡', 'Trade', '/portfolio/trade.html'],
-               ['rwa', '🏛', 'RWA', '/portfolio/rwa.html'], ['meta', '🎯', 'Meta', '/portfolio/meta.html']];
+  var items = [['dash', 'dashboard', 'Dashboard', '/portfolio/index.html'], ['hold', 'hold', 'HOLD', '/portfolio/hold.html'],
+               ['defi', 'defi', 'DeFi', '/portfolio/defi.html'], ['trade', 'trade', 'Trade', '/portfolio/trade.html'],
+               ['rwa', 'rwa', 'RWA', '/portfolio/rwa.html'], ['meta', 'target', 'Meta', '/portfolio/meta.html']];
   /* O plano é apenas EXIBIDO aqui. A fonte de verdade é o Firestore, lido
      por nexus-auth.js. Nunca torne isto editável pelo usuário. */
   var planoLbl = P.PLAN_LBL[P.planoAtual] || 'Grátis';
 
   var tabs = items.map(function (it) {
     return '<a class="tnav-tab' + (active === it[0] ? ' active' : '') + '" href="' + it[3] + '" role="tab"'
-      + (active === it[0] ? ' aria-selected="true"' : ' aria-selected="false"') + '><span class="ico">' + it[1] + '</span>' + it[2] + '</a>';
+      + (active === it[0] ? ' aria-selected="true"' : ' aria-selected="false"') + '><span class="ico">' + MDFIcons.svg(it[1]) + '</span>' + it[2] + '</a>';
   }).join('');
 
   var carts = '<select class="fsel" id="cartSel"><option value="all">Todas as carteiras</option>'
@@ -339,13 +339,13 @@ P.shell = function (active) {
   var avMenu = '<div class="avmenu" id="avMenu" hidden>'
     + '<div class="avmenu-sync" id="sbSync">' + P.statusSync() + '</div>'
     + '<div class="avmenu-plan"><div><div class="avmenu-cap">Acesso</div><div class="avmenu-val">Gratuito</div></div></div>'
-    + '<a class="avmenu-link" href="#" id="sbSuper">🛡 Supervisão das contas</a>'
-    + '<a class="avmenu-link" href="#" id="sbClear">🗑 Limpar e começar do zero</a>'
+    + '<a class="avmenu-link" href="#" id="sbSuper">Supervisão das contas</a>'
+    + '<a class="avmenu-link" href="#" id="sbClear">Limpar e começar do zero</a>'
     + '<a class="avmenu-link" href="/">← Voltar ao site</a>'
     + '</div>';
 
   var header = '<header class="tnav">'
-    + '<a href="/" class="tnav-logo"><span class="tnav-mark">₿</span><span class="tnav-name">Mundo<em>DeFi</em></span></a>'
+    + '<a href="/" class="tnav-logo"><span class="tnav-mark">M</span><span class="tnav-name">Mundo<em>DeFi</em></span></a>'
     + '<nav class="tnav-tabs" role="tablist">' + tabs + '</nav>'
     + '<div class="tnav-right">'
     + (P.st.carteiras.length ? carts : '')
@@ -515,7 +515,7 @@ P.wcardHTML = function (c) {
   var multi = P.st.carteiras.length >= 2;
   return '<div class="wcard" data-cart="' + c.id + '">'
     + '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px">'
-    + '<span style="font-weight:600">👛 ' + e(c.nome) + '</span>'
+    + '<span style="font-weight:600">' + e(c.nome) + '</span>'
     + '<span class="mono" style="font-weight:700">' + P.money(total) + '</span></div>'
     + '<div class="wcard-bar"><span style="width:' + pctInv.toFixed(1) + '%"></span>'
     + '<span class="seg-cx" style="width:' + pctCx.toFixed(1) + '%"></span></div>'
@@ -719,13 +719,13 @@ P.vTradeTeaser = function () { P.vDemoTeaser(P.vTrade); };
 
 P.vDash = function () {
   var e = P.esc, T = P.totais();
-  document.getElementById('pgTitle').textContent = P.saud() + ' 👋';
+  document.getElementById('pgTitle').textContent = P.saud();
   document.getElementById('pgSub').textContent = 'Visão consolidada de todo o seu patrimônio cripto';
   document.getElementById('btnAdd').onclick = function () {
     P.modal('Adicionar', '<div class="up-list" style="margin-top:0">'
-      + '<a class="up-item" href="/portfolio/hold.html"><span>💎</span>Compra ou venda de um ativo</a>'
-      + '<a class="up-item" href="/portfolio/defi.html"><span>🌊</span>Pool de liquidez ou lending</a>'
-      + '<a class="up-item" href="/portfolio/trade.html"><span>⚡</span>Operação de trade</a></div>');
+      + '<a class="up-item" href="/portfolio/hold.html"><span>' + MDFIcons.svg('hold') + '</span>Compra ou venda de um ativo</a>'
+      + '<a class="up-item" href="/portfolio/defi.html"><span>' + MDFIcons.svg('defi') + '</span>Pool de liquidez ou lending</a>'
+      + '<a class="up-item" href="/portfolio/trade.html"><span>' + MDFIcons.svg('trade') + '</span>Operação de trade</a></div>');
   };
 
   if (T.vazio) {
@@ -1605,10 +1605,10 @@ P.formPool = function () {
     + '<div class="fg"><label>Depósito inicial (US$)</label><input id="fDep" type="number" step="any" inputmode="decimal"></div>'
     + '<div class="fg"><label>Data de abertura</label><input id="fDt" type="date" value="' + C.hoje() + '" max="' + C.hoje() + '"></div></div>'
     + '<div class="fg"><label>Tokens depositados</label><input id="fTok" placeholder="Ex: 20 SOL + 1.400 USDC"></div>'
-    + '<div class="sb-sec" style="padding-left:0">💧 Impermanent loss <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
+    + '<div class="sb-sec" style="padding-left:0">Impermanent loss <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
     + '<div class="fhint">Com o preço dos dois tokens no dia da abertura, o MundoDeFi calcula quanto a pool rendeu a menos do que simplesmente ter segurado os tokens — e se as taxas coletadas cobriram essa diferença. Dá para preencher depois.</div>'
     + P.ilCampos('', '', null)
-    + '<div class="sb-sec" style="padding-left:0">📓 Diário estratégico <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
+    + '<div class="sb-sec" style="padding-left:0">Diário estratégico <small style="text-transform:none;letter-spacing:0">(opcional)</small></div>'
     + '<div class="fg"><label>Objetivo</label><input id="dObj"></div>'
     + '<div class="fg"><label>Motivo da entrada</label><input id="dMot"></div>'
     + '<div class="frow"><div class="fg"><label>Plano A</label><input id="dPa"></div><div class="fg"><label>Plano B</label><input id="dPb"></div></div>'
@@ -1727,7 +1727,7 @@ P.poolDetalhe = function (id) {
   tl.sort(function (a, b) { return String(b.dt || '').localeCompare(String(a.dt || '')); });
 
   var di = p.di || {};
-  var diH = ['obj|🎯 Objetivo', 'mot|💡 Motivo', 'pa|🅰 Plano A', 'pb|🅱 Plano B', 'sai|🚪 Critério de saída'].map(function (x) {
+  var diH = ['obj|Objetivo', 'mot|Motivo', 'pa|Plano A', 'pb|Plano B', 'sai|Critério de saída'].map(function (x) {
     var k = x.split('|');
     return di[k[0]] ? '<div class="d-item"><b>' + k[1] + '</b><p>' + e(di[k[0]]) + '</p></div>' : '';
   }).join('');
@@ -1758,7 +1758,7 @@ P.poolDetalhe = function (id) {
   /* Só para pool aberta: numa encerrada faltaria o preço do dia do
      encerramento, e o resultado dela já está realizado no extrato. */
   var IL = R.aberta ? C.poolIL(P.st, p, P.precos) : null;
-  if (R.aberta) body += '<div class="sb-sec" style="padding-left:0">💧 A pool bateu o HOLD?</div>';
+  if (R.aberta) body += '<div class="sb-sec" style="padding-left:0">A pool bateu o HOLD?</div>';
   if (R.aberta && !IL) {
     body += '<div class="notice">Faltam os preços dos dois tokens no dia da abertura ('
       + P.dBR(p.ab) + '). Com eles o MundoDeFi calcula o impermanent loss desta pool e diz se as taxas coletadas cobriram a perda. '
@@ -1795,12 +1795,12 @@ P.poolDetalhe = function (id) {
     + '<button class="btn btn-g btn-sm" data-a="ret">− Retirada</button>'
     + '<button class="btn btn-g btn-sm" data-a="cur">✎ Atualizar valor</button>'
     + '<button class="btn btn-g btn-sm" data-a="reb">↔ Rebalanceamento</button>'
-    + '<button class="btn btn-g btn-sm" data-a="nota">📝 Nota</button>'
-    + (IL ? '<button class="btn btn-g btn-sm" data-a="il">💧 Editar IL</button>' : '')
+    + '<button class="btn btn-g btn-sm" data-a="nota">Nota</button>'
+    + (IL ? '<button class="btn btn-g btn-sm" data-a="il">Editar IL</button>' : '')
     + '<button class="btn btn-red btn-sm" data-a="end" style="margin-left:auto">Encerrar pool</button></div>';
 
-  body += '<div class="grid2b"><div><div class="sb-sec" style="padding-left:0">📓 Diário estratégico</div><div class="diario">' + (diH || '<div class="empty">Diário vazio</div>') + '</div></div>'
-    + '<div><div class="sb-sec" style="padding-left:0">🕐 Linha do tempo</div><div class="tl">'
+  body += '<div class="grid2b"><div><div class="sb-sec" style="padding-left:0">Diário estratégico</div><div class="diario">' + (diH || '<div class="empty">Diário vazio</div>') + '</div></div>'
+    + '<div><div class="sb-sec" style="padding-left:0">Linha do tempo</div><div class="tl">'
     + (tl.map(function (x) { return '<div class="tl-item"><span class="tl-date">' + P.dBR(x.dt) + '</span><span class="tl-txt">' + x.txt + '</span></div>'; }).join('') || '<div class="empty">Sem eventos</div>')
     + '</div></div></div>';
 
@@ -1934,8 +1934,8 @@ P.vDefi = function () {
     + '<div class="mc-sub">' + abertas.length + ' pool(s) aberta(s)</div></div>'
     + '</div>';
 
-  html += '<div class="tabs"><button class="tab' + (P.dTab === 'pools' ? ' on' : '') + '" data-t="pools">🌊 Pools</button>'
-    + '<button class="tab' + (P.dTab === 'lend' ? ' on' : '') + '" data-t="lend">🏦 Lending</button>'
+  html += '<div class="tabs"><button class="tab' + (P.dTab === 'pools' ? ' on' : '') + '" data-t="pools">Pools</button>'
+    + '<button class="tab' + (P.dTab === 'lend' ? ' on' : '') + '" data-t="lend">Lending</button>'
     + '<span style="margin-left:auto">' + P.exportBtn('defi') + '</span></div>';
 
   if (P.dTab === 'pools') {
@@ -2383,7 +2383,7 @@ P.metaCardHTML = function (meta, r, concluida, semMenu) {
      o que a identifica é o próprio ativo. Mostrar "Patrimônio total" numa
      meta de 1 BTC era a tela inventando um escopo que a meta não tem. */
   var escopoTxt = r.tipoLido === 'ativo' ? (meta.ativoTk || '—') : P.metaEscopoNome(meta.escopo);
-  var head = '<div class="mcard-hd"><div class="mcard-ico">🎯</div>'
+  var head = '<div class="mcard-hd"><div class="mcard-ico">' + MDFIcons.svg('target') + '</div>'
     + '<div class="mcard-title">' + e(meta.nome) + '</div>' + menu + '</div>'
     + '<div class="mc-sub">' + e(escopoTxt) + ' · até ' + P.dBR(meta.prazo) + '</div>';
 

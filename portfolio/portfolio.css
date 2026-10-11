@@ -710,3 +710,16 @@ a.up-item:hover{border-color:var(--purple,#9945FF)}
 @media(prefers-reduced-motion:reduce){
   *{transition:none!important;animation:none!important}
 }
+
+/* Identidade visual de painel financeiro. */
+.tnav{background:rgba(13,17,28,.96);backdrop-filter:blur(8px)}
+.tnav-mark{background:#192A39;border:1px solid #41657B;box-shadow:none;color:#D9E9F0;font-size:16px}
+.tnav-name{letter-spacing:-.035em}
+.tnav-name em{color:var(--purple-txt)}
+.tnav-tab{border-radius:7px;font-weight:500}
+.tnav-tab .ico{display:inline-flex;align-items:center;justify-content:center}
+.tnav-tab .mdf-icon{width:17px;height:17px}
+.tnav-tab.active::after{background:var(--purple-txt)}
+.btn{border-radius:8px}
+.btn-p{background:var(--purple);box-shadow:none}
+.up-item span .mdf-icon{width:19px;height:19px}

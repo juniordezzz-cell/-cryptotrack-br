@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script src="/mundodefi-api.js?v=40ddca9a91"></script>
-<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
+<script src="/mundodefi-api.js?v=05a87b07b1"></script>
+<link rel="icon" href="/favicon.svg?v=05a87b07b1" type="image/svg+xml">
 <title>Criar conta — MundoDeFi</title>
 <meta property="og:image" content="https://mundodefi.com.br/og/home.png">
 <meta property="og:image:width" content="1200">
@@ -14,8 +14,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="description" content="Crie sua conta gratuita no MundoDeFi: ferramentas DeFi e portfólio cripto em português.">
 <meta name="robots" content="noindex">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/mundodefi-tokens.css?v=05a87b07b1">
 <style>
 :root{
   /* Superfícies e texto de /mundodefi-tokens.css. */
@@ -30,7 +30,7 @@
   --r:10px;--rl:16px;--rxl:24px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.55}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden;line-height:1.55}
 
 /* fundo espacial */
 .space{position:fixed;inset:0;pointer-events:none;z-index:0}
@@ -72,23 +72,23 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 .auth-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0;background:linear-gradient(90deg,transparent,var(--purple),transparent)}
 
 .auth-tabs{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:4px;margin-bottom:1.6rem}
-.auth-tab{flex:1;padding:9px;border:none;border-radius:9px;background:transparent;color:var(--muted2);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:.2s}
+.auth-tab{flex:1;padding:9px;border:none;border-radius:9px;background:transparent;color:var(--muted2);font-family:'Inter',sans-serif;font-size:13.5px;font-weight:700;cursor:pointer;transition:.2s}
 .auth-tab.active{background:var(--purple);color:#fff;box-shadow:0 4px 14px rgba(153,69,255,.35)}
 
 .fgrp{margin-bottom:1rem}
 .flabel{display:block;font-size:12px;font-weight:600;color:var(--muted2);margin-bottom:6px;letter-spacing:.02em}
-.finput{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:14px;transition:border-color .2s;outline:none}
+.finput{width:100%;padding:12px 14px;background:var(--bg3);border:1px solid var(--border2);border-radius:11px;color:var(--text);font-family:'Inter',sans-serif;font-size:14px;transition:border-color .2s;outline:none}
 .finput:focus{border-color:var(--purple)}
 .finput::placeholder{color:var(--muted)}
 .fhint{font-size:11px;color:var(--muted);margin-top:5px}
 
-.auth-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(120deg,var(--purple),#7b2ff7);color:#fff;font-family:'Space Grotesk',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 8px 28px rgba(153,69,255,.3);margin-top:.4rem}
+.auth-btn{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(120deg,var(--purple),#7b2ff7);color:#fff;font-family:'Inter',sans-serif;font-size:14.5px;font-weight:700;cursor:pointer;transition:.2s;box-shadow:0 8px 28px rgba(153,69,255,.3);margin-top:.4rem}
 .auth-btn:hover{transform:translateY(-1px) scale(1.015);box-shadow:0 10px 34px rgba(153,69,255,.45)}
 .auth-btn:disabled{opacity:.55;cursor:wait;transform:none}
 
 .or-line{display:flex;align-items:center;gap:12px;margin:1rem 0;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.1em}
 .or-line::before,.or-line::after{content:'';flex:1;height:1px;background:var(--border)}
-.auth-btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border:1px solid var(--border2);border-radius:12px;background:var(--bg3);color:var(--text);font-family:'Space Grotesk',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s}
+.auth-btn-google{width:100%;display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;border:1px solid var(--border2);border-radius:12px;background:var(--bg3);color:var(--text);font-family:'Inter',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;transition:.2s}
 .auth-btn-google:hover{border-color:var(--purple-line);background:var(--bg4)}
 
 .auth-msg{display:none;font-size:12.5px;line-height:1.5;border-radius:10px;padding:10px 13px;margin-bottom:1rem}
@@ -117,7 +117,7 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
 <div class="wrap">
 
   <div class="topbar">
-    <a class="logo" href="/index.html">₿ Mundo<b>DeFi</b></a>
+    <a class="logo" href="/index.html">Mundo<b>DeFi</b></a>
     <a class="back-link" href="/index.html">← Voltar ao site</a>
   </div>
 
@@ -128,15 +128,15 @@ body{background:var(--bg);color:var(--text);font-family:'Space Grotesk',sans-ser
       <h1>Crie sua conta.<br><span>É grátis para sempre.</span></h1>
       <p>Sem cartão de crédito, sem teste que expira. Sua conta gratuita libera de verdade:</p>
       <div class="perk">
-        <div class="perk-ic">🛠️</div>
+        <div class="perk-ic">01</div>
         <div><b>Nove ferramentas, sem limite de uso</b><span>Pool de liquidez com impermanent loss, staking, juros compostos, lucro cripto, comparador, conversor e câmbio.</span></div>
       </div>
       <div class="perk">
-        <div class="perk-ic">📊</div>
+        <div class="perk-ic">02</div>
         <div><b>O portfólio inteiro, não uma amostra</b><span>HOLD, DeFi e Trade com carteiras ilimitadas, preço médio, lucro realizado e impermanent loss — salvo na nuvem.</span></div>
       </div>
       <div class="perk">
-        <div class="perk-ic">🧭</div>
+        <div class="perk-ic">03</div>
         <div><b>Diagnóstico IMD</b><span>Descubra seu nível de investidor e receba um plano de evolução personalizado.</span></div>
       </div>
     </div>

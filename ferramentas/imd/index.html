@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="canonical" href="https://mundodefi.com.br/ferramentas/imd/index.html">
-<link rel="icon" href="/favicon.svg?v=40ddca9a91" type="image/svg+xml">
+<link rel="icon" href="/favicon.svg?v=05a87b07b1" type="image/svg+xml">
 <title>IMD — Índice Mundo DeFi · Diagnóstico do Investidor</title>
 <meta property="og:image" content="https://mundodefi.com.br/og/ferramenta-imd.png">
 <meta property="og:image:width" content="1200">
@@ -15,8 +15,8 @@
   <meta name="description" content="Descubra seu Índice Mundo DeFi: um diagnóstico adaptativo que mede seu nível em segurança, fundamentos, DeFi e autonomia. Gratuito, em poucos minutos." />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/mundodefi-tokens.css?v=40ddca9a91">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/mundodefi-tokens.css?v=05a87b07b1">
   <style>
     :root{
       --bg:var(--mdf-bg);
@@ -146,6 +146,18 @@
     .lock-status{font-size:12.5px;color:var(--muted);margin-top:12px;min-height:18px}
     .lock-status code{font-family:ui-monospace,monospace;font-size:11px;background:var(--panel2);padding:2px 6px;border-radius:6px;color:var(--green)}
 
+    /* Mesma linguagem sóbria das ferramentas e do portfólio. */
+    html,body{background:var(--mdf-bg)}
+    .dot{width:10px;height:10px;background:var(--purple-txt);box-shadow:none}
+    .grad,.score{background:none;-webkit-background-clip:initial;background-clip:initial;color:var(--purple-txt)}
+    .frame{background:var(--mdf-surface);border-radius:16px;box-shadow:none}
+    .card{border-radius:12px}
+    .big-cta{border-radius:9px;background:var(--purple);box-shadow:none;font-weight:600}
+    .big-cta.alt{background:var(--mdf-surface-2);color:var(--mdf-text);border:1px solid var(--mdf-line-2)}
+    .list li{border-radius:9px;display:flex;align-items:center;gap:12px}
+    .list li::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--purple-txt);flex:none}
+    .lock-ico{font-size:13px;font-weight:700;display:grid;place-items:center;width:30px;height:30px;margin:0 auto 12px;border:1px solid var(--mdf-line-2);border-radius:7px}
+
   </style>
 <!-- schema:auto — gerado por dev/gerar-schema.mjs, nao edite a mao -->
 <script type="application/ld+json">
@@ -232,11 +244,11 @@
             <div class="tag">O que você recebe</div>
             <h2>Resultado personalizado</h2>
             <ul class="list">
-              <li>✅ Perfil de Risco</li>
-              <li>📚 Nível de Conhecimento</li>
-              <li>🌐 Preparação para DeFi</li>
-              <li>⭐ Índice Mundo DeFi</li>
-              <li>📈 Trilha Personalizada de Evolução</li>
+              <li>Perfil de Risco</li>
+              <li>Nível de Conhecimento</li>
+              <li>Preparação para DeFi</li>
+              <li>Índice Mundo DeFi</li>
+              <li>Trilha Personalizada de Evolução</li>
             </ul>
           </div>
           <div class="card">
@@ -253,7 +265,7 @@
             <div class="control-row">
               <button class="big-cta" onclick="go('screen-intro')">COMEÇAR DIAGNÓSTICO</button>
             </div>
-            <div class="footer-note">🔒 Suas respostas serão utilizadas para gerar seu diagnóstico personalizado. Caso você crie uma conta, seu histórico poderá ser salvo para acompanhar sua evolução.</div>
+            <div class="footer-note">Suas respostas serão utilizadas para gerar seu diagnóstico personalizado. Caso você crie uma conta, seu histórico poderá ser salvo para acompanhar sua evolução.</div>
           </div>
         </div>
       </div>
@@ -322,7 +334,7 @@
             <div class="tag">Por que pedimos isso?</div>
             <h2>Pra te conhecer melhor</h2>
             <p>Seu nome deixa a conversa mais próxima durante o diagnóstico. A faixa de idade nos ajuda a entender o público do MundoDeFi — nada além disso é obrigatório agora.</p>
-            <div class="footer-note">🔒 Você só informa e-mail/conta no final, se quiser salvar seu resultado.</div>
+            <div class="footer-note">Você só informa e-mail/conta no final, se quiser salvar seu resultado.</div>
           </div>
         </div>
       </div>
@@ -378,16 +390,16 @@
 
         <!-- ISCA / CADEADO (aparece antes do login quando a trava está ligada) -->
         <div class="lock-overlay" id="imd-lock">
-          <div class="lock-ico">🔒</div>
+          <div class="lock-ico">N</div>
           <h2>Seu diagnóstico está pronto<span id="imd-lock-nome"></span>!</h2>
           <div class="lock-risco">Você é <span id="imd-lock-risco" style="color:var(--gold)">—</span></div>
           <p class="lock-sub">Seu diagnóstico completo já foi calculado. Entre com o Google pra destravar:</p>
 
           <div class="lock-list">
-            <div class="lock-item"><span class="lock-item-ico">📊</span> Seu Índice MundoDeFi de 0 a 100</div>
-            <div class="lock-item"><span class="lock-item-ico">🧩</span> Sua pontuação nos 4 pilares: Segurança, Fundamentos, DeFi e Autonomia</div>
-            <div class="lock-item"><span class="lock-item-ico">💪</span> Suas competências mais fortes e as que precisam de atenção</div>
-            <div class="lock-item"><span class="lock-item-ico">🎯</span> O próximo passo recomendado pro seu nível</div>
+            <div class="lock-item">Seu Índice MundoDeFi de 0 a 100</div>
+            <div class="lock-item">Sua pontuação nos 4 pilares: Segurança, Fundamentos, DeFi e Autonomia</div>
+            <div class="lock-item">Suas competências mais fortes e as que precisam de atenção</div>
+            <div class="lock-item">O próximo passo recomendado pro seu nível</div>
           </div>
 
           <div class="lock-checks">
@@ -476,15 +488,15 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-  <script src="firebase/config.js?v=40ddca9a91"></script>
-  <script src="js/firebase.js?v=40ddca9a91"></script>
+  <script src="firebase/config.js?v=05a87b07b1"></script>
+  <script src="js/firebase.js?v=05a87b07b1"></script>
 
   <!-- Miolo intocável + utilitários + confete -->
-  <script src="js/motor.js?v=40ddca9a91"></script>
-  <script src="js/app.js?v=40ddca9a91"></script>
-  <script src="assets/confetti.js?v=40ddca9a91"></script>
+  <script src="js/motor.js?v=05a87b07b1"></script>
+  <script src="js/app.js?v=05a87b07b1"></script>
+  <script src="assets/confetti.js?v=05a87b07b1"></script>
 
   <!-- Ponte casca<->miolo (controla as telas) -->
-  <script src="js/imd-app.js?v=40ddca9a91"></script>
+  <script src="js/imd-app.js?v=05a87b07b1"></script>
 </body>
 </html>
